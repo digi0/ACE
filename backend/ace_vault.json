@@ -1,0 +1,117 @@
+{
+  "policies": [
+    {
+      "vault_id": "PSU-CAL-001",
+      "title": "Academic Calendar - Spring 2026",
+      "category": "academic_calendar",
+      "content": "Spring 2026 semester begins January 12, 2026. Last day to add courses: January 23, 2026. Last day to drop without 'W' grade: February 7, 2026. Spring break: March 7-15, 2026. Last day to withdraw from courses: April 3, 2026. Final exams: May 4-8, 2026. Commencement: May 9, 2026.",
+      "link": "https://registrar.psu.edu/academic-calendars/",
+      "key_dates": {
+        "semester_start": "2026-01-12",
+        "add_deadline": "2026-01-23",
+        "drop_deadline": "2026-02-07",
+        "spring_break_start": "2026-03-07",
+        "spring_break_end": "2026-03-15",
+        "withdrawal_deadline": "2026-04-03",
+        "finals_start": "2026-05-04",
+        "finals_end": "2026-05-08",
+        "commencement": "2026-05-09"
+      }
+    },
+    {
+      "vault_id": "PSU-WDR-001",
+      "title": "Course Withdrawal Policy",
+      "category": "withdrawal",
+      "content": "Students may withdraw from courses until the withdrawal deadline (typically 10 weeks into the semester). A 'W' grade will appear on the transcript but does not affect GPA. After the deadline, withdrawals require approval from the dean's office and may result in a 'WF' (withdrawn failing) grade. Students considering withdrawal should consult with their academic advisor and financial aid office to understand implications.",
+      "link": "https://registrar.psu.edu/withdrawal/",
+      "implications": {
+        "gpa_impact": "No impact if withdrawn before deadline",
+        "financial_aid": "May affect aid if dropping below full-time",
+        "transcript": "W grade appears on record"
+      }
+    },
+    {
+      "vault_id": "PSU-TUI-001",
+      "title": "Tuition Refund Schedule",
+      "category": "tuition",
+      "content": "Tuition refunds are based on the date of official withdrawal: Week 1: 100% refund. Week 2: 90% refund. Week 3: 75% refund. Week 4: 50% refund. Week 5: 25% refund. After Week 5: No refund. Room and board refunds follow a separate schedule. Students must officially withdraw through LionPATH to be eligible for refunds.",
+      "link": "https://bursar.psu.edu/tuition-and-fees/refund-schedule",
+      "schedule": {
+        "week_1": "100%",
+        "week_2": "90%",
+        "week_3": "75%",
+        "week_4": "50%",
+        "week_5": "25%",
+        "after_week_5": "0%"
+      }
+    },
+    {
+      "vault_id": "PSU-GRD-001",
+      "title": "Grading Policy",
+      "category": "grades",
+      "content": "Penn State uses a 4.0 grading scale. A=4.0, A-=3.67, B+=3.33, B=3.0, B-=2.67, C+=2.33, C=2.0, D=1.0, F=0.0. Students may elect late drop (LD) for one course during their undergraduate career. Pass/Fail option available for elective courses only with advisor approval. Grade appeals must be submitted within one semester of receiving the grade.",
+      "link": "https://registrar.psu.edu/grades/",
+      "scale": {
+        "A": 4.0, "A-": 3.67, "B+": 3.33, "B": 3.0, "B-": 2.67,
+        "C+": 2.33, "C": 2.0, "D": 1.0, "F": 0.0
+      }
+    },
+    {
+      "vault_id": "PSU-ADV-001",
+      "title": "Academic Advising Services",
+      "category": "advising",
+      "content": "All students are assigned an academic advisor based on their major. Advising appointments can be scheduled through Starfish or by contacting your college's advising center. Students on academic probation must meet with advisors each semester. Pre-professional advising is available for law, medical, and graduate school planning.",
+      "link": "https://advising.psu.edu/",
+      "contact": {
+        "general": "advising@psu.edu",
+        "scheduling": "starfish.psu.edu"
+      }
+    },
+    {
+      "vault_id": "PSU-PRO-001",
+      "title": "Academic Probation & Dismissal",
+      "category": "academic_standing",
+      "content": "Students with cumulative GPA below 2.0 are placed on academic probation. While on probation, students must meet with their advisor and may have enrollment restrictions. Students who fail to achieve a 2.0 semester GPA while on probation may face academic dismissal. Dismissed students may appeal or apply for re-enrollment after one year.",
+      "link": "https://registrar.psu.edu/academic-standing/",
+      "thresholds": {
+        "probation": "GPA below 2.0",
+        "dismissal": "Failure to improve while on probation",
+        "good_standing": "GPA 2.0 or above"
+      }
+    },
+    {
+      "vault_id": "PSU-REG-001",
+      "title": "Course Registration",
+      "category": "registration",
+      "content": "Registration opens based on class standing and credits earned. Seniors register first, followed by juniors, sophomores, and freshmen. Students must clear any holds before registering. Prerequisites are enforced automatically. Overload requests (more than 19 credits) require advisor approval.",
+      "link": "https://registrar.psu.edu/registration/",
+      "priority": ["Seniors", "Juniors", "Sophomores", "Freshmen"]
+    },
+    {
+      "vault_id": "PSU-FIN-001",
+      "title": "Financial Aid Satisfactory Progress",
+      "category": "financial_aid",
+      "content": "To maintain financial aid eligibility, students must: Complete 67% of attempted credits, maintain cumulative GPA of 2.0, and complete degree within 150% of published credit requirements. Withdrawals and repeated courses affect these calculations. Students not meeting SAP may appeal or create an academic plan.",
+      "link": "https://studentaid.psu.edu/sap/",
+      "requirements": {
+        "completion_rate": "67%",
+        "minimum_gpa": "2.0",
+        "maximum_timeframe": "150% of degree credits"
+      }
+    }
+  ],
+  "student_mock": {
+    "id": "abc123456",
+    "psu_id": "xyz9012345",
+    "name": "Jordan Chen",
+    "email": "jxc1234@psu.edu",
+    "major": "Computer Science",
+    "minor": "Data Sciences",
+    "year": "Junior",
+    "credits_completed": 72,
+    "gpa": 3.45,
+    "advisor": "Dr. Sarah Mitchell",
+    "enrollment_status": "Full-time",
+    "college": "College of Engineering"
+  }
+}
