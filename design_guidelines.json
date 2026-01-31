@@ -1,0 +1,128 @@
+{
+  "identity": {
+    "name": "ACE (Academic Clarity Engine)",
+    "persona": "E1 - The Anti-AI Designer",
+    "tone": "Academic, Calm, Trustworthy, Persistent Companion",
+    "target_audience": "Penn State Students",
+    "context": "Desktop-first Academic Assistant"
+  },
+  "typography": {
+    "font_family": {
+      "headings": "Merriweather, serif",
+      "body": "Inter, system-ui, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-4xl font-bold tracking-tight",
+      "h2": "text-3xl font-semibold tracking-tight",
+      "h3": "text-2xl font-semibold",
+      "body_lg": "text-lg leading-relaxed",
+      "body_base": "text-base leading-relaxed",
+      "caption": "text-sm text-muted-foreground"
+    }
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "DEFAULT": "#001E44",
+        "foreground": "#FFFFFF",
+        "description": "Nittany Navy - Core Brand Color"
+      },
+      "secondary": {
+        "DEFAULT": "#1E407C",
+        "foreground": "#FFFFFF",
+        "description": "Beaver Blue - Secondary Brand Color"
+      },
+      "accent": {
+        "DEFAULT": "#96BEE6",
+        "foreground": "#001E44",
+        "description": "Pugh Blue - Soft Accent"
+      },
+      "background": {
+        "DEFAULT": "#F4F6F8",
+        "paper": "#FFFFFF",
+        "subtle": "#E2E8F0"
+      },
+      "text": {
+        "primary": "#0F172A",
+        "secondary": "#475569",
+        "muted": "#94A3B8"
+      },
+      "status": {
+        "success": "#10B981",
+        "warning": "#F59E0B",
+        "error": "#EF4444",
+        "info": "#3B82F6"
+      }
+    },
+    "theme": "light"
+  },
+  "layout": {
+    "grid_system": "Two-column layout: Fixed Left Sidebar (320px) + Fluid Right Content",
+    "spacing": {
+      "container_padding": "p-8",
+      "element_gap": "gap-6",
+      "section_gap": "gap-12"
+    },
+    "radius": {
+      "default": "rounded-lg",
+      "button": "rounded-md",
+      "card": "rounded-xl"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-[#001E44] text-white hover:bg-[#1E407C] shadow-sm transition-all",
+      "secondary": "bg-white text-[#001E44] border border-[#E2E8F0] hover:bg-[#F8FAFC]",
+      "ghost": "hover:bg-[#F1F5F9] text-[#475569]"
+    },
+    "cards": {
+      "base": "bg-white border border-[#E2E8F0] shadow-sm hover:shadow-md transition-shadow duration-200",
+      "interactive": "cursor-pointer hover:border-[#96BEE6]"
+    },
+    "chat": {
+      "user_bubble": "bg-[#001E44] text-white rounded-2xl rounded-tr-sm px-6 py-3 max-w-[80%]",
+      "ai_bubble": "bg-white border border-[#E2E8F0] text-[#0F172A] rounded-2xl rounded-tl-sm px-6 py-4 shadow-sm max-w-[80%]",
+      "input_area": "bg-white border border-[#E2E8F0] rounded-xl shadow-sm focus-within:ring-2 focus-within:ring-[#96BEE6]"
+    }
+  },
+  "visual_enhancers": {
+    "shadows": {
+      "soft": "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
+      "medium": "0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025)"
+    },
+    "textures": "Subtle noise overlay on background for paper-like feel (optional)",
+    "glassmorphism": "backdrop-blur-md bg-white/80 border-b border-white/20 (for sticky headers)"
+  },
+  "assets": {
+    "images": {
+      "login_bg": "https://images.unsplash.com/photo-1724157934664-86b93f93858b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTJ8MHwxfHNlYXJjaHwxfHx1bml2ZXJzaXR5JTIwY2FtcHVzJTIwbGlicmFyeSUyMHN0dWRlbnRzfGVufDB8fHx8MTc2OTg2MzY5MHww&ixlib=rb-4.1.0&q=85",
+      "student_avatar": "https://images.unsplash.com/photo-1745558858213-c1bb66fc8fde?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTJ8MHwxfHNlYXJjaHwyfHx1bml2ZXJzaXR5JTIwY2FtcHVzJTIwbGlicmFyeSUyMHN0dWRlbnRzfGVufDB8fHx8MTc2OTg2MzY5MHww&ixlib=rb-4.1.0&q=85",
+      "library_interior": "https://images.unsplash.com/photo-1741528803484-a14f1ae76f2e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTJ8MHwxfHNlYXJjaHwzfHx1bml2ZXJzaXR5JTIwY2FtcHVzJTIwbGlicmFyeSUyMHN0dWRlbnRzfGVufDB8fHx8MTc2OTg2MzY5MHww&ixlib=rb-4.1.0&q=85"
+    },
+    "icons": "Lucide React (default)"
+  },
+  "accessibility": {
+    "contrast": "Ensure text meets WCAG AA standards. Use #001E44 for primary text on light backgrounds.",
+    "focus_states": "Visible focus rings using #96BEE6 (Pugh Blue)",
+    "reduced_motion": "Respect prefers-reduced-motion media query"
+  },
+  "instructions_to_main_agent": [
+    "Implement the 'Login' page with a mocked 'Sign in with Penn State' button using the Nittany Navy color.",
+    "Build the 'Main Assistant Interface' with a strict two-column layout. Left: 320px fixed. Right: Fluid.",
+    "Use 'Merriweather' font for all headings to give an academic feel. Import it from Google Fonts.",
+    "The Chat Interface must feel distinct: User messages right-aligned (Navy), AI messages left-aligned (White card).",
+    "Implement 'Collapsible Sources' in AI responses using Shadcn Accordion or similar pattern.",
+    "Use the 'Pugh Blue' (#96BEE6) sparingly for accents, active states, and focus rings.",
+    "Ensure the 'Risk Indicator' in AI responses is subtle but clear (e.g., a small colored badge: Yellow for Warning, Red for Critical).",
+    "Do NOT use dark mode. Force light mode in Tailwind config if necessary.",
+    "Use the provided image URLs for the login background and profile avatar placeholder."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Avoid generic 'AI slop' designs. Focus on clean, academic typography and generous spacing.",
+    "Do not use gradients for backgrounds. Stick to solid, calming neutral tones.",
+    "Use 'sonner' for toast notifications.",
+    "Ensure all interactive elements have 'data-testid' attributes.",
+    "Prioritize Shadcn UI components but customize them to match the 'ACE' design system (rounded corners, specific border colors)."
+  ]
+}
