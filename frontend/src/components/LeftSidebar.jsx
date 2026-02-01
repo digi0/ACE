@@ -7,10 +7,8 @@ import {
   Settings, 
   MessageSquare, 
   Plus, 
-  AlertCircle,
-  Calendar,
-  ChevronRight,
-  Trash2
+  Trash2,
+  ChevronRight
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -21,7 +19,8 @@ export const LeftSidebar = ({
   onSelectChat, 
   currentChatId, 
   studentId,
-  refreshTrigger 
+  refreshTrigger,
+  onInsightAction
 }) => {
   const [profile, setProfile] = useState(null);
   const [intelligence, setIntelligence] = useState(null);
@@ -63,19 +62,17 @@ export const LeftSidebar = ({
     }
   };
 
-  const getUrgencyColor = (urgency) => {
-    switch (urgency) {
-      case 'high': return 'bg-red-50 border-red-200 text-red-700';
-      case 'medium': return 'bg-amber-50 border-amber-200 text-amber-700';
-      default: return 'bg-[#96BEE6]/10 border-[#96BEE6]/30 text-[#001E44]';
+  const handleInsightAction = () => {
+    if (intelligence?.action && onInsightAction) {
+      onInsightAction(intelligence.action.prompt);
     }
   };
 
-  const getUrgencyIcon = (urgency) => {
+  const getUrgencyStyle = (urgency) => {
     switch (urgency) {
-      case 'high': return <AlertCircle className="w-4 h-4 text-red-500" />;
-      case 'medium': return <Calendar className="w-4 h-4 text-amber-500" />;
-      default: return <Calendar className="w-4 h-4 text-[#1E407C]" />;
+      case 'high': return 'border-l-red-400 bg-red-50/50';
+      case 'medium': return 'border-l-amber-400 bg-amber-50/50';
+      default: return 'border-l-[#96BEE6] bg-[#F8FAFC]';
     }
   };
 
@@ -122,24 +119,37 @@ export const LeftSidebar = ({
         )}
       </div>
 
-      {/* Intelligence Card */}
+      {/* Intelligence Card - Dynamic */}
       {intelligence && (
         <div className="p-4 border-b border-[#E2E8F0]">
           <Card 
-            className={`border ${getUrgencyColor(intelligence.urgency)} shadow-none animate-subtle-pulse`}
+            className={`border-0 border-l-[3px] shadow-none ${getUrgencyStyle(intelligence.urgency)}`}
             data-testid="intelligence-card"
           >
             <CardContent className="p-3">
-              <div className="flex items-start gap-2">
-                {getUrgencyIcon(intelligence.urgency)}
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium mb-0.5">{intelligence.title}</p>
-                  <p className="text-xs opacity-80 leading-relaxed">
-                    {intelligence.description}
-                  </p>
-                </div>
-                <ChevronRight className="w-4 h-4 opacity-40 flex-shrink-0" />
-              </div>
+              {/* Context Line */}
+              <p className="text-[10px] uppercase tracking-wider text-[#94A3B8] mb-1.5" data-testid="intelligence-context">
+                {intelligence.context?.term} · {intelligence.context?.level} · {intelligence.context?.status}
+              </p>
+              
+              {/* Single Insight */}
+              <p className="text-sm text-[#0F172A] leading-relaxed" data-testid="intelligence-insight">
+                {intelligence.insight}
+              </p>
+              
+              {/* Soft Action Button (optional) */}
+              {intelligence.action && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleInsightAction}
+                  className="mt-2.5 h-7 px-0 text-xs text-[#1E407C] hover:text-[#001E44] hover:bg-transparent font-medium gap-1"
+                  data-testid="intelligence-action-button"
+                >
+                  {intelligence.action.label}
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Button>
+              )}
             </CardContent>
           </Card>
         </div>
