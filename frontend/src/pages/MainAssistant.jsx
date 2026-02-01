@@ -11,6 +11,7 @@ export const MainAssistant = () => {
   const [currentChatId, setCurrentChatId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [prefillPrompt, setPrefillPrompt] = useState('');
   
   // Get student ID from localStorage (set during mocked login)
   const studentId = localStorage.getItem('ace_student_id') || 'abc123456';
@@ -27,6 +28,7 @@ export const MainAssistant = () => {
   const handleNewChat = () => {
     setCurrentChatId(null);
     setMessages([]);
+    setPrefillPrompt('');
   };
 
   const handleSelectChat = async (chatId) => {
@@ -34,6 +36,7 @@ export const MainAssistant = () => {
       const response = await axios.get(`${API}/chat/${chatId}`);
       setCurrentChatId(chatId);
       setMessages(response.data.messages || []);
+      setPrefillPrompt('');
     } catch (error) {
       console.error('Error loading chat:', error);
     }
@@ -43,6 +46,13 @@ export const MainAssistant = () => {
     setCurrentChatId(newChatId);
     // Trigger sidebar refresh to show new chat
     setRefreshTrigger(prev => prev + 1);
+  };
+
+  const handleInsightAction = (prompt) => {
+    // Start new chat with pre-filled prompt from intelligence card
+    setCurrentChatId(null);
+    setMessages([]);
+    setPrefillPrompt(prompt);
   };
 
   return (
@@ -56,6 +66,7 @@ export const MainAssistant = () => {
         currentChatId={currentChatId}
         studentId={studentId}
         refreshTrigger={refreshTrigger}
+        onInsightAction={handleInsightAction}
       />
       <ChatWorkspace
         chatId={currentChatId}
@@ -63,6 +74,8 @@ export const MainAssistant = () => {
         onChatCreated={handleChatCreated}
         messages={messages}
         setMessages={setMessages}
+        prefillPrompt={prefillPrompt}
+        clearPrefill={() => setPrefillPrompt('')}
       />
     </div>
   );
