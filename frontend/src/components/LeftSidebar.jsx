@@ -3,16 +3,82 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
+import { Checkbox } from './ui/checkbox';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
 import { 
   Settings, 
   MessageSquare, 
   Plus, 
   Trash2,
-  ChevronRight
+  ChevronRight,
+  Calendar,
+  GraduationCap,
+  Users,
+  Clock,
+  LayoutGrid,
+  Sliders,
+  BookOpen,
+  TrendingUp
 } from 'lucide-react';
 import axios from 'axios';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
+// Available tools for Quick Access
+const AVAILABLE_TOOLS = [
+  { 
+    id: 'weekly-calendar', 
+    label: 'Weekly Calendar', 
+    icon: Calendar,
+    action: 'chat',
+    prompt: "Show me what's on my schedule this week and any upcoming deadlines."
+  },
+  { 
+    id: 'schedule-builder', 
+    label: 'Schedule Builder', 
+    icon: LayoutGrid,
+    action: 'chat',
+    prompt: "Help me plan my course schedule for next semester."
+  },
+  { 
+    id: 'degree-progress', 
+    label: 'Degree Progress', 
+    icon: TrendingUp,
+    action: 'chat',
+    prompt: "What requirements do I still need to complete for my degree?"
+  },
+  { 
+    id: 'advising-portal', 
+    label: 'Advising Portal', 
+    icon: Users,
+    action: 'stub',
+    stubTitle: 'Advising Portal',
+    stubContent: 'Connect with your academic advisor through Starfish.'
+  },
+  { 
+    id: 'check-deadlines', 
+    label: 'Check Deadlines', 
+    icon: Clock,
+    action: 'chat',
+    prompt: "What are the important academic deadlines I should know about this semester?"
+  },
+  { 
+    id: 'course-catalog', 
+    label: 'Course Catalog', 
+    icon: BookOpen,
+    action: 'stub',
+    stubTitle: 'Course Catalog',
+    stubContent: 'Browse available courses in LionPATH.'
+  }
+];
+
+const DEFAULT_TOOLS = ['weekly-calendar', 'degree-progress', 'check-deadlines'];
 
 export const LeftSidebar = ({ 
   onNewChat, 
@@ -26,10 +92,21 @@ export const LeftSidebar = ({
   const [intelligence, setIntelligence] = useState(null);
   const [chatSessions, setChatSessions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedTools, setSelectedTools] = useState(() => {
+    const saved = localStorage.getItem('ace_quick_tools');
+    return saved ? JSON.parse(saved) : DEFAULT_TOOLS;
+  });
+  const [customizeOpen, setCustomizeOpen] = useState(false);
+  const [tempSelectedTools, setTempSelectedTools] = useState(selectedTools);
+  const [stubModal, setStubModal] = useState(null);
 
   useEffect(() => {
     fetchData();
   }, [studentId, refreshTrigger]);
+
+  useEffect(() => {
+    localStorage.setItem('ace_quick_tools', JSON.stringify(selectedTools));
+  }, [selectedTools]);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -68,6 +145,35 @@ export const LeftSidebar = ({
     }
   };
 
+  const handleToolClick = (tool) => {
+    if (tool.action === 'chat' && onInsightAction) {
+      onInsightAction(tool.prompt);
+    } else if (tool.action === 'stub') {
+      setStubModal({ title: tool.stubTitle, content: tool.stubContent });
+    }
+  };
+
+  const handleToolToggle = (toolId) => {
+    setTempSelectedTools(prev => {
+      if (prev.includes(toolId)) {
+        return prev.filter(id => id !== toolId);
+      } else if (prev.length < 3) {
+        return [...prev, toolId];
+      }
+      return prev;
+    });
+  };
+
+  const handleSaveTools = () => {
+    setSelectedTools(tempSelectedTools);
+    setCustomizeOpen(false);
+  };
+
+  const handleOpenCustomize = () => {
+    setTempSelectedTools(selectedTools);
+    setCustomizeOpen(true);
+  };
+
   const getUrgencyStyle = (urgency) => {
     switch (urgency) {
       case 'high': return 'border-l-red-400 bg-red-50/50';
@@ -75,6 +181,10 @@ export const LeftSidebar = ({
       default: return 'border-l-[#96BEE6] bg-[#F8FAFC]';
     }
   };
+
+  const activeTools = selectedTools
+    .map(id => AVAILABLE_TOOLS.find(t => t.id === id))
+    .filter(Boolean);
 
   return (
     <aside 
@@ -154,6 +264,138 @@ export const LeftSidebar = ({
           </Card>
         </div>
       )}
+
+      {/* Quick Access Panel */}
+      <div className="px-4 pt-4 pb-3 border-b border-[#E2E8F0]">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-xs font-medium text-[#475569] uppercase tracking-wider">
+            Quick Access
+          </p>
+          <Dialog open={customizeOpen} onOpenChange={setCustomizeOpen}>
+            <DialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleOpenCustomize}
+                className="h-6 px-2 text-[10px] text-[#94A3B8] hover:text-[#475569] hover:bg-[#F1F5F9] gap-1"
+                data-testid="customize-tools-button"
+              >
+                <Sliders className="w-3 h-3" />
+                Customize
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md" data-testid="customize-tools-modal">
+              <DialogHeader>
+                <DialogTitle className="font-heading text-lg text-[#001E44]">
+                  Customize Quick Access
+                </DialogTitle>
+              </DialogHeader>
+              <div className="py-4">
+                <p className="text-sm text-[#475569] mb-4">
+                  Select up to 3 tools for quick access:
+                </p>
+                <div className="space-y-2">
+                  {AVAILABLE_TOOLS.map(tool => {
+                    const IconComponent = tool.icon;
+                    const isSelected = tempSelectedTools.includes(tool.id);
+                    const isDisabled = !isSelected && tempSelectedTools.length >= 3;
+                    
+                    return (
+                      <label
+                        key={tool.id}
+                        className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                          isSelected 
+                            ? 'border-[#96BEE6] bg-[#96BEE6]/10' 
+                            : isDisabled
+                              ? 'border-[#E2E8F0] bg-[#F8FAFC] opacity-50 cursor-not-allowed'
+                              : 'border-[#E2E8F0] hover:border-[#96BEE6]/50 hover:bg-[#F8FAFC]'
+                        }`}
+                        data-testid={`tool-option-${tool.id}`}
+                      >
+                        <Checkbox
+                          checked={isSelected}
+                          onCheckedChange={() => !isDisabled && handleToolToggle(tool.id)}
+                          disabled={isDisabled}
+                          className="data-[state=checked]:bg-[#001E44] data-[state=checked]:border-[#001E44]"
+                        />
+                        <IconComponent className="w-4 h-4 text-[#1E407C]" />
+                        <span className="text-sm text-[#0F172A]">{tool.label}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+                <p className="text-xs text-[#94A3B8] mt-3">
+                  {tempSelectedTools.length}/3 tools selected
+                </p>
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setCustomizeOpen(false)}
+                  className="border-[#E2E8F0]"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSaveTools}
+                  className="bg-[#001E44] hover:bg-[#1E407C]"
+                  data-testid="save-tools-button"
+                >
+                  Save
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+        
+        {/* Tool Rows */}
+        <div className="space-y-1" data-testid="quick-access-tools">
+          {activeTools.map(tool => {
+            const IconComponent = tool.icon;
+            return (
+              <button
+                key={tool.id}
+                onClick={() => handleToolClick(tool)}
+                className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left hover:bg-[#F1F5F9] transition-colors group"
+                data-testid={`quick-tool-${tool.id}`}
+              >
+                <div className="w-7 h-7 rounded-md bg-[#F1F5F9] group-hover:bg-[#96BEE6]/20 flex items-center justify-center transition-colors">
+                  <IconComponent className="w-4 h-4 text-[#1E407C]" />
+                </div>
+                <span className="text-sm text-[#0F172A]">{tool.label}</span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8] ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Stub Modal for non-chat tools */}
+      <Dialog open={!!stubModal} onOpenChange={() => setStubModal(null)}>
+        <DialogContent className="sm:max-w-sm" data-testid="stub-modal">
+          <DialogHeader>
+            <DialogTitle className="font-heading text-lg text-[#001E44]">
+              {stubModal?.title}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-sm text-[#475569]">{stubModal?.content}</p>
+            <div className="mt-4 p-4 bg-[#F8FAFC] rounded-lg border border-[#E2E8F0]">
+              <p className="text-xs text-[#94A3B8] text-center">
+                This feature links to external Penn State systems
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <Button
+              onClick={() => setStubModal(null)}
+              className="bg-[#001E44] hover:bg-[#1E407C]"
+            >
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* New Chat Button */}
       <div className="p-4">
