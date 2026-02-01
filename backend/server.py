@@ -204,14 +204,72 @@ async def get_student_profile():
 
 @api_router.get("/student/intelligence")
 async def get_student_intelligence():
-    """Get adaptive intelligence/status for student"""
-    # This would be personalized in production
+    """Get adaptive intelligence/status for student - single calm insight"""
+    from datetime import date
+    
+    student = ace_vault['student_mock']
+    policies = ace_vault['policies']
+    
+    # Get calendar policy for deadline calculations
+    calendar = next((p for p in policies if p['vault_id'] == 'PSU-CAL-001'), None)
+    
+    # Context line data
+    context = {
+        "term": "Spring 2026",
+        "level": student['year'],
+        "status": student['enrollment_status']
+    }
+    
+    # Calculate days until withdrawal deadline
+    today = date.today()
+    withdrawal_deadline = date(2026, 4, 3)
+    days_until_withdrawal = (withdrawal_deadline - today).days
+    
+    # Determine single insight based on priority
+    insight = None
+    action = None
+    urgency = "low"
+    
+    if days_until_withdrawal <= 7 and days_until_withdrawal > 0:
+        # Urgent deadline
+        urgency = "high"
+        insight = f"Withdrawal deadline is in {days_until_withdrawal} day{'s' if days_until_withdrawal != 1 else ''}. Act now if you're considering dropping a course."
+        action = {
+            "label": "Ask about withdrawal",
+            "prompt": "I need to understand my options for withdrawing from a course before the deadline."
+        }
+    elif days_until_withdrawal <= 21 and days_until_withdrawal > 7:
+        # Approaching deadline
+        urgency = "medium"
+        insight = f"The course withdrawal deadline is April 3rd — {days_until_withdrawal} days away."
+        action = {
+            "label": "Review my options",
+            "prompt": "What should I consider before the withdrawal deadline on April 3rd?"
+        }
+    elif student['gpa'] >= 3.5:
+        # Reassurance for strong students
+        urgency = "low"
+        insight = f"You're doing well with a {student['gpa']} GPA. Stay on track this semester."
+        action = None
+    elif student['credits_completed'] >= 60 and student['credits_completed'] < 90:
+        # Junior-year planning
+        urgency = "low"
+        insight = "As a junior, now is a good time to map out your remaining requirements."
+        action = {
+            "label": "Plan ahead",
+            "prompt": "Help me plan my remaining semesters to graduate on time."
+        }
+    else:
+        # Default calm reassurance
+        urgency = "low"
+        insight = "No urgent items right now. You're on track for Spring 2026."
+        action = None
+    
     return {
-        "type": "upcoming_deadline",
-        "title": "Withdrawal deadline approaching",
-        "description": "April 3rd is the last day to withdraw from Spring 2026 courses",
-        "urgency": "medium",
-        "related_policy": "PSU-WDR-001"
+        "context": context,
+        "insight": insight,
+        "urgency": urgency,
+        "action": action
     }
 
 @api_router.get("/chats/{student_id}")
