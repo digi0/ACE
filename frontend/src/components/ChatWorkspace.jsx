@@ -9,7 +9,9 @@ import {
   Sparkles,
   Calendar,
   AlertCircle,
-  Target
+  Target,
+  Menu,
+  PanelLeft
 } from 'lucide-react';
 import axios from 'axios';
 
