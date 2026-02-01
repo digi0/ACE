@@ -27,7 +27,9 @@ export const ChatWorkspace = ({
   studentId, 
   onChatCreated,
   messages,
-  setMessages 
+  setMessages,
+  prefillPrompt,
+  clearPrefill
 }) => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -50,6 +52,20 @@ export const ChatWorkspace = ({
       inputRef.current.focus();
     }
   }, [chatId]);
+
+  // Handle prefill prompt from intelligence card
+  useEffect(() => {
+    if (prefillPrompt && !isLoading) {
+      setInput(prefillPrompt);
+      if (clearPrefill) clearPrefill();
+      // Auto-send after a brief delay
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }, 100);
+    }
+  }, [prefillPrompt, clearPrefill, isLoading]);
 
   const sendMessage = async (messageText) => {
     if (!messageText.trim() || isLoading) return;
