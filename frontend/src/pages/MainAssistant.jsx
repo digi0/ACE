@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LeftSidebar } from '../components/LeftSidebar';
 import { ChatWorkspace } from '../components/ChatWorkspace';
+import { Button } from '../components/ui/button';
+import { PanelLeftClose, PanelLeft } from 'lucide-react';
 import axios from 'axios';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -12,6 +14,11 @@ export const MainAssistant = () => {
   const [messages, setMessages] = useState([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [prefillPrompt, setPrefillPrompt] = useState('');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    const saved = localStorage.getItem('ace_sidebar_collapsed');
+    return saved === 'true';
+  });
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   // Get student ID from localStorage (set during mocked login)
   const studentId = localStorage.getItem('ace_student_id') || 'abc123456';
@@ -25,10 +32,26 @@ export const MainAssistant = () => {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    localStorage.setItem('ace_sidebar_collapsed', sidebarCollapsed.toString());
+  }, [sidebarCollapsed]);
+
+  // Close mobile menu when screen resizes to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleNewChat = () => {
     setCurrentChatId(null);
     setMessages([]);
     setPrefillPrompt('');
+    setMobileMenuOpen(false);
   };
 
   const handleSelectChat = async (chatId) => {
@@ -37,6 +60,7 @@ export const MainAssistant = () => {
       setCurrentChatId(chatId);
       setMessages(response.data.messages || []);
       setPrefillPrompt('');
+      setMobileMenuOpen(false);
     } catch (error) {
       console.error('Error loading chat:', error);
     }
@@ -53,30 +77,68 @@ export const MainAssistant = () => {
     setCurrentChatId(null);
     setMessages([]);
     setPrefillPrompt(prompt);
+    setMobileMenuOpen(false);
+  };
+
+  const toggleSidebar = () => {
+    setSidebarCollapsed(prev => !prev);
+  };
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(prev => !prev);
   };
 
   return (
     <div 
-      className="flex h-screen overflow-hidden"
+      className="flex h-screen overflow-hidden relative"
       data-testid="main-assistant"
     >
-      <LeftSidebar
-        onNewChat={handleNewChat}
-        onSelectChat={handleSelectChat}
-        currentChatId={currentChatId}
-        studentId={studentId}
-        refreshTrigger={refreshTrigger}
-        onInsightAction={handleInsightAction}
-      />
-      <ChatWorkspace
-        chatId={currentChatId}
-        studentId={studentId}
-        onChatCreated={handleChatCreated}
-        messages={messages}
-        setMessages={setMessages}
-        prefillPrompt={prefillPrompt}
-        clearPrefill={() => setPrefillPrompt('')}
-      />
+      {/* Mobile overlay */}
+      {mobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/30 z-40 md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+          data-testid="mobile-overlay"
+        />
+      )}
+
+      {/* Sidebar - responsive */}
+      <div 
+        className={`
+          ${sidebarCollapsed ? 'w-0 md:w-16' : 'w-64 md:w-72'} 
+          ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+          fixed md:relative z-50 md:z-auto
+          transition-all duration-300 ease-in-out
+          h-full
+        `}
+      >
+        <LeftSidebar
+          onNewChat={handleNewChat}
+          onSelectChat={handleSelectChat}
+          currentChatId={currentChatId}
+          studentId={studentId}
+          refreshTrigger={refreshTrigger}
+          onInsightAction={handleInsightAction}
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={toggleSidebar}
+        />
+      </div>
+
+      {/* Main content */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <ChatWorkspace
+          chatId={currentChatId}
+          studentId={studentId}
+          onChatCreated={handleChatCreated}
+          messages={messages}
+          setMessages={setMessages}
+          prefillPrompt={prefillPrompt}
+          clearPrefill={() => setPrefillPrompt('')}
+          sidebarCollapsed={sidebarCollapsed}
+          onToggleSidebar={toggleSidebar}
+          onToggleMobileMenu={toggleMobileMenu}
+        />
+      </div>
     </div>
   );
 };
