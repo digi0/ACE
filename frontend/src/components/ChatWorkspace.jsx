@@ -29,7 +29,10 @@ export const ChatWorkspace = ({
   messages,
   setMessages,
   prefillPrompt,
-  clearPrefill
+  clearPrefill,
+  sidebarCollapsed,
+  onToggleSidebar,
+  onToggleMobileMenu
 }) => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
