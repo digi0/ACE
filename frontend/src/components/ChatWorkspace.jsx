@@ -147,7 +147,31 @@ export const ChatWorkspace = ({
       data-testid="chat-workspace"
     >
       {/* Header */}
-      <header className="h-16 px-6 flex items-center border-b border-[#E2E8F0] bg-white/80 backdrop-blur-sm">
+      <header className="h-14 px-4 flex items-center border-b border-[#E2E8F0] bg-white/80 backdrop-blur-sm gap-3">
+        {/* Mobile menu button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggleMobileMenu}
+          className="h-9 w-9 md:hidden text-[#475569] hover:bg-[#F1F5F9]"
+          data-testid="mobile-menu-button"
+        >
+          <Menu className="w-5 h-5" />
+        </Button>
+
+        {/* Desktop sidebar toggle (only show when collapsed) */}
+        {sidebarCollapsed && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onToggleSidebar}
+            className="h-9 w-9 hidden md:flex text-[#475569] hover:bg-[#F1F5F9]"
+            data-testid="expand-sidebar-header-button"
+          >
+            <PanelLeft className="w-5 h-5" />
+          </Button>
+        )}
+
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-[#001E44] rounded-lg flex items-center justify-center">
             <GraduationCap className="w-5 h-5 text-white" />
