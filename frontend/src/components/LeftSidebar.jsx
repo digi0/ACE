@@ -97,7 +97,8 @@ export const LeftSidebar = ({
   refreshTrigger,
   onInsightAction,
   collapsed,
-  onToggleCollapse
+  onToggleCollapse,
+  isMobile = false
 }) => {
   const [profile, setProfile] = useState(null);
   const [intelligence, setIntelligence] = useState(null);
@@ -110,6 +111,8 @@ export const LeftSidebar = ({
   const [customizeOpen, setCustomizeOpen] = useState(false);
   const [tempSelectedTools, setTempSelectedTools] = useState(selectedTools);
   const [stubModal, setStubModal] = useState(null);
+
+  const testIdPrefix = isMobile ? 'mobile-' : 'desktop-';
 
   useEffect(() => {
     fetchData();
