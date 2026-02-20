@@ -36,6 +36,7 @@ Build a desktop-first web application called ACE for Penn State students only. A
 7. ✅ Risk classification layer (Low/Medium/High based on triggers)
 8. ✅ Updated AI system prompt with tone guidelines
 9. ✅ Admin interface for policy vault management (scaffolded)
+10. ✅ "Remember me" option (7 days default, 30 days if checked)
 
 ## What's Been Implemented (Feb 20, 2026)
 
