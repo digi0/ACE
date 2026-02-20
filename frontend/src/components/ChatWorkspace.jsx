@@ -88,8 +88,9 @@ export const ChatWorkspace = ({
     try {
       const response = await axios.post(`${API}/chat/send`, {
         chat_id: chatId || null,
-        message: messageText.trim(),
-        student_id: studentId
+        message: messageText.trim()
+      }, {
+        withCredentials: true
       });
 
       const assistantMessage = {
@@ -112,8 +113,8 @@ export const ChatWorkspace = ({
         content: 'I apologize, but I encountered an error. Please try again.',
         timestamp: new Date().toISOString(),
         structured_response: {
-          direct_answer: 'I apologize, but I encountered an error processing your request. Please try again.',
-          next_steps: ['Refresh the page', 'Try rephrasing your question'],
+          direct_answer: error.response?.data?.detail || 'I apologize, but I encountered an error processing your request. Please try again.',
+          next_steps: ['Try rephrasing your question', 'Contact your advisor at advising@psu.edu'],
           sources_used: [],
           risk_level: 'low',
           advisor_needed: false
