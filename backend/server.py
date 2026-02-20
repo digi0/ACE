@@ -264,7 +264,8 @@ async def login(data: UserLogin, request: Request, response: Response):
         "email": user_doc["email"],
         "name": user_doc["name"],
         "profile_complete": user_doc.get("profile_complete", False),
-        "is_admin": user_doc.get("is_admin", False)
+        "is_admin": user_doc.get("is_admin", False),
+        "session_token": session_token
     }
 
 @api_router.post("/auth/session")
