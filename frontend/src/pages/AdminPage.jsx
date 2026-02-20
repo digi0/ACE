@@ -66,8 +66,13 @@ export const AdminPage = () => {
   }, []);
 
   const checkAdminAccess = async () => {
+    if (!isAuthenticated()) {
+      navigate('/login');
+      return;
+    }
+    
     try {
-      const response = await axios.get(`${API}/auth/me`, { withCredentials: true });
+      const response = await api.get('/auth/me');
       if (!response.data.is_admin) {
         navigate('/assistant');
       }
@@ -78,7 +83,7 @@ export const AdminPage = () => {
 
   const fetchPolicies = async () => {
     try {
-      const response = await axios.get(`${API}/admin/policies`, { withCredentials: true });
+      const response = await api.get('/admin/policies');
       setPolicies(response.data);
     } catch (err) {
       setError('Failed to load policies');
