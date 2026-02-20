@@ -102,32 +102,11 @@ export const MainAssistant = () => {
         />
       )}
 
-      {/* Sidebar - Desktop: relative positioning, Mobile: fixed overlay */}
-      <div 
-        className={`
-          hidden md:block flex-shrink-0
-          ${sidebarCollapsed ? 'w-16' : 'w-64'}
-          transition-all duration-300 ease-in-out
-          h-full
-        `}
-      >
-        <LeftSidebar
-          onNewChat={handleNewChat}
-          onSelectChat={handleSelectChat}
-          currentChatId={currentChatId}
-          studentId={studentId}
-          refreshTrigger={refreshTrigger}
-          onInsightAction={handleInsightAction}
-          collapsed={sidebarCollapsed}
-          onToggleCollapse={toggleSidebar}
-        />
-      </div>
-
-      {/* Mobile Sidebar - Fixed overlay */}
+      {/* Mobile Sidebar - Fixed overlay (only on mobile) */}
       <div 
         className={`
           md:hidden fixed inset-y-0 left-0 z-50
-          w-64
+          w-72
           transform transition-transform duration-300 ease-in-out
           ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
@@ -141,11 +120,33 @@ export const MainAssistant = () => {
           onInsightAction={handleInsightAction}
           collapsed={false}
           onToggleCollapse={() => setMobileMenuOpen(false)}
+          isMobile={true}
+        />
+      </div>
+
+      {/* Desktop Sidebar - Static in flex layout */}
+      <div 
+        className={`
+          hidden md:flex flex-shrink-0
+          ${sidebarCollapsed ? 'w-16' : 'w-72'}
+          transition-all duration-300 ease-in-out
+        `}
+      >
+        <LeftSidebar
+          onNewChat={handleNewChat}
+          onSelectChat={handleSelectChat}
+          currentChatId={currentChatId}
+          studentId={studentId}
+          refreshTrigger={refreshTrigger}
+          onInsightAction={handleInsightAction}
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={toggleSidebar}
+          isMobile={false}
         />
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0 w-full">
+      <div className="flex-1 flex flex-col min-w-0">
         <ChatWorkspace
           chatId={currentChatId}
           studentId={studentId}
