@@ -116,12 +116,14 @@ class PolicyUpdate(BaseModel):
 
 async def get_current_user(request: Request) -> User:
     """Extract and validate user from session token"""
-    # Check cookie first, then Authorization header
-    session_token = request.cookies.get("session_token")
+    # Check Authorization header first, then cookie
+    session_token = None
+    auth_header = request.headers.get("Authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        session_token = auth_header.split(" ")[1]
+    
     if not session_token:
-        auth_header = request.headers.get("Authorization")
-        if auth_header and auth_header.startswith("Bearer "):
-            session_token = auth_header.split(" ")[1]
+        session_token = request.cookies.get("session_token")
     
     if not session_token:
         raise HTTPException(status_code=401, detail="Not authenticated")
