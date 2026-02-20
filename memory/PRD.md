@@ -7,78 +7,204 @@ Build a desktop-first web application called ACE for Penn State students only. A
 - **Primary**: Penn State undergraduate/graduate students seeking academic guidance
 - **Use Cases**: Course withdrawal questions, deadline inquiries, academic planning, policy clarification
 
-## Core Requirements (Static)
-1. ✅ Mocked Penn State SSO login
-2. ✅ Two-column desktop layout (320px left sidebar + fluid right workspace)
-3. ✅ AI-powered conversational assistant using OpenAI GPT-5.2
-4. ✅ Structured responses (direct answer, next steps, sources, risk indicator)
-5. ✅ Student profile display with mocked data
-6. ✅ Intelligence card with adaptive notifications
-7. ✅ Chat history persistence in MongoDB
-8. ✅ Quick-access conversation starters
-9. ✅ Policy vault with PSU academic policies
-10. ✅ Penn State branding (navy blue accents, Merriweather font)
+## Core Requirements
 
-## What's Been Implemented (Jan 31, 2026)
-- **Backend**: FastAPI with OpenAI GPT-5.2 integration via Emergent LLM key
-- **Frontend**: React with Tailwind CSS and Shadcn UI components
-- **Database**: MongoDB for chat session persistence
-- **AI Features**: 
-  - Structured JSON responses with policy citations
-  - Clarifying questions when intent unclear
-  - Risk assessment (low/medium/high)
-  - Advisor escalation recommendations
-- **Policy Vault**: 8 PSU policies (calendar, withdrawal, tuition, grading, etc.)
+### Phase 1 (Initial Build - Completed)
+1. ✅ Two-column desktop layout (320px left sidebar + fluid right workspace)
+2. ✅ AI-powered conversational assistant using OpenAI GPT-5.2
+3. ✅ Structured responses (direct answer, next steps, sources, risk indicator)
+4. ✅ Student profile display
+5. ✅ Intelligence card with adaptive notifications
+6. ✅ Chat history persistence in MongoDB
+7. ✅ Quick-access conversation starters
+8. ✅ Policy vault with PSU academic policies
+9. ✅ Penn State branding (navy blue accents)
+
+### Phase 2 (Dynamic Features - Completed)
+1. ✅ Dynamic Intelligence Card with context line, primary insight, action button
+2. ✅ Quick Access Panel with customizable tools (up to 3)
+3. ✅ Collapsible left sidebar with toggle button
+4. ✅ Mobile responsive layout
+
+### Phase 3 (Authentication & Core Logic - Completed)
+1. ✅ Email/password authentication with bcrypt hashing
+2. ✅ Google OAuth via Emergent-managed auth
+3. ✅ Bearer token authentication (localStorage + axios interceptors)
+4. ✅ Multi-step onboarding wizard (Campus/Major, Academic Standing, Additional Info)
+5. ✅ Profile completion check and route protection
+6. ✅ User profile context passed to AI in every conversation
+7. ✅ Risk classification layer (Low/Medium/High based on triggers)
+8. ✅ Updated AI system prompt with tone guidelines
+9. ✅ Admin interface for policy vault management (scaffolded)
+
+## What's Been Implemented (Feb 20, 2026)
+
+### Backend (FastAPI + MongoDB)
+- User authentication (email/password + Google OAuth)
+- Session management with Bearer tokens
+- User profile storage and onboarding
+- AI chat with GPT-5.2 via Emergent LLM key
+- Risk classification for AI responses
+- Policy vault with CRUD operations
+- Admin endpoints for policy management
+
+### Frontend (React + Tailwind CSS + Shadcn UI)
+- Login/Signup pages with form validation
+- Google OAuth callback handler
+- 3-step onboarding wizard
+- Main assistant with collapsible sidebar
+- Dynamic intelligence card
+- Quick access tools panel
+- Chat workspace with structured AI responses
+- Chat history management
+- Route protection and auth state management
 
 ## Architecture
 ```
 /app/
 ├── backend/
-│   ├── server.py          # FastAPI with AI chat endpoints
-│   ├── ace_vault.json     # Policy data
-│   └── .env               # EMERGENT_LLM_KEY
+│   ├── server.py          # FastAPI with all endpoints
+│   ├── ace_vault.json     # Policy data with modular entries
+│   ├── requirements.txt
+│   └── .env               # EMERGENT_LLM_KEY, MONGO_URL, CORS_ORIGINS
 └── frontend/
     ├── src/
+    │   ├── utils/
+    │   │   └── api.js     # Axios with Bearer token interceptors
     │   ├── pages/
     │   │   ├── LoginPage.jsx
-    │   │   └── MainAssistant.jsx
+    │   │   ├── SignupPage.jsx
+    │   │   ├── OnboardingPage.jsx
+    │   │   ├── AuthCallback.jsx
+    │   │   ├── MainAssistant.jsx
+    │   │   └── AdminPage.jsx
     │   └── components/
     │       ├── LeftSidebar.jsx
     │       ├── ChatWorkspace.jsx
     │       └── ACEResponse.jsx
-    └── .env
+    └── .env               # REACT_APP_BACKEND_URL
 ```
 
 ## API Endpoints
-- `GET /api/student/profile` - Mocked student data
+
+### Authentication
+- `POST /api/auth/signup` - Email/password signup
+- `POST /api/auth/login` - Email/password login
+- `POST /api/auth/session` - Google OAuth session exchange
+- `GET /api/auth/me` - Get current user (Bearer token)
+- `POST /api/auth/logout` - Logout user
+
+### User Profile
+- `GET /api/user/profile` - Get user profile
+- `POST /api/user/profile` - Update profile (onboarding)
+- `GET /api/user/profile-options` - Get options for profile fields
+
+### Intelligence & Chat
 - `GET /api/student/intelligence` - Adaptive status card
-- `GET /api/chats/{student_id}` - Chat history
+- `GET /api/chats` - Get user's chat sessions
+- `GET /api/chat/{chat_id}` - Get specific chat
 - `POST /api/chat/send` - Send message & get AI response
-- `GET /api/policies` - Policy vault data
+- `DELETE /api/chat/{chat_id}` - Delete chat session
+
+### Policies & Admin
+- `GET /api/policies` - Get all policies
+- `GET /api/admin/policies` - Admin: Get policies
+- `POST /api/admin/policies` - Admin: Add policy
+- `PUT /api/admin/policies/{vault_id}` - Admin: Update policy
+- `DELETE /api/admin/policies/{vault_id}` - Admin: Delete policy
+
+## Database Schema
+
+### users Collection
+```json
+{
+  "user_id": "user_xxx",
+  "email": "student@psu.edu",
+  "name": "John Doe",
+  "password_hash": "bcrypt_hash",
+  "picture": "url",
+  "profile_complete": true,
+  "profile": {
+    "campus": "University Park",
+    "major": "Computer Science",
+    "academic_level": "Junior (60-89 credits)",
+    "credit_load": "Full-time (12+ credits)",
+    "financial_aid_status": "Receiving aid",
+    "international_student": false,
+    "expected_graduation": "Spring 2026",
+    "current_semester": "Spring 2026"
+  },
+  "is_admin": false,
+  "auth_provider": "email|google",
+  "created_at": "ISO_DATE"
+}
+```
+
+### user_sessions Collection
+```json
+{
+  "user_id": "user_xxx",
+  "session_token": "session_xxx",
+  "expires_at": "ISO_DATE",
+  "created_at": "ISO_DATE"
+}
+```
+
+### chat_sessions Collection
+```json
+{
+  "id": "uuid",
+  "user_id": "user_xxx",
+  "title": "Chat title",
+  "messages": [
+    {
+      "role": "user|assistant",
+      "content": "message text",
+      "timestamp": "ISO_DATE",
+      "structured_response": {}
+    }
+  ],
+  "created_at": "ISO_DATE",
+  "updated_at": "ISO_DATE"
+}
+```
 
 ## Prioritized Backlog
 
-### P0 (Critical) - Completed
-- ✅ Core chat functionality
-- ✅ Structured AI responses
-- ✅ Policy citations
+### P0 (Critical) - Completed ✅
+- Core chat functionality
+- Authentication (email/password + Google OAuth)
+- Onboarding flow
+- User profile context in AI
+- Risk classification
 
 ### P1 (High Priority)
-- File upload support (+ button is stubbed)
+- File upload support for document analysis
+- Admin interface full implementation and testing
 - Real-time deadline calculations
 - Academic calendar integration
-- Profile settings modal
 
 ### P2 (Nice to Have)
-- Dark mode option
+- Profile settings modal
 - Export chat history
 - Voice input support
-- Multi-language support
+- Dark mode option
 - Push notifications for deadlines
+- Multi-language support
 
 ## Next Tasks
-1. Implement file upload for document analysis
-2. Add real Penn State SSO integration
-3. Create profile settings modal
-4. Add more sophisticated deadline tracking
+1. Implement file upload functionality in chat
+2. Complete admin interface testing
+3. Add "Profile & Memory" settings modal
+4. Connect Quick Access tools to external PSU links
 5. Implement conversation search
+
+## 3rd Party Integrations
+- **OpenAI GPT-5.2**: Text generation via Emergent LLM Key
+- **Emergent Google Auth**: Google OAuth authentication
+
+## Test Credentials
+```
+Email: test@psu.edu
+Password: testpass123
+```
