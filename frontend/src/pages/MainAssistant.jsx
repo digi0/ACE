@@ -121,12 +121,12 @@ export const MainAssistant = () => {
           onNewChat={handleNewChat}
           onSelectChat={handleSelectChat}
           currentChatId={currentChatId}
-          studentId={studentId}
           refreshTrigger={refreshTrigger}
           onInsightAction={handleInsightAction}
           collapsed={false}
           onToggleCollapse={() => setMobileMenuOpen(false)}
           isMobile={true}
+          user={user}
         />
       </div>
 
@@ -142,12 +142,12 @@ export const MainAssistant = () => {
           onNewChat={handleNewChat}
           onSelectChat={handleSelectChat}
           currentChatId={currentChatId}
-          studentId={studentId}
           refreshTrigger={refreshTrigger}
           onInsightAction={handleInsightAction}
           collapsed={sidebarCollapsed}
           onToggleCollapse={toggleSidebar}
           isMobile={false}
+          user={user}
         />
       </div>
 
