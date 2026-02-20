@@ -395,7 +395,7 @@ export const LeftSidebar = ({
         {profile ? (
           <div className="flex items-center gap-2.5" data-testid="profile-block">
             <Avatar className="h-9 w-9 border-2 border-[#96BEE6]/30">
-              <AvatarImage src="https://images.unsplash.com/photo-1745558858213-c1bb66fc8fde?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTJ8MHwxfHNlYXJjaHwyfHx1bml2ZXJzaXR5JTIwY2FtcHVzJTIwbGlicmFyeSUyMHN0dWRlbnRzfGVufDB8fHx8MTc2OTg2MzY5MHww&ixlib=rb-4.1.0&q=85&w=100" />
+              <AvatarImage src={profile.picture} />
               <AvatarFallback className="bg-[#001E44] text-white text-xs font-medium">
                 {profile.name?.split(' ').map(n => n[0]).join('')}
               </AvatarFallback>
@@ -404,18 +404,43 @@ export const LeftSidebar = ({
               <p className="font-medium text-[#0F172A] text-sm truncate" data-testid="student-name">
                 {profile.name}
               </p>
-              <p className="text-xs text-[#475569]" data-testid="student-id">
-                {profile.psu_id}
+              <p className="text-xs text-[#475569]" data-testid="student-email">
+                {profile.email}
               </p>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7 text-[#475569] hover:bg-[#F1F5F9]"
-              data-testid="settings-button"
-            >
-              <Settings className="w-3.5 h-3.5" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 text-[#475569] hover:bg-[#F1F5F9]"
+                  data-testid="settings-button"
+                >
+                  <Settings className="w-3.5 h-3.5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                {user?.is_admin && (
+                  <>
+                    <DropdownMenuItem 
+                      onClick={() => navigate('/admin')}
+                      className="cursor-pointer"
+                    >
+                      <Shield className="w-4 h-4 mr-2" />
+                      Admin Panel
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
+                <DropdownMenuItem 
+                  onClick={handleLogout}
+                  className="cursor-pointer text-red-600 focus:text-red-600"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         ) : (
           <div className="animate-pulse flex items-center gap-2.5">
