@@ -72,6 +72,7 @@ class UserSignup(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+    remember_me: bool = False
 
 class ProfileUpdate(BaseModel):
     campus: str
@@ -237,13 +238,15 @@ async def login(data: UserLogin, request: Request, response: Response):
     if not verify_password(data.password, user_doc["password_hash"]):
         raise HTTPException(status_code=401, detail="Invalid email or password")
     
-    # Create session
+    # Create session - 30 days if remember_me, otherwise 7 days
+    session_days = 30 if data.remember_me else 7
     session_token = f"session_{uuid.uuid4().hex}"
     session_doc = {
         "user_id": user_doc["user_id"],
         "session_token": session_token,
-        "expires_at": (datetime.now(timezone.utc) + timedelta(days=7)).isoformat(),
-        "created_at": datetime.now(timezone.utc).isoformat()
+        "expires_at": (datetime.now(timezone.utc) + timedelta(days=session_days)).isoformat(),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "remember_me": data.remember_me
     }
     await db.user_sessions.insert_one(session_doc)
     
@@ -256,7 +259,7 @@ async def login(data: UserLogin, request: Request, response: Response):
         secure=is_secure,
         samesite="lax" if not is_secure else "none",
         path="/",
-        max_age=7 * 24 * 60 * 60
+        max_age=session_days * 24 * 60 * 60
     )
     
     return {
