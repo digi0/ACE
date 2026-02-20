@@ -13,9 +13,7 @@ import {
   Menu,
   PanelLeft
 } from 'lucide-react';
-import axios from 'axios';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+import api from '../utils/api';
 
 const QUICK_STARTERS = [
   { icon: Target, text: "Help me plan this semester", color: "text-[#1E407C]" },
