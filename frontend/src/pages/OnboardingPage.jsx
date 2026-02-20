@@ -56,8 +56,13 @@ export const OnboardingPage = () => {
   }, []);
 
   const checkAuth = async () => {
+    if (!isAuthenticated()) {
+      navigate('/login');
+      return;
+    }
+    
     try {
-      const response = await axios.get(`${API}/auth/me`, { withCredentials: true });
+      const response = await api.get('/auth/me');
       if (response.data.profile_complete) {
         navigate('/assistant');
       }
@@ -68,7 +73,7 @@ export const OnboardingPage = () => {
 
   const fetchOptions = async () => {
     try {
-      const response = await axios.get(`${API}/user/profile-options`);
+      const response = await api.get('/user/profile-options');
       setOptions(response.data);
     } catch (err) {
       console.error('Failed to fetch options:', err);
