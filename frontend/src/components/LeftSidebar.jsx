@@ -45,9 +45,7 @@ import {
   LogOut,
   Shield
 } from 'lucide-react';
-import axios from 'axios';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+import api, { clearAuth } from '../utils/api';
 
 // Available tools for Quick Access
 const AVAILABLE_TOOLS = [
