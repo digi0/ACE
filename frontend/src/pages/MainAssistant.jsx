@@ -24,8 +24,13 @@ export const MainAssistant = () => {
   }, []);
 
   const fetchUser = async () => {
+    if (!isAuthenticated()) {
+      navigate('/login');
+      return;
+    }
+    
     try {
-      const response = await axios.get(`${API}/auth/me`, { withCredentials: true });
+      const response = await api.get('/auth/me');
       setUser(response.data);
       
       if (!response.data.profile_complete) {
