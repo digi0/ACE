@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
@@ -11,6 +12,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from './ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
 import {
   Tooltip,
   TooltipContent,
@@ -33,7 +41,9 @@ import {
   BookOpen,
   TrendingUp,
   PanelLeftClose,
-  PanelLeft
+  PanelLeft,
+  LogOut,
+  Shield
 } from 'lucide-react';
 import axios from 'axios';
 
