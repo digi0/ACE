@@ -68,32 +68,108 @@ class ACEAPITester:
 
     def test_root_endpoint(self):
         """Test root API endpoint"""
-        return self.run_test("Root API", "GET", "", 200)
+        return self.run_test("Root API", "GET", "", 200, use_session=False)
 
-    def test_student_profile(self):
-        """Test student profile endpoint"""
-        success, response = self.run_test("Student Profile", "GET", "student/profile", 200)
+    def test_signup(self):
+        """Test user signup"""
+        signup_data = {
+            "name": "Test User",
+            "email": self.test_email,
+            "password": self.test_password
+        }
+        
+        success, response = self.run_test("User Signup", "POST", "auth/signup", 200, signup_data)
         if success:
-            # Verify expected fields
-            expected_fields = ['id', 'psu_id', 'name', 'email', 'major']
+            expected_fields = ['user_id', 'email', 'name', 'profile_complete']
             missing_fields = [field for field in expected_fields if field not in response]
             if missing_fields:
-                print(f"⚠️  Missing fields in profile: {missing_fields}")
+                print(f"⚠️  Missing fields in signup response: {missing_fields}")
             else:
-                print(f"✅ Profile contains all expected fields")
-                print(f"   Student: {response.get('name')} ({response.get('psu_id')})")
+                print(f"✅ Signup response contains all expected fields")
+                print(f"   User: {response.get('name')} ({response.get('email')})")
+                self.user_data = response
+        return success, response
+
+    def test_login(self):
+        """Test user login"""
+        login_data = {
+            "email": self.test_email,
+            "password": self.test_password
+        }
+        
+        success, response = self.run_test("User Login", "POST", "auth/login", 200, login_data)
+        if success:
+            expected_fields = ['user_id', 'email', 'name', 'profile_complete']
+            missing_fields = [field for field in expected_fields if field not in response]
+            if missing_fields:
+                print(f"⚠️  Missing fields in login response: {missing_fields}")
+            else:
+                print(f"✅ Login response contains all expected fields")
+                print(f"   User: {response.get('name')} ({response.get('email')})")
+                self.user_data = response
+        return success, response
+
+    def test_get_me(self):
+        """Test get current user"""
+        success, response = self.run_test("Get Current User", "GET", "auth/me", 200)
+        if success:
+            expected_fields = ['user_id', 'email', 'name', 'profile_complete']
+            missing_fields = [field for field in expected_fields if field not in response]
+            if missing_fields:
+                print(f"⚠️  Missing fields in user response: {missing_fields}")
+            else:
+                print(f"✅ User response contains all expected fields")
+        return success, response
+
+    def test_profile_options(self):
+        """Test profile options endpoint"""
+        success, response = self.run_test("Profile Options", "GET", "user/profile-options", 200, use_session=False)
+        if success:
+            expected_fields = ['campuses', 'academic_levels', 'credit_loads', 'financial_aid_statuses']
+            missing_fields = [field for field in expected_fields if field not in response]
+            if missing_fields:
+                print(f"⚠️  Missing fields in profile options: {missing_fields}")
+            else:
+                print(f"✅ Profile options contains all expected fields")
+                print(f"   Campuses: {len(response.get('campuses', []))}")
+                print(f"   Academic levels: {len(response.get('academic_levels', []))}")
+        return success, response
+
+    def test_update_profile(self):
+        """Test profile update (onboarding)"""
+        profile_data = {
+            "campus": "University Park",
+            "major": "Computer Science",
+            "academic_level": "Junior (60-89 credits)",
+            "credit_load": "Full-time (12-18 credits)",
+            "financial_aid_status": "Receiving aid (grants/scholarships)",
+            "international_student": False,
+            "expected_graduation": "Spring 2026",
+            "current_semester": "Spring 2026"
+        }
+        
+        success, response = self.run_test("Update Profile", "POST", "user/profile", 200, profile_data)
+        if success:
+            expected_fields = ['message', 'profile_complete', 'profile']
+            missing_fields = [field for field in expected_fields if field not in response]
+            if missing_fields:
+                print(f"⚠️  Missing fields in profile update response: {missing_fields}")
+            else:
+                print(f"✅ Profile update response contains all expected fields")
+                print(f"   Profile complete: {response.get('profile_complete')}")
         return success, response
 
     def test_student_intelligence(self):
         """Test student intelligence endpoint"""
         success, response = self.run_test("Student Intelligence", "GET", "student/intelligence", 200)
         if success:
-            expected_fields = ['type', 'title', 'description', 'urgency']
+            expected_fields = ['context', 'insight', 'urgency']
             missing_fields = [field for field in expected_fields if field not in response]
             if missing_fields:
                 print(f"⚠️  Missing fields in intelligence: {missing_fields}")
             else:
                 print(f"✅ Intelligence contains all expected fields")
+                print(f"   Urgency: {response.get('urgency')}")
         return success, response
 
     def test_chat_send(self):
@@ -101,8 +177,7 @@ class ACEAPITester:
         test_message = "What are the withdrawal deadlines for this semester?"
         test_data = {
             "chat_id": None,
-            "message": test_message,
-            "student_id": "abc123456"
+            "message": test_message
         }
         
         success, response = self.run_test("Chat Send", "POST", "chat/send", 200, test_data)
@@ -130,24 +205,28 @@ class ACEAPITester:
         return success, response
 
     def test_get_chats(self):
-        """Test get chats for student"""
-        student_id = "abc123456"
-        return self.run_test("Get Chats", "GET", f"chats/{student_id}", 200)
+        """Test get chats for current user"""
+        return self.run_test("Get Chats", "GET", "chats", 200)
 
     def test_policies(self):
         """Test policies endpoint"""
-        success, response = self.run_test("Get Policies", "GET", "policies", 200)
+        success, response = self.run_test("Get Policies", "GET", "policies", 200, use_session=False)
         if success and isinstance(response, list):
             print(f"✅ Found {len(response)} policies")
             if len(response) > 0:
                 first_policy = response[0]
-                expected_fields = ['vault_id', 'title', 'category', 'content', 'link']
+                expected_fields = ['vault_id', 'title', 'category', 'summary', 'risk_category', 'source_link']
                 missing_fields = [field for field in expected_fields if field not in first_policy]
                 if missing_fields:
                     print(f"⚠️  Missing fields in policy: {missing_fields}")
                 else:
                     print(f"✅ Policy structure is correct")
+                    print(f"   First policy: {first_policy.get('title')} (Risk: {first_policy.get('risk_category')})")
         return success, response
+
+    def test_logout(self):
+        """Test user logout"""
+        return self.run_test("User Logout", "POST", "auth/logout", 200)
 
 def main():
     print("🚀 Starting ACE API Testing...")
