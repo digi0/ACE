@@ -139,6 +139,21 @@ export const LoginPage = () => {
                 </div>
               </div>
 
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="rememberMe"
+                  checked={formData.rememberMe}
+                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, rememberMe: checked }))}
+                  data-testid="remember-me-checkbox"
+                />
+                <Label 
+                  htmlFor="rememberMe" 
+                  className="text-sm text-[#475569] font-normal cursor-pointer"
+                >
+                  Remember me for 30 days
+                </Label>
+              </div>
+
               <Button
                 type="submit"
                 disabled={isLoading}
