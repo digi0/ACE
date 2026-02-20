@@ -93,13 +93,14 @@ export const LeftSidebar = ({
   onNewChat, 
   onSelectChat, 
   currentChatId, 
-  studentId,
   refreshTrigger,
   onInsightAction,
   collapsed,
   onToggleCollapse,
-  isMobile = false
+  isMobile = false,
+  user
 }) => {
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [intelligence, setIntelligence] = useState(null);
   const [chatSessions, setChatSessions] = useState([]);
