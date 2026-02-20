@@ -84,11 +84,9 @@ export const ChatWorkspace = ({
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`${API}/chat/send`, {
+      const response = await api.post('/chat/send', {
         chat_id: chatId || null,
         message: messageText.trim()
-      }, {
-        withCredentials: true
       });
 
       const assistantMessage = {
