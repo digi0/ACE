@@ -137,14 +137,10 @@ export const AdminPage = () => {
 
     try {
       if (editingPolicy) {
-        await axios.put(`${API}/admin/policies/${editingPolicy.vault_id}`, payload, { 
-          withCredentials: true 
-        });
+        await api.put(`/admin/policies/${editingPolicy.vault_id}`, payload);
         setSuccess('Policy updated successfully');
       } else {
-        await axios.post(`${API}/admin/policies`, payload, { 
-          withCredentials: true 
-        });
+        await api.post('/admin/policies', payload);
         setSuccess('Policy added successfully');
       }
       
@@ -159,7 +155,7 @@ export const AdminPage = () => {
     if (!window.confirm('Are you sure you want to delete this policy?')) return;
 
     try {
-      await axios.delete(`${API}/admin/policies/${vaultId}`, { withCredentials: true });
+      await api.delete(`/admin/policies/${vaultId}`);
       setSuccess('Policy deleted');
       fetchPolicies();
     } catch (err) {
