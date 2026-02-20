@@ -1,0 +1,17 @@
+{$DOMAIN} {
+  encode gzip
+
+  # Basic auth so only you can access the app.
+  basicauth {
+    {$BASIC_AUTH_USER} {$BASIC_AUTH_HASH}
+  }
+
+  @api path /api/*
+  handle @api {
+    reverse_proxy backend:8000
+  }
+
+  handle {
+    reverse_proxy frontend:80
+  }
+}
