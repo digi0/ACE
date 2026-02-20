@@ -164,7 +164,7 @@ export const LeftSidebar = ({
   const handleDeleteChat = async (e, chatId) => {
     e.stopPropagation();
     try {
-      await axios.delete(`${API}/chat/${chatId}`);
+      await axios.delete(`${API}/chat/${chatId}`, { withCredentials: true });
       setChatSessions(prev => prev.filter(c => c.id !== chatId));
       if (currentChatId === chatId) {
         onNewChat();
