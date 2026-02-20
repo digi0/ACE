@@ -234,14 +234,19 @@ def main():
     
     tester = ACEAPITester()
     
-    # Run all tests
+    # Run all tests in order (authentication flow first)
     tests = [
         tester.test_root_endpoint,
-        tester.test_student_profile,
+        tester.test_policies,  # Public endpoint
+        tester.test_profile_options,  # Public endpoint
+        tester.test_signup,
+        tester.test_login,
+        tester.test_get_me,
+        tester.test_update_profile,
         tester.test_student_intelligence,
-        tester.test_policies,
         tester.test_get_chats,
         tester.test_chat_send,  # This one might take longer due to AI processing
+        tester.test_logout,
     ]
     
     for test in tests:
