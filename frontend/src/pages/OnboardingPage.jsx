@@ -127,7 +127,7 @@ export const OnboardingPage = () => {
     setError('');
 
     try {
-      await axios.post(`${API}/user/profile`, formData, { withCredentials: true });
+      await api.post('/user/profile', formData);
       navigate('/assistant');
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to save profile. Please try again.');
