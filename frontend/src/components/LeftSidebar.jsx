@@ -206,7 +206,7 @@ export const LeftSidebar = ({
       <TooltipProvider delayDuration={100}>
         <aside 
           className="w-16 h-screen bg-white border-r border-[#E2E8F0] flex flex-col items-center py-3"
-          data-testid="left-sidebar-collapsed"
+          data-testid={`${testIdPrefix}sidebar-collapsed`}
         >
           {/* Expand button */}
           <Tooltip>
@@ -216,7 +216,7 @@ export const LeftSidebar = ({
                 size="icon"
                 onClick={onToggleCollapse}
                 className="h-9 w-9 mb-3 text-[#475569] hover:bg-[#F1F5F9]"
-                data-testid="expand-sidebar-button"
+                data-testid={`${testIdPrefix}expand-sidebar-button`}
               >
                 <PanelLeft className="w-5 h-5" />
               </Button>
@@ -246,7 +246,7 @@ export const LeftSidebar = ({
                 onClick={onNewChat}
                 size="icon"
                 className="h-9 w-9 bg-[#001E44] hover:bg-[#1E407C] text-white mb-4"
-                data-testid="new-chat-button-collapsed"
+                data-testid={`${testIdPrefix}new-chat-button-collapsed`}
               >
                 <Plus className="w-4 h-4" />
               </Button>
@@ -266,7 +266,7 @@ export const LeftSidebar = ({
                       size="icon"
                       onClick={() => handleToolClick(tool)}
                       className="h-9 w-9 text-[#475569] hover:bg-[#F1F5F9]"
-                      data-testid={`quick-tool-collapsed-${tool.id}`}
+                      data-testid={`${testIdPrefix}quick-tool-collapsed-${tool.id}`}
                     >
                       <IconComponent className="w-4 h-4" />
                     </Button>
@@ -295,7 +295,7 @@ export const LeftSidebar = ({
                           ? 'bg-[#96BEE6]/20 text-[#001E44]' 
                           : 'text-[#475569] hover:bg-[#F1F5F9]'
                       }`}
-                      data-testid={`chat-collapsed-${session.id}`}
+                      data-testid={`${testIdPrefix}chat-collapsed-${session.id}`}
                     >
                       <MessageSquare className="w-4 h-4" />
                     </Button>
