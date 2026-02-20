@@ -204,13 +204,14 @@ async def signup(data: UserSignup, response: Response):
     }
     await db.user_sessions.insert_one(session_doc)
     
-    # Set cookie
+    # Set cookie - use secure settings for production URLs
+    is_secure = "localhost" not in str(request.url) and "127.0.0.1" not in str(request.url)
     response.set_cookie(
         key="session_token",
         value=session_token,
         httponly=True,
-        secure=True,
-        samesite="none",
+        secure=is_secure,
+        samesite="lax" if not is_secure else "none",
         path="/",
         max_age=7 * 24 * 60 * 60
     )
