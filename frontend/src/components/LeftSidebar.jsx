@@ -348,7 +348,7 @@ export const LeftSidebar = ({
   return (
     <aside 
       className="w-full h-screen bg-white border-r border-[#E2E8F0] flex flex-col"
-      data-testid="left-sidebar"
+      data-testid={`${testIdPrefix}sidebar`}
     >
       {/* Header with collapse button */}
       <div className="p-3 border-b border-[#E2E8F0] flex items-center justify-between">
@@ -363,9 +363,9 @@ export const LeftSidebar = ({
           size="icon"
           onClick={onToggleCollapse}
           className="h-8 w-8 text-[#475569] hover:bg-[#F1F5F9]"
-          data-testid="collapse-sidebar-button"
+          data-testid={`${testIdPrefix}collapse-sidebar-button`}
         >
-          <PanelLeftClose className="w-4 h-4" />
+          {isMobile ? <ChevronLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
         </Button>
       </div>
 
