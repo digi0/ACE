@@ -308,6 +308,25 @@ Then rebuild from `deploy/`:
 docker compose --env-file .env.private -f docker-compose.private.yml up -d --build
 ```
 
+### I already have `frontend/Dockerfile` (for example: `-rw-r--r-- ... frontend/Dockerfile`)
+Great. That means frontend Docker build config exists.
+
+Run this next from repo root:
+
+```bash
+ls -la frontend/nginx.conf
+```
+
+- If it exists, start/rebuild the stack:
+
+  ```bash
+  cd deploy
+  docker compose --env-file .env.private -f docker-compose.private.yml up -d --build
+  docker compose --env-file .env.private -f docker-compose.private.yml ps
+  ```
+
+- If it is missing, create it with the `frontend/nginx.conf` block above, then run the same compose commands.
+
 This repo's compose file now pins explicit Dockerfile paths (`backend/Dockerfile`, `frontend/Dockerfile`) so the build is less sensitive to path confusion.
 
 ### No HTTPS certificate
