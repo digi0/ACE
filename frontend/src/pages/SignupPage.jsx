@@ -6,9 +6,7 @@ import { Label } from '../components/ui/label';
 import { Card, CardContent } from '../components/ui/card';
 import { Separator } from '../components/ui/separator';
 import { GraduationCap, Mail, Lock, User, AlertCircle } from 'lucide-react';
-import axios from 'axios';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+import api, { setAuth } from '../utils/api';
 
 export const SignupPage = () => {
   const navigate = useNavigate();
@@ -46,13 +44,14 @@ export const SignupPage = () => {
     setError('');
 
     try {
-      await axios.post(`${API}/auth/signup`, {
+      const response = await api.post('/auth/signup', {
         name: formData.name,
         email: formData.email,
         password: formData.password
-      }, {
-        withCredentials: true
       });
+      
+      const { session_token, ...user } = response.data;
+      setAuth(session_token, user);
       
       // New users always go to onboarding
       navigate('/onboarding');
@@ -64,7 +63,6 @@ export const SignupPage = () => {
   };
 
   const handleGoogleSignup = () => {
-    // REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
     const redirectUrl = window.location.origin + '/auth/callback';
     window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
   };
