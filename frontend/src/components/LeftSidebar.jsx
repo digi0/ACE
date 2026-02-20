@@ -135,9 +135,9 @@ export const LeftSidebar = ({
     setIsLoading(true);
     try {
       const [profileRes, intelligenceRes, chatsRes] = await Promise.all([
-        axios.get(`${API}/user/profile`, { withCredentials: true }),
-        axios.get(`${API}/student/intelligence`, { withCredentials: true }),
-        axios.get(`${API}/chats`, { withCredentials: true })
+        api.get('/user/profile'),
+        api.get('/student/intelligence'),
+        api.get('/chats')
       ]);
       setProfile(profileRes.data);
       setIntelligence(intelligenceRes.data);
@@ -151,12 +151,12 @@ export const LeftSidebar = ({
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${API}/auth/logout`, {}, { withCredentials: true });
-      navigate('/login');
+      await api.post('/auth/logout');
     } catch (error) {
       console.error('Logout error:', error);
-      navigate('/login');
     }
+    clearAuth();
+    navigate('/login');
   };
 
   const handleDeleteChat = async (e, chatId) => {
