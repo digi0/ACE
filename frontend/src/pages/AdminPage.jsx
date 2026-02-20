@@ -32,9 +32,7 @@ import {
   ExternalLink,
   Calendar
 } from 'lucide-react';
-import axios from 'axios';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+import api, { isAuthenticated } from '../utils/api';
 
 const RISK_CATEGORIES = ['low', 'medium', 'high'];
 const POLICY_CATEGORIES = [
