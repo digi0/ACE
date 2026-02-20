@@ -19,18 +19,24 @@ export const MainAssistant = () => {
     return saved === 'true';
   });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  // Get student ID from localStorage (set during mocked login)
-  const studentId = localStorage.getItem('ace_student_id') || 'abc123456';
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Check if authenticated
-    const isAuthenticated = localStorage.getItem('ace_authenticated');
-    if (!isAuthenticated) {
-      navigate('/');
-      return;
+    fetchUser();
+  }, []);
+
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get(`${API}/auth/me`, { withCredentials: true });
+      setUser(response.data);
+      
+      if (!response.data.profile_complete) {
+        navigate('/onboarding');
+      }
+    } catch (err) {
+      navigate('/login');
     }
-  }, [navigate]);
+  };
 
   useEffect(() => {
     localStorage.setItem('ace_sidebar_collapsed', sidebarCollapsed.toString());
