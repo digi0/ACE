@@ -891,10 +891,20 @@ async def root():
 app.include_router(api_router)
 app.include_router(admin_router)
 
+# Get allowed origins - handle wildcard for credentials
+cors_origins = os.environ.get('CORS_ORIGINS', '*')
+if cors_origins == '*':
+    # For development, allow all origins but handle preflight manually
+    allowed_origins = ["*"]
+    allow_credentials = False
+else:
+    allowed_origins = cors_origins.split(',')
+    allow_credentials = True
+
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_credentials=allow_credentials,
+    allow_origins=allowed_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
