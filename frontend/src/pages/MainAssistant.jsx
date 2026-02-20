@@ -4,9 +4,7 @@ import { LeftSidebar } from '../components/LeftSidebar';
 import { ChatWorkspace } from '../components/ChatWorkspace';
 import { Button } from '../components/ui/button';
 import { PanelLeftClose, PanelLeft } from 'lucide-react';
-import axios from 'axios';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+import api, { isAuthenticated } from '../utils/api';
 
 export const MainAssistant = () => {
   const navigate = useNavigate();
