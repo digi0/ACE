@@ -171,7 +171,7 @@ def verify_password(password: str, hashed: str) -> bool:
 # ==================== AUTH ROUTES ====================
 
 @api_router.post("/auth/signup")
-async def signup(data: UserSignup, response: Response):
+async def signup(data: UserSignup, request: Request, response: Response):
     """Email/password signup"""
     # Check if user exists
     existing = await db.users.find_one({"email": data.email}, {"_id": 0})
