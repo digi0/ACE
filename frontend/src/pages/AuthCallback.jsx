@@ -1,8 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+import api, { setAuth } from '../utils/api';
 
 export const AuthCallback = () => {
   const navigate = useNavigate();
@@ -10,7 +8,6 @@ export const AuthCallback = () => {
   const hasProcessed = useRef(false);
 
   useEffect(() => {
-    // Prevent double processing in StrictMode
     if (hasProcessed.current) return;
     hasProcessed.current = true;
 
@@ -28,13 +25,12 @@ export const AuthCallback = () => {
         }
 
         // Exchange session_id for session token
-        const response = await axios.post(`${API}/auth/session`, {
+        const response = await api.post('/auth/session', {
           session_id: sessionId
-        }, {
-          withCredentials: true
         });
 
-        const { profile_complete } = response.data;
+        const { session_token, profile_complete, ...user } = response.data;
+        setAuth(session_token, user);
 
         // Clear URL fragment and navigate
         window.history.replaceState({}, document.title, window.location.pathname);
