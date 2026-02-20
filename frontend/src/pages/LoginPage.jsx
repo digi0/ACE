@@ -5,10 +5,8 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent } from '../components/ui/card';
 import { Separator } from '../components/ui/separator';
-import { GraduationCap, Mail, Lock, User, AlertCircle } from 'lucide-react';
-import axios from 'axios';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+import { GraduationCap, Mail, Lock, AlertCircle } from 'lucide-react';
+import api, { setAuth } from '../utils/api';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -33,11 +31,10 @@ export const LoginPage = () => {
     setError('');
 
     try {
-      const response = await axios.post(`${API}/auth/login`, formData, {
-        withCredentials: true
-      });
+      const response = await api.post('/auth/login', formData);
+      const { session_token, profile_complete, ...user } = response.data;
       
-      const { profile_complete } = response.data;
+      setAuth(session_token, user);
       
       if (profile_complete) {
         navigate('/assistant');
@@ -52,7 +49,6 @@ export const LoginPage = () => {
   };
 
   const handleGoogleLogin = () => {
-    // REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
     const redirectUrl = window.location.origin + '/auth/callback';
     window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
   };
