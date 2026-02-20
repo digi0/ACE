@@ -5,6 +5,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent } from '../components/ui/card';
 import { Separator } from '../components/ui/separator';
+import { Checkbox } from '../components/ui/checkbox';
 import { GraduationCap, Mail, Lock, AlertCircle } from 'lucide-react';
 import api, { setAuth } from '../utils/api';
 
@@ -14,7 +15,8 @@ export const LoginPage = () => {
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    rememberMe: false
   });
 
   const handleChange = (e) => {
@@ -31,7 +33,11 @@ export const LoginPage = () => {
     setError('');
 
     try {
-      const response = await api.post('/auth/login', formData);
+      const response = await api.post('/auth/login', {
+        email: formData.email,
+        password: formData.password,
+        remember_me: formData.rememberMe
+      });
       const { session_token, profile_complete, ...user } = response.data;
       
       setAuth(session_token, user);
