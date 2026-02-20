@@ -102,12 +102,11 @@ export const MainAssistant = () => {
         />
       )}
 
-      {/* Sidebar - responsive */}
+      {/* Sidebar - Desktop: relative positioning, Mobile: fixed overlay */}
       <div 
         className={`
-          ${sidebarCollapsed ? 'w-0 md:w-16' : 'w-64 md:w-72'} 
-          ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-          fixed md:relative z-50 md:z-auto
+          hidden md:block flex-shrink-0
+          ${sidebarCollapsed ? 'w-16' : 'w-64'}
           transition-all duration-300 ease-in-out
           h-full
         `}
@@ -124,8 +123,29 @@ export const MainAssistant = () => {
         />
       </div>
 
+      {/* Mobile Sidebar - Fixed overlay */}
+      <div 
+        className={`
+          md:hidden fixed inset-y-0 left-0 z-50
+          w-64
+          transform transition-transform duration-300 ease-in-out
+          ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}
+      >
+        <LeftSidebar
+          onNewChat={handleNewChat}
+          onSelectChat={handleSelectChat}
+          currentChatId={currentChatId}
+          studentId={studentId}
+          refreshTrigger={refreshTrigger}
+          onInsightAction={handleInsightAction}
+          collapsed={false}
+          onToggleCollapse={() => setMobileMenuOpen(false)}
+        />
+      </div>
+
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 w-full">
         <ChatWorkspace
           chatId={currentChatId}
           studentId={studentId}
