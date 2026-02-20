@@ -8,28 +8,22 @@ import { AuthCallback } from "./pages/AuthCallback";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import { MainAssistant } from "./pages/MainAssistant";
 import { AdminPage } from "./pages/AdminPage";
-import axios from 'axios';
+import api, { isAuthenticated, getStoredUser } from './utils/api';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
-
-// Protected route wrapper - verifies auth server-side
+// Protected route wrapper - verifies auth with server
 const ProtectedRoute = ({ children, requireProfile = true }) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [isAuthenticated, setIsAuthenticated] = useState(location.state?.user ? true : null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [authState, setAuthState] = useState({ loading: true, valid: false });
 
   useEffect(() => {
-    // Skip if user data passed from AuthCallback
-    if (location.state?.user) {
-      setIsAuthenticated(true);
-      setIsLoading(false);
-      return;
-    }
-
     const checkAuth = async () => {
+      if (!isAuthenticated()) {
+        navigate('/login', { replace: true });
+        return;
+      }
+
       try {
-        const response = await axios.get(`${API}/auth/me`, { withCredentials: true });
+        const response = await api.get('/auth/me');
         const { profile_complete } = response.data;
         
         if (requireProfile && !profile_complete) {
@@ -37,19 +31,16 @@ const ProtectedRoute = ({ children, requireProfile = true }) => {
           return;
         }
         
-        setIsAuthenticated(true);
+        setAuthState({ loading: false, valid: true });
       } catch (error) {
-        setIsAuthenticated(false);
         navigate('/login', { replace: true });
-      } finally {
-        setIsLoading(false);
       }
     };
 
     checkAuth();
-  }, [navigate, location.state, requireProfile]);
+  }, [navigate, requireProfile]);
 
-  if (isLoading || isAuthenticated === null) {
+  if (authState.loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F4F6F8]">
         <div className="w-10 h-10 border-4 border-[#001E44] border-t-transparent rounded-full animate-spin" />
@@ -57,7 +48,7 @@ const ProtectedRoute = ({ children, requireProfile = true }) => {
     );
   }
 
-  if (!isAuthenticated) {
+  if (!authState.valid) {
     return null;
   }
 
@@ -71,8 +62,13 @@ const PublicRoute = ({ children }) => {
 
   useEffect(() => {
     const checkAuth = async () => {
+      if (!isAuthenticated()) {
+        setChecked(true);
+        return;
+      }
+
       try {
-        const response = await axios.get(`${API}/auth/me`, { withCredentials: true });
+        const response = await api.get('/auth/me');
         if (response.data.profile_complete) {
           navigate('/assistant', { replace: true });
         } else {
@@ -102,7 +98,6 @@ function AppRouter() {
   const location = useLocation();
 
   // Check URL fragment for session_id (OAuth callback)
-  // This must happen synchronously during render, not in useEffect
   if (location.hash?.includes('session_id=')) {
     return <AuthCallback />;
   }
