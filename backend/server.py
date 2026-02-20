@@ -222,7 +222,8 @@ async def signup(data: UserSignup, request: Request, response: Response):
         "user_id": user_id,
         "email": data.email,
         "name": data.name,
-        "profile_complete": False
+        "profile_complete": False,
+        "session_token": session_token
     }
 
 @api_router.post("/auth/login")
