@@ -1,16 +1,21 @@
 import requests
 import sys
 import json
+import uuid
 from datetime import datetime
 
 class ACEAPITester:
     def __init__(self, base_url="https://ace-advisor.preview.emergentagent.com/api"):
         self.base_url = base_url
+        self.session = requests.Session()
         self.tests_run = 0
         self.tests_passed = 0
         self.failed_tests = []
+        self.user_data = None
+        self.test_email = f"test_{uuid.uuid4().hex[:8]}@psu.edu"
+        self.test_password = "TestPass123!"
 
-    def run_test(self, name, method, endpoint, expected_status, data=None, headers=None):
+    def run_test(self, name, method, endpoint, expected_status, data=None, headers=None, use_session=True):
         """Run a single API test"""
         url = f"{self.base_url}/{endpoint}"
         if headers is None:
@@ -21,12 +26,16 @@ class ACEAPITester:
         print(f"   URL: {url}")
         
         try:
+            client = self.session if use_session else requests
+            
             if method == 'GET':
-                response = requests.get(url, headers=headers, timeout=30)
+                response = client.get(url, headers=headers, timeout=30)
             elif method == 'POST':
-                response = requests.post(url, json=data, headers=headers, timeout=30)
+                response = client.post(url, json=data, headers=headers, timeout=30)
             elif method == 'DELETE':
-                response = requests.delete(url, headers=headers, timeout=30)
+                response = client.delete(url, headers=headers, timeout=30)
+            elif method == 'PUT':
+                response = client.put(url, json=data, headers=headers, timeout=30)
 
             success = response.status_code == expected_status
             if success:
