@@ -3,9 +3,13 @@
     {
       "vault_id": "PSU-CAL-001",
       "title": "Academic Calendar - Spring 2026",
+      "summary": "Key dates for Spring 2026 semester including add/drop deadlines, withdrawal deadline, spring break, finals, and commencement.",
       "category": "academic_calendar",
+      "tags": ["deadlines", "calendar", "semester", "registration"],
+      "risk_category": "medium",
       "content": "Spring 2026 semester begins January 12, 2026. Last day to add courses: January 23, 2026. Last day to drop without 'W' grade: February 7, 2026. Spring break: March 7-15, 2026. Last day to withdraw from courses: April 3, 2026. Final exams: May 4-8, 2026. Commencement: May 9, 2026.",
-      "link": "https://registrar.psu.edu/academic-calendars/",
+      "source_link": "https://registrar.psu.edu/academic-calendars/",
+      "last_reviewed": "2025-12-15",
       "key_dates": {
         "semester_start": "2026-01-12",
         "add_deadline": "2026-01-23",
@@ -21,9 +25,13 @@
     {
       "vault_id": "PSU-WDR-001",
       "title": "Course Withdrawal Policy",
+      "summary": "Guidelines for withdrawing from courses, including deadlines, grade implications, and approval requirements after the deadline.",
       "category": "withdrawal",
+      "tags": ["withdrawal", "grades", "transcript", "deadlines"],
+      "risk_category": "high",
       "content": "Students may withdraw from courses until the withdrawal deadline (typically 10 weeks into the semester). A 'W' grade will appear on the transcript but does not affect GPA. After the deadline, withdrawals require approval from the dean's office and may result in a 'WF' (withdrawn failing) grade. Students considering withdrawal should consult with their academic advisor and financial aid office to understand implications.",
-      "link": "https://registrar.psu.edu/withdrawal/",
+      "source_link": "https://registrar.psu.edu/withdrawal/",
+      "last_reviewed": "2025-12-15",
       "implications": {
         "gpa_impact": "No impact if withdrawn before deadline",
         "financial_aid": "May affect aid if dropping below full-time",
@@ -33,9 +41,13 @@
     {
       "vault_id": "PSU-TUI-001",
       "title": "Tuition Refund Schedule",
+      "summary": "Percentage of tuition refund based on withdrawal timing. Refunds decrease progressively through the first five weeks.",
       "category": "tuition",
+      "tags": ["tuition", "refund", "financial", "withdrawal"],
+      "risk_category": "high",
       "content": "Tuition refunds are based on the date of official withdrawal: Week 1: 100% refund. Week 2: 90% refund. Week 3: 75% refund. Week 4: 50% refund. Week 5: 25% refund. After Week 5: No refund. Room and board refunds follow a separate schedule. Students must officially withdraw through LionPATH to be eligible for refunds.",
-      "link": "https://bursar.psu.edu/tuition-and-fees/refund-schedule",
+      "source_link": "https://bursar.psu.edu/tuition-and-fees/refund-schedule",
+      "last_reviewed": "2025-12-15",
       "schedule": {
         "week_1": "100%",
         "week_2": "90%",
@@ -48,9 +60,13 @@
     {
       "vault_id": "PSU-GRD-001",
       "title": "Grading Policy",
+      "summary": "Penn State grading scale, late drop options, pass/fail elections, and grade appeal procedures.",
       "category": "grades",
+      "tags": ["grades", "GPA", "transcript", "late-drop"],
+      "risk_category": "medium",
       "content": "Penn State uses a 4.0 grading scale. A=4.0, A-=3.67, B+=3.33, B=3.0, B-=2.67, C+=2.33, C=2.0, D=1.0, F=0.0. Students may elect late drop (LD) for one course during their undergraduate career. Pass/Fail option available for elective courses only with advisor approval. Grade appeals must be submitted within one semester of receiving the grade.",
-      "link": "https://registrar.psu.edu/grades/",
+      "source_link": "https://registrar.psu.edu/grades/",
+      "last_reviewed": "2025-12-15",
       "scale": {
         "A": 4.0, "A-": 3.67, "B+": 3.33, "B": 3.0, "B-": 2.67,
         "C+": 2.33, "C": 2.0, "D": 1.0, "F": 0.0
@@ -59,9 +75,13 @@
     {
       "vault_id": "PSU-ADV-001",
       "title": "Academic Advising Services",
+      "summary": "Information about academic advisors, scheduling appointments, and advising requirements for students on probation.",
       "category": "advising",
+      "tags": ["advising", "advisor", "appointment", "support"],
+      "risk_category": "low",
       "content": "All students are assigned an academic advisor based on their major. Advising appointments can be scheduled through Starfish or by contacting your college's advising center. Students on academic probation must meet with advisors each semester. Pre-professional advising is available for law, medical, and graduate school planning.",
-      "link": "https://advising.psu.edu/",
+      "source_link": "https://advising.psu.edu/",
+      "last_reviewed": "2025-12-15",
       "contact": {
         "general": "advising@psu.edu",
         "scheduling": "starfish.psu.edu"
@@ -69,10 +89,14 @@
     },
     {
       "vault_id": "PSU-PRO-001",
-      "title": "Academic Probation & Dismissal",
+      "title": "Academic Probation and Dismissal",
+      "summary": "Academic standing thresholds, probation requirements, dismissal criteria, and reinstatement procedures.",
       "category": "academic_standing",
+      "tags": ["probation", "dismissal", "academic-standing", "GPA", "warning"],
+      "risk_category": "high",
       "content": "Students with cumulative GPA below 2.0 are placed on academic probation. While on probation, students must meet with their advisor and may have enrollment restrictions. Students who fail to achieve a 2.0 semester GPA while on probation may face academic dismissal. Dismissed students may appeal or apply for re-enrollment after one year.",
-      "link": "https://registrar.psu.edu/academic-standing/",
+      "source_link": "https://registrar.psu.edu/academic-standing/",
+      "last_reviewed": "2025-12-15",
       "thresholds": {
         "probation": "GPA below 2.0",
         "dismissal": "Failure to improve while on probation",
@@ -82,36 +106,142 @@
     {
       "vault_id": "PSU-REG-001",
       "title": "Course Registration",
+      "summary": "Registration priority by class standing, hold requirements, prerequisite enforcement, and overload requests.",
       "category": "registration",
+      "tags": ["registration", "enrollment", "courses", "schedule"],
+      "risk_category": "low",
       "content": "Registration opens based on class standing and credits earned. Seniors register first, followed by juniors, sophomores, and freshmen. Students must clear any holds before registering. Prerequisites are enforced automatically. Overload requests (more than 19 credits) require advisor approval.",
-      "link": "https://registrar.psu.edu/registration/",
+      "source_link": "https://registrar.psu.edu/registration/",
+      "last_reviewed": "2025-12-15",
       "priority": ["Seniors", "Juniors", "Sophomores", "Freshmen"]
     },
     {
       "vault_id": "PSU-FIN-001",
-      "title": "Financial Aid Satisfactory Progress",
+      "title": "Financial Aid Satisfactory Academic Progress",
+      "summary": "Requirements for maintaining financial aid eligibility including completion rate, GPA, and maximum timeframe.",
       "category": "financial_aid",
+      "tags": ["financial-aid", "SAP", "eligibility", "credits"],
+      "risk_category": "high",
       "content": "To maintain financial aid eligibility, students must: Complete 67% of attempted credits, maintain cumulative GPA of 2.0, and complete degree within 150% of published credit requirements. Withdrawals and repeated courses affect these calculations. Students not meeting SAP may appeal or create an academic plan.",
-      "link": "https://studentaid.psu.edu/sap/",
+      "source_link": "https://studentaid.psu.edu/sap/",
+      "last_reviewed": "2025-12-15",
       "requirements": {
         "completion_rate": "67%",
         "minimum_gpa": "2.0",
         "maximum_timeframe": "150% of degree credits"
       }
+    },
+    {
+      "vault_id": "PSU-INT-001",
+      "title": "International Student Enrollment Requirements",
+      "summary": "F-1 visa enrollment requirements, reduced course load procedures, and OPT/CPT regulations.",
+      "category": "international",
+      "tags": ["international", "F-1", "visa", "enrollment", "OPT", "CPT"],
+      "risk_category": "high",
+      "content": "F-1 students must maintain full-time enrollment (12+ credits undergraduate, 9+ credits graduate) each fall and spring semester. Reduced course load requires prior approval from Global Programs. Dropping below full-time without authorization may result in visa status violation. Work authorization (CPT/OPT) has specific eligibility requirements and application timelines.",
+      "source_link": "https://global.psu.edu/category/immigration",
+      "last_reviewed": "2025-12-15",
+      "requirements": {
+        "undergraduate_minimum": "12 credits",
+        "graduate_minimum": "9 credits",
+        "summer_requirement": "Optional unless final semester"
+      }
+    },
+    {
+      "vault_id": "PSU-DEG-001",
+      "title": "Degree Audit and Graduation Requirements",
+      "summary": "How to read degree audit, graduation application deadlines, and commencement eligibility.",
+      "category": "graduation",
+      "tags": ["graduation", "degree-audit", "requirements", "commencement"],
+      "risk_category": "medium",
+      "content": "Degree audit in LionPATH shows completed and remaining requirements. Students must apply for graduation by the deadline (typically 2 months before commencement). All requirements including grades must be finalized before degree conferral. Students may participate in commencement if within 15 credits of completion with advisor approval.",
+      "source_link": "https://registrar.psu.edu/graduation/",
+      "last_reviewed": "2025-12-15",
+      "deadlines": {
+        "spring_application": "February 1",
+        "fall_application": "September 1",
+        "summer_application": "June 1"
+      }
+    },
+    {
+      "vault_id": "PSU-LOA-001",
+      "title": "Leave of Absence Policy",
+      "summary": "Procedures for taking a leave of absence, duration limits, and re-enrollment requirements.",
+      "category": "enrollment",
+      "tags": ["leave", "absence", "enrollment", "return"],
+      "risk_category": "medium",
+      "content": "Students may request a leave of absence for personal, medical, or financial reasons. Leave is typically granted for up to one year. Students on leave must apply for re-enrollment before returning. Financial aid implications should be discussed with the financial aid office. International students must consult Global Programs before taking leave.",
+      "source_link": "https://registrar.psu.edu/enrollment/leave-of-absence/",
+      "last_reviewed": "2025-12-15",
+      "process": {
+        "duration": "Up to 1 year",
+        "approval": "College dean's office",
+        "return": "Re-enrollment application required"
+      }
+    },
+    {
+      "vault_id": "PSU-APP-001",
+      "title": "Grade Appeal Process",
+      "summary": "Steps for appealing a final grade, timeline requirements, and escalation procedures.",
+      "category": "grades",
+      "tags": ["appeal", "grades", "dispute", "process"],
+      "risk_category": "medium",
+      "content": "Students may appeal a final grade if they believe it was assigned unfairly or in error. Step 1: Discuss with instructor within 10 days of grade posting. Step 2: If unresolved, submit written appeal to department head within 30 days. Step 3: If still unresolved, appeal to college-level committee. Appeals must be submitted within one semester of receiving the grade.",
+      "source_link": "https://registrar.psu.edu/grades/grade-appeal/",
+      "last_reviewed": "2025-12-15",
+      "timeline": {
+        "instructor_discussion": "10 days",
+        "department_appeal": "30 days",
+        "college_appeal": "One semester"
+      }
     }
   ],
-  "student_mock": {
-    "id": "abc123456",
-    "psu_id": "xyz9012345",
-    "name": "Jordan Chen",
-    "email": "jxc1234@psu.edu",
-    "major": "Computer Science",
-    "minor": "Data Sciences",
-    "year": "Junior",
-    "credits_completed": 72,
-    "gpa": 3.45,
-    "advisor": "Dr. Sarah Mitchell",
-    "enrollment_status": "Full-time",
-    "college": "College of Engineering"
-  }
+  "risk_triggers": {
+    "high": ["withdrawal", "dismissal", "probation", "financial aid", "visa", "international", "status change", "deadline missed", "enrollment status"],
+    "medium": ["deadline approaching", "grade concern", "registration", "graduation", "leave of absence", "appeal"],
+    "low": ["general question", "information request", "planning", "advising appointment"]
+  },
+  "campuses": [
+    "University Park",
+    "Abington",
+    "Altoona",
+    "Beaver",
+    "Behrend",
+    "Berks",
+    "Brandywine",
+    "DuBois",
+    "Fayette",
+    "Greater Allegheny",
+    "Harrisburg",
+    "Hazleton",
+    "Lehigh Valley",
+    "Mont Alto",
+    "New Kensington",
+    "Schuylkill",
+    "Scranton",
+    "Shenango",
+    "Wilkes-Barre",
+    "World Campus",
+    "York"
+  ],
+  "academic_levels": [
+    "Freshman (0-29 credits)",
+    "Sophomore (30-59 credits)",
+    "Junior (60-89 credits)",
+    "Senior (90+ credits)",
+    "Graduate Student",
+    "Professional Student"
+  ],
+  "credit_loads": [
+    "Full-time (12-18 credits)",
+    "Part-time (less than 12 credits)",
+    "Overload (19+ credits)"
+  ],
+  "financial_aid_statuses": [
+    "Receiving aid (grants/scholarships)",
+    "Receiving loans only",
+    "Not receiving aid",
+    "Aid suspended/appeal pending",
+    "Unknown/Prefer not to say"
+  ]
 }
