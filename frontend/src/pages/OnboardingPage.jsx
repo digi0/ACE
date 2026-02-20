@@ -14,9 +14,7 @@ import {
 } from '../components/ui/select';
 import { Input } from '../components/ui/input';
 import { GraduationCap, ChevronRight, ChevronLeft, AlertCircle, CheckCircle2 } from 'lucide-react';
-import axios from 'axios';
-
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+import api, { isAuthenticated } from '../utils/api';
 
 const GRADUATION_TERMS = [
   'Fall 2025', 'Spring 2026', 'Summer 2026',
