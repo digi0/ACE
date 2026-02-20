@@ -65,7 +65,7 @@ export const MainAssistant = () => {
 
   const handleSelectChat = async (chatId) => {
     try {
-      const response = await axios.get(`${API}/chat/${chatId}`);
+      const response = await api.get(`/chat/${chatId}`);
       setCurrentChatId(chatId);
       setMessages(response.data.messages || []);
       setPrefillPrompt('');
