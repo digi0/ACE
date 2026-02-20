@@ -127,7 +127,7 @@ export const LeftSidebar = ({
 
   useEffect(() => {
     fetchData();
-  }, [studentId, refreshTrigger]);
+  }, [refreshTrigger]);
 
   useEffect(() => {
     localStorage.setItem('ace_quick_tools', JSON.stringify(selectedTools));
@@ -137,9 +137,9 @@ export const LeftSidebar = ({
     setIsLoading(true);
     try {
       const [profileRes, intelligenceRes, chatsRes] = await Promise.all([
-        axios.get(`${API}/student/profile`),
-        axios.get(`${API}/student/intelligence`),
-        axios.get(`${API}/chats/${studentId}`)
+        axios.get(`${API}/user/profile`, { withCredentials: true }),
+        axios.get(`${API}/student/intelligence`, { withCredentials: true }),
+        axios.get(`${API}/chats`, { withCredentials: true })
       ]);
       setProfile(profileRes.data);
       setIntelligence(intelligenceRes.data);
@@ -148,6 +148,16 @@ export const LeftSidebar = ({
       console.error('Error fetching sidebar data:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${API}/auth/logout`, {}, { withCredentials: true });
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      navigate('/login');
     }
   };
 
