@@ -155,7 +155,6 @@ export const MainAssistant = () => {
       <div className="flex-1 flex flex-col min-w-0">
         <ChatWorkspace
           chatId={currentChatId}
-          studentId={studentId}
           onChatCreated={handleChatCreated}
           messages={messages}
           setMessages={setMessages}
