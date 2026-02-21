@@ -386,6 +386,29 @@ cd deploy
 docker compose --env-file .env.private -f docker-compose.private.yml up -d --build
 ```
 
+### Backend build fails: `No matching distribution found for emergentintegrations==0.1.0`
+This means your local branch is using an older backend dependency set.
+
+Fix:
+
+```bash
+git pull origin <your-active-branch>
+```
+
+Then confirm `backend/requirements.txt` no longer contains `emergentintegrations==0.1.0`:
+
+```bash
+rg -n "emergentintegrations" backend/requirements.txt
+```
+
+Expected result: no matches.
+
+Rebuild from `deploy/`:
+
+```bash
+docker compose --env-file .env.private -f docker-compose.private.yml up -d --build
+```
+
 ### No HTTPS certificate
 You need a real domain pointing to your server's public IP for automatic TLS.
 
