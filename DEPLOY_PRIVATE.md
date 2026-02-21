@@ -403,6 +403,16 @@ rg -n "emergentintegrations" backend/requirements.txt
 
 Expected result: no matches.
 
+If you are blocked right now and cannot pull a newer branch yet, apply a local hotfix:
+
+```bash
+cd ~/ACE
+sed -i '' '/^emergentintegrations==0.1.0$/d' backend/requirements.txt
+rg -n "emergentintegrations" backend/requirements.txt
+```
+
+Expected result after the hotfix: no matches.
+
 Rebuild from `deploy/`:
 
 ```bash
