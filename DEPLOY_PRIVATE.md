@@ -419,6 +419,28 @@ Rebuild from `deploy/`:
 docker compose --env-file .env.private -f docker-compose.private.yml up -d --build
 ```
 
+### Frontend build fails with `ERESOLVE unable to resolve dependency tree`
+This is a peer-dependency conflict (for example `date-fns` vs `react-day-picker`) and can happen on older branches.
+
+Use the updated frontend Dockerfile install flags (`--legacy-peer-deps`) and rebuild:
+
+```bash
+cd ~/ACE
+git pull origin <your-active-branch>
+cd deploy
+docker compose --env-file .env.private -f docker-compose.private.yml up -d --build
+```
+
+If you cannot pull right now, locally patch `frontend/Dockerfile` install commands:
+
+```bash
+cd ~/ACE
+sed -i '' 's/npm ci;/npm ci --legacy-peer-deps;/' frontend/Dockerfile
+sed -i '' 's/npm install;/npm install --legacy-peer-deps;/' frontend/Dockerfile
+```
+
+Then rebuild from `deploy/`.
+
 ### No HTTPS certificate
 You need a real domain pointing to your server's public IP for automatic TLS.
 
