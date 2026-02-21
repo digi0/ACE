@@ -18,4 +18,4 @@ If your local branch is missing frontend deploy files, run:
 ```
 
 (If you are already in `deploy/`, use `./scripts/recover_missing_frontend_files.sh`.)
-
+If you see `ls: frontend/nginx.conf: No such file or directory`, use the quick fix in `DEPLOY_PRIVATE.md` (Troubleshooting section).

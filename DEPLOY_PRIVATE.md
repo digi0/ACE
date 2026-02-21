@@ -236,6 +236,34 @@ cd deploy
 docker compose --env-file .env.private -f docker-compose.private.yml up -d --build
 ```
 
+### Quick fix for `ls: frontend/nginx.conf: No such file or directory`
+If your terminal shows this exact error, run these commands from repo root:
+
+```bash
+cat > frontend/nginx.conf <<'NGINX'
+server {
+  listen 80;
+  server_name _;
+
+  root /usr/share/nginx/html;
+  index index.html;
+
+  location / {
+    try_files $uri /index.html;
+  }
+}
+NGINX
+
+cd deploy
+docker compose --env-file .env.private -f docker-compose.private.yml up -d --build
+```
+
+Then verify:
+
+```bash
+docker compose --env-file .env.private -f docker-compose.private.yml ps
+```
+
 ### `frontend/Dockerfile` or `frontend/nginx.conf` is missing (or is empty)
 If you ran:
 
