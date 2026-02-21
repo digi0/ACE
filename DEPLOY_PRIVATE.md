@@ -357,6 +357,35 @@ ls -la frontend/nginx.conf
 
 This repo's compose file now pins explicit Dockerfile paths (`backend/Dockerfile`, `frontend/Dockerfile`) so the build is less sensitive to path confusion.
 
+### Build fails with `npm ci` / `EUSAGE` (missing lockfile)
+If the build logs show:
+
+```text
+npm error code EUSAGE
+The `npm ci` command can only install with an existing package-lock.json
+```
+
+then your local `frontend/Dockerfile` is likely older. Verify it contains lockfile-aware install logic:
+
+```bash
+sed -n '1,120p' frontend/Dockerfile
+```
+
+Look for this line:
+
+```Dockerfile
+RUN if [ -f yarn.lock ]; then yarn install --frozen-lockfile; \
+    elif [ -f package-lock.json ]; then npm ci; \
+    else npm install; fi
+```
+
+If your Dockerfile still has plain `RUN npm ci`, replace `frontend/Dockerfile` with the version in this guide, then rebuild:
+
+```bash
+cd deploy
+docker compose --env-file .env.private -f docker-compose.private.yml up -d --build
+```
+
 ### No HTTPS certificate
 You need a real domain pointing to your server's public IP for automatic TLS.
 
