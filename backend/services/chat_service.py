@@ -92,6 +92,37 @@ def detect_question_intent(question):
     ]
 
 
+    gen_ed_keywords = [
+        "gen ed", "general education", "gened", "ga ", " ga ", "gh ", " gh ",
+        "gq ", " gq ", "gn ", " gn ", "gs ", " gs ", "gha", "us culture",
+        "international culture", " il ", "il course", "arts requirement",
+        "humanities requirement", "social science requirement",
+        "natural science requirement", "quantification", "health requirement",
+        "diversity requirement", "writing requirement", "speaking requirement",
+        "gen ed requirement", "gen-ed", "general ed",
+        "what counts for", "what satisfies", "double dip", "double-dip",
+        "kines 082", "phil 010", "musc 007", "musc 008", "thea 100",
+        "psych 100", "econ 102", "anth 001", "intl 100",
+    ]
+
+    wellbeing_keywords = [
+        "stress", "stressed", "anxiety", "anxious", "overwhelmed", "burnout",
+        "mental health", "depressed", "depression", "struggling", "counseling",
+        "caps", "uhs", "health", "sick", "therapy", "therapist", "crisis",
+        "emergency fund", "financial hardship", "broke", "can't afford",
+        "safe walk", "unsafe", "harassed", "emergency", "campus police",
+        "extracurricular", "club", "clubs", "org", "student org", "orgcentral",
+        "rec", "recreation", "gym", "intramural", "career", "internship",
+        "resume", "job", "handshake", "writing center", "tutoring", "lrc",
+        "calc", "calculus help",
+    ]
+
+    if any(keyword in q for keyword in gen_ed_keywords):
+        return "gen_ed"
+
+    if any(keyword in q for keyword in wellbeing_keywords):
+        return "wellbeing"
+
     if any(keyword in q for keyword in personal_progress_keywords):
         return "student_progress"
 
@@ -130,6 +161,9 @@ def select_top_records(records, intent):
 
     if intent == "contact":
         return vault[:4] + handbook[:1] + bulletin[:1]
+
+    if intent == "gen_ed":
+        return handbook[:3] + bulletin[:3] + vault[:2]
 
     # general
     return bulletin[:2] + handbook[:2] + vault[:3]
@@ -581,6 +615,72 @@ _DEGREE_AUDIT_FOOTER = (
 )
 
 
+CAMPUS_RESOURCES_SNIPPET = """
+=== PSU CAMPUS RESOURCES (mention only when directly relevant) ===
+- Mental health / counseling: CAPS — https://studentaffairs.psu.edu/counseling (free, confidential)
+- Crisis support: 988 Lifeline (call/text 988), Crisis Text Line (text HOME to 741741)
+- Medical care: UHS — https://studentaffairs.psu.edu/health
+- Free tutoring: LRC — https://lrc.psu.edu/
+- Writing help: Writing Center — https://writing.psu.edu/
+- Calculus help: Calc Central — https://math.psu.edu/undergraduate/calculus-central
+- Career & internships: Career Services — https://careerservices.psu.edu/ | Handshake — https://psu.joinhandshake.com/
+- Student clubs: OrgCentral — https://orgcentral.psu.edu/
+- Campus rec / gym: RecSports — https://recsports.psu.edu/
+- Emergency financial aid: https://studentaffairs.psu.edu/student-care/emergency-fund
+- Nighttime escort: Safe Walk — https://police.psu.edu/services/safewalk
+- Student crisis support: Student Care & Advocacy — https://studentaffairs.psu.edu/student-care
+Mention the most relevant 1–2 resources naturally at the end of your response. Do not list all of them.
+"""
+
+
+GEN_ED_SNIPPET = """
+=== PENN STATE GEN ED REQUIREMENTS (2024-2025) ===
+
+Penn State's General Education program requires students to complete courses in these categories:
+
+FOUNDATION REQUIREMENTS (mostly satisfied by CMPSC major requirements):
+- First-Year Writing (FYW): ENGL 015 or ENGL 030 (3 cr) — already required for CMPSC
+- Quantification (GQ): 3+ credits of math/logic — MATH 140 (required for CMPSC) satisfies this
+- Natural Sciences (GN): 6 credits, 2 courses, at least 1 with a lab — PHYS 211 + PHYS 212 (required for CMPSC) satisfy this
+- Speaking: CAS 100A, 100B, or 100C (3 cr) — already required for CMPSC
+- Writing Across Curriculum (W): Satisfied by CMPSC 431W and CMPSC 483W (required for CMPSC)
+
+KNOWLEDGE DOMAIN REQUIREMENTS (students must select courses):
+- Arts (GA): 3 credits — e.g., MUSC 007, MUSC 008, THEA 100, ART 010, ENGL 200N
+- Humanities (GH): 3 credits — e.g., PHIL 010 (Ethics, highly recommended for CS), PHIL 012 (Logic), HIST 021, LING 100
+- Social & Behavioral Sciences (GS): 3 credits — e.g., PSYCH 100, ECON 102, SOC 001, COMM 100
+- Health & Physical Activity (GHA): 2 credits — e.g., KINES 082 (Health for Living, popular online option)
+- United States Cultures (US): 3 credits — e.g., HIST 026, WMNST 001, SOC 119, AFAM 100
+- International Cultures (IL): 3 credits — e.g., ANTH 001, INTL 100, GEOG 020, foreign language intermediate courses
+
+DOUBLE-DIP OPPORTUNITIES (courses satisfying both Gen Ed AND major requirements):
+- MATH 140: GQ + CMPSC major requirement
+- PHYS 211 + PHYS 212: GN + CMPSC major requirement
+- ENGL 015/030: FYW + CMPSC major requirement
+- CAS 100A/B/C: Speaking + CMPSC major requirement
+- CMPSC 431W, 483W: Writing (W) + CMPSC major requirement
+- HIST 021: Can satisfy both GH and US (check current designation)
+- SOC 119: Can satisfy both GS and US
+
+SMART PICKS FOR CS STUDENTS:
+- PHIL 010 (Ethics, GH): Directly relevant to AI ethics, software engineering ethics, and tech policy
+- ECON 102 (Microeconomics, GS): Great for product thinking, startups, tech business understanding
+- KINES 082 (Health for Living, GHA): Popular 2-credit online course, easy checkbox
+- MUSC 008 (History of Rock, GA): Low-stress creative requirement, great balance to CS workload
+- INTL 100 (International Relations, IL): Relevant for international tech careers and global perspective
+- LING 100 (Language & Linguistics, GH): Surprisingly relevant to CS (parsing, syntax, NLP)
+- ECON 104 (Macroeconomics, GS): Complements ECON 102 for broader economic understanding
+
+IMPORTANT RULES:
+- GN requires at least one course to have a lab component
+- Many courses carry multiple designations — always check the Schedule of Courses for current designations
+- Gen Ed requirements may vary slightly by catalog year — verify on LionPATH or with your advisor
+- US and IL requirements emphasize diversity perspectives; check if your preferred course carries the designation
+
+Official source: https://bulletins.psu.edu/undergraduate/general-education/
+"""
+
+
 def build_degree_audit_advisory(doc_type, declared):
     """Return a system-prompt advisory string, or empty string."""
     # Always advise when a what-if is uploaded
@@ -636,6 +736,9 @@ def ask_advisor_stream(question, history=None):
     if degree_audit_advisory:
         logger.info("ask_advisor_stream | degree audit advisory injected | doc_type=%r", doc_type)
 
+    resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
+    gen_ed_snippet = GEN_ED_SNIPPET if intent == "gen_ed" else ""
+
     # Deterministic path — stream the full answer as one chunk then done
     if intent == "student_progress" and student_doc:
         deterministic_answer = build_student_progress_answer(student_doc)
@@ -658,7 +761,7 @@ The detected intent for the current question is: {intent}
 {rule_summary}
 
 === STUDENT DOCUMENT ===
-{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}
+{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{resources_snippet}{gen_ed_snippet}
 
 === ANSWER RULES ===
 - You may use the conversation history above to understand follow-up context, but ground every answer in the advising records, extracted rules, and student document provided.

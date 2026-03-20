@@ -1,6 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import Dashboard from "./Dashboard.jsx";
+import ResourceHub from "./ResourceHub.jsx";
+import GpaCalculator from "./GpaCalculator.jsx";
+import LoginPage from "./LoginPage.jsx";
+import OnboardingTour from "./OnboardingTour.jsx";
+import SidebarWidgetSection from "./SidebarWidgetSection.jsx";
+import AcademicCalendar from "./AcademicCalendar.jsx";
+import GraduationChecklist from "./GraduationChecklist.jsx";
+import CoursePrereqMap from "./CoursePrereqMap.jsx";
+import GenEdExplorer from "./GenEdExplorer.jsx";
+import { useAuth } from "./AuthContext.jsx";
 
 /* ── Icons ─────────────────────────────────────── */
 function GradCapIcon({ size = 16 }) {
@@ -24,16 +34,6 @@ function GradCapIcon({ size = 16 }) {
   );
 }
 
-function MicrosoftIcon() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 16 16" style={{ flexShrink: 0 }}>
-      <rect x="0" y="0" width="7" height="7" fill="#f25022" />
-      <rect x="9" y="0" width="7" height="7" fill="#7fba00" />
-      <rect x="0" y="9" width="7" height="7" fill="#00a4ef" />
-      <rect x="9" y="9" width="7" height="7" fill="#ffb900" />
-    </svg>
-  );
-}
 
 function AceLogo({ size = 36 }) {
   const iconSize = Math.round(size * 0.52);
@@ -53,16 +53,22 @@ const SUGGESTION_CHIPS = [
   { icon: "📅", text: "Check my schedule" },
 ];
 
-const QUICK_ACCESS = [
-  { icon: "💬", label: "Chat", view: "chat" },
-  { icon: "📊", label: "Dashboard", view: "dashboard" },
-  { icon: "📅", label: "Weekly Calendar", view: null },
-  { icon: "🕐", label: "Check Deadlines", view: null },
-];
+const FOLLOW_UP_MAP = {
+  courses:          ["What are the prerequisites?", "When is this offered?", "How does this fit my degree plan?"],
+  student_progress: ["What courses do I still need?", "Am I on track to graduate?", "What's my GPA situation?"],
+  wellbeing:        ["How do I schedule a CAPS appointment?", "Are there peer support options?", "What other wellness resources exist?"],
+  substitution:     ["Who approves substitutions?", "What's the petition process?", "Can a different course count instead?"],
+  etm:              ["What elective options do I have?", "How many elective credits do I need?", "Suggest related courses"],
+  transfer:         ["Will this transfer credit count?", "How do I request a transfer evaluation?", "What documentation do I need?"],
+  gen_ed:           ["What Gen Ed counts for CS students?", "Which courses double-dip?", "What's the easiest way to finish Gen Ed?"],
+  general:          ["Tell me more", "How does this affect my graduation?", "What should I do next?"],
+};
+
 
 /* ── App ───────────────────────────────────────── */
 function App() {
-  const [user, setUser] = useState(null);
+  const { user, signOut } = useAuth();
+  const [showTour, setShowTour] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -72,6 +78,9 @@ function App() {
   const [conversations, setConversations] = useState([]);
   const [activeConvId, setActiveConvId] = useState(null);
   const [activeView, setActiveView] = useState("chat");
+  const [followUpChips, setFollowUpChips] = useState([]);
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("ace_darkmode") === "1");
+  const [auditData, setAuditData] = useState(null);
 
   const [headerText, setHeaderText] = useState('');
   const fileInputRef = useRef(null);
@@ -106,9 +115,40 @@ function App() {
     );
   }, [messages, activeConvId]);
 
-  // ── Mock sign-in; replace with real Microsoft OAuth ──
-  const handleSignIn = () => {
-    setUser({ name: "PSU Student", email: "xyz1234@psu.edu" });
+  // ── Dark mode ──
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");
+    localStorage.setItem("ace_darkmode", darkMode ? "1" : "0");
+  }, [darkMode]);
+
+  // ── Conversation persistence: load ──
+  useEffect(() => {
+    if (!user?.uid) return;
+    try {
+      const saved = localStorage.getItem(`ace_chats_${user.uid}`);
+      if (saved) setConversations(JSON.parse(saved));
+    } catch {}
+  }, [user?.uid]);
+
+  // ── Conversation persistence: save ──
+  useEffect(() => {
+    if (!user?.uid) return;
+    localStorage.setItem(`ace_chats_${user.uid}`, JSON.stringify(conversations));
+  }, [conversations, user?.uid]);
+
+  // ── Show tour for first-time users ──
+  useEffect(() => {
+    if (!user?.uid) return;
+    const key = `ace_onboarded_${user.uid}`;
+    if (!localStorage.getItem(key)) {
+      const t = setTimeout(() => setShowTour(true), 900);
+      return () => clearTimeout(t);
+    }
+  }, [user?.uid]);
+
+  const handleTourFinish = () => {
+    setShowTour(false);
+    if (user?.uid) localStorage.setItem(`ace_onboarded_${user.uid}`, "1");
   };
 
   // ── Send (real SSE streaming) ──
@@ -121,6 +161,7 @@ function App() {
     setMessages(newMessages);
     setInput("");
     setLoading(true);
+    setFollowUpChips([]);
 
     if (messages.length === 0) {
       const convId = Date.now();
@@ -191,6 +232,8 @@ function App() {
               };
               return next;
             });
+            const chips = FOLLOW_UP_MAP[data.intent] ?? FOLLOW_UP_MAP.general;
+            setFollowUpChips(chips);
           }
 
           if (data.error) {
@@ -229,6 +272,12 @@ function App() {
       if (res.ok) {
         setUploadedFile(file);
         setUploadStatus("Uploaded");
+        // Fetch parsed audit data and push it to the widget section
+        try {
+          const dashRes = await fetch("http://127.0.0.1:8000/dashboard");
+          const dashData = await dashRes.json();
+          if (dashData.available) setAuditData(dashData);
+        } catch {}
       } else {
         setUploadStatus(data.detail || "Upload failed");
       }
@@ -240,6 +289,7 @@ function App() {
   const handleClearFile = async () => {
     setUploadedFile(null);
     setUploadStatus("");
+    setAuditData(null);
     try {
       await fetch("http://127.0.0.1:8000/clear-student-doc", { method: "POST" });
     } catch {}
@@ -259,15 +309,35 @@ function App() {
     setActiveConvId(null);
   };
 
-  const initials = user
-    ? user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
-    : "";
+  const displayName = user?.displayName || user?.email || "";
+  const initials = displayName
+    .split(/[\s@]/)
+    .filter(Boolean)
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  // Still checking auth state
+  if (user === undefined) {
+    return (
+      <div className="auth-loading">
+        <div className="loading-dots"><span /><span /><span /></div>
+        <p>Loading…</p>
+      </div>
+    );
+  }
+
+  // Not signed in → show login page
+  if (user === null) {
+    return <LoginPage />;
+  }
 
   return (
     <div className={`app-layout${sidebarCollapsed ? " sidebar-collapsed" : ""}`}>
 
       {/* ── Sidebar ─────────────────────────── */}
-      <aside className="sidebar">
+      <aside className="sidebar" data-tour="sidebar">
 
         {/* Brand */}
         <div className="sidebar-header">
@@ -275,63 +345,52 @@ function App() {
             <AceLogo size={34} />
             <span className="sidebar-brand-name">ACE</span>
           </div>
+          <div style={{ display: "flex", gap: 4 }}>
+            <button
+              className="sidebar-icon-btn"
+              onClick={() => setDarkMode(v => !v)}
+              title={darkMode ? "Light mode" : "Dark mode"}
+            >
+              {darkMode ? "☀" : "🌙"}
+            </button>
+            <button
+              className="sidebar-icon-btn"
+              onClick={() => setSidebarCollapsed(true)}
+              title="Collapse sidebar"
+            >
+              ◀
+            </button>
+          </div>
+        </div>
+
+        {/* User */}
+        <div className="sidebar-user">
+          <div className="sidebar-avatar">{initials}</div>
+          <div className="sidebar-user-info">
+            <div className="sidebar-user-name">{user.displayName || user.email}</div>
+            <div className="sidebar-user-email">{user.email}</div>
+          </div>
           <button
             className="sidebar-icon-btn"
-            onClick={() => setSidebarCollapsed(true)}
-            title="Collapse sidebar"
+            title="Sign out"
+            onClick={signOut}
           >
-            ◀
+            ↩
           </button>
         </div>
 
-        {/* User / sign-in */}
-        {user ? (
-          <div className="sidebar-user">
-            <div className="sidebar-avatar">{initials}</div>
-            <div className="sidebar-user-info">
-              <div className="sidebar-user-name">{user.name}</div>
-              <div className="sidebar-user-email">{user.email}</div>
-            </div>
-            <button className="sidebar-icon-btn" title="Settings">⚙</button>
-          </div>
-        ) : (
-          <div className="sidebar-signin">
-            <p className="sidebar-signin-hint">Sign in to save your chats</p>
-            <button className="signin-btn" onClick={handleSignIn}>
-              <MicrosoftIcon />
-              Sign in with PSU Outlook
-            </button>
-          </div>
-        )}
-
-        {/* Alert card — only when signed in */}
-        {user && (
-          <div className="sidebar-alert">
-            <div className="sidebar-alert-meta">SPRING 2026 · JUNIOR · FULL-TIME</div>
-            <p className="sidebar-alert-text">
-              As an international student, any enrollment changes require prior
-              approval from Global Programs.
-            </p>
-            <button className="sidebar-alert-link">Check requirements →</button>
-          </div>
-        )}
-
-        {/* Quick access */}
-        <div className="sidebar-section">
-          <div className="sidebar-section-header">
-            <span className="sidebar-section-label">QUICK ACCESS</span>
-          </div>
-          {QUICK_ACCESS.map((item) => (
-            <button
-              key={item.label}
-              className={`sidebar-nav-item${activeView === item.view ? " sidebar-nav-item--active" : ""}`}
-              onClick={() => item.view && setActiveView(item.view)}
-            >
-              <span className="sidebar-nav-icon">{item.icon}</span>
-              <span>{item.label}</span>
-            </button>
-          ))}
+        {/* Alert card */}
+        <div className="sidebar-alert">
+          <div className="sidebar-alert-meta">SPRING 2026 · JUNIOR · FULL-TIME</div>
+          <p className="sidebar-alert-text">
+            As an international student, any enrollment changes require prior
+            approval from Global Programs.
+          </p>
+          <button className="sidebar-alert-link">Check requirements →</button>
         </div>
+
+        {/* Customisable widget section */}
+        <SidebarWidgetSection userId={user.uid} onNavigate={setActiveView} auditData={auditData} />
 
         {/* New conversation */}
         <button className="new-conv-btn" onClick={handleNewConversation}>
@@ -356,6 +415,11 @@ function App() {
             ))
           )}
         </div>
+
+        {/* Take the tour */}
+        <button className="sidebar-tour-btn" onClick={() => setShowTour(true)}>
+          ✦ Take the tour
+        </button>
       </aside>
 
       {sidebarCollapsed && (
@@ -385,10 +449,23 @@ function App() {
               💬 Chat
             </button>
             <button
+              data-tour="dashboard-tab"
               className={`top-bar-tab${activeView === "dashboard" ? " top-bar-tab--active" : ""}`}
               onClick={() => setActiveView("dashboard")}
             >
               📊 Dashboard
+            </button>
+            <button
+              className={`top-bar-tab${activeView === "resources" ? " top-bar-tab--active" : ""}`}
+              onClick={() => setActiveView("resources")}
+            >
+              🏛️ Resources
+            </button>
+            <button
+              className={`top-bar-tab${activeView === "gened" ? " top-bar-tab--active" : ""}`}
+              onClick={() => setActiveView("gened")}
+            >
+              🎓 Gen Ed
             </button>
           </nav>
         </header>
@@ -407,7 +484,31 @@ function App() {
           }}
         />
 
-        {activeView === "dashboard" ? (
+        {activeView === "resources" ? (
+          <div className="dashboard-area">
+            <ResourceHub />
+          </div>
+        ) : activeView === "gpa" ? (
+          <div className="dashboard-area">
+            <GpaCalculator userId={user.uid} />
+          </div>
+        ) : activeView === "calendar" ? (
+          <div className="dashboard-area">
+            <AcademicCalendar />
+          </div>
+        ) : activeView === "checklist" ? (
+          <div className="dashboard-area">
+            <GraduationChecklist userId={user.uid} />
+          </div>
+        ) : activeView === "prereq" ? (
+          <div className="dashboard-area">
+            <CoursePrereqMap userId={user.uid} />
+          </div>
+        ) : activeView === "gened" ? (
+          <div className="dashboard-area">
+            <GenEdExplorer userId={user.uid} />
+          </div>
+        ) : activeView === "dashboard" ? (
           <div className="dashboard-area">
             <Dashboard
               uploadedFile={uploadedFile}
@@ -501,6 +602,20 @@ function App() {
             </div>
           )}
 
+          {hasMessages && !loading && followUpChips.length > 0 && (
+            <div className="followup-chips-row">
+              {followUpChips.map((chip) => (
+                <button
+                  key={chip}
+                  className="followup-chip"
+                  onClick={() => handleSend(chip)}
+                >
+                  {chip}
+                </button>
+              ))}
+            </div>
+          )}
+
           {(uploadedFile || (uploadStatus && uploadStatus !== "Uploaded")) && (
             <div className={`upload-badge${uploadedFile ? " upload-badge--ok" : ""}`}>
               {uploadedFile ? (
@@ -515,8 +630,8 @@ function App() {
             </div>
           )}
 
-          <div className="input-bar">
-            <label className="attach-btn" title="Upload degree audit or what-if report">
+          <div className="input-bar" data-tour="chat-input">
+            <label className="attach-btn" data-tour="upload-btn" title="Upload degree audit or what-if report">
               +
               <input
                 type="file"
@@ -549,6 +664,9 @@ function App() {
         </>
         )}
       </div>
+
+      {/* ── Onboarding tour ──────────────────── */}
+      {showTour && <OnboardingTour onFinish={handleTourFinish} />}
     </div>
   );
 }
