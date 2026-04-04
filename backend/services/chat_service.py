@@ -23,7 +23,8 @@ def detect_question_intent(question):
 
     course_keywords = [
         "course", "courses", "class", "classes",
-        "math", "stat", "cmpsc", "credits",
+        "math", "stat", "cmpsc", "ds ", " ds ", "dtsce",
+        "data sciences", "data science", "credits",
         "requirement", "requirements", "take", "need"
     ]
 
@@ -231,16 +232,14 @@ def build_sources(records):
             continue
 
         if source_type == "pdf_handbook" and handbook_source is None:
-            handbook_source = {
-                "title": "CMPSC Handbook",
-                "link": source_link
-            }
+            source_name = str(record.get("source_name", "")).lower()
+            label = "DTSCE Handbook" if "dtsce" in source_name else "CMPSC Handbook"
+            handbook_source = {"title": label, "link": source_link}
 
         elif source_type == "web_bulletin" and bulletin_source is None:
-            bulletin_source = {
-                "title": "CMPSC University Bulletin",
-                "link": source_link
-            }
+            source_name = str(record.get("source_name", "")).lower()
+            label = "DTSCE University Bulletin" if "dtsce" in source_name else "CMPSC University Bulletin"
+            bulletin_source = {"title": label, "link": source_link}
 
     sources = []
 
@@ -413,8 +412,8 @@ def build_student_progress_answer(student_doc):
             units = or_group_blocks[0].get("units", {})
             needed = units.get("needed", 6)
             lines.append(
-                f"- **400-Level Non-CMPSC/CMPEN Electives**: {needed:.0f} credits needed "
-                f"— complete one 6-credit group in consultation with your advisor"
+                f"- **Elective Group Requirement**: {needed:.0f} credits needed "
+                f"— complete one group in consultation with your advisor"
             )
 
     # ── In-progress courses ─────────────────────────────────────────────
@@ -577,6 +576,17 @@ _DECLARED_MAJOR_KEYWORDS = [
     "cmpsc major",
     "cs major",
     "computer science major",
+    # DS / DTSCE
+    "i'm in dtsce",
+    "i'm in ds",
+    "i am in dtsce",
+    "i am in ds",
+    "dtsce major",
+    "data sciences major",
+    "data science major",
+    "computational data sciences",
+    "i study data",
+    # general
     "in the major",
     "entered the major",
     "admitted to the major",
@@ -632,6 +642,42 @@ CAMPUS_RESOURCES_SNIPPET = """
 Mention the most relevant 1–2 resources naturally at the end of your response. Do not list all of them.
 """
 
+
+DS_GEN_ED_SNIPPET = """
+=== PENN STATE GEN ED REQUIREMENTS FOR DTSCE (DATA SCIENCES, 2024-2025) ===
+
+COMMUNICATIONS (9 credits — required for DTSCE):
+- ENGL 15 GWS (3) — Rhetoric and Composition (ENGL 30 or ESL 15 may substitute)
+- ENGL 202C GWS (3) — Technical Writing
+- CAS 100 A/B (3) — Effective Speech
+- ENGL/CAS 137 & 138 may substitute for ENGL 15 and CAS 100 A/B
+
+QUANTIFICATION (14 credits — required for DTSCE):
+- MATH 140 GQ (4) — Calculus I
+- MATH 141 GQ (4) — Calculus II
+- MATH 220 GQ (2) — Matrices
+- MATH 230 (4) — Calculus and Vector Analysis (MATH 231+232 may substitute)
+
+NATURAL SCIENCES (9 credits):
+- Any GN courses except: ASTRO 1/6/7N/10/11/120/140, all BISC, CHEM below 110 (3cr CHEM 106 OK), GAME 180N, PHYS 250/251, PHYS below 211, GEOSC 20
+
+OTHER GENERAL EDUCATION (21 credits):
+- Health & Wellness (GHW): 3 credits (or two 1.5-credit courses)
+- Arts (GA), Humanities (GH), Social/Behavioral Sciences (GS), US Cultures (US), International Cultures (IL) — same as university-wide Penn State Gen Ed requirements
+
+DOUBLE-DIP OPPORTUNITIES for DTSCE students:
+- MATH 140/141: GQ + DTSCE Quantification requirement
+- ENGL 15: FYW + DTSCE Communications requirement
+- CAS 100: Speaking + DTSCE Communications requirement
+- ENGL 202C: GWS + DTSCE Communications requirement
+
+SMART PICKS for DS students:
+- STAT 184 (Intro to R, GQ): Direct major requirement — take early
+- PHIL 010 (Ethics, GH): Relevant to DS 435 Ethical Issues in Data Science
+- ECON 102 (Microeconomics, GS): Useful for data analytics careers
+- KINES 082 (Health for Living, GHA): Easy 2-credit online option
+- INTL 100 (International Relations, IL): Relevant to global data analytics
+"""
 
 GEN_ED_SNIPPET = """
 === PENN STATE GEN ED REQUIREMENTS (2024-2025) ===
@@ -737,7 +783,17 @@ def ask_advisor_stream(question, history=None):
         logger.info("ask_advisor_stream | degree audit advisory injected | doc_type=%r", doc_type)
 
     resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
-    gen_ed_snippet = GEN_ED_SNIPPET if intent == "gen_ed" else ""
+
+    # Pick the right gen-ed snippet based on detected major from doc or keywords
+    if intent == "gen_ed":
+        q_lower = question.lower()
+        is_ds = (
+            doc_type in (None, "what_if_report", "academic_document")
+            and any(kw in q_lower for kw in ["dtsce", "data sciences", "data science", "ds "])
+        ) or (student_doc.get("major", "").upper() in ("DTSCE", "DS"))
+        gen_ed_snippet = DS_GEN_ED_SNIPPET if is_ds else GEN_ED_SNIPPET
+    else:
+        gen_ed_snippet = ""
 
     # Deterministic path — stream the full answer as one chunk then done
     if intent == "student_progress" and student_doc:

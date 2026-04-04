@@ -47,7 +47,19 @@ def chunk_text(text, chunk_size=CHUNK_SIZE, overlap=CHUNK_OVERLAP):
     return chunks
 
 
-def load_handbook_chunks(pdf_path):
+def load_handbook_chunks(pdf_path, source_name=None, source_link=None, title_prefix=None):
+    """Load and chunk a handbook PDF.
+
+    Defaults to CMPSC handbook metadata for backwards compatibility.
+    Pass source_name, source_link, title_prefix to ingest any handbook.
+    """
+    if source_name is None:
+        source_name = HANDBOOK_SOURCE_NAME
+    if source_link is None:
+        source_link = HANDBOOK_SOURCE_LINK
+    if title_prefix is None:
+        title_prefix = "CMPSC Handbook"
+
     pages = extract_pdf_pages(pdf_path)
     records = []
     chunk_counter = 1
@@ -61,14 +73,14 @@ def load_handbook_chunks(pdf_path):
             records.append({
                 "record_id": f"handbook_{chunk_counter}",
                 "source_type": "pdf_handbook",
-                "source_name": HANDBOOK_SOURCE_NAME,
+                "source_name": source_name,
                 "page_number": page_number,
-                "Title": f"CMPSC Handbook Page {page_number}",
+                "Title": f"{title_prefix} Page {page_number}",
                 "Category": "handbook",
                 "Subcategory": "",
                 "Used_for": "",
                 "Content": chunk.strip(),
-                "Source_link": HANDBOOK_SOURCE_LINK
+                "Source_link": source_link
             })
             chunk_counter += 1
 

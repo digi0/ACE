@@ -5,7 +5,7 @@ import ResourceHub from "./ResourceHub.jsx";
 import GpaCalculator from "./GpaCalculator.jsx";
 import LoginPage from "./LoginPage.jsx";
 import OnboardingTour from "./OnboardingTour.jsx";
-import SidebarWidgetSection from "./SidebarWidgetSection.jsx";
+import SidebarWidgetSection, { WidgetPickerPage } from "./SidebarWidgetSection.jsx";
 import AcademicCalendar from "./AcademicCalendar.jsx";
 import GraduationChecklist from "./GraduationChecklist.jsx";
 import CoursePrereqMap from "./CoursePrereqMap.jsx";
@@ -81,6 +81,13 @@ function App() {
   const [followUpChips, setFollowUpChips] = useState([]);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("ace_darkmode") === "1");
   const [auditData, setAuditData] = useState(null);
+  const [activeWidgets, setActiveWidgets] = useState(() => {
+    try {
+      const raw = localStorage.getItem("ace_widgets3");
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return ["deadlines"];
+  });
 
   const [headerText, setHeaderText] = useState('');
   const fileInputRef = useRef(null);
@@ -120,6 +127,19 @@ function App() {
     document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");
     localStorage.setItem("ace_darkmode", darkMode ? "1" : "0");
   }, [darkMode]);
+
+  // ── Widget config persistence ──
+  useEffect(() => {
+    localStorage.setItem("ace_widgets3", JSON.stringify(activeWidgets));
+  }, [activeWidgets]);
+
+  // ── Fetch audit data on mount (document may already be uploaded) ──
+  useEffect(() => {
+    fetch("${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard")
+      .then(r => r.json())
+      .then(d => { if (d.available) setAuditData(d); })
+      .catch(() => {});
+  }, []);
 
   // ── Conversation persistence: load ──
   useEffect(() => {
@@ -177,7 +197,7 @@ function App() {
       .slice(-6);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/chat/stream", {
+      const response = await fetch("${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/chat/stream", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: query, history }),
@@ -264,7 +284,7 @@ function App() {
     const fd = new FormData();
     fd.append("file", file);
     try {
-      const res = await fetch("http://127.0.0.1:8000/upload-student-doc", {
+      const res = await fetch("${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/upload-student-doc", {
         method: "POST",
         body: fd,
       });
@@ -274,7 +294,7 @@ function App() {
         setUploadStatus("Uploaded");
         // Fetch parsed audit data and push it to the widget section
         try {
-          const dashRes = await fetch("http://127.0.0.1:8000/dashboard");
+          const dashRes = await fetch("${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard");
           const dashData = await dashRes.json();
           if (dashData.available) setAuditData(dashData);
         } catch {}
@@ -291,7 +311,7 @@ function App() {
     setUploadStatus("");
     setAuditData(null);
     try {
-      await fetch("http://127.0.0.1:8000/clear-student-doc", { method: "POST" });
+      await fetch("${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/clear-student-doc", { method: "POST" });
     } catch {}
   };
 
@@ -390,7 +410,7 @@ function App() {
         </div>
 
         {/* Customisable widget section */}
-        <SidebarWidgetSection userId={user.uid} onNavigate={setActiveView} auditData={auditData} />
+        <SidebarWidgetSection activeWidgets={activeWidgets} onNavigate={setActiveView} auditData={auditData} />
 
         {/* New conversation */}
         <button className="new-conv-btn" onClick={handleNewConversation}>
@@ -484,7 +504,15 @@ function App() {
           }}
         />
 
-        {activeView === "resources" ? (
+        {activeView === "widgets" ? (
+          <div className="dashboard-area">
+            <WidgetPickerPage
+              activeWidgets={activeWidgets}
+              setActiveWidgets={setActiveWidgets}
+              onDone={() => setActiveView("chat")}
+            />
+          </div>
+        ) : activeView === "resources" ? (
           <div className="dashboard-area">
             <ResourceHub />
           </div>

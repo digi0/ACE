@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+// no React hook imports needed — all state is managed by parent
 
 /* ── Spring 2026 deadlines ────────────────────────────────────── */
 const SPRING_DEADLINES = [
@@ -187,164 +187,98 @@ const WIDGET_COMPONENTS = {
   prereq:    PrereqWidget,
 };
 
-/* ── Default config — only Deadlines on by default ───────────── */
-function defaultConfig() {
-  return {
-    order:   ["deadlines", "progress", "gened", "resources", "gpa", "prereq"],
-    enabled: { deadlines: true, progress: false, gened: false, resources: false, gpa: false, prereq: false },
-  };
-}
-
-/* ── Main component ───────────────────────────────────────────── */
-export default function SidebarWidgetSection({ userId, onNavigate, auditData }) {
-  const storageKey = `ace_widgets2_${userId}`;   // new key → fresh defaults
-
-  const [config, setConfig] = useState(() => {
-    const def = defaultConfig();
-    try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        // Merge any widget IDs added since last save
-        const allIds  = WIDGET_DEFS.map(d => d.id);
-        const missing = allIds.filter(id => !parsed.order.includes(id));
-        return {
-          order:   [...parsed.order, ...missing],
-          enabled: { ...def.enabled, ...parsed.enabled },
-        };
-      }
-    } catch {}
-    return def;
-  });
-
-  const [showPicker, setShowPicker] = useState(false);
-  const [dragOver, setDragOver]     = useState(null);
-  const dragItem = useRef(null);
-
-  useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(config));
-  }, [config, storageKey]);
-
-  const toggleEnabled = id =>
-    setConfig(p => ({ ...p, enabled: { ...p.enabled, [id]: !p.enabled[id] } }));
-
-  /* drag-to-reorder (in picker) */
-  const handleDragStart = (e, id) => {
-    dragItem.current = id;
-    e.dataTransfer.effectAllowed = "move";
-  };
-  const handleDragOver = (e, id) => {
-    e.preventDefault();
-    if (dragOver !== id) setDragOver(id);
-  };
-  const handleDrop = (e, targetId) => {
-    e.preventDefault();
-    if (!dragItem.current || dragItem.current === targetId) { setDragOver(null); return; }
-    setConfig(p => {
-      const order = [...p.order];
-      const fi = order.indexOf(dragItem.current);
-      const ti = order.indexOf(targetId);
-      order.splice(fi, 1);
-      order.splice(ti, 0, dragItem.current);
-      return { ...p, order };
-    });
-    dragItem.current = null;
-    setDragOver(null);
-  };
-  const handleDragEnd = () => { dragItem.current = null; setDragOver(null); };
-
-  /* Notification badge: any deadline within 7 days */
+/* ── Main sidebar widget section ─────────────────────────────── */
+export default function SidebarWidgetSection({ activeWidgets, onNavigate, auditData }) {
   const deadlineBadge = SPRING_DEADLINES.some(d => {
     const ms = parseDate(d.date) - new Date();
     return ms >= 0 && ms <= 7 * 24 * 60 * 60 * 1000;
   });
 
-  const enabledWidgets = config.order.filter(id => config.enabled[id]);
-
   return (
     <div className="ws-root">
-
-      {/* ── Widget picker panel ── */}
-      {showPicker && (
-        <div className="ws-picker">
-          <div className="ws-picker-top">
-            <span className="ws-picker-title">Edit Widgets</span>
-            <button className="ws-picker-done" onClick={() => setShowPicker(false)}>Done</button>
-          </div>
-          <p className="ws-picker-hint">Toggle to add · drag ⠿ to reorder</p>
-
-          {config.order.map(id => {
-            const def = WIDGET_DEFS.find(d => d.id === id);
-            const on  = config.enabled[id];
-            return (
-              <div
-                key={id}
-                className={`ws-picker-row${dragOver === id ? " ws-picker-row--over" : ""}`}
-                draggable
-                onDragStart={e => handleDragStart(e, id)}
-                onDragOver={e => handleDragOver(e, id)}
-                onDrop={e => handleDrop(e, id)}
-                onDragEnd={handleDragEnd}
-              >
-                <span className="ws-drag-handle">⠿</span>
-                <span className="ws-picker-icon">{def.icon}</span>
-                <div className="ws-picker-info">
-                  <span className="ws-picker-name">{def.label}</span>
-                  <span className="ws-picker-desc">{def.desc}</span>
-                </div>
-                <button
-                  className={`ws-toggle${on ? " ws-toggle--on" : ""}`}
-                  onClick={() => toggleEnabled(id)}
-                >
-                  <span className="ws-toggle-thumb" />
-                </button>
+      <div className="ws-stack">
+        {activeWidgets.map(id => {
+          const def     = WIDGET_DEFS.find(d => d.id === id);
+          if (!def) return null;
+          const Content = WIDGET_COMPONENTS[id];
+          const badge   = id === "deadlines" && deadlineBadge;
+          return (
+            <div key={id} className="ws-card">
+              <div className="ws-card-header">
+                <span className="ws-card-icon">{def.icon}</span>
+                <span className="ws-card-label">{def.label}</span>
+                {badge && <span className="ws-badge" />}
+                {onNavigate && def.viewId && (
+                  <button
+                    className="ws-open-btn"
+                    onClick={() => onNavigate(def.viewId)}
+                    title={`Open ${def.label}`}
+                  >
+                    ↗
+                  </button>
+                )}
               </div>
-            );
-          })}
-        </div>
-      )}
+              <Content onNavigate={onNavigate} auditData={auditData} />
+            </div>
+          );
+        })}
+        {activeWidgets.length === 0 && (
+          <p className="ws-empty">No widgets added yet.</p>
+        )}
+      </div>
 
-      {/* ── Widget stack ── */}
-      {!showPicker && (
-        <div className="ws-stack">
-          {enabledWidgets.map(id => {
-            const def     = WIDGET_DEFS.find(d => d.id === id);
-            const Content = WIDGET_COMPONENTS[id];
-            const badge   = id === "deadlines" && deadlineBadge;
-            return (
-              <div key={id} className="ws-card">
-                <div className="ws-card-header">
-                  <span className="ws-card-icon">{def.icon}</span>
-                  <span className="ws-card-label">{def.label}</span>
-                  {badge && <span className="ws-badge" />}
-                  {onNavigate && def.viewId && (
-                    <button
-                      className="ws-open-btn"
-                      onClick={() => onNavigate(def.viewId)}
-                      title={`Open ${def.label}`}
-                    >
-                      ↗
-                    </button>
-                  )}
-                </div>
-                <Content onNavigate={onNavigate} auditData={auditData} />
-              </div>
-            );
-          })}
-
-          {enabledWidgets.length === 0 && (
-            <p className="ws-empty">No widgets added yet.</p>
-          )}
-        </div>
-      )}
-
-      {/* ── Edit button ── */}
-      <button
-        className={`ws-edit-btn${showPicker ? " ws-edit-btn--active" : ""}`}
-        onClick={() => setShowPicker(v => !v)}
-      >
-        {showPicker ? "← Back" : "⊕ Edit Widgets"}
+      <button className="ws-edit-btn" onClick={() => onNavigate("widgets")}>
+        ⊕ Manage Widgets
       </button>
+    </div>
+  );
+}
+
+/* ── Widget picker full page ──────────────────────────────────── */
+export function WidgetPickerPage({ activeWidgets, setActiveWidgets, onDone }) {
+  const toggle = (id) => {
+    setActiveWidgets(prev => {
+      if (prev.includes(id)) return prev.filter(x => x !== id);
+      if (prev.length >= 3) return prev;
+      return [...prev, id];
+    });
+  };
+
+  return (
+    <div className="wpp-root">
+      <div className="wpp-header">
+        <h2 className="wpp-title">Choose Your Widgets</h2>
+        <p className="wpp-subtitle">
+          Pick up to <strong>3 widgets</strong> to display in your sidebar.
+        </p>
+        <div className="wpp-counter">{activeWidgets.length} / 3 selected</div>
+      </div>
+
+      <div className="wpp-grid">
+        {WIDGET_DEFS.map(def => {
+          const active   = activeWidgets.includes(def.id);
+          const disabled = !active && activeWidgets.length >= 3;
+          return (
+            <button
+              key={def.id}
+              className={`wpp-card${active ? " wpp-card--active" : ""}${disabled ? " wpp-card--disabled" : ""}`}
+              onClick={() => toggle(def.id)}
+              disabled={disabled}
+            >
+              {active && <span className="wpp-check">✓</span>}
+              <span className="wpp-card-icon">{def.icon}</span>
+              <span className="wpp-card-name">{def.label}</span>
+              <span className="wpp-card-desc">{def.desc}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="wpp-footer">
+        <button className="wpp-done-btn" onClick={onDone}>
+          Done
+        </button>
+      </div>
     </div>
   );
 }

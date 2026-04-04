@@ -3,3 +3,7 @@ node_modules/
 .DS_Store
 __pycache__/
 *.pyc
+.venv/
+backend/data/ace_index.pkl
+backend/uploads/
+psu-cs-academic-advisor-main/

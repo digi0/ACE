@@ -1,53 +1,27 @@
 import { useState, useEffect } from "react";
 
-/* ── Donut Chart ────────────────────────────────────────────── */
-function DonutChart({ pct, completed, remaining }) {
-  const r = 68;
-  const cx = 90;
-  const cy = 90;
-  const circ = 2 * Math.PI * r;
-  const filled = Math.min((pct / 100) * circ, circ);
-
+/* ── Degree Progress Bar ────────────────────────────────────── */
+function DegreeProgressBar({ pct, completed, remaining, required }) {
   return (
-    <div className="donut-wrap">
-      <svg width="180" height="180" viewBox="0 0 180 180" aria-label={`${pct}% degree complete`}>
-        {/* Track */}
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke="#e5e7eb" strokeWidth="18" />
-        {/* Gold segment (remaining) */}
-        <circle
-          cx={cx} cy={cy} r={r} fill="none"
-          stroke="#c9a227" strokeWidth="18"
-          strokeDasharray={`${circ - filled} ${filled}`}
-          strokeDashoffset={-(filled)}
-          transform={`rotate(-90 ${cx} ${cy})`}
-          strokeLinecap="butt"
-        />
-        {/* Navy segment (completed) */}
-        <circle
-          cx={cx} cy={cy} r={r} fill="none"
-          stroke="#1a2744" strokeWidth="18"
-          strokeDasharray={`${filled} ${circ - filled}`}
-          transform={`rotate(-90 ${cx} ${cy})`}
-          strokeLinecap="butt"
-        />
-        {/* Center text */}
-        <text x={cx} y={cy - 10} textAnchor="middle" fill="#1a2744" fontSize="26" fontWeight="700" fontFamily="Inter, sans-serif">
-          {pct.toFixed(0)}%
-        </text>
-        <text x={cx} y={cy + 14} textAnchor="middle" fill="#6b7280" fontSize="11" fontFamily="Inter, sans-serif">
-          Complete
-        </text>
-      </svg>
-      <div className="donut-legend">
-        <span className="donut-legend-item">
-          <span className="donut-dot donut-dot--navy" />
-          Completed ({completed} cr)
+    <div className="dpb-wrap">
+      <div className="dpb-top">
+        <span className="dpb-pct">{pct.toFixed(0)}%</span>
+        <span className="dpb-label">Complete</span>
+      </div>
+      <div className="dpb-track">
+        <div className="dpb-fill" style={{ width: `${Math.min(pct, 100)}%` }} />
+      </div>
+      <div className="dpb-legend">
+        <span className="dpb-legend-item">
+          <span className="dpb-dot dpb-dot--navy" />
+          Completed — {completed} cr
         </span>
-        <span className="donut-legend-item">
-          <span className="donut-dot donut-dot--gold" />
-          Remaining ({remaining} cr)
+        <span className="dpb-legend-item">
+          <span className="dpb-dot dpb-dot--gold" />
+          Remaining — {remaining} cr
         </span>
       </div>
+      <div className="dpb-totals">{completed} of {required} total credits</div>
     </div>
   );
 }
@@ -99,7 +73,7 @@ export default function Dashboard({ uploadedFile, onUploadClick }) {
   useEffect(() => {
     setLoading(true);
     setFetchError(null);
-    fetch("http://127.0.0.1:8000/dashboard")
+    fetch("${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard")
       .then((r) => r.json())
       .then((d) => { setData(d); setLoading(false); })
       .catch(() => { setFetchError("Could not connect to the backend."); setLoading(false); });
@@ -185,13 +159,14 @@ export default function Dashboard({ uploadedFile, onUploadClick }) {
       {/* ── Chart + Recommended ───────────────────────── */}
       <div className="dash-mid-row">
 
-        {/* Donut chart */}
+        {/* Degree progress bar */}
         <div className="dash-card dash-card--chart">
           <h3 className="dash-card-title">Degree Completion</h3>
-          <DonutChart
+          <DegreeProgressBar
             pct={degree_progress_pct}
             completed={credits_completed}
             remaining={credits_remaining}
+            required={credits_required}
           />
         </div>
 
