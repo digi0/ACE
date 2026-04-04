@@ -37,20 +37,10 @@ class ChatRequest(BaseModel):
     question: str = Field(..., min_length=1, max_length=2000)
     history: List[ChatMessage] = Field(default_factory=list)
 
-import re as _re
-
-ALLOWED_ORIGINS_RE = _re.compile(
-    r"^https://.*\.vercel\.app$|^http://localhost:\d+$"
-)
-
-def _cors_origin_ok(origin: str) -> bool:
-    return bool(ALLOWED_ORIGINS_RE.match(origin))
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # refined per-request via allow_origin_regex in prod
-    allow_origin_regex=r"https://.*\.vercel\.app|http://localhost:\d+",
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
