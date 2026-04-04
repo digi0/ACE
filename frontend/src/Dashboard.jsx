@@ -73,7 +73,7 @@ export default function Dashboard({ uploadedFile, onUploadClick }) {
   useEffect(() => {
     setLoading(true);
     setFetchError(null);
-    fetch("${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard")
+    fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard`)
       .then((r) => r.json())
       .then((d) => { setData(d); setLoading(false); })
       .catch(() => { setFetchError("Could not connect to the backend."); setLoading(false); });

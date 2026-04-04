@@ -135,7 +135,7 @@ function App() {
 
   // ── Fetch audit data on mount (document may already be uploaded) ──
   useEffect(() => {
-    fetch("${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard")
+    fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard`)
       .then(r => r.json())
       .then(d => { if (d.available) setAuditData(d); })
       .catch(() => {});
@@ -197,7 +197,7 @@ function App() {
       .slice(-6);
 
     try {
-      const response = await fetch("${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/chat/stream", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/chat/stream`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: query, history }),
@@ -284,7 +284,7 @@ function App() {
     const fd = new FormData();
     fd.append("file", file);
     try {
-      const res = await fetch("${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/upload-student-doc", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/upload-student-doc`, {
         method: "POST",
         body: fd,
       });
@@ -294,7 +294,7 @@ function App() {
         setUploadStatus("Uploaded");
         // Fetch parsed audit data and push it to the widget section
         try {
-          const dashRes = await fetch("${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard");
+          const dashRes = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard`);
           const dashData = await dashRes.json();
           if (dashData.available) setAuditData(dashData);
         } catch {}
@@ -311,7 +311,7 @@ function App() {
     setUploadStatus("");
     setAuditData(null);
     try {
-      await fetch("${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/clear-student-doc", { method: "POST" });
+      await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/clear-student-doc`, { method: "POST" });
     } catch {}
   };
 
