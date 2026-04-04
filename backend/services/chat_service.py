@@ -106,6 +106,20 @@ def detect_question_intent(question):
         "psych 100", "econ 102", "anth 001", "intl 100",
     ]
 
+    deadline_keywords = [
+        "deadline", "deadlines", "due date", "last day to", "last day of",
+        "drop/add", "drop add", "add/drop", "add drop",
+        "withdraw", "withdrawal", "late drop", "late withdrawal",
+        "registration", "register", "enroll", "enrollment",
+        "when can i register", "when does registration",
+        "academic calendar", "calendar", "schedule of classes",
+        "final exam", "finals week", "finals schedule",
+        "semester end", "semester ends", "last day of class",
+        "spring 2026", "fall 2026", "summer 2026",
+        "tuition due", "payment deadline", "bill due",
+        "grade appeal", "grade deadline",
+    ]
+
     wellbeing_keywords = [
         "stress", "stressed", "anxiety", "anxious", "overwhelmed", "burnout",
         "mental health", "depressed", "depression", "struggling", "counseling",
@@ -117,6 +131,9 @@ def detect_question_intent(question):
         "resume", "job", "handshake", "writing center", "tutoring", "lrc",
         "calc", "calculus help",
     ]
+
+    if any(keyword in q for keyword in deadline_keywords):
+        return "deadline"
 
     if any(keyword in q for keyword in gen_ed_keywords):
         return "gen_ed"
@@ -165,6 +182,9 @@ def select_top_records(records, intent):
 
     if intent == "gen_ed":
         return handbook[:3] + bulletin[:3] + vault[:2]
+
+    if intent == "deadline":
+        return vault[:3] + bulletin[:2] + handbook[:1]
 
     # general
     return bulletin[:2] + handbook[:2] + vault[:3]
@@ -643,6 +663,46 @@ Mention the most relevant 1–2 resources naturally at the end of your response.
 """
 
 
+DEADLINES_SNIPPET = """
+=== PENN STATE ACADEMIC CALENDAR — KEY DEADLINES ===
+
+SPRING 2026 SEMESTER:
+- First day of classes: January 13, 2026
+- Last day to add a course (penalty-free): January 19, 2026
+- Martin Luther King Jr. Day (no classes): January 19, 2026
+- Last day to drop a course without a "W" grade: January 26, 2026
+- Spring Break: March 9–13, 2026
+- Last day to drop a course WITH a "W" grade (late drop): March 20, 2026
+- Last day of classes: April 25, 2026
+- Final exams: April 28 – May 4, 2026
+- Commencement: May 9, 2026
+
+FALL 2026 REGISTRATION (for current students):
+- Priority registration for seniors (90+ credits): April 6–10, 2026
+- Priority registration for juniors (60–89 credits): April 13–17, 2026
+- Priority registration for sophomores (30–59 credits): April 20–24, 2026
+- Open registration for freshmen and all others: April 27, 2026 onward
+
+SUMMER 2026 (approximate):
+- Summer Session 1 (6-week): May 18 – June 26, 2026
+- Summer Session 2 (6-week): July 6 – August 14, 2026
+- Full Summer (12-week): May 18 – August 14, 2026
+
+IMPORTANT NOTES:
+- "W" grades (course withdrawals) appear on transcript but do NOT affect GPA.
+- Dropping after the late-drop deadline requires Dean's exception (rare — illness, emergency).
+- LionPATH is the official system to add/drop courses and view your schedule.
+- Late-drop and withdrawal deadlines may differ for module courses and summer sessions.
+- Always verify exact dates on the official Registrar's academic calendar.
+
+OFFICIAL LINKS:
+- Academic Calendar: https://registrar.psu.edu/academic-calendar/
+- Drop/Withdrawal policy: https://registrar.psu.edu/student-records/drop-withdrawal/
+- LionPATH (schedule, registration): https://lionpath.psu.edu/
+- Schedule of Courses: https://soc.psu.edu/
+- Tuition/Billing: https://bursar.psu.edu/
+"""
+
 DS_GEN_ED_SNIPPET = """
 === PENN STATE GEN ED REQUIREMENTS FOR DTSCE (DATA SCIENCES, 2024-2025) ===
 
@@ -783,6 +843,7 @@ def ask_advisor_stream(question, history=None):
         logger.info("ask_advisor_stream | degree audit advisory injected | doc_type=%r", doc_type)
 
     resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
+    deadline_snippet = DEADLINES_SNIPPET if intent == "deadline" else ""
 
     # Pick the right gen-ed snippet based on detected major from doc or keywords
     if intent == "gen_ed":
@@ -817,7 +878,7 @@ The detected intent for the current question is: {intent}
 {rule_summary}
 
 === STUDENT DOCUMENT ===
-{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{resources_snippet}{gen_ed_snippet}
+{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{resources_snippet}{deadline_snippet}{gen_ed_snippet}
 
 === ANSWER RULES ===
 - You may use the conversation history above to understand follow-up context, but ground every answer in the advising records, extracted rules, and student document provided.
