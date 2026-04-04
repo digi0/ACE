@@ -4,6 +4,6 @@ node_modules/
 __pycache__/
 *.pyc
 .venv/
-backend/data/ace_index.pkl
+# backend/data/ace_index.pkl  # committed so Railway doesn't need to rebuild
 backend/uploads/
 psu-cs-academic-advisor-main/
