@@ -460,7 +460,7 @@ def build_student_progress_answer(student_doc):
     return "\n".join(lines)
 
 
-def ask_advisor(question):
+def ask_advisor(question, user_id: str = None):
     intent = detect_question_intent(question)
 
     retrieved_records = semantic_search(question, top_k=10)
@@ -472,10 +472,10 @@ def ask_advisor(question):
     sources = build_sources(records)
 
     student_doc_context = ""
-    student_doc = get_current_student_doc() if has_student_doc() else {}
+    student_doc = get_current_student_doc(user_id) if (user_id and has_student_doc(user_id)) else {}
 
-    if has_student_doc():
-        student_doc_context = build_student_doc_context()
+    if user_id and has_student_doc(user_id):
+        student_doc_context = build_student_doc_context(user_id)
 
     # Deterministic path first for student-progress questions
     if intent == "student_progress" and student_doc:
@@ -812,11 +812,13 @@ def build_degree_audit_advisory(doc_type, declared):
     return ""
 
 
-def ask_advisor_stream(question, history=None):
+def ask_advisor_stream(question, history=None, user_id: str = None):
     """Generator that yields SSE-formatted chunks for the chat response.
 
     history: list of {"role": "user"|"assistant", "content": str} dicts
              representing the prior conversation turns.
+    user_id: Firebase UID of the signed-in student; used to look up their
+             uploaded document. If None, no document context is injected.
     """
     intent = detect_question_intent(question)
     logger.info("ask_advisor_stream | intent=%r | question=%r", intent, question[:80])
@@ -831,10 +833,10 @@ def ask_advisor_stream(question, history=None):
     sources = build_sources(records)
 
     student_doc_context = ""
-    student_doc = get_current_student_doc() if has_student_doc() else {}
+    student_doc = get_current_student_doc(user_id) if (user_id and has_student_doc(user_id)) else {}
 
-    if has_student_doc():
-        student_doc_context = build_student_doc_context()
+    if user_id and has_student_doc(user_id):
+        student_doc_context = build_student_doc_context(user_id)
 
     doc_type = student_doc.get("doc_type") if student_doc else None
     declared = detect_declared_major(question, history, doc_type)

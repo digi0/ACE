@@ -1,5 +1,7 @@
 import os
 import re
+import json
+import sqlite3
 import logging
 from pypdf import PdfReader
 from backend.services.audit_parser_service import parse_whatif_blocks
@@ -7,12 +9,37 @@ from backend.config import UPLOAD_DIR, MAX_UPLOAD_FILES
 
 _logger = logging.getLogger(__name__)
 
+# ── SQLite persistence ─────────────────────────────────────────────────────
+# Each user's document is stored as a row keyed by their Firebase UID.
+#
+# PRODUCTION NOTE: Replace this SQLite file with a proper database
+# (e.g. PostgreSQL on Railway via DATABASE_URL) when multi-instance or
+# high-traffic deployment is needed. SQLite is fine for a single Railway
+# instance but data will be lost if the volume is ephemeral.
+_DB_PATH = os.path.join("backend", "data", "ace_users.db")
+
+
+def _get_conn() -> sqlite3.Connection:
+    os.makedirs(os.path.dirname(_DB_PATH), exist_ok=True)
+    conn = sqlite3.connect(_DB_PATH, check_same_thread=False)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS user_docs (
+            user_id          TEXT PRIMARY KEY,
+            filename         TEXT,
+            doc_type         TEXT,
+            text             TEXT,
+            analysis_json    TEXT,
+            audit_parse_json TEXT
+        )
+    """)
+    conn.commit()
+    return conn
+
+
+# ── Upload directory helpers ───────────────────────────────────────────────
 
 def cleanup_upload_dir() -> int:
-    """Delete the oldest files in UPLOAD_DIR when the count exceeds MAX_UPLOAD_FILES.
-
-    Returns the number of files deleted.
-    """
+    """Delete oldest files in UPLOAD_DIR when count exceeds MAX_UPLOAD_FILES."""
     try:
         entries = [
             os.path.join(UPLOAD_DIR, f)
@@ -21,78 +48,60 @@ def cleanup_upload_dir() -> int:
         ]
         if len(entries) <= MAX_UPLOAD_FILES:
             return 0
-
-        # Sort oldest-first by last-modified time
         entries.sort(key=lambda p: os.path.getmtime(p))
         to_delete = entries[: len(entries) - MAX_UPLOAD_FILES]
-
         for path in to_delete:
             try:
                 os.remove(path)
                 _logger.info("cleanup_upload_dir | deleted %r", path)
             except OSError as exc:
                 _logger.warning("cleanup_upload_dir | could not delete %r: %s", path, exc)
-
         return len(to_delete)
     except Exception as exc:
         _logger.warning("cleanup_upload_dir | error: %s", exc)
         return 0
 
-_current_student_doc = {
-    "filename": None,
-    "file_path": None,
-    "doc_type": None,
-    "text": None,
-    "analysis": None,
-    "audit_parse": None,
-}
 
+# ── PDF helpers ────────────────────────────────────────────────────────────
 
-def extract_pdf_text(pdf_path):
+def extract_pdf_text(pdf_path: str) -> str:
     reader = PdfReader(pdf_path)
-    full_text = []
-
+    pages = []
     for page in reader.pages:
         text = page.extract_text()
         if text:
             cleaned = text.strip()
             if cleaned:
-                full_text.append(cleaned)
+                pages.append(cleaned)
+    return "\n".join(pages)
 
-    return "\n".join(full_text)
 
-
-def detect_doc_type(filename, text):
+def detect_doc_type(filename: str, text: str) -> str:
     combined = f"{filename}\n{text}".lower()
-
     if "what-if" in combined or "what if" in combined:
         return "what_if_report"
-
     if "degree audit" in combined or "academic requirements report" in combined:
         return "degree_audit"
-
     if "transcript" in combined:
         return "transcript"
-
     return "academic_document"
 
 
-def normalize_line(line):
+def normalize_line(line: str) -> str:
     return " ".join(line.split()).strip()
 
 
-def looks_like_course(line):
+def looks_like_course(line: str) -> bool:
     return bool(re.search(r"\b[A-Z]{2,6}\s?\d{3}[A-Z]?\b", line.upper()))
 
 
-def extract_course_code(line):
+def extract_course_code(line: str):
     match = re.search(r"\b([A-Z]{2,6}\s?\d{3}[A-Z]?)\b", line.upper())
     return match.group(1).strip() if match else None
 
 
-def analyze_student_document(text):
+def analyze_student_document(text: str) -> dict:
     lines = [normalize_line(line) for line in text.splitlines() if normalize_line(line)]
-
     analysis = {
         "in_progress_courses": [],
         "withdrawn_or_unsat_courses": [],
@@ -101,7 +110,6 @@ def analyze_student_document(text):
         "possible_remaining_geneds": [],
         "all_flagged_lines": [],
     }
-
     seen = set()
 
     for line in lines:
@@ -109,11 +117,10 @@ def analyze_student_document(text):
 
         if "IN PROGRESS" in upper and looks_like_course(line):
             code = extract_course_code(line)
-            entry = {"course": code, "line": line}
             key = ("in_progress", line)
             if key not in seen:
                 seen.add(key)
-                analysis["in_progress_courses"].append(entry)
+                analysis["in_progress_courses"].append({"course": code, "line": line})
                 analysis["all_flagged_lines"].append(line)
 
         if (
@@ -121,96 +128,121 @@ def analyze_student_document(text):
             and looks_like_course(line)
         ):
             code = extract_course_code(line)
-            entry = {"course": code, "line": line}
             key = ("withdrawn", line)
             if key not in seen:
                 seen.add(key)
-                analysis["withdrawn_or_unsat_courses"].append(entry)
+                analysis["withdrawn_or_unsat_courses"].append({"course": code, "line": line})
                 analysis["all_flagged_lines"].append(line)
 
         unsat_phrases = [
-            "UNSATISFIED",
-            "NOT SATISFIED",
-            "STILL NEEDED",
-            "NEEDS",
-            "REMAINING",
-            "INCOMPLETE",
-            "NOT COMPLETE",
+            "UNSATISFIED", "NOT SATISFIED", "STILL NEEDED",
+            "NEEDS", "REMAINING", "INCOMPLETE", "NOT COMPLETE",
         ]
-
         if any(phrase in upper for phrase in unsat_phrases):
             key = ("unsat", line)
             if key not in seen:
                 seen.add(key)
                 analysis["unsatisfied_requirement_lines"].append(line)
                 analysis["all_flagged_lines"].append(line)
-
             if "ELECTIVE" in upper:
                 analysis["possible_remaining_electives"].append(line)
-
-            if (
-                "GENERAL EDUCATION" in upper
-                or "GEN ED" in upper
-                or "GENED" in upper
-                or "GHW" in upper
-                or "GQ" in upper
-                or "GA" in upper
-                or "GS" in upper
-                or "GN" in upper
-                or "US" in upper
-                or "IL" in upper
-            ):
+            if any(tag in upper for tag in [
+                "GENERAL EDUCATION", "GEN ED", "GENED",
+                "GHW", "GQ", "GA", "GS", "GN", "US", "IL",
+            ]):
                 analysis["possible_remaining_geneds"].append(line)
 
     return analysis
 
 
-def load_student_document(file_path, filename):
-    extension = os.path.splitext(filename)[1].lower()
+# ── Per-user document store ────────────────────────────────────────────────
 
-    if extension == ".pdf":
-        text = extract_pdf_text(file_path)
-    else:
-        text = ""
+def load_student_document(file_path: str, filename: str, user_id: str) -> dict:
+    extension = os.path.splitext(filename)[1].lower()
+    text = extract_pdf_text(file_path) if extension == ".pdf" else ""
 
     doc_type = detect_doc_type(filename, text)
     analysis = analyze_student_document(text)
     audit_parse = parse_whatif_blocks(text)
 
-    _current_student_doc["filename"] = filename
-    _current_student_doc["file_path"] = file_path
-    _current_student_doc["doc_type"] = doc_type
-    _current_student_doc["text"] = text
-    _current_student_doc["analysis"] = analysis
-    _current_student_doc["audit_parse"] = audit_parse
+    with _get_conn() as conn:
+        conn.execute(
+            """
+            INSERT OR REPLACE INTO user_docs
+                (user_id, filename, doc_type, text, analysis_json, audit_parse_json)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (
+                user_id,
+                filename,
+                doc_type,
+                text,
+                json.dumps(analysis),
+                json.dumps(audit_parse),
+            ),
+        )
+        conn.commit()
 
-    return _current_student_doc.copy()
+    return {
+        "filename": filename,
+        "file_path": file_path,
+        "doc_type": doc_type,
+        "text": text,
+        "analysis": analysis,
+        "audit_parse": audit_parse,
+    }
 
 
-def get_current_student_doc():
-    return _current_student_doc.copy()
+def get_current_student_doc(user_id: str) -> dict:
+    with _get_conn() as conn:
+        row = conn.execute(
+            "SELECT filename, doc_type, text, analysis_json, audit_parse_json "
+            "FROM user_docs WHERE user_id = ?",
+            (user_id,),
+        ).fetchone()
+
+    if not row:
+        return {
+            "filename": None, "file_path": None, "doc_type": None,
+            "text": None, "analysis": None, "audit_parse": None,
+        }
+
+    filename, doc_type, text, analysis_json, audit_parse_json = row
+    return {
+        "filename": filename,
+        "file_path": None,
+        "doc_type": doc_type,
+        "text": text,
+        "analysis": json.loads(analysis_json) if analysis_json else None,
+        "audit_parse": json.loads(audit_parse_json) if audit_parse_json else None,
+    }
 
 
-def clear_student_document():
-    for key in _current_student_doc:
-        _current_student_doc[key] = None
+def clear_student_document(user_id: str) -> None:
+    with _get_conn() as conn:
+        conn.execute("DELETE FROM user_docs WHERE user_id = ?", (user_id,))
+        conn.commit()
 
 
-def has_student_doc():
-    return bool(_current_student_doc.get("text"))
+def has_student_doc(user_id: str) -> bool:
+    with _get_conn() as conn:
+        row = conn.execute(
+            "SELECT 1 FROM user_docs WHERE user_id = ? AND text IS NOT NULL AND text != ''",
+            (user_id,),
+        ).fetchone()
+    return bool(row)
 
 
-def build_student_doc_context(max_chars=5000):
-    text = _current_student_doc.get("text") or ""
-    doc_type = _current_student_doc.get("doc_type") or "academic_document"
-    filename = _current_student_doc.get("filename") or "unknown"
-    analysis = _current_student_doc.get("analysis") or {}
-    audit_parse = _current_student_doc.get("audit_parse") or {}
-
+def build_student_doc_context(user_id: str, max_chars: int = 5000) -> str:
+    doc = get_current_student_doc(user_id)
+    text = doc.get("text") or ""
     if not text:
         return ""
 
-    trimmed_text = text[:max_chars]
+    doc_type = doc.get("doc_type") or "academic_document"
+    filename = doc.get("filename") or "unknown"
+    analysis = doc.get("analysis") or {}
+    audit_parse = doc.get("audit_parse") or {}
 
     analysis_lines = []
 
@@ -228,22 +260,18 @@ def build_student_doc_context(max_chars=5000):
         analysis_lines.append("In-progress courses detected:")
         for item in in_progress[:15]:
             analysis_lines.append(f"- {item['line']}")
-
     if withdrawn:
         analysis_lines.append("Withdrawn / not satisfactory courses detected:")
         for item in withdrawn[:15]:
             analysis_lines.append(f"- {item['line']}")
-
     if unsat:
         analysis_lines.append("Unsatisfied or remaining requirement lines detected:")
         for line in unsat[:20]:
             analysis_lines.append(f"- {line}")
-
     if electives:
         analysis_lines.append("Possible remaining elective-related lines:")
         for line in electives[:10]:
             analysis_lines.append(f"- {line}")
-
     if geneds:
         analysis_lines.append("Possible remaining gen ed-related lines:")
         for line in geneds[:10]:
@@ -255,5 +283,5 @@ def build_student_doc_context(max_chars=5000):
         f"Student uploaded document type: {doc_type}\n"
         f"Filename: {filename}\n\n"
         f"Structured findings from the document:\n{analysis_block}\n\n"
-        f"Document content excerpt:\n{trimmed_text}"
+        f"Document content excerpt:\n{text[:max_chars]}"
     )

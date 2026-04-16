@@ -1,11 +1,11 @@
 import logging
 import os
 
-from fastapi import FastAPI, Query, UploadFile, File, HTTPException
+from fastapi import FastAPI, Query, Form, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 
 from backend.config import UPLOAD_DIR, LOG_LEVEL
 from backend.services.vault_service import get_all_vault_records, search_vault
@@ -36,6 +36,7 @@ class ChatMessage(BaseModel):
 class ChatRequest(BaseModel):
     question: str = Field(..., min_length=1, max_length=2000)
     history: List[ChatMessage] = Field(default_factory=list)
+    user_id: Optional[str] = Field(default=None, max_length=256)
 
 app.add_middleware(
     CORSMiddleware,
@@ -82,21 +83,24 @@ def chat_with_advisor(question: str = Query(...)):
 
 @app.post("/chat/stream")
 async def chat_stream(req: ChatRequest):
-    logger.info("chat/stream | question=%r | history_turns=%d", req.question[:80], len(req.history))
+    logger.info("chat/stream | question=%r | history_turns=%d | user_id=%r", req.question[:80], len(req.history), req.user_id)
     history = [{"role": m.role, "content": m.content} for m in req.history]
     return StreamingResponse(
-        ask_advisor_stream(req.question, history=history),
+        ask_advisor_stream(req.question, history=history, user_id=req.user_id),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
 
 
 @app.get("/dashboard")
-def get_dashboard():
-    if not has_student_doc():
+def get_dashboard(user_id: str = Query(default=None)):
+    if not user_id:
+        return {"available": False, "message": "Not signed in"}
+
+    if not has_student_doc(user_id):
         return {"available": False, "message": "No student document uploaded"}
 
-    doc = get_current_student_doc()
+    doc = get_current_student_doc(user_id)
     audit_parse = doc.get("audit_parse") or {}
     doc_type = doc.get("doc_type") or "academic_document"
 
@@ -201,22 +205,30 @@ def get_dashboard():
 
 
 @app.post("/clear-student-doc")
-def clear_student_doc():
-    logger.info("Student document cleared")
-    clear_student_document()
+def clear_student_doc(user_id: str = Query(...)):
+    if not user_id:
+        raise HTTPException(status_code=401, detail="user_id is required")
+    logger.info("Student document cleared | user_id=%r", user_id)
+    clear_student_document(user_id)
     return {"message": "Student document cleared"}
 
 
 @app.post("/upload-student-doc")
-async def upload_student_doc(file: UploadFile = File(...)):
+async def upload_student_doc(
+    file: UploadFile = File(...),
+    user_id: str = Form(...),
+):
+    if not user_id:
+        raise HTTPException(status_code=401, detail="user_id is required")
+
     file_path = os.path.join(UPLOAD_DIR, file.filename)
-    logger.info("upload-student-doc | filename=%r", file.filename)
+    logger.info("upload-student-doc | filename=%r | user_id=%r", file.filename, user_id)
 
     with open(file_path, "wb") as f:
         content = await file.read()
         f.write(content)
 
-    doc_info = load_student_document(file_path, file.filename)
+    doc_info = load_student_document(file_path, file.filename, user_id)
     logger.info("upload-student-doc | doc_type=%r", doc_info.get("doc_type"))
 
     deleted = cleanup_upload_dir()

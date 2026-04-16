@@ -135,11 +135,12 @@ function App() {
 
   // ── Fetch audit data on mount (document may already be uploaded) ──
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard`)
+    if (!user?.uid) return;
+    fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard?user_id=${encodeURIComponent(user.uid)}`)
       .then(r => r.json())
       .then(d => { if (d.available) setAuditData(d); })
       .catch(() => {});
-  }, []);
+  }, [user?.uid]);
 
   // ── Conversation persistence: load ──
   useEffect(() => {
@@ -200,7 +201,7 @@ function App() {
       const response = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/chat/stream`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: query, history }),
+        body: JSON.stringify({ question: query, history, user_id: user?.uid || null }),
       });
 
       const reader = response.body.getReader();
@@ -279,10 +280,12 @@ function App() {
   // ── File upload ──
   const handleFileUpload = async (file) => {
     if (!file) return;
+    if (!user?.uid) { setUploadStatus("Sign in to upload"); return; }
     setUploadStatus("Uploading...");
     setUploadedFile(null);
     const fd = new FormData();
     fd.append("file", file);
+    fd.append("user_id", user.uid);
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/upload-student-doc`, {
         method: "POST",
@@ -294,7 +297,7 @@ function App() {
         setUploadStatus("Uploaded");
         // Fetch parsed audit data and push it to the widget section
         try {
-          const dashRes = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard`);
+          const dashRes = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard?user_id=${encodeURIComponent(user.uid)}`);
           const dashData = await dashRes.json();
           if (dashData.available) setAuditData(dashData);
         } catch {}
@@ -310,8 +313,12 @@ function App() {
     setUploadedFile(null);
     setUploadStatus("");
     setAuditData(null);
+    if (!user?.uid) return;
     try {
-      await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/clear-student-doc`, { method: "POST" });
+      await fetch(
+        `${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/clear-student-doc?user_id=${encodeURIComponent(user.uid)}`,
+        { method: "POST" }
+      );
     } catch {}
   };
 
@@ -541,6 +548,8 @@ function App() {
             <Dashboard
               uploadedFile={uploadedFile}
               onUploadClick={() => fileInputRef.current?.click()}
+              onRemoveClick={handleClearFile}
+              userId={user?.uid}
             />
           </div>
         ) : (

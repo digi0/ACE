@@ -65,19 +65,24 @@ function EmptyDashboard({ onUploadClick }) {
 }
 
 /* ── Dashboard ──────────────────────────────────────────────── */
-export default function Dashboard({ uploadedFile, onUploadClick }) {
+export default function Dashboard({ uploadedFile, onUploadClick, onRemoveClick, userId }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
 
   useEffect(() => {
+    if (!userId) {
+      setData(null);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setFetchError(null);
-    fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard`)
+    fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard?user_id=${encodeURIComponent(userId)}`)
       .then((r) => r.json())
       .then((d) => { setData(d); setLoading(false); })
       .catch(() => { setFetchError("Could not connect to the backend."); setLoading(false); });
-  }, [uploadedFile]);
+  }, [uploadedFile, userId]);
 
   if (loading) {
     return (
@@ -113,6 +118,19 @@ export default function Dashboard({ uploadedFile, onUploadClick }) {
 
   return (
     <div className="dashboard">
+
+      {/* ── Document actions ──────────────────────────── */}
+      <div className="dash-doc-actions">
+        <span className="dash-doc-label">📄 {data.filename || "Uploaded document"}</span>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <button className="dash-doc-btn dash-doc-btn--replace" onClick={onUploadClick}>
+            ↑ Upload new
+          </button>
+          <button className="dash-doc-btn dash-doc-btn--remove" onClick={onRemoveClick}>
+            × Remove
+          </button>
+        </div>
+      </div>
 
       {/* ── Alerts bar ────────────────────────────────── */}
       {alerts.length > 0 && (
