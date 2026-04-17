@@ -40,6 +40,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const handleGoogle = async () => {
     setError("");
@@ -65,7 +66,10 @@ export default function LoginPage() {
       if (mode === "signin") {
         await signInWithEmail(email, password);
       } else {
-        await signUpWithEmail(email, password, name.trim());
+        const result = await signUpWithEmail(email, password, name.trim());
+        if (result?.needsVerification) {
+          setVerificationSent(true);
+        }
       }
     } catch (e) {
       setError(friendlyError(e.code));
@@ -80,6 +84,7 @@ export default function LoginPage() {
     setName("");
     setEmail("");
     setPassword("");
+    setVerificationSent(false);
   };
 
   return (
@@ -104,6 +109,34 @@ export default function LoginPage() {
 
         {/* Card */}
         <div className="login-card">
+          {verificationSent ? (
+            <div style={{ textAlign: "center", padding: "8px 0" }}>
+              <div style={{
+                width: 44, height: 44, borderRadius: 10, background: "rgba(59,130,246,0.1)",
+                display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px",
+              }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                  stroke="#3b82f6" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                </svg>
+              </div>
+              <p className="login-card-title" style={{ marginBottom: 8 }}>Verification email sent</p>
+              <p className="login-card-subtitle">
+                Check your inbox and click the verification link, then come back and sign in.
+              </p>
+              <button
+                onClick={() => { setVerificationSent(false); setMode("signin"); }}
+                style={{
+                  marginTop: 20, fontSize: 13, color: "#3b82f6", background: "none",
+                  border: "none", cursor: "pointer", fontWeight: 500, fontFamily: "inherit",
+                }}
+              >
+                Back to sign in
+              </button>
+            </div>
+          ) : (
+          <>
           <h2 className="login-card-title">
             {mode === "signin" ? "Welcome back" : "Create your account"}
           </h2>
@@ -190,6 +223,8 @@ export default function LoginPage() {
               {mode === "signin" ? "Sign up" : "Sign in"}
             </button>
           </p>
+          </>
+          )}
         </div>
 
         <p className="login-footer">Built for Penn State students</p>

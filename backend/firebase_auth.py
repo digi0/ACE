@@ -45,7 +45,16 @@ async def get_current_user(
     """Dependency: verifies Bearer token, returns decoded claims dict (uid, email, …)."""
     if not creds:
         raise HTTPException(status_code=401, detail="Authorization header required")
-    return _verify(creds.credentials)
+    decoded = _verify(creds.credentials)
+
+    # Block unverified email/password users — Google sign-in is always verified
+    if not decoded.get("email_verified", False):
+        raise HTTPException(
+            status_code=403,
+            detail="Email not verified. Please check your inbox.",
+        )
+
+    return decoded
 
 
 async def get_optional_user(

@@ -14,6 +14,7 @@ import CoursePrereqMap from "./CoursePrereqMap.jsx";
 import GenEdExplorer from "./GenEdExplorer.jsx";
 import { useAuth } from "./AuthContext.jsx";
 import { apiFetch, apiStream } from "./api.js";
+import EmailVerificationScreen from "./EmailVerificationScreen.jsx";
 
 /* ── Icons ─────────────────────────────────────── */
 function GradCapIcon({ size = 16 }) {
@@ -463,6 +464,11 @@ function App() {
   // Not signed in → show login page
   if (user === null) {
     return <LoginPage />;
+  }
+
+  // Email/password user who hasn't verified yet
+  if (user && !user.emailVerified && user.providerData?.[0]?.providerId === "password") {
+    return <EmailVerificationScreen user={user} />;
   }
 
   return (

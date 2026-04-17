@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   updateProfile,
+  sendEmailVerification,
   signOut as firebaseSignOut,
 } from "firebase/auth";
 import { apiFetch } from "./api.js";
@@ -41,13 +42,30 @@ export function AuthProvider({ children }) {
   const signUpWithEmail = async (email, password, name) => {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(user, { displayName: name });
-    setUser({ ...user, displayName: name });
+    await sendEmailVerification(user);
+    // Sign out immediately — must verify email before accessing the app
+    await firebaseSignOut(auth);
+    return { needsVerification: true };
+  };
+
+  const resendVerification = async (email, password) => {
+    const { user } = await signInWithEmailAndPassword(auth, email, password);
+    if (!user.emailVerified) {
+      await sendEmailVerification(user);
+      await firebaseSignOut(auth);
+      return { sent: true };
+    }
+    // Already verified — let them through naturally via onAuthStateChanged
+    return { sent: false, alreadyVerified: true };
   };
 
   const signOut = () => firebaseSignOut(auth);
 
   return (
-    <AuthContext.Provider value={{ user, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut }}>
+    <AuthContext.Provider value={{
+      user, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut,
+      resendVerification,
+    }}>
       {children}
     </AuthContext.Provider>
   );
