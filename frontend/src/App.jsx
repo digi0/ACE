@@ -217,6 +217,20 @@ function App() {
     );
   }, [messages, activeConvId]);
 
+  // ── Reset all user-scoped state when the signed-in user changes ──
+  useEffect(() => {
+    setMessages([]);
+    setInput("");
+    setConversations([]);
+    setActiveConvId(null);
+    setFollowUpChips([]);
+    setAuditData(null);
+    setSelectedMajor(null);
+    setUploadedFile(null);
+    setUploadStatus("");
+    setActiveView("chat");
+  }, [user?.uid]);
+
   // ── Dark mode ──
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");
