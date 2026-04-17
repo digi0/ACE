@@ -16,6 +16,14 @@ from backend.services.student_doc_service import (
     get_current_student_doc,
     has_student_doc,
     cleanup_upload_dir,
+    set_user_major,
+    get_user_major,
+)
+from backend.services.program_service import (
+    get_all_programs,
+    get_course,
+    build_gen_ed_response,
+    search_programs,
 )
 
 logging.basicConfig(
@@ -204,6 +212,90 @@ def get_dashboard(user_id: str = Query(default=None)):
     }
 
 
+# ── Programs ──────────────────────────────────────────────────────────────────
+
+@app.get("/programs")
+def list_programs(
+    q: str = Query(default=None),
+    college: str = Query(default=None),
+    degree_type: str = Query(default=None),
+):
+    """
+    Return programs list.
+    Optional: ?q=search+query, ?college=engineering, ?degree_type=baccalaureate
+    """
+    if q:
+        progs = search_programs(q, limit=50)
+    else:
+        progs = get_all_programs()
+
+    if college:
+        progs = [p for p in progs if p.get("college", "").lower() == college.lower()]
+    if degree_type:
+        progs = [p for p in progs if p.get("degree_type", "").lower() == degree_type.lower()]
+
+    # Return lightweight list (no full requirements tree)
+    return [
+        {
+            "program_name": p["program_name"],
+            "degree_type": p.get("degree_type", ""),
+            "college": p.get("college", ""),
+            "plan_codes": p.get("plan_codes", []),
+            "campuses": p.get("campuses", []),
+            "total_credits": p.get("total_credits"),
+        }
+        for p in progs
+    ]
+
+
+# ── User major preference ─────────────────────────────────────────────────────
+
+class MajorRequest(BaseModel):
+    major: str = Field(..., min_length=1, max_length=500)
+    user_id: str = Field(..., min_length=1, max_length=256)
+
+
+@app.post("/user/major")
+def set_major(req: MajorRequest):
+    set_user_major(req.user_id, req.major)
+    logger.info("set_major | user_id=%r major=%r", req.user_id, req.major)
+    return {"message": "Major saved", "major": req.major}
+
+
+@app.get("/user/major")
+def get_major(user_id: str = Query(...)):
+    major = get_user_major(user_id)
+    return {"major": major}
+
+
+# ── Course detail ─────────────────────────────────────────────────────────────
+
+@app.get("/course/{code:path}")
+def course_detail(code: str):
+    course = get_course(code)
+    if not course:
+        raise HTTPException(status_code=404, detail=f"Course '{code}' not found")
+    return course
+
+
+# ── Gen-Ed explorer ───────────────────────────────────────────────────────────
+
+@app.get("/gen-ed")
+def gen_ed(
+    major: str = Query(default=None),
+    user_id: str = Query(default=None),
+):
+    """
+    Return gen-ed category data with course lists and major double-dip tags.
+    Major can be specified directly or looked up from user_id.
+    """
+    resolved_major = major
+    if not resolved_major and user_id:
+        resolved_major = get_user_major(user_id)
+    data = build_gen_ed_response(resolved_major)
+    return data
+
+
 @app.post("/clear-student-doc")
 def clear_student_doc(user_id: str = Query(...)):
     if not user_id:
@@ -240,4 +332,5 @@ async def upload_student_doc(
         "filename": file.filename,
         "path": file_path,
         "doc_type": doc_info.get("doc_type"),
+        "detected_major": doc_info.get("detected_major"),
     }

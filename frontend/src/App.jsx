@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
-import { Sun, Moon, ChevronLeft, ChevronRight, Plus, MessageSquare, Compass } from "lucide-react";
+import { Sun, Moon, ChevronLeft, ChevronRight, Plus, MessageSquare, Compass, GraduationCap } from "lucide-react";
 import Dashboard from "./Dashboard.jsx";
 import ResourceHub from "./ResourceHub.jsx";
 import GpaCalculator from "./GpaCalculator.jsx";
@@ -66,6 +66,102 @@ const FOLLOW_UP_MAP = {
 };
 
 
+const API = API;
+
+/* ── MajorSelectModal ──────────────────────────── */
+function MajorSelectModal({ userId, onSelect, onSkip }) {
+  const [programs, setPrograms]   = useState([]);
+  const [query, setQuery]         = useState("");
+  const [loading, setLoading]     = useState(true);
+  const [saving, setSaving]       = useState(false);
+  const [selected, setSelected]   = useState(null);
+
+  useEffect(() => {
+    fetch(`${API}/programs?degree_type=baccalaureate`)
+      .then((r) => r.json())
+      .then((data) => { setPrograms(data); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const filtered = query.trim()
+    ? programs.filter((p) =>
+        p.program_name.toLowerCase().includes(query.trim().toLowerCase())
+      )
+    : programs;
+
+  const handleConfirm = async () => {
+    if (!selected) return;
+    setSaving(true);
+    try {
+      await fetch(`${API}/user/major`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ major: selected.program_name, user_id: userId }),
+      });
+      onSelect(selected.program_name);
+    } catch {
+      onSelect(selected.program_name);   // store locally even if API fails
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="major-modal-overlay">
+      <div className="major-modal">
+        <div className="major-modal-header">
+          <GraduationCap size={20} strokeWidth={1.75} />
+          <h2 className="major-modal-title">What's your major?</h2>
+        </div>
+        <p className="major-modal-desc">
+          ACE will personalize Gen Ed suggestions, course recommendations, and advising
+          context for your specific degree program.
+        </p>
+        <input
+          className="major-modal-search"
+          type="text"
+          placeholder="Search programs (e.g. Computer Science, Psychology…)"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          autoFocus
+        />
+        <div className="major-modal-list">
+          {loading ? (
+            <div className="major-modal-loading">
+              <div className="loading-dots"><span /><span /><span /></div>
+            </div>
+          ) : filtered.length === 0 ? (
+            <p className="major-modal-empty">No programs found.</p>
+          ) : (
+            filtered.slice(0, 80).map((p) => (
+              <button
+                key={p.program_name}
+                className={`major-modal-item${selected?.program_name === p.program_name ? " major-modal-item--selected" : ""}`}
+                onClick={() => setSelected(p)}
+              >
+                <span className="major-modal-item-name">{p.program_name}</span>
+                <span className="major-modal-item-college">{p.college?.replace(/-/g, " ")}</span>
+              </button>
+            ))
+          )}
+        </div>
+        <div className="major-modal-actions">
+          <button className="major-modal-skip" onClick={onSkip}>
+            Skip for now
+          </button>
+          <button
+            className="major-modal-confirm"
+            disabled={!selected || saving}
+            onClick={handleConfirm}
+          >
+            {saving ? "Saving…" : "Continue"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── App ───────────────────────────────────────── */
 function App() {
   const { user, signOut } = useAuth();
@@ -89,6 +185,9 @@ function App() {
     } catch {}
     return ["deadlines"];
   });
+
+  const [selectedMajor, setSelectedMajor] = useState(null);
+  const [showMajorModal, setShowMajorModal] = useState(false);
 
   const [headerText, setHeaderText] = useState('');
   const fileInputRef = useRef(null);
@@ -137,7 +236,7 @@ function App() {
   // ── Fetch audit data on mount (document may already be uploaded) ──
   useEffect(() => {
     if (!user?.uid) return;
-    fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard?user_id=${encodeURIComponent(user.uid)}`)
+    fetch(`${API}/dashboard?user_id=${encodeURIComponent(user.uid)}`)
       .then(r => r.json())
       .then(d => { if (d.available) setAuditData(d); })
       .catch(() => {});
@@ -173,6 +272,35 @@ function App() {
     if (user?.uid) localStorage.setItem(`ace_onboarded_${user.uid}`, "1");
   };
 
+  // ── Major selection ──
+  useEffect(() => {
+    if (!user?.uid) return;
+    fetch(`${API}/user/major?user_id=${encodeURIComponent(user.uid)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.major) {
+          setSelectedMajor(data.major);
+        } else {
+          // First time: show modal after a short delay
+          const key = `ace_major_skipped_${user.uid}`;
+          if (!localStorage.getItem(key)) {
+            setTimeout(() => setShowMajorModal(true), 1200);
+          }
+        }
+      })
+      .catch(() => {});
+  }, [user?.uid]);
+
+  const handleMajorSelect = useCallback((majorName) => {
+    setSelectedMajor(majorName);
+    setShowMajorModal(false);
+  }, []);
+
+  const handleMajorSkip = useCallback(() => {
+    setShowMajorModal(false);
+    if (user?.uid) localStorage.setItem(`ace_major_skipped_${user.uid}`, "1");
+  }, [user?.uid]);
+
   // ── Send (real SSE streaming) ──
   const handleSend = async (text) => {
     const query = (text !== undefined ? text : input).trim();
@@ -199,7 +327,7 @@ function App() {
       .slice(-6);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/chat/stream`, {
+      const response = await fetch(`${API}/chat/stream`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: query, history, user_id: user?.uid || null }),
@@ -288,7 +416,7 @@ function App() {
     fd.append("file", file);
     fd.append("user_id", user.uid);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/upload-student-doc`, {
+      const res = await fetch(`${API}/upload-student-doc`, {
         method: "POST",
         body: fd,
       });
@@ -298,9 +426,13 @@ function App() {
         setUploadStatus("Uploaded");
         // Fetch parsed audit data and push it to the widget section
         try {
-          const dashRes = await fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard?user_id=${encodeURIComponent(user.uid)}`);
+          const dashRes = await fetch(`${API}/dashboard?user_id=${encodeURIComponent(user.uid)}`);
           const dashData = await dashRes.json();
           if (dashData.available) setAuditData(dashData);
+          // Use auto-detected major if user hasn't set one yet
+          if (data.detected_major && !selectedMajor) {
+            setSelectedMajor(data.detected_major);
+          }
         } catch {}
       } else {
         setUploadStatus(data.detail || "Upload failed");
@@ -317,7 +449,7 @@ function App() {
     if (!user?.uid) return;
     try {
       await fetch(
-        `${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/clear-student-doc?user_id=${encodeURIComponent(user.uid)}`,
+        `${API}/clear-student-doc?user_id=${encodeURIComponent(user.uid)}`,
         { method: "POST" }
       );
     } catch {}
@@ -406,6 +538,27 @@ function App() {
             ↩
           </button>
         </div>
+
+        {/* Major badge */}
+        {selectedMajor && (
+          <button
+            className="sidebar-major-badge"
+            title="Change major"
+            onClick={() => setShowMajorModal(true)}
+          >
+            <GraduationCap size={13} strokeWidth={1.75} />
+            <span className="sidebar-major-name">{selectedMajor}</span>
+          </button>
+        )}
+        {!selectedMajor && (
+          <button
+            className="sidebar-major-badge sidebar-major-badge--empty"
+            onClick={() => setShowMajorModal(true)}
+          >
+            <GraduationCap size={13} strokeWidth={1.75} />
+            <span>Set your major</span>
+          </button>
+        )}
 
         {/* Alert card */}
         <div className="sidebar-alert">
@@ -542,7 +695,7 @@ function App() {
           </div>
         ) : activeView === "gened" ? (
           <div className="dashboard-area">
-            <GenEdExplorer userId={user.uid} />
+            <GenEdExplorer userId={user.uid} selectedMajor={selectedMajor} />
           </div>
         ) : activeView === "dashboard" ? (
           <div className="dashboard-area">
@@ -704,6 +857,15 @@ function App() {
 
       {/* ── Onboarding tour ──────────────────── */}
       {showTour && <OnboardingTour onFinish={handleTourFinish} />}
+
+      {/* ── Major selection modal ─────────────── */}
+      {showMajorModal && (
+        <MajorSelectModal
+          userId={user.uid}
+          onSelect={handleMajorSelect}
+          onSkip={handleMajorSkip}
+        />
+      )}
     </div>
   );
 }

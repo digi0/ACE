@@ -10,6 +10,12 @@ from backend.services.student_doc_service import (
     has_student_doc,
     build_student_doc_context,
     get_current_student_doc,
+    get_user_major,
+)
+from backend.services.program_service import (
+    get_program,
+    build_program_context_snippet,
+    get_double_dips,
 )
 
 load_dotenv()
@@ -477,6 +483,9 @@ def ask_advisor(question, user_id: str = None):
     if user_id and has_student_doc(user_id):
         student_doc_context = build_student_doc_context(user_id)
 
+    user_major = get_user_major(user_id) if user_id else None
+    program_snippet = build_program_context_snippet(user_major) if user_major else ""
+
     # Deterministic path first for student-progress questions
     if intent == "student_progress" and student_doc:
         deterministic_answer = build_student_progress_answer(student_doc)
@@ -493,11 +502,14 @@ def ask_advisor(question, user_id: str = None):
 You are ACE, the Academic Counselling Engine for Penn State students.
 
 The student's question intent is: {intent}
+{"The student's selected major is: " + user_major if user_major else ""}
 
 You must answer using only:
 1. the provided advising records,
 2. the extracted rules,
-3. the uploaded student academic document if it is provided.
+3. the uploaded student academic document if it is provided,
+4. the program requirements if provided below.
+{program_snippet}
 
 Strict rules:
 - Give a direct answer first.
@@ -787,6 +799,31 @@ Official source: https://bulletins.psu.edu/undergraduate/general-education/
 """
 
 
+def _build_dynamic_gen_ed_snippet(program_name: str, prog: dict | None, double_dips: list[dict]) -> str:
+    """Build a gen-ed context snippet from live program data."""
+    lines = [f"=== PENN STATE GEN ED — {program_name.upper()} ==="]
+    if prog:
+        overlap = prog.get("gen_ed_overlap", {})
+        overlap_note = prog.get("gen_ed_overlap_note", "")
+        if overlap_note:
+            lines.append(overlap_note)
+        elif overlap:
+            parts = ", ".join(f"{v} credits of {k}" for k, v in overlap.items())
+            lines.append(f"Gen Ed overlap with this major: {parts}")
+
+    if double_dips:
+        lines.append("")
+        lines.append("DOUBLE-DIP OPPORTUNITIES (courses satisfying both this major AND Gen Ed):")
+        for dd in double_dips:
+            cats = ", ".join(dd.get("gen_ed_categories", []))
+            tag = "Prescribed" if dd.get("is_prescribed") else "Elective option"
+            lines.append(f"  - {dd['code']} ({dd.get('credits','')} cr) — Gen Ed: {cats} [{tag}]")
+
+    lines.append("")
+    lines.append("Use the above program-specific Gen Ed overlap data to answer the student's question accurately.")
+    return "\n".join(lines)
+
+
 def build_degree_audit_advisory(doc_type, declared):
     """Return a system-prompt advisory string, or empty string."""
     # Always advise when a what-if is uploaded
@@ -847,14 +884,28 @@ def ask_advisor_stream(question, history=None, user_id: str = None):
     resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
     deadline_snippet = DEADLINES_SNIPPET if intent == "deadline" else ""
 
-    # Pick the right gen-ed snippet based on detected major from doc or keywords
+    # Build program requirements context if user has a major selected
+    user_major = get_user_major(user_id) if user_id else None
+    program_snippet = ""
+    if user_major:
+        try:
+            program_snippet = build_program_context_snippet(user_major)
+        except Exception:
+            pass
+
+    # Gen-ed snippet: use dynamic program data if available, else static fallback
     if intent == "gen_ed":
-        q_lower = question.lower()
-        is_ds = (
-            doc_type in (None, "what_if_report", "academic_document")
-            and any(kw in q_lower for kw in ["dtsce", "data sciences", "data science", "ds "])
-        ) or (student_doc.get("major", "").upper() in ("DTSCE", "DS"))
-        gen_ed_snippet = DS_GEN_ED_SNIPPET if is_ds else GEN_ED_SNIPPET
+        if user_major:
+            try:
+                double_dips = get_double_dips(user_major)
+                prog = get_program(user_major)
+                gen_ed_snippet = _build_dynamic_gen_ed_snippet(user_major, prog, double_dips)
+            except Exception:
+                gen_ed_snippet = GEN_ED_SNIPPET
+        else:
+            q_lower = question.lower()
+            is_ds = any(kw in q_lower for kw in ["dtsce", "data sciences", "data science"])
+            gen_ed_snippet = DS_GEN_ED_SNIPPET if is_ds else GEN_ED_SNIPPET
     else:
         gen_ed_snippet = ""
 
@@ -872,6 +923,7 @@ def ask_advisor_stream(question, history=None, user_id: str = None):
     # All context lives in the system prompt so history messages stay lightweight
     system_prompt = f"""You are ACE, the Academic Counselling Engine for Penn State University students.
 The detected intent for the current question is: {intent}
+{"The student's selected major is: " + user_major if user_major else ""}
 
 === ADVISING RECORDS (current question) ===
 {context}
@@ -880,7 +932,7 @@ The detected intent for the current question is: {intent}
 {rule_summary}
 
 === STUDENT DOCUMENT ===
-{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{resources_snippet}{deadline_snippet}{gen_ed_snippet}
+{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{program_snippet if program_snippet else ""}{resources_snippet}{deadline_snippet}{gen_ed_snippet}
 
 === ANSWER RULES ===
 - You may use the conversation history above to understand follow-up context, but ground every answer in the advising records, extracted rules, and student document provided.

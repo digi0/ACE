@@ -32,6 +32,12 @@ def _get_conn() -> sqlite3.Connection:
             audit_parse_json TEXT
         )
     """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS user_prefs (
+            user_id        TEXT PRIMARY KEY,
+            selected_major TEXT
+        )
+    """)
     conn.commit()
     return conn
 
@@ -183,6 +189,21 @@ def load_student_document(file_path: str, filename: str, user_id: str) -> dict:
         )
         conn.commit()
 
+    # Auto-detect major from document text if user hasn't already set one
+    detected_major = None
+    if text and not get_user_major(user_id):
+        try:
+            from backend.services.program_service import detect_major_from_text
+            detected_major = detect_major_from_text(text)
+            if detected_major:
+                set_user_major(user_id, detected_major)
+                _logger.info(
+                    "load_student_document | auto-detected major=%r for user_id=%r",
+                    detected_major, user_id,
+                )
+        except Exception as exc:
+            _logger.warning("load_student_document | major auto-detection failed: %s", exc)
+
     return {
         "filename": filename,
         "file_path": file_path,
@@ -190,6 +211,7 @@ def load_student_document(file_path: str, filename: str, user_id: str) -> dict:
         "text": text,
         "analysis": analysis,
         "audit_parse": audit_parse,
+        "detected_major": detected_major,
     }
 
 
@@ -231,6 +253,37 @@ def has_student_doc(user_id: str) -> bool:
             (user_id,),
         ).fetchone()
     return bool(row)
+
+
+# ── Per-user major preferences ─────────────────────────────────────────────────
+
+def set_user_major(user_id: str, major: str) -> None:
+    """Store (or update) the student's selected major."""
+    with _get_conn() as conn:
+        conn.execute(
+            "INSERT OR REPLACE INTO user_prefs (user_id, selected_major) VALUES (?, ?)",
+            (user_id, major.strip()),
+        )
+        conn.commit()
+
+
+def get_user_major(user_id: str) -> str | None:
+    """Return the stored major for a user, or None if not set."""
+    if not user_id:
+        return None
+    with _get_conn() as conn:
+        row = conn.execute(
+            "SELECT selected_major FROM user_prefs WHERE user_id = ?",
+            (user_id,),
+        ).fetchone()
+    return row[0] if row else None
+
+
+def clear_user_major(user_id: str) -> None:
+    """Remove the stored major for a user."""
+    with _get_conn() as conn:
+        conn.execute("DELETE FROM user_prefs WHERE user_id = ?", (user_id,))
+        conn.commit()
 
 
 def build_student_doc_context(user_id: str, max_chars: int = 5000) -> str:
