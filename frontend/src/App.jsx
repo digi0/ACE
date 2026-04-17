@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
-import { Sun, Moon, ChevronLeft, ChevronRight, Plus, MessageSquare, Compass, GraduationCap } from "lucide-react";
+import { Sun, Moon, ChevronLeft, ChevronRight, Plus, MessageSquare, Compass, GraduationCap, LogOut, Pencil } from "lucide-react";
 import Dashboard from "./Dashboard.jsx";
 import ResourceHub from "./ResourceHub.jsx";
 import GpaCalculator from "./GpaCalculator.jsx";
@@ -499,108 +499,127 @@ function App() {
       {/* ── Sidebar ─────────────────────────── */}
       <aside className="sidebar" data-tour="sidebar">
 
-        {/* Brand */}
-        <div className="sidebar-header">
-          <div className="sidebar-brand">
-            <AceLogo size={34} />
-            <span className="sidebar-brand-name">ACE</span>
-          </div>
-          <div style={{ display: "flex", gap: 4 }}>
-            <button
-              className="sidebar-icon-btn"
-              onClick={() => setDarkMode(v => !v)}
-              title={darkMode ? "Light mode" : "Dark mode"}
-            >
-              {darkMode ? <Sun size={15} /> : <Moon size={15} />}
-            </button>
-            <button
-              className="sidebar-icon-btn"
-              onClick={() => setSidebarCollapsed(true)}
-              title="Collapse sidebar"
-            >
-              <ChevronLeft size={15} />
-            </button>
-          </div>
-        </div>
-
-        {/* User */}
-        <div className="sidebar-user">
-          <div className="sidebar-avatar">{initials}</div>
-          <div className="sidebar-user-info">
-            <div className="sidebar-user-name">{user.displayName || user.email}</div>
-            <div className="sidebar-user-email">{user.email}</div>
-          </div>
-          <button
-            className="sidebar-icon-btn"
-            title="Sign out"
-            onClick={signOut}
-          >
-            ↩
-          </button>
-        </div>
-
-        {/* Major badge */}
-        {selectedMajor && (
-          <button
-            className="sidebar-major-badge"
-            title="Change major"
-            onClick={() => setShowMajorModal(true)}
-          >
-            <GraduationCap size={13} strokeWidth={1.75} />
-            <span className="sidebar-major-name">{selectedMajor}</span>
-          </button>
-        )}
-        {!selectedMajor && (
-          <button
-            className="sidebar-major-badge sidebar-major-badge--empty"
-            onClick={() => setShowMajorModal(true)}
-          >
-            <GraduationCap size={13} strokeWidth={1.75} />
-            <span>Set your major</span>
-          </button>
-        )}
-
-        {/* Alert card */}
-        <div className="sidebar-alert">
-          <div className="sidebar-alert-meta">SPRING 2026 · JUNIOR · FULL-TIME</div>
-          <p className="sidebar-alert-text">
-            As an international student, any enrollment changes require prior
-            approval from Global Programs.
-          </p>
-          <button className="sidebar-alert-link">Check requirements →</button>
-        </div>
-
-        {/* Customisable widget section */}
-        <SidebarWidgetSection activeWidgets={activeWidgets} onNavigate={setActiveView} auditData={auditData} />
-
-        {/* New conversation */}
-        <button className="new-conv-btn" onClick={handleNewConversation}>
-          <Plus size={14} strokeWidth={2.5} /> New conversation
-        </button>
-
-        {/* Previous chats */}
-        <div className="sidebar-section sidebar-section--chats">
-          <div className="sidebar-section-label">PREVIOUS CHATS</div>
-          {conversations.length === 0 ? (
-            <p className="sidebar-empty">No previous chats</p>
-          ) : (
-            conversations.map((conv) => (
+        {/* ── Top (fixed): brand + user + major ── */}
+        <div className="sidebar-top">
+          <div className="sidebar-header">
+            <div className="sidebar-brand">
+              <AceLogo size={34} />
+              <span className="sidebar-brand-name">ACE</span>
+            </div>
+            <div style={{ display: "flex", gap: 4 }}>
               <button
-                key={conv.id}
-                className={`sidebar-nav-item${activeConvId === conv.id ? " sidebar-nav-item--active" : ""}`}
-                onClick={() => handleSwitchConversation(conv)}
+                className="sidebar-icon-btn"
+                onClick={() => setDarkMode(v => !v)}
+                title={darkMode ? "Light mode" : "Dark mode"}
               >
-                <MessageSquare size={13} className="sidebar-nav-icon" />
-                <span className="sidebar-chat-preview">{conv.preview}</span>
+                {darkMode ? <Sun size={15} /> : <Moon size={15} />}
               </button>
-            ))
-          )}
+              <button
+                className="sidebar-icon-btn"
+                onClick={() => setSidebarCollapsed(true)}
+                title="Collapse sidebar"
+              >
+                <ChevronLeft size={15} />
+              </button>
+            </div>
+          </div>
+
+          <div className="sidebar-user">
+            <div className="sidebar-avatar">{initials}</div>
+            <div className="sidebar-user-info">
+              <div className="sidebar-user-name">{user.displayName || user.email}</div>
+              <div className="sidebar-user-email">{user.email}</div>
+            </div>
+            <button className="sidebar-icon-btn" title="Sign out" onClick={signOut}>
+              <LogOut size={14} />
+            </button>
+          </div>
+
+          <div className="sidebar-major-row">
+            <GraduationCap size={13} strokeWidth={1.75} className="sidebar-major-icon" />
+            {selectedMajor ? (
+              <span className="sidebar-major-name">{selectedMajor}</span>
+            ) : (
+              <span className="sidebar-major-name sidebar-major-name--empty">Set your major</span>
+            )}
+            <button className="sidebar-major-edit" title="Change major" onClick={() => setShowMajorModal(true)}>
+              <Pencil size={11} />
+            </button>
+          </div>
         </div>
 
-        {/* Take the tour */}
-        <button className="sidebar-tour-btn" onClick={() => setShowTour(true)}>
-          <Compass size={13} /> Take the tour
-        </button>
+        {/* ── Middle (scrollable): status + widgets + chats ── */}
+        <div className="sidebar-middle">
+          {/* Smart Status Card — real data only */}
+          {auditData && auditData.available && (
+            <div className="sidebar-status">
+              <div className="sidebar-status-row">
+                <span className="sidebar-status-label">Progress</span>
+                <span className="sidebar-status-value">{Math.round(auditData.degree_progress_pct ?? 0)}%</span>
+              </div>
+              <div className="sidebar-status-bar">
+                <div className="sidebar-status-fill" style={{ width: `${Math.min(100, auditData.degree_progress_pct ?? 0)}%` }} />
+              </div>
+              <div className="sidebar-status-row">
+                <span className="sidebar-status-label">Credits</span>
+                <span className="sidebar-status-value">
+                  {auditData.credits_completed ?? 0} / {auditData.credits_required ?? 0}
+                </span>
+              </div>
+              {auditData.alerts && auditData.alerts.length > 0 && (
+                <div className="sidebar-status-alerts">
+                  {auditData.alerts.slice(0, 2).map((alert, i) => (
+                    <div key={i} className={`sidebar-status-alert sidebar-status-alert--${alert.type}`}>
+                      {alert.message}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Upload prompt — no document uploaded */}
+          {(!auditData || !auditData.available) && (
+            <div className="sidebar-upload-prompt">
+              <p className="sidebar-upload-text">
+                Upload your Degree Audit or What-If Report to unlock personalized tracking
+              </p>
+              <button className="sidebar-upload-btn" onClick={() => setActiveView("chat")}>
+                Upload Document →
+              </button>
+            </div>
+          )}
+
+          <SidebarWidgetSection activeWidgets={activeWidgets} onNavigate={setActiveView} auditData={auditData} />
+
+          <div className="sidebar-section sidebar-section--chats">
+            <div className="sidebar-section-label">PREVIOUS CHATS</div>
+            {conversations.length === 0 ? (
+              <p className="sidebar-empty">No previous chats</p>
+            ) : (
+              conversations.map((conv) => (
+                <button
+                  key={conv.id}
+                  className={`sidebar-nav-item${activeConvId === conv.id ? " sidebar-nav-item--active" : ""}`}
+                  onClick={() => handleSwitchConversation(conv)}
+                >
+                  <MessageSquare size={13} className="sidebar-nav-icon" />
+                  <span className="sidebar-chat-preview">{conv.preview}</span>
+                </button>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* ── Bottom (fixed): new conversation + tour ── */}
+        <div className="sidebar-bottom">
+          <button className="new-conv-btn" onClick={handleNewConversation}>
+            <Plus size={14} strokeWidth={2} /> New conversation
+          </button>
+          <button className="sidebar-tour-btn" onClick={() => setShowTour(true)}>
+            <Compass size={13} /> Take the tour
+          </button>
+        </div>
       </aside>
 
       {sidebarCollapsed && (

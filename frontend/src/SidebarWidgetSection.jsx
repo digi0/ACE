@@ -1,19 +1,7 @@
-import { LayoutGrid, Check, ExternalLink } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Settings, Check, ExternalLink, LayoutGrid, Upload } from "lucide-react";
 
-/* ── Spring 2026 deadlines ────────────────────────────────────── */
-const SPRING_DEADLINES = [
-  { date: "Jan 13", label: "First day of classes",       type: "info"    },
-  { date: "Jan 17", label: "Last day to add (full-sem)", type: "warning" },
-  { date: "Jan 20", label: "MLK Day – No classes",       type: "holiday" },
-  { date: "Feb 14", label: "Last day to drop (no W)",    type: "warning" },
-  { date: "Mar 9",  label: "Spring Break begins",        type: "holiday" },
-  { date: "Mar 21", label: "Last day to withdraw (W)",   type: "warning" },
-  { date: "Apr 11", label: "Last day of classes",        type: "info"    },
-  { date: "Apr 12", label: "Final Exams begin",          type: "exam"    },
-  { date: "May 10", label: "Summer tuition due",         type: "tuition" },
-];
-
-function parseDate(s) { return new Date(`${s} 2026`); }
+const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 /* ── Widget registry ──────────────────────────────────────────── */
 const WIDGET_DEFS = [
@@ -25,21 +13,60 @@ const WIDGET_DEFS = [
   { id: "prereq",    label: "Course Map",         viewId: "prereq",    desc: "Visualize course prerequisites"   },
 ];
 
+/* ── Category → deadline type mapping ────────────────────────── */
+function calEventType(eventName) {
+  const n = eventName.toLowerCase();
+  if (/(holiday|break|no classes|recess)/i.test(n))          return "holiday";
+  if (/(deadline|last day|late drop|late add|late reg|withdraw)/i.test(n)) return "warning";
+  if (/(final exam)/i.test(n))                                return "exam";
+  if (/(tuition|refund|billing|payment)/i.test(n))           return "tuition";
+  return "info";
+}
+
+function formatShortDate(isoDate) {
+  const [, mm, dd] = isoDate.split("-").map(Number);
+  const months = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return `${months[mm]} ${dd}`;
+}
+
 /* ── Compact widget content ───────────────────────────────────── */
 function DeadlinesWidget({ onNavigate }) {
-  const now = new Date();
-  const upcoming = SPRING_DEADLINES.filter(d => parseDate(d.date) >= now).slice(0, 3);
+  const [upcoming, setUpcoming] = useState(null); // null = loading
+
+  useEffect(() => {
+    fetch(`${API}/calendar/current`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (!data) { setUpcoming([]); return; }
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const items = (data.events || [])
+          .filter(e => e.iso_date && new Date(e.iso_date + "T00:00:00") >= today)
+          .slice(0, 3)
+          .map(e => ({
+            date:  formatShortDate(e.iso_date),
+            label: e.event,
+            type:  calEventType(e.event),
+          }));
+        setUpcoming(items);
+      })
+      .catch(() => setUpcoming([]));
+  }, []);
+
   return (
     <div className="wc-body">
-      {upcoming.length === 0
-        ? <p className="wc-empty">No upcoming deadlines</p>
-        : upcoming.map((d, i) => (
+      {upcoming === null ? (
+        <p className="wc-empty">Loading…</p>
+      ) : upcoming.length === 0 ? (
+        <p className="wc-empty">No upcoming deadlines</p>
+      ) : (
+        upcoming.map((d, i) => (
           <div key={i} className={`wc-deadline wc-deadline--${d.type}`}>
             <span className="wc-date">{d.date}</span>
             <span className="wc-dlabel">{d.label}</span>
           </div>
         ))
-      }
+      )}
       {onNavigate && (
         <button className="wc-link" onClick={() => onNavigate("calendar")}>View full calendar →</button>
       )}
@@ -88,18 +115,22 @@ function auditToProgressItems(auditData) {
 
 function ProgressWidget({ onNavigate, auditData }) {
   const liveItems = auditToProgressItems(auditData);
-  const items = liveItems ?? [
-    { label: "Core CS",   pct: 72 },
-    { label: "Math",      pct: 85 },
-    { label: "Gen Ed",    pct: 60 },
-    { label: "Electives", pct: 40 },
-  ];
+
+  if (!liveItems) {
+    return (
+      <div className="wc-body">
+        <p className="wc-empty">
+          <Upload size={11} style={{ display: "inline", marginRight: 5, verticalAlign: "middle", opacity: 0.6 }} />
+          Upload your degree audit to track progress
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="wc-body">
-      {liveItems && (
-        <p className="wc-desc" style={{ marginBottom: 2 }}>From your uploaded audit</p>
-      )}
-      {items.map(item => (
+      <p className="wc-desc" style={{ marginBottom: 4 }}>From your uploaded audit</p>
+      {liveItems.map(item => (
         <div key={item.label} className="wc-prog-row">
           <div className="wc-prog-meta">
             <span className="wc-prog-label">{item.label}</span>
@@ -185,24 +216,30 @@ const WIDGET_COMPONENTS = {
 
 /* ── Main sidebar widget section ─────────────────────────────── */
 export default function SidebarWidgetSection({ activeWidgets, onNavigate, auditData }) {
-  const deadlineBadge = SPRING_DEADLINES.some(d => {
-    const ms = parseDate(d.date) - new Date();
-    return ms >= 0 && ms <= 7 * 24 * 60 * 60 * 1000;
-  });
-
   return (
     <div className="ws-root">
+      <div className="ws-section-header">
+        <span className="ws-section-label">WIDGETS</span>
+        {onNavigate && (
+          <button
+            className="ws-gear-btn"
+            onClick={() => onNavigate("widgets")}
+            title="Manage widgets"
+          >
+            <Settings size={13} />
+          </button>
+        )}
+      </div>
+
       <div className="ws-stack">
         {activeWidgets.map(id => {
           const def     = WIDGET_DEFS.find(d => d.id === id);
           if (!def) return null;
           const Content = WIDGET_COMPONENTS[id];
-          const badge   = id === "deadlines" && deadlineBadge;
           return (
             <div key={id} className="ws-card">
               <div className="ws-card-header">
                 <span className="ws-card-label">{def.label}</span>
-                {badge && <span className="ws-badge" />}
                 {onNavigate && def.viewId && (
                   <button
                     className="ws-open-btn"
@@ -218,13 +255,16 @@ export default function SidebarWidgetSection({ activeWidgets, onNavigate, auditD
           );
         })}
         {activeWidgets.length === 0 && (
-          <p className="ws-empty">No widgets added yet.</p>
+          <div className="ws-empty-state">
+            <p className="ws-empty-state-msg">Add widgets to customize your sidebar</p>
+            {onNavigate && (
+              <button className="ws-empty-add-btn" onClick={() => onNavigate("widgets")}>
+                <LayoutGrid size={12} /> Add widgets
+              </button>
+            )}
+          </div>
         )}
       </div>
-
-      <button className="ws-edit-btn" onClick={() => onNavigate("widgets")}>
-        <LayoutGrid size={13} /> Manage Widgets
-      </button>
     </div>
   );
 }
