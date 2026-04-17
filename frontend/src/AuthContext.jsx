@@ -3,6 +3,8 @@ import { auth } from "./firebase";
 import {
   onAuthStateChanged,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -19,6 +21,17 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(undefined);
 
   useEffect(() => {
+    // Handle redirect result on mobile after returning from Google
+    getRedirectResult(auth).then(async (result) => {
+      if (result?.user) {
+        try {
+          await apiFetch("/auth/sync", { method: "POST" });
+        } catch (e) {
+          console.warn("User sync failed:", e);
+        }
+      }
+    }).catch(() => {});
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {
@@ -33,8 +46,13 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
-  const signInWithGoogle = () =>
-    signInWithPopup(auth, new GoogleAuthProvider());
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  const signInWithGoogle = () => {
+    const provider = new GoogleAuthProvider();
+    if (isMobile) return signInWithRedirect(auth, provider);
+    return signInWithPopup(auth, provider);
+  };
 
   const signInWithEmail = (email, password) =>
     signInWithEmailAndPassword(auth, email, password);
