@@ -97,10 +97,10 @@ export default function LoginPage() {
 
   return (
     <div className="login-page">
+      <AnimatedShaderBackground />
 
       {/* ── Left hero panel ─────────────────────── */}
       <div className="login-hero">
-        <AnimatedShaderBackground />
         <div className="login-hero-content">
           <GradCapIcon size={64} />
           <h1 className="login-hero-title">ACE</h1>
