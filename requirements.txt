@@ -9,4 +9,6 @@ numpy==2.4.3
 pydantic==2.12.5
 python-dotenv==1.2.2
 beautifulsoup4==4.14.3
+requests==2.33.1
+lxml==6.0.4
 python-multipart==0.0.22

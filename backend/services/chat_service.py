@@ -675,31 +675,7 @@ Mention the most relevant 1–2 resources naturally at the end of your response.
 """
 
 
-DEADLINES_SNIPPET = """
-=== PENN STATE ACADEMIC CALENDAR — KEY DEADLINES ===
-
-SPRING 2026 SEMESTER:
-- First day of classes: January 13, 2026
-- Last day to add a course (penalty-free): January 19, 2026
-- Martin Luther King Jr. Day (no classes): January 19, 2026
-- Last day to drop a course without a "W" grade: January 26, 2026
-- Spring Break: March 9–13, 2026
-- Last day to drop a course WITH a "W" grade (late drop): March 20, 2026
-- Last day of classes: April 25, 2026
-- Final exams: April 28 – May 4, 2026
-- Commencement: May 9, 2026
-
-FALL 2026 REGISTRATION (for current students):
-- Priority registration for seniors (90+ credits): April 6–10, 2026
-- Priority registration for juniors (60–89 credits): April 13–17, 2026
-- Priority registration for sophomores (30–59 credits): April 20–24, 2026
-- Open registration for freshmen and all others: April 27, 2026 onward
-
-SUMMER 2026 (approximate):
-- Summer Session 1 (6-week): May 18 – June 26, 2026
-- Summer Session 2 (6-week): July 6 – August 14, 2026
-- Full Summer (12-week): May 18 – August 14, 2026
-
+_DEADLINES_STATIC_NOTES = """
 IMPORTANT NOTES:
 - "W" grades (course withdrawals) appear on transcript but do NOT affect GPA.
 - Dropping after the late-drop deadline requires Dean's exception (rare — illness, emergency).
@@ -714,6 +690,62 @@ OFFICIAL LINKS:
 - Schedule of Courses: https://soc.psu.edu/
 - Tuition/Billing: https://bursar.psu.edu/
 """
+
+_deadlines_cache: str | None = None
+
+
+def _build_deadlines_snippet() -> str:
+    """
+    Build the DEADLINES_SNIPPET from backend/data/calendar.json.
+    Falls back to a generic header if the file is missing.
+    Results are cached in-process so the file is read once per worker.
+    """
+    global _deadlines_cache
+    if _deadlines_cache is not None:
+        return _deadlines_cache
+
+    try:
+        from backend.services.calendar_scraper import load_calendar
+        data = load_calendar()
+    except Exception:
+        data = None
+
+    if not data:
+        _deadlines_cache = (
+            "=== PENN STATE ACADEMIC CALENDAR ===\n"
+            "(Calendar data unavailable — advise student to check registrar.psu.edu)"
+            + _DEADLINES_STATIC_NOTES
+        )
+        return _deadlines_cache
+
+    lines = ["=== PENN STATE ACADEMIC CALENDAR — KEY DEADLINES ==="]
+    current_name = data.get("current_semester", "")
+
+    # Include current + any upcoming semesters (up to 3 total)
+    semesters = data.get("semesters", [])
+    current_idx = next(
+        (i for i, s in enumerate(semesters) if s["semester"] == current_name), 0
+    )
+    for sem in semesters[current_idx: current_idx + 3]:
+        lines.append(f"\n{sem['semester'].upper()}:")
+        for ev in sem.get("events", []):
+            date_str = ev.get("date", "")
+            time_str = ev.get("time", "")
+            suffix = f" at {time_str}" if time_str else ""
+            lines.append(f"- {ev['event']}: {date_str}{suffix}")
+
+    lines.append(_DEADLINES_STATIC_NOTES)
+    _deadlines_cache = "\n".join(lines)
+    return _deadlines_cache
+
+
+def _get_deadlines_snippet() -> str:
+    return _build_deadlines_snippet()
+
+
+# Keep the name for backward compatibility — evaluated lazily on first use
+def _deadlines_snippet_property() -> str:
+    return _get_deadlines_snippet()
 
 DS_GEN_ED_SNIPPET = """
 === PENN STATE GEN ED REQUIREMENTS FOR DTSCE (DATA SCIENCES, 2024-2025) ===
@@ -882,7 +914,7 @@ def ask_advisor_stream(question, history=None, user_id: str = None):
         logger.info("ask_advisor_stream | degree audit advisory injected | doc_type=%r", doc_type)
 
     resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
-    deadline_snippet = DEADLINES_SNIPPET if intent == "deadline" else ""
+    deadline_snippet = _get_deadlines_snippet() if intent == "deadline" else ""
 
     # Build program requirements context if user has a major selected
     user_major = get_user_major(user_id) if user_id else None

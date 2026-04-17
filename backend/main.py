@@ -25,6 +25,11 @@ from backend.services.program_service import (
     build_gen_ed_response,
     search_programs,
 )
+from backend.services.calendar_scraper import (
+    load_calendar,
+    refresh_calendar,
+    CALENDAR_FILE,
+)
 
 logging.basicConfig(
     level=getattr(logging, LOG_LEVEL.upper(), logging.INFO),
@@ -294,6 +299,54 @@ def gen_ed(
         resolved_major = get_user_major(user_id)
     data = build_gen_ed_response(resolved_major)
     return data
+
+
+# ── Academic Calendar ─────────────────────────────────────────────────────────
+
+@app.get("/calendar")
+def get_calendar():
+    """Return the full calendar JSON (all semesters)."""
+    data = load_calendar()
+    if not data:
+        raise HTTPException(status_code=503, detail="Calendar data not available. Run /calendar/refresh first.")
+    return data
+
+
+@app.get("/calendar/current")
+def get_current_calendar():
+    """Return only the current semester's events."""
+    data = load_calendar()
+    if not data:
+        raise HTTPException(status_code=503, detail="Calendar data not available.")
+    current_name = data.get("current_semester", "")
+    current_sem = next(
+        (s for s in data.get("semesters", []) if s["semester"] == current_name),
+        None,
+    )
+    if not current_sem:
+        raise HTTPException(status_code=404, detail=f"Current semester '{current_name}' not found in data.")
+    return {
+        "semester": current_name,
+        "year": current_sem.get("year"),
+        "events": current_sem.get("events", []),
+        "footnotes": current_sem.get("footnotes", {}),
+        "scraped_at": data.get("scraped_at"),
+    }
+
+
+@app.post("/calendar/refresh")
+def refresh_calendar_endpoint():
+    """Re-scrape the registrar page and update calendar.json."""
+    try:
+        data = refresh_calendar()
+        return {
+            "message": "Calendar refreshed",
+            "semesters": [s["semester"] for s in data["semesters"]],
+            "current_semester": data["current_semester"],
+            "scraped_at": data["scraped_at"],
+        }
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Scrape failed: {exc}")
 
 
 @app.post("/clear-student-doc")
