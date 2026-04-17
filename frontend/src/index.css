@@ -2405,7 +2405,7 @@ body {
 [data-theme="dark"] .main-panel    { background: #111111; }
 [data-theme="dark"] .top-bar       { background: #141414; border-color: #262626; }
 [data-theme="dark"] .chat-area     { background: #111111; }
-[data-theme="dark"] .chat-area .absolute { opacity: 0.4; }
+[data-theme="dark"] .chat-area > div:first-child { opacity: 0.15; }
 [data-theme="dark"] .input-section { background: #111111; }
 [data-theme="dark"] .dashboard-area { background: #111111; }
 

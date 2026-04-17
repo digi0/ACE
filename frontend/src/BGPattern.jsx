@@ -1,17 +1,13 @@
-function cn(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
-
-const maskClasses = {
-  'fade-edges':  '[mask-image:radial-gradient(ellipse_at_center,var(--background),transparent)]',
-  'fade-center': '[mask-image:radial-gradient(ellipse_at_center,transparent,var(--background))]',
-  'fade-top':    '[mask-image:linear-gradient(to_bottom,transparent,var(--background))]',
-  'fade-bottom': '[mask-image:linear-gradient(to_bottom,var(--background),transparent)]',
-  'fade-left':   '[mask-image:linear-gradient(to_right,transparent,var(--background))]',
-  'fade-right':  '[mask-image:linear-gradient(to_right,var(--background),transparent)]',
-  'fade-x':      '[mask-image:linear-gradient(to_right,transparent,var(--background),transparent)]',
-  'fade-y':      '[mask-image:linear-gradient(to_bottom,transparent,var(--background),transparent)]',
-  none: '',
+const maskStyles = {
+  'fade-edges':  { maskImage: 'radial-gradient(ellipse at center, black, transparent)' },
+  'fade-center': { maskImage: 'radial-gradient(ellipse at center, transparent, black)' },
+  'fade-top':    { maskImage: 'linear-gradient(to bottom, transparent, black)' },
+  'fade-bottom': { maskImage: 'linear-gradient(to bottom, black, transparent)' },
+  'fade-left':   { maskImage: 'linear-gradient(to right, transparent, black)' },
+  'fade-right':  { maskImage: 'linear-gradient(to right, black, transparent)' },
+  'fade-x':      { maskImage: 'linear-gradient(to right, transparent, black, transparent)' },
+  'fade-y':      { maskImage: 'linear-gradient(to bottom, transparent, black, transparent)' },
+  none: {},
 };
 
 function getBgImage(variant, fill, size) {
@@ -34,11 +30,10 @@ function getBgImage(variant, fill, size) {
 }
 
 export function BGPattern({
-  variant = 'grid',
+  variant = 'dots',
   mask = 'none',
   size = 24,
   fill = '#252525',
-  className,
   style,
   ...props
 }) {
@@ -47,11 +42,15 @@ export function BGPattern({
 
   return (
     <div
-      className={cn('absolute inset-0 size-full', maskClasses[mask], className)}
       style={{
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 0,
         backgroundImage,
         backgroundSize: bgSize,
-        zIndex: -10,
+        ...(maskStyles[mask] || {}),
         ...style,
       }}
       {...props}

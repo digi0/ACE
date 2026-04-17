@@ -587,8 +587,8 @@ function App() {
           </div>
         ) : (
         <>
-        <div className="chat-area" style={{ position: "relative" }}>
-          <BGPattern variant="dots" fill="var(--gray-200)" size={20} style={{ zIndex: 0 }} />
+        <div className="chat-area">
+          <BGPattern variant="dots" fill="#e4e4e7" size={20} />
           {!hasMessages ? (
             <div className="welcome-screen">
               <AceLogo size={72} />
