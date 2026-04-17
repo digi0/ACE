@@ -66,7 +66,7 @@ const FOLLOW_UP_MAP = {
 };
 
 
-const API = API;
+const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 /* ── MajorSelectModal ──────────────────────────── */
 function MajorSelectModal({ userId, onSelect, onSkip }) {
