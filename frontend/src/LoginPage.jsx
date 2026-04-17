@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "./AuthContext";
+import AnimatedShaderBackground from "./AnimatedShaderBackground";
 
 /* ── Icons ──────────────────────────────────────────── */
 function GoogleIcon() {
@@ -99,6 +100,7 @@ export default function LoginPage() {
 
       {/* ── Left hero panel ─────────────────────── */}
       <div className="login-hero">
+        <AnimatedShaderBackground />
         <div className="login-hero-content">
           <GradCapIcon size={64} />
           <h1 className="login-hero-title">ACE</h1>
