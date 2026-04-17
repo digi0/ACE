@@ -13,6 +13,7 @@ import GraduationChecklist from "./GraduationChecklist.jsx";
 import CoursePrereqMap from "./CoursePrereqMap.jsx";
 import GenEdExplorer from "./GenEdExplorer.jsx";
 import { useAuth } from "./AuthContext.jsx";
+import { apiFetch, apiStream } from "./api.js";
 
 /* ── Icons ─────────────────────────────────────── */
 function GradCapIcon({ size = 16 }) {
@@ -94,10 +95,9 @@ function MajorSelectModal({ userId, onSelect, onSkip }) {
     if (!selected) return;
     setSaving(true);
     try {
-      await fetch(`${API}/user/major`, {
+      await apiFetch(`/user/major`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ major: selected.program_name, user_id: userId }),
+        body: JSON.stringify({ major: selected.program_name }),
       });
       onSelect(selected.program_name);
     } catch {
@@ -225,7 +225,7 @@ function App() {
   // ── Fetch audit data on mount (document may already be uploaded) ──
   useEffect(() => {
     if (!user?.uid) return;
-    fetch(`${API}/dashboard?user_id=${encodeURIComponent(user.uid)}`)
+    apiFetch("/dashboard")
       .then(r => r.json())
       .then(d => { if (d.available) setAuditData(d); })
       .catch(() => {});
@@ -264,7 +264,7 @@ function App() {
   // ── Major selection ──
   useEffect(() => {
     if (!user?.uid) return;
-    fetch(`${API}/user/major?user_id=${encodeURIComponent(user.uid)}`)
+    apiFetch("/user/major")
       .then((r) => r.json())
       .then((data) => {
         if (data.major) {
@@ -316,11 +316,7 @@ function App() {
       .slice(-6);
 
     try {
-      const response = await fetch(`${API}/chat/stream`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: query, history, user_id: user?.uid || null }),
-      });
+      const response = await apiStream("/chat/stream", { question: query, history });
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -403,9 +399,8 @@ function App() {
     setUploadedFile(null);
     const fd = new FormData();
     fd.append("file", file);
-    fd.append("user_id", user.uid);
     try {
-      const res = await fetch(`${API}/upload-student-doc`, {
+      const res = await apiFetch("/upload-student-doc", {
         method: "POST",
         body: fd,
       });
@@ -415,7 +410,7 @@ function App() {
         setUploadStatus("Uploaded");
         // Fetch parsed audit data and push it to the widget section
         try {
-          const dashRes = await fetch(`${API}/dashboard?user_id=${encodeURIComponent(user.uid)}`);
+          const dashRes = await apiFetch("/dashboard");
           const dashData = await dashRes.json();
           if (dashData.available) setAuditData(dashData);
           // Use auto-detected major if user hasn't set one yet
@@ -437,10 +432,7 @@ function App() {
     setAuditData(null);
     if (!user?.uid) return;
     try {
-      await fetch(
-        `${API}/clear-student-doc?user_id=${encodeURIComponent(user.uid)}`,
-        { method: "POST" }
-      );
+      await apiFetch("/clear-student-doc", { method: "POST" });
     } catch {}
   };
 

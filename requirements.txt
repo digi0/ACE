@@ -12,3 +12,7 @@ beautifulsoup4==4.14.3
 requests==2.33.1
 lxml==6.0.4
 python-multipart==0.0.22
+psycopg2-binary>=2.9.9
+sqlalchemy==2.0.36
+alembic==1.13.3
+firebase-admin==6.6.0

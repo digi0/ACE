@@ -1,45 +1,34 @@
 import os
 import re
 import json
-import sqlite3
 import logging
+from datetime import datetime, timezone
 from pypdf import PdfReader
 from backend.services.audit_parser_service import parse_whatif_blocks
 from backend.config import UPLOAD_DIR, MAX_UPLOAD_FILES
+from backend.database import SessionLocal
+from backend.models import User, UserDocument
 
 _logger = logging.getLogger(__name__)
 
-# ── SQLite persistence ─────────────────────────────────────────────────────
-# Each user's document is stored as a row keyed by their Firebase UID.
-#
-# PRODUCTION NOTE: Replace this SQLite file with a proper database
-# (e.g. PostgreSQL on Railway via DATABASE_URL) when multi-instance or
-# high-traffic deployment is needed. SQLite is fine for a single Railway
-# instance but data will be lost if the volume is ephemeral.
-_DB_PATH = os.path.join("backend", "data", "ace_users.db")
+
+# ── DB session helper ──────────────────────────────────────────────────────
+
+def _ensure_db(db):
+    """Return (session, should_close). If db is None, opens a new one."""
+    if db is not None:
+        return db, False
+    return SessionLocal(), True
 
 
-def _get_conn() -> sqlite3.Connection:
-    os.makedirs(os.path.dirname(_DB_PATH), exist_ok=True)
-    conn = sqlite3.connect(_DB_PATH, check_same_thread=False)
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS user_docs (
-            user_id          TEXT PRIMARY KEY,
-            filename         TEXT,
-            doc_type         TEXT,
-            text             TEXT,
-            analysis_json    TEXT,
-            audit_parse_json TEXT
-        )
-    """)
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS user_prefs (
-            user_id        TEXT PRIMARY KEY,
-            selected_major TEXT
-        )
-    """)
-    conn.commit()
-    return conn
+def _ensure_user(db, user_id: str) -> User:
+    """Get or create the User row for user_id (upsert by PK)."""
+    user = db.query(User).filter_by(id=user_id).first()
+    if not user:
+        user = User(id=user_id)
+        db.add(user)
+        db.flush()
+    return user
 
 
 # ── Upload directory helpers ───────────────────────────────────────────────
@@ -163,7 +152,7 @@ def analyze_student_document(text: str) -> dict:
 
 # ── Per-user document store ────────────────────────────────────────────────
 
-def load_student_document(file_path: str, filename: str, user_id: str) -> dict:
+def load_student_document(file_path: str, filename: str, user_id: str, db=None) -> dict:
     extension = os.path.splitext(filename)[1].lower()
     text = extract_pdf_text(file_path) if extension == ".pdf" else ""
 
@@ -171,23 +160,34 @@ def load_student_document(file_path: str, filename: str, user_id: str) -> dict:
     analysis = analyze_student_document(text)
     audit_parse = parse_whatif_blocks(text)
 
-    with _get_conn() as conn:
-        conn.execute(
-            """
-            INSERT OR REPLACE INTO user_docs
-                (user_id, filename, doc_type, text, analysis_json, audit_parse_json)
-            VALUES (?, ?, ?, ?, ?, ?)
-            """,
-            (
-                user_id,
-                filename,
-                doc_type,
-                text,
-                json.dumps(analysis),
-                json.dumps(audit_parse),
-            ),
-        )
-        conn.commit()
+    db, should_close = _ensure_db(db)
+    try:
+        _ensure_user(db, user_id)
+
+        # Upsert: replace any existing doc for this user
+        existing = db.query(UserDocument).filter_by(user_id=user_id).first()
+        if existing:
+            existing.filename = filename
+            existing.doc_type = doc_type
+            existing.text = text
+            existing.analysis_json = json.dumps(analysis)
+            existing.audit_parse_json = json.dumps(audit_parse)
+            existing.uploaded_at = datetime.now(timezone.utc)
+        else:
+            doc = UserDocument(
+                user_id=user_id,
+                filename=filename,
+                doc_type=doc_type,
+                text=text,
+                analysis_json=json.dumps(analysis),
+                audit_parse_json=json.dumps(audit_parse),
+            )
+            db.add(doc)
+
+        db.commit()
+    finally:
+        if should_close:
+            db.close()
 
     # Auto-detect major from document text if user hasn't already set one
     detected_major = None
@@ -215,13 +215,18 @@ def load_student_document(file_path: str, filename: str, user_id: str) -> dict:
     }
 
 
-def get_current_student_doc(user_id: str) -> dict:
-    with _get_conn() as conn:
-        row = conn.execute(
-            "SELECT filename, doc_type, text, analysis_json, audit_parse_json "
-            "FROM user_docs WHERE user_id = ?",
-            (user_id,),
-        ).fetchone()
+def get_current_student_doc(user_id: str, db=None) -> dict:
+    db, should_close = _ensure_db(db)
+    try:
+        row = (
+            db.query(UserDocument)
+            .filter_by(user_id=user_id)
+            .order_by(UserDocument.uploaded_at.desc())
+            .first()
+        )
+    finally:
+        if should_close:
+            db.close()
 
     if not row:
         return {
@@ -229,61 +234,79 @@ def get_current_student_doc(user_id: str) -> dict:
             "text": None, "analysis": None, "audit_parse": None,
         }
 
-    filename, doc_type, text, analysis_json, audit_parse_json = row
     return {
-        "filename": filename,
+        "filename": row.filename,
         "file_path": None,
-        "doc_type": doc_type,
-        "text": text,
-        "analysis": json.loads(analysis_json) if analysis_json else None,
-        "audit_parse": json.loads(audit_parse_json) if audit_parse_json else None,
+        "doc_type": row.doc_type,
+        "text": row.text,
+        "analysis": json.loads(row.analysis_json) if row.analysis_json else None,
+        "audit_parse": json.loads(row.audit_parse_json) if row.audit_parse_json else None,
     }
 
 
-def clear_student_document(user_id: str) -> None:
-    with _get_conn() as conn:
-        conn.execute("DELETE FROM user_docs WHERE user_id = ?", (user_id,))
-        conn.commit()
+def clear_student_document(user_id: str, db=None) -> None:
+    db, should_close = _ensure_db(db)
+    try:
+        db.query(UserDocument).filter_by(user_id=user_id).delete()
+        db.commit()
+    finally:
+        if should_close:
+            db.close()
 
 
-def has_student_doc(user_id: str) -> bool:
-    with _get_conn() as conn:
-        row = conn.execute(
-            "SELECT 1 FROM user_docs WHERE user_id = ? AND text IS NOT NULL AND text != ''",
-            (user_id,),
-        ).fetchone()
-    return bool(row)
-
-
-# ── Per-user major preferences ─────────────────────────────────────────────────
-
-def set_user_major(user_id: str, major: str) -> None:
-    """Store (or update) the student's selected major."""
-    with _get_conn() as conn:
-        conn.execute(
-            "INSERT OR REPLACE INTO user_prefs (user_id, selected_major) VALUES (?, ?)",
-            (user_id, major.strip()),
+def has_student_doc(user_id: str, db=None) -> bool:
+    db, should_close = _ensure_db(db)
+    try:
+        row = (
+            db.query(UserDocument.id)
+            .filter(
+                UserDocument.user_id == user_id,
+                UserDocument.text.isnot(None),
+                UserDocument.text != "",
+            )
+            .first()
         )
-        conn.commit()
+        return row is not None
+    finally:
+        if should_close:
+            db.close()
 
 
-def get_user_major(user_id: str) -> str | None:
-    """Return the stored major for a user, or None if not set."""
+# ── Per-user major preferences ─────────────────────────────────────────────
+
+def set_user_major(user_id: str, major: str, db=None) -> None:
+    db, should_close = _ensure_db(db)
+    try:
+        user = _ensure_user(db, user_id)
+        user.selected_major = major.strip()
+        db.commit()
+    finally:
+        if should_close:
+            db.close()
+
+
+def get_user_major(user_id: str, db=None) -> str | None:
     if not user_id:
         return None
-    with _get_conn() as conn:
-        row = conn.execute(
-            "SELECT selected_major FROM user_prefs WHERE user_id = ?",
-            (user_id,),
-        ).fetchone()
-    return row[0] if row else None
+    db, should_close = _ensure_db(db)
+    try:
+        user = db.query(User).filter_by(id=user_id).first()
+        return user.selected_major if user else None
+    finally:
+        if should_close:
+            db.close()
 
 
-def clear_user_major(user_id: str) -> None:
-    """Remove the stored major for a user."""
-    with _get_conn() as conn:
-        conn.execute("DELETE FROM user_prefs WHERE user_id = ?", (user_id,))
-        conn.commit()
+def clear_user_major(user_id: str, db=None) -> None:
+    db, should_close = _ensure_db(db)
+    try:
+        user = db.query(User).filter_by(id=user_id).first()
+        if user:
+            user.selected_major = None
+            db.commit()
+    finally:
+        if should_close:
+            db.close()
 
 
 def build_student_doc_context(user_id: str, max_chars: int = 5000) -> str:

@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-
-const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+import { apiFetch } from "./api.js";
 
 /* ── Static fallback courses for categories sparse in the bulletin scrape ── */
 const STATIC_FALLBACK = {
@@ -204,9 +203,8 @@ export default function GenEdExplorer({ userId, selectedMajor }) {
     setLoading(true);
     const params = new URLSearchParams();
     if (selectedMajor) params.set("major", selectedMajor);
-    else if (userId)   params.set("user_id", userId);
 
-    fetch(`${API}/gen-ed?${params}`)
+    apiFetch(`/gen-ed?${params}`)
       .then((r) => r.json())
       .then((data) => { setGenEdData(data); setLoading(false); })
       .catch(() => { setGenEdData(null); setLoading(false); });

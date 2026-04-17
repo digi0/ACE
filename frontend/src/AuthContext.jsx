@@ -9,6 +9,7 @@ import {
   updateProfile,
   signOut as firebaseSignOut,
 } from "firebase/auth";
+import { apiFetch } from "./api.js";
 
 const AuthContext = createContext(null);
 
@@ -17,7 +18,17 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(undefined);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, setUser);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setUser(firebaseUser);
+      if (firebaseUser) {
+        // Sync user record to our database (non-blocking)
+        try {
+          await apiFetch("/auth/sync", { method: "POST" });
+        } catch (e) {
+          console.warn("User sync failed:", e);
+        }
+      }
+    });
     return unsubscribe;
   }, []);
 
@@ -30,7 +41,6 @@ export function AuthProvider({ children }) {
   const signUpWithEmail = async (email, password, name) => {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(user, { displayName: name });
-    // Refresh the user object so displayName is immediately available
     setUser({ ...user, displayName: name });
   };
 

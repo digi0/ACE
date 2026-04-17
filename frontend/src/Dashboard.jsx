@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { AlertTriangle, Info, CheckCircle } from "lucide-react";
+import { apiFetch } from "./api.js";
 
 /* ── Degree Progress Bar ────────────────────────────────────── */
 function DegreeProgressBar({ pct, completed, remaining, required }) {
@@ -79,7 +80,7 @@ export default function Dashboard({ uploadedFile, onUploadClick, onRemoveClick, 
     }
     setLoading(true);
     setFetchError(null);
-    fetch(`${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/dashboard?user_id=${encodeURIComponent(userId)}`)
+    apiFetch("/dashboard")
       .then((r) => r.json())
       .then((d) => { setData(d); setLoading(false); })
       .catch(() => { setFetchError("Could not connect to the backend."); setLoading(false); });

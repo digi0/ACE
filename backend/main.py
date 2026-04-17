@@ -1,13 +1,18 @@
 import logging
 import os
+from datetime import datetime, timezone
 
-from fastapi import FastAPI, Query, Form, UploadFile, File, HTTPException
+from fastapi import FastAPI, Query, Form, UploadFile, File, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from typing import List, Optional
+from sqlalchemy.orm import Session
 
 from backend.config import UPLOAD_DIR, LOG_LEVEL
+from backend.database import engine, Base, get_db
+from backend import models  # noqa: F401 — registers models with Base
+from backend.firebase_auth import get_current_user, get_optional_user
 from backend.services.vault_service import get_all_vault_records, search_vault
 from backend.services.chat_service import ask_advisor, ask_advisor_stream
 from backend.services.student_doc_service import (
@@ -40,6 +45,27 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
+# Create all tables (safe to call repeatedly — only creates if missing)
+Base.metadata.create_all(bind=engine)
+
+# ── CORS ──────────────────────────────────────────────────────────────────────
+ALLOWED_ORIGINS = os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:5173,http://localhost:5174,http://localhost:5175,http://127.0.0.1:5173,http://127.0.0.1:8000",
+).split(",")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
+)
+
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+
+# ── Request models ────────────────────────────────────────────────────────────
 
 class ChatMessage(BaseModel):
     role: str = Field(..., pattern="^(user|assistant)$")
@@ -49,18 +75,13 @@ class ChatMessage(BaseModel):
 class ChatRequest(BaseModel):
     question: str = Field(..., min_length=1, max_length=2000)
     history: List[ChatMessage] = Field(default_factory=list)
-    user_id: Optional[str] = Field(default=None, max_length=256)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+class MajorRequest(BaseModel):
+    major: str = Field(..., min_length=1, max_length=500)
 
+
+# ── Public endpoints ──────────────────────────────────────────────────────────
 
 @app.get("/")
 def root():
@@ -70,10 +91,7 @@ def root():
 @app.get("/vault")
 def get_vault_records():
     records = get_all_vault_records()
-    return {
-        "total_records": len(records),
-        "data": records
-    }
+    return {"total_records": len(records), "data": records}
 
 
 @app.get("/vault/search")
@@ -83,10 +101,7 @@ def search_vault_records(
     keyword: str = Query(default=None)
 ):
     results = search_vault(category=category, used_for=used_for, keyword=keyword)
-    return {
-        "total_results": len(results),
-        "data": results
-    }
+    return {"total_results": len(results), "data": results}
 
 
 @app.get("/chat")
@@ -94,26 +109,151 @@ def chat_with_advisor(question: str = Query(...)):
     return ask_advisor(question)
 
 
+@app.get("/programs")
+def list_programs(
+    q: str = Query(default=None),
+    college: str = Query(default=None),
+    degree_type: str = Query(default=None),
+):
+    if q:
+        progs = search_programs(q, limit=50)
+    else:
+        progs = get_all_programs()
+
+    if college:
+        progs = [p for p in progs if p.get("college", "").lower() == college.lower()]
+    if degree_type:
+        progs = [p for p in progs if p.get("degree_type", "").lower() == degree_type.lower()]
+
+    return [
+        {
+            "program_name": p["program_name"],
+            "degree_type": p.get("degree_type", ""),
+            "college": p.get("college", ""),
+            "plan_codes": p.get("plan_codes", []),
+            "campuses": p.get("campuses", []),
+            "total_credits": p.get("total_credits"),
+        }
+        for p in progs
+    ]
+
+
+@app.get("/course/{code:path}")
+def course_detail(code: str):
+    course = get_course(code)
+    if not course:
+        raise HTTPException(status_code=404, detail=f"Course '{code}' not found")
+    return course
+
+
+@app.get("/calendar")
+def get_calendar():
+    data = load_calendar()
+    if not data:
+        raise HTTPException(status_code=503, detail="Calendar data not available. Run /calendar/refresh first.")
+    return data
+
+
+@app.get("/calendar/current")
+def get_current_calendar():
+    data = load_calendar()
+    if not data:
+        raise HTTPException(status_code=503, detail="Calendar data not available.")
+    current_name = data.get("current_semester", "")
+    current_sem = next(
+        (s for s in data.get("semesters", []) if s["semester"] == current_name),
+        None,
+    )
+    if not current_sem:
+        raise HTTPException(status_code=404, detail=f"Current semester '{current_name}' not found in data.")
+    return {
+        "semester": current_name,
+        "year": current_sem.get("year"),
+        "events": current_sem.get("events", []),
+        "footnotes": current_sem.get("footnotes", {}),
+        "scraped_at": data.get("scraped_at"),
+    }
+
+
+@app.post("/calendar/refresh")
+def refresh_calendar_endpoint():
+    try:
+        data = refresh_calendar()
+        return {
+            "message": "Calendar refreshed",
+            "semesters": [s["semester"] for s in data["semesters"]],
+            "current_semester": data["current_semester"],
+            "scraped_at": data["scraped_at"],
+        }
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Scrape failed: {exc}")
+
+
+# ── Gen-Ed explorer (optional auth — unauthenticated users can browse) ────────
+
+@app.get("/gen-ed")
+def gen_ed(
+    major: str = Query(default=None),
+    current_user: dict | None = Depends(get_optional_user),
+    db: Session = Depends(get_db),
+):
+    resolved_major = major
+    if not resolved_major and current_user:
+        resolved_major = get_user_major(current_user["uid"], db=db)
+    data = build_gen_ed_response(resolved_major)
+    return data
+
+
+# ── Auth-required endpoints ───────────────────────────────────────────────────
+
+@app.post("/auth/sync")
+def sync_user(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Called after login to upsert user record in the database."""
+    user = db.query(models.User).filter_by(id=current_user["uid"]).first()
+    if not user:
+        user = models.User(
+            id=current_user["uid"],
+            email=current_user.get("email"),
+            display_name=current_user.get("name"),
+        )
+        db.add(user)
+    else:
+        user.email = current_user.get("email", user.email)
+        user.display_name = current_user.get("name", user.display_name)
+        user.last_login = datetime.now(timezone.utc)
+    db.commit()
+    return {"message": "User synced", "uid": current_user["uid"]}
+
+
 @app.post("/chat/stream")
-async def chat_stream(req: ChatRequest):
-    logger.info("chat/stream | question=%r | history_turns=%d | user_id=%r", req.question[:80], len(req.history), req.user_id)
+async def chat_stream(
+    req: ChatRequest,
+    current_user: dict = Depends(get_current_user),
+):
+    user_id = current_user["uid"]
+    logger.info("chat/stream | question=%r | history_turns=%d | user_id=%r", req.question[:80], len(req.history), user_id)
     history = [{"role": m.role, "content": m.content} for m in req.history]
     return StreamingResponse(
-        ask_advisor_stream(req.question, history=history, user_id=req.user_id),
+        ask_advisor_stream(req.question, history=history, user_id=user_id),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
 
 
 @app.get("/dashboard")
-def get_dashboard(user_id: str = Query(default=None)):
-    if not user_id:
-        return {"available": False, "message": "Not signed in"}
+def get_dashboard(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    user_id = current_user["uid"]
 
-    if not has_student_doc(user_id):
+    if not has_student_doc(user_id, db=db):
         return {"available": False, "message": "No student document uploaded"}
 
-    doc = get_current_student_doc(user_id)
+    doc = get_current_student_doc(user_id, db=db)
     audit_parse = doc.get("audit_parse") or {}
     doc_type = doc.get("doc_type") or "academic_document"
 
@@ -154,7 +294,6 @@ def get_dashboard(user_id: str = Query(default=None)):
 
         units = block.get("units", {})
 
-        # Collapse *OR* Group 1–N blocks into one descriptive entry
         if _re.match(r'^\*?OR\*?\s*Group\s+\d+|^Group\s+\d+$', title, _re.IGNORECASE):
             if not or_group_seen:
                 or_group_seen = True
@@ -217,155 +356,44 @@ def get_dashboard(user_id: str = Query(default=None)):
     }
 
 
-# ── Programs ──────────────────────────────────────────────────────────────────
-
-@app.get("/programs")
-def list_programs(
-    q: str = Query(default=None),
-    college: str = Query(default=None),
-    degree_type: str = Query(default=None),
-):
-    """
-    Return programs list.
-    Optional: ?q=search+query, ?college=engineering, ?degree_type=baccalaureate
-    """
-    if q:
-        progs = search_programs(q, limit=50)
-    else:
-        progs = get_all_programs()
-
-    if college:
-        progs = [p for p in progs if p.get("college", "").lower() == college.lower()]
-    if degree_type:
-        progs = [p for p in progs if p.get("degree_type", "").lower() == degree_type.lower()]
-
-    # Return lightweight list (no full requirements tree)
-    return [
-        {
-            "program_name": p["program_name"],
-            "degree_type": p.get("degree_type", ""),
-            "college": p.get("college", ""),
-            "plan_codes": p.get("plan_codes", []),
-            "campuses": p.get("campuses", []),
-            "total_credits": p.get("total_credits"),
-        }
-        for p in progs
-    ]
-
-
-# ── User major preference ─────────────────────────────────────────────────────
-
-class MajorRequest(BaseModel):
-    major: str = Field(..., min_length=1, max_length=500)
-    user_id: str = Field(..., min_length=1, max_length=256)
-
-
 @app.post("/user/major")
-def set_major(req: MajorRequest):
-    set_user_major(req.user_id, req.major)
-    logger.info("set_major | user_id=%r major=%r", req.user_id, req.major)
+def set_major(
+    req: MajorRequest,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    set_user_major(current_user["uid"], req.major, db=db)
+    logger.info("set_major | user_id=%r major=%r", current_user["uid"], req.major)
     return {"message": "Major saved", "major": req.major}
 
 
 @app.get("/user/major")
-def get_major(user_id: str = Query(...)):
-    major = get_user_major(user_id)
+def get_major(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    major = get_user_major(current_user["uid"], db=db)
     return {"major": major}
 
 
-# ── Course detail ─────────────────────────────────────────────────────────────
-
-@app.get("/course/{code:path}")
-def course_detail(code: str):
-    course = get_course(code)
-    if not course:
-        raise HTTPException(status_code=404, detail=f"Course '{code}' not found")
-    return course
-
-
-# ── Gen-Ed explorer ───────────────────────────────────────────────────────────
-
-@app.get("/gen-ed")
-def gen_ed(
-    major: str = Query(default=None),
-    user_id: str = Query(default=None),
-):
-    """
-    Return gen-ed category data with course lists and major double-dip tags.
-    Major can be specified directly or looked up from user_id.
-    """
-    resolved_major = major
-    if not resolved_major and user_id:
-        resolved_major = get_user_major(user_id)
-    data = build_gen_ed_response(resolved_major)
-    return data
-
-
-# ── Academic Calendar ─────────────────────────────────────────────────────────
-
-@app.get("/calendar")
-def get_calendar():
-    """Return the full calendar JSON (all semesters)."""
-    data = load_calendar()
-    if not data:
-        raise HTTPException(status_code=503, detail="Calendar data not available. Run /calendar/refresh first.")
-    return data
-
-
-@app.get("/calendar/current")
-def get_current_calendar():
-    """Return only the current semester's events."""
-    data = load_calendar()
-    if not data:
-        raise HTTPException(status_code=503, detail="Calendar data not available.")
-    current_name = data.get("current_semester", "")
-    current_sem = next(
-        (s for s in data.get("semesters", []) if s["semester"] == current_name),
-        None,
-    )
-    if not current_sem:
-        raise HTTPException(status_code=404, detail=f"Current semester '{current_name}' not found in data.")
-    return {
-        "semester": current_name,
-        "year": current_sem.get("year"),
-        "events": current_sem.get("events", []),
-        "footnotes": current_sem.get("footnotes", {}),
-        "scraped_at": data.get("scraped_at"),
-    }
-
-
-@app.post("/calendar/refresh")
-def refresh_calendar_endpoint():
-    """Re-scrape the registrar page and update calendar.json."""
-    try:
-        data = refresh_calendar()
-        return {
-            "message": "Calendar refreshed",
-            "semesters": [s["semester"] for s in data["semesters"]],
-            "current_semester": data["current_semester"],
-            "scraped_at": data["scraped_at"],
-        }
-    except Exception as exc:
-        raise HTTPException(status_code=502, detail=f"Scrape failed: {exc}")
-
-
 @app.post("/clear-student-doc")
-def clear_student_doc(user_id: str = Query(...)):
-    if not user_id:
-        raise HTTPException(status_code=401, detail="user_id is required")
+def clear_student_doc(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    user_id = current_user["uid"]
     logger.info("Student document cleared | user_id=%r", user_id)
-    clear_student_document(user_id)
+    clear_student_document(user_id, db=db)
     return {"message": "Student document cleared"}
 
 
 @app.post("/upload-student-doc")
 async def upload_student_doc(
     file: UploadFile = File(...),
-    user_id: str = Form(...),
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
-    if not user_id:
-        raise HTTPException(status_code=401, detail="user_id is required")
-
+    user_id = current_user["uid"]
     file_path = os.path.join(UPLOAD_DIR, file.filename)
     logger.info("upload-student-doc | filename=%r | user_id=%r", file.filename, user_id)
 
@@ -373,7 +401,7 @@ async def upload_student_doc(
         content = await file.read()
         f.write(content)
 
-    doc_info = load_student_document(file_path, file.filename, user_id)
+    doc_info = load_student_document(file_path, file.filename, user_id, db=db)
     logger.info("upload-student-doc | doc_type=%r", doc_info.get("doc_type"))
 
     deleted = cleanup_upload_dir()
