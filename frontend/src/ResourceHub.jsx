@@ -1,11 +1,8 @@
 const RESOURCES = [
   {
     category: "Mental Health & Wellness",
-    categoryIcon: "🧠",
-    accent: "purple",
     items: [
       {
-        icon: "💬",
         name: "CAPS",
         full: "Counseling & Psychological Services",
         description:
@@ -13,7 +10,6 @@ const RESOURCES = [
         link: "https://studentaffairs.psu.edu/counseling",
       },
       {
-        icon: "🆘",
         name: "Crisis Support",
         full: "988 Suicide & Crisis Lifeline",
         description:
@@ -21,7 +17,6 @@ const RESOURCES = [
         link: "https://988lifeline.org/",
       },
       {
-        icon: "🤝",
         name: "Peer Counseling",
         full: "CAPS Peer Counseling Program",
         description:
@@ -32,11 +27,8 @@ const RESOURCES = [
   },
   {
     category: "Medical & Health",
-    categoryIcon: "🏥",
-    accent: "red",
     items: [
       {
-        icon: "🩺",
         name: "UHS",
         full: "University Health Services",
         description:
@@ -44,7 +36,6 @@ const RESOURCES = [
         link: "https://studentaffairs.psu.edu/health",
       },
       {
-        icon: "💊",
         name: "Student Pharmacy",
         full: "UHS Student Pharmacy",
         description:
@@ -55,11 +46,8 @@ const RESOURCES = [
   },
   {
     category: "Academic Support",
-    categoryIcon: "📚",
-    accent: "blue",
     items: [
       {
-        icon: "📖",
         name: "LRC",
         full: "Learning Resource Center",
         description:
@@ -67,7 +55,6 @@ const RESOURCES = [
         link: "https://lrc.psu.edu/",
       },
       {
-        icon: "✍️",
         name: "Writing Center",
         full: "Penn State Writing Center",
         description:
@@ -75,7 +62,6 @@ const RESOURCES = [
         link: "https://writing.psu.edu/",
       },
       {
-        icon: "➗",
         name: "Calc Central",
         full: "Calculus Central",
         description:
@@ -83,7 +69,6 @@ const RESOURCES = [
         link: "https://math.psu.edu/undergraduate/calculus-central",
       },
       {
-        icon: "🎓",
         name: "EECS Advising",
         full: "Engineering Advising Office",
         description:
@@ -94,11 +79,8 @@ const RESOURCES = [
   },
   {
     category: "Career & Professional",
-    categoryIcon: "🎯",
-    accent: "gold",
     items: [
       {
-        icon: "💼",
         name: "Career Services",
         full: "Nittany Lion Career Network",
         description:
@@ -106,7 +88,6 @@ const RESOURCES = [
         link: "https://careerservices.psu.edu/",
       },
       {
-        icon: "🔗",
         name: "Handshake",
         full: "Handshake Job & Internship Portal",
         description:
@@ -117,11 +98,8 @@ const RESOURCES = [
   },
   {
     category: "Campus Life",
-    categoryIcon: "🎉",
-    accent: "orange",
     items: [
       {
-        icon: "🏛️",
         name: "OrgCentral",
         full: "Student Organizations Hub",
         description:
@@ -129,7 +107,6 @@ const RESOURCES = [
         link: "https://orgcentral.psu.edu/",
       },
       {
-        icon: "🏋️",
         name: "RecSports",
         full: "Campus Recreation & Sports",
         description:
@@ -137,7 +114,6 @@ const RESOURCES = [
         link: "https://recsports.psu.edu/",
       },
       {
-        icon: "🎭",
         name: "Student Activities",
         full: "Office of Student Activities",
         description:
@@ -148,11 +124,8 @@ const RESOURCES = [
   },
   {
     category: "Financial Support",
-    categoryIcon: "💰",
-    accent: "green",
     items: [
       {
-        icon: "🏦",
         name: "Bursar",
         full: "Bursar's Office",
         description:
@@ -160,7 +133,6 @@ const RESOURCES = [
         link: "https://bursar.psu.edu/",
       },
       {
-        icon: "🎒",
         name: "Student Aid",
         full: "Office of Student Aid",
         description:
@@ -168,7 +140,6 @@ const RESOURCES = [
         link: "https://studentaid.psu.edu/",
       },
       {
-        icon: "🆘",
         name: "Emergency Fund",
         full: "Student Emergency Aid Fund",
         description:
@@ -179,11 +150,8 @@ const RESOURCES = [
   },
   {
     category: "Safety & Emergency",
-    categoryIcon: "🔒",
-    accent: "navy",
     items: [
       {
-        icon: "🚔",
         name: "UPPS",
         full: "University Police & Public Safety",
         description:
@@ -191,7 +159,6 @@ const RESOURCES = [
         link: "https://police.psu.edu/",
       },
       {
-        icon: "🚶",
         name: "Safe Walk",
         full: "Safe Walk Escort Program",
         description:
@@ -199,7 +166,6 @@ const RESOURCES = [
         link: "https://police.psu.edu/services/safewalk",
       },
       {
-        icon: "❤️",
         name: "Student Care",
         full: "Student Care & Advocacy",
         description:
@@ -214,7 +180,6 @@ const RESOURCES = [
 function ResourceCard({ item }) {
   return (
     <div className="resource-card">
-      <div className="resource-card-icon">{item.icon}</div>
       <div className="resource-card-body">
         <div className="resource-card-header">
           <span className="resource-card-name">{item.name}</span>
@@ -238,7 +203,6 @@ function ResourceCard({ item }) {
 export default function ResourceHub() {
   return (
     <div className="resource-hub">
-      {/* Header */}
       <div className="resource-hub-header">
         <h1 className="resource-hub-title">PSU Resource Hub</h1>
         <p className="resource-hub-subtitle">
@@ -247,13 +211,11 @@ export default function ResourceHub() {
         </p>
       </div>
 
-      {/* Categories */}
       {RESOURCES.map((cat) => (
         <section key={cat.category} className="resource-section">
           <div className="resource-section-header">
-            <span className="resource-section-icon">{cat.categoryIcon}</span>
             <h2 className="resource-section-title">{cat.category}</h2>
-            <span className={`resource-section-badge resource-section-badge--${cat.accent}`}>
+            <span className="resource-section-badge">
               {cat.items.length} resource{cat.items.length !== 1 ? "s" : ""}
             </span>
           </div>

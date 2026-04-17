@@ -7,7 +7,6 @@ const GEN_ED_CATS = [
     id: "fyw",
     code: "FYW",
     label: "First-Year Writing",
-    icon: "✍️",
     creditsRequired: 3,
     description:
       "Develops foundational college writing skills. Required for all Penn State students.",
@@ -33,7 +32,6 @@ const GEN_ED_CATS = [
     id: "gq",
     code: "GQ",
     label: "Quantification",
-    icon: "➗",
     creditsRequired: 3,
     description:
       "Develops mathematical reasoning and quantitative literacy.",
@@ -71,7 +69,6 @@ const GEN_ED_CATS = [
     id: "gn",
     code: "GN",
     label: "Natural Sciences",
-    icon: "🔬",
     creditsRequired: 6,
     description:
       "Two GN courses required (6 cr total). At least one must include a lab component.",
@@ -116,7 +113,6 @@ const GEN_ED_CATS = [
     id: "ga",
     code: "GA",
     label: "Arts",
-    icon: "🎨",
     creditsRequired: 3,
     description:
       "Explores creative expression in visual art, music, theatre, film, or design.",
@@ -165,7 +161,6 @@ const GEN_ED_CATS = [
     id: "gh",
     code: "GH",
     label: "Humanities",
-    icon: "📖",
     creditsRequired: 3,
     description:
       "Engages with human culture, philosophy, history, and literature.",
@@ -214,7 +209,6 @@ const GEN_ED_CATS = [
     id: "gs",
     code: "GS",
     label: "Social & Behavioral Sciences",
-    icon: "🧠",
     creditsRequired: 3,
     description:
       "Develops understanding of human behavior, society, and social institutions.",
@@ -263,7 +257,6 @@ const GEN_ED_CATS = [
     id: "gha",
     code: "GHA",
     label: "Health & Physical Activity",
-    icon: "🏃",
     creditsRequired: 2,
     description:
       "Develops knowledge and habits for lifelong wellness and physical activity.",
@@ -300,7 +293,6 @@ const GEN_ED_CATS = [
     id: "us",
     code: "US",
     label: "United States Cultures",
-    icon: "🇺🇸",
     creditsRequired: 3,
     description:
       "Explores diversity, equity, and the complexity of U.S. society, history, and culture.",
@@ -351,7 +343,6 @@ const GEN_ED_CATS = [
     id: "il",
     code: "IL",
     label: "International Cultures",
-    icon: "🌍",
     creditsRequired: 3,
     description:
       "Broadens understanding of global cultures, perspectives, and international issues.",
@@ -526,7 +517,7 @@ function CategoryCard({ cat, completed, onToggle, defaultOpen }) {
         aria-expanded={open}
       >
         <span className={`gened-cat-code gened-cat-code--${status}`}>
-          {cat.icon} {cat.code}
+          {cat.code}
         </span>
         <span className="gened-cat-label">{cat.label}</span>
         <span className="gened-cat-meta">

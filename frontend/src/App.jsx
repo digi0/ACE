@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import { Sun, Moon, ChevronLeft, ChevronRight, Plus, MessageSquare, Compass } from "lucide-react";
 import Dashboard from "./Dashboard.jsx";
 import ResourceHub from "./ResourceHub.jsx";
 import GpaCalculator from "./GpaCalculator.jsx";
@@ -47,10 +48,10 @@ function AceLogo({ size = 36 }) {
 
 /* ── Constants ─────────────────────────────────── */
 const SUGGESTION_CHIPS = [
-  { icon: "🎯", text: "Help me plan this semester" },
-  { icon: "✨", text: "What should I focus on this week?" },
-  { icon: "⚠️", text: "I'm worried about a deadline" },
-  { icon: "📅", text: "Check my schedule" },
+  "Help me plan this semester",
+  "What should I focus on this week?",
+  "I'm worried about a deadline",
+  "Check my schedule",
 ];
 
 const FOLLOW_UP_MAP = {
@@ -378,14 +379,14 @@ function App() {
               onClick={() => setDarkMode(v => !v)}
               title={darkMode ? "Light mode" : "Dark mode"}
             >
-              {darkMode ? "☀" : "🌙"}
+              {darkMode ? <Sun size={15} /> : <Moon size={15} />}
             </button>
             <button
               className="sidebar-icon-btn"
               onClick={() => setSidebarCollapsed(true)}
               title="Collapse sidebar"
             >
-              ◀
+              <ChevronLeft size={15} />
             </button>
           </div>
         </div>
@@ -421,7 +422,7 @@ function App() {
 
         {/* New conversation */}
         <button className="new-conv-btn" onClick={handleNewConversation}>
-          + New conversation
+          <Plus size={14} strokeWidth={2.5} /> New conversation
         </button>
 
         {/* Previous chats */}
@@ -436,7 +437,7 @@ function App() {
                 className={`sidebar-nav-item${activeConvId === conv.id ? " sidebar-nav-item--active" : ""}`}
                 onClick={() => handleSwitchConversation(conv)}
               >
-                <span className="sidebar-nav-icon">💬</span>
+                <MessageSquare size={13} className="sidebar-nav-icon" />
                 <span className="sidebar-chat-preview">{conv.preview}</span>
               </button>
             ))
@@ -445,7 +446,7 @@ function App() {
 
         {/* Take the tour */}
         <button className="sidebar-tour-btn" onClick={() => setShowTour(true)}>
-          ✦ Take the tour
+          <Compass size={13} /> Take the tour
         </button>
       </aside>
 
@@ -455,7 +456,7 @@ function App() {
           onClick={() => setSidebarCollapsed(false)}
           title="Open sidebar"
         >
-          ▶
+          <ChevronRight size={15} />
         </button>
       )}
 
@@ -473,26 +474,26 @@ function App() {
               className={`top-bar-tab${activeView === "chat" ? " top-bar-tab--active" : ""}`}
               onClick={() => setActiveView("chat")}
             >
-              💬 Chat
+              Chat
             </button>
             <button
               data-tour="dashboard-tab"
               className={`top-bar-tab${activeView === "dashboard" ? " top-bar-tab--active" : ""}`}
               onClick={() => setActiveView("dashboard")}
             >
-              📊 Dashboard
+              Dashboard
             </button>
             <button
               className={`top-bar-tab${activeView === "resources" ? " top-bar-tab--active" : ""}`}
               onClick={() => setActiveView("resources")}
             >
-              🏛️ Resources
+              Resources
             </button>
             <button
               className={`top-bar-tab${activeView === "gened" ? " top-bar-tab--active" : ""}`}
               onClick={() => setActiveView("gened")}
             >
-              🎓 Gen Ed
+              Gen Ed
             </button>
           </nav>
         </header>
@@ -628,12 +629,11 @@ function App() {
             <div className="chips-row">
               {SUGGESTION_CHIPS.map((chip) => (
                 <button
-                  key={chip.text}
+                  key={chip}
                   className="suggestion-chip"
-                  onClick={() => handleSend(chip.text)}
+                  onClick={() => handleSend(chip)}
                 >
-                  <span>{chip.icon}</span>
-                  <span>{chip.text}</span>
+                  {chip}
                 </button>
               ))}
             </div>

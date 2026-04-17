@@ -1,4 +1,4 @@
-// no React hook imports needed — all state is managed by parent
+import { LayoutGrid, Check, ExternalLink } from "lucide-react";
 
 /* ── Spring 2026 deadlines ────────────────────────────────────── */
 const SPRING_DEADLINES = [
@@ -17,12 +17,12 @@ function parseDate(s) { return new Date(`${s} 2026`); }
 
 /* ── Widget registry ──────────────────────────────────────────── */
 const WIDGET_DEFS = [
-  { id: "deadlines", label: "Upcoming Deadlines", icon: "🗓️", viewId: "calendar",  desc: "Key dates & deadlines"            },
-  { id: "progress",  label: "Degree Progress",    icon: "📊", viewId: "checklist", desc: "Track graduation requirements"    },
-  { id: "gened",     label: "Gen Ed Explorer",    icon: "🎓", viewId: "gened",     desc: "Manage Gen Ed credits"            },
-  { id: "resources", label: "Quick Resources",    icon: "🔗", viewId: "resources", desc: "Campus services & support"        },
-  { id: "gpa",       label: "GPA Tracker",        icon: "🧮", viewId: "gpa",       desc: "Calculate & track your GPA"      },
-  { id: "prereq",    label: "Course Map",         icon: "🗺️", viewId: "prereq",   desc: "Visualize course prerequisites"   },
+  { id: "deadlines", label: "Upcoming Deadlines", viewId: "calendar",  desc: "Key dates & deadlines"            },
+  { id: "progress",  label: "Degree Progress",    viewId: "checklist", desc: "Track graduation requirements"    },
+  { id: "gened",     label: "Gen Ed Explorer",    viewId: "gened",     desc: "Manage Gen Ed credits"            },
+  { id: "resources", label: "Quick Resources",    viewId: "resources", desc: "Campus services & support"        },
+  { id: "gpa",       label: "GPA Tracker",        viewId: "gpa",       desc: "Calculate & track your GPA"      },
+  { id: "prereq",    label: "Course Map",         viewId: "prereq",    desc: "Visualize course prerequisites"   },
 ];
 
 /* ── Compact widget content ───────────────────────────────────── */
@@ -60,13 +60,11 @@ const REQ_LABEL_MAP = [
 function auditToProgressItems(auditData) {
   if (!auditData) return null;
 
-  // Overall bar from credit totals
   const overall = {
     label: "Overall",
     pct: Math.min(100, Math.round(auditData.degree_progress_pct ?? 0)),
   };
 
-  // Build per-category bars from unsatisfied blocks (up to 3)
   const cats = [];
   const seen = new Set();
   for (const req of (auditData.remaining_requirements ?? [])) {
@@ -74,7 +72,6 @@ function auditToProgressItems(auditData) {
     const needed = req.credits_needed ?? 0;
     if (cr <= 0) continue;
     const pct = Math.min(100, Math.round(((cr - needed) / cr) * 100));
-    // Find a human label
     let label = null;
     for (const { match, label: l } of REQ_LABEL_MAP) {
       if (match.test(req.title)) { label = l; break; }
@@ -121,7 +118,7 @@ function ProgressWidget({ onNavigate, auditData }) {
 }
 
 function GenEdWidget({ onNavigate }) {
-  const cats = ["GQ","GN","GA","GH","GS","GHA","US","IL"];
+  const cats = ["FYW","GQ","GN","GA","GH","GS","GHA","US","IL"];
   return (
     <div className="wc-body">
       <p className="wc-desc">Track Gen Ed across 9 categories</p>
@@ -136,10 +133,10 @@ function GenEdWidget({ onNavigate }) {
 }
 
 const QUICK_RES = [
-  { icon: "💬", label: "CAPS Counseling",  url: "https://studentaffairs.psu.edu/counseling" },
-  { icon: "📖", label: "LRC Tutoring",     url: "https://lrc.psu.edu/" },
-  { icon: "💼", label: "Career Services",  url: "https://careerservices.psu.edu/" },
-  { icon: "🩺", label: "UHS Medical",      url: "https://studentaffairs.psu.edu/health" },
+  { label: "CAPS Counseling",  url: "https://studentaffairs.psu.edu/counseling" },
+  { label: "LRC Tutoring",     url: "https://lrc.psu.edu/" },
+  { label: "Career Services",  url: "https://careerservices.psu.edu/" },
+  { label: "UHS Medical",      url: "https://studentaffairs.psu.edu/health" },
 ];
 
 function ResourcesWidget() {
@@ -147,9 +144,8 @@ function ResourcesWidget() {
     <div className="wc-body">
       {QUICK_RES.map(r => (
         <a key={r.label} className="wc-res-link" href={r.url} target="_blank" rel="noreferrer">
-          <span>{r.icon}</span>
           <span className="wc-res-name">{r.label}</span>
-          <span className="wc-res-arrow">↗</span>
+          <ExternalLink size={11} className="wc-res-arrow" />
         </a>
       ))}
     </div>
@@ -205,7 +201,6 @@ export default function SidebarWidgetSection({ activeWidgets, onNavigate, auditD
           return (
             <div key={id} className="ws-card">
               <div className="ws-card-header">
-                <span className="ws-card-icon">{def.icon}</span>
                 <span className="ws-card-label">{def.label}</span>
                 {badge && <span className="ws-badge" />}
                 {onNavigate && def.viewId && (
@@ -214,7 +209,7 @@ export default function SidebarWidgetSection({ activeWidgets, onNavigate, auditD
                     onClick={() => onNavigate(def.viewId)}
                     title={`Open ${def.label}`}
                   >
-                    ↗
+                    <ExternalLink size={11} />
                   </button>
                 )}
               </div>
@@ -228,7 +223,7 @@ export default function SidebarWidgetSection({ activeWidgets, onNavigate, auditD
       </div>
 
       <button className="ws-edit-btn" onClick={() => onNavigate("widgets")}>
-        ⊕ Manage Widgets
+        <LayoutGrid size={13} /> Manage Widgets
       </button>
     </div>
   );
@@ -265,8 +260,7 @@ export function WidgetPickerPage({ activeWidgets, setActiveWidgets, onDone }) {
               onClick={() => toggle(def.id)}
               disabled={disabled}
             >
-              {active && <span className="wpp-check">✓</span>}
-              <span className="wpp-card-icon">{def.icon}</span>
+              {active && <Check size={14} className="wpp-check" />}
               <span className="wpp-card-name">{def.label}</span>
               <span className="wpp-card-desc">{def.desc}</span>
             </button>

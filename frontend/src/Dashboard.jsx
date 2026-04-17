@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { AlertTriangle, Info, CheckCircle } from "lucide-react";
 
 /* ── Degree Progress Bar ────────────────────────────────────── */
 function DegreeProgressBar({ pct, completed, remaining, required }) {
@@ -121,7 +122,7 @@ export default function Dashboard({ uploadedFile, onUploadClick, onRemoveClick, 
 
       {/* ── Document actions ──────────────────────────── */}
       <div className="dash-doc-actions">
-        <span className="dash-doc-label">📄 {data.filename || "Uploaded document"}</span>
+        <span className="dash-doc-label">{data.filename || "Uploaded document"}</span>
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button className="dash-doc-btn dash-doc-btn--replace" onClick={onUploadClick}>
             ↑ Upload new
@@ -138,7 +139,7 @@ export default function Dashboard({ uploadedFile, onUploadClick, onRemoveClick, 
           {alerts.map((a, i) => (
             <div key={i} className={`dash-alert dash-alert--${a.type}`}>
               <span className="dash-alert-icon">
-                {a.type === "warning" ? "⚠" : a.type === "success" ? "✓" : "ℹ"}
+                {a.type === "warning" ? <AlertTriangle size={14} /> : a.type === "success" ? <CheckCircle size={14} /> : <Info size={14} />}
               </span>
               {a.message}
             </div>
