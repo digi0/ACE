@@ -625,7 +625,7 @@ function App() {
                           <div className="message-sources">
                             {msg.sources.map((s, si) => (
                               <div key={si} className="source-chip">
-                                📄 {s.title || "Official Source"}
+                                {s.title || "Official Source"}
                                 {s.link && (
                                   <a href={s.link} target="_blank" rel="noreferrer" className="source-chip-link">
                                     ↗
