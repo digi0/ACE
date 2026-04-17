@@ -43,9 +43,8 @@ export function AuthProvider({ children }) {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(user, { displayName: name });
     await sendEmailVerification(user);
-    // Sign out immediately — must verify email before accessing the app
-    await firebaseSignOut(auth);
-    return { needsVerification: true };
+    // Keep the user signed in — App.jsx will show EmailVerificationScreen
+    // automatically since emailVerified is false at this point.
   };
 
   const resendVerification = async (email, password) => {

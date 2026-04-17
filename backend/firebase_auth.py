@@ -67,3 +67,13 @@ async def get_optional_user(
         return _verify(creds.credentials)
     except HTTPException:
         return None
+
+
+async def get_current_user_any(
+    creds: HTTPAuthorizationCredentials = Depends(security),
+) -> dict:
+    """Like get_current_user but does NOT enforce email verification.
+    Used for /auth/sync so unverified users can still create their DB record."""
+    if not creds:
+        raise HTTPException(status_code=401, detail="Authorization header required")
+    return _verify(creds.credentials)

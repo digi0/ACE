@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from backend.config import UPLOAD_DIR, LOG_LEVEL
 from backend.database import engine, Base, get_db
 from backend import models  # noqa: F401 — registers models with Base
-from backend.firebase_auth import get_current_user, get_optional_user
+from backend.firebase_auth import get_current_user, get_optional_user, get_current_user_any
 from backend.services.vault_service import get_all_vault_records, search_vault
 from backend.services.chat_service import ask_advisor, ask_advisor_stream
 from backend.services.student_doc_service import (
@@ -208,7 +208,7 @@ def gen_ed(
 
 @app.post("/auth/sync")
 def sync_user(
-    current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user_any),
     db: Session = Depends(get_db),
 ):
     """Called after login to upsert user record in the database."""
