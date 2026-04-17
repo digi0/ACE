@@ -3,7 +3,7 @@ import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCtEGy6WiWVfhLwXXn4vj3gs-Er-Iz835E",
-  authDomain: "ace1-a42fc.firebaseapp.com",
+  authDomain: "ace-digi0s-projects.vercel.app",
   projectId: "ace1-a42fc",
   storageBucket: "ace1-a42fc.firebasestorage.app",
   messagingSenderId: "779545135129",
