@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useAuth } from "./AuthContext";
 import AnimatedShaderBackground from "./AnimatedShaderBackground";
 
-/* ── Icons ──────────────────────────────────────────── */
+/* ── Google icon ─────────────────────────────────── */
 function GoogleIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden>
+    <svg width="16" height="16" viewBox="0 0 18 18" aria-hidden>
       <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908C16.658 14.013 17.64 11.706 17.64 9.2z" />
       <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" />
       <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" />
@@ -14,40 +14,27 @@ function GoogleIcon() {
   );
 }
 
-function GradCapIcon({ size = 36 }) {
-  const iconSize = Math.round(size * 0.52);
-  const radius = Math.round(size * 0.22);
-  return (
-    <div className="ace-logo-box" style={{ width: size, height: size, borderRadius: radius }}>
-      <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-        <path d="M6 12v5c3 3 9 3 12 0v-5" />
-      </svg>
-    </div>
-  );
-}
-
-/* ── Friendly error messages ────────────────────────── */
+/* ── Error helper ────────────────────────────────── */
 function friendlyError(code) {
   switch (code) {
-    case "auth/invalid-email":            return "Invalid email address.";
-    case "auth/user-not-found":           return "No account found with this email.";
-    case "auth/wrong-password":           return "Incorrect password.";
-    case "auth/invalid-credential":       return "Invalid email or password.";
-    case "auth/email-already-in-use":     return "An account with this email already exists.";
-    case "auth/weak-password":            return "Password must be at least 6 characters.";
-    case "auth/popup-closed-by-user":     return "Google sign-in was cancelled.";
-    case "auth/network-request-failed":   return "Network error. Check your connection.";
-    case "auth/too-many-requests":        return "Too many attempts. Please try again later.";
-    default:                              return "Something went wrong. Please try again.";
+    case "auth/invalid-email":          return "Invalid email address.";
+    case "auth/user-not-found":         return "No account found with this email.";
+    case "auth/wrong-password":         return "Incorrect password.";
+    case "auth/invalid-credential":     return "Invalid email or password.";
+    case "auth/email-already-in-use":   return "An account with this email already exists.";
+    case "auth/weak-password":          return "Password must be at least 6 characters.";
+    case "auth/popup-closed-by-user":   return "Google sign-in was cancelled.";
+    case "auth/network-request-failed": return "Network error. Check your connection.";
+    case "auth/too-many-requests":      return "Too many attempts. Please try again later.";
+    default:                            return "Something went wrong. Please try again.";
   }
 }
 
-/* ── LoginPage ──────────────────────────────────────── */
+/* ── LoginPage ───────────────────────────────────── */
 export default function LoginPage() {
   const { signInWithGoogle, signInWithEmail, signUpWithEmail } = useAuth();
 
-  const [mode, setMode] = useState("signin"); // "signin" | "signup"
+  const [mode, setMode] = useState("signin");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -99,25 +86,24 @@ export default function LoginPage() {
     <div className="login-page">
       <AnimatedShaderBackground />
 
-      {/* ── Left hero panel ─────────────────────── */}
-      <div className="login-hero">
-        <div className="login-hero-content">
-          <GradCapIcon size={64} />
-          <h1 className="login-hero-title">ACE</h1>
-          <p className="login-hero-subtitle">Academic Counselling Engine</p>
-          <p className="login-hero-desc">
-            Your AI-powered academic advisor for Penn State Computer Science.
-            Get personalized course planning, degree progress insights, and
-            academic guidance — all in one place.
-          </p>
-          <span className="login-hero-badge">Penn State University</span>
+      <div className="login-center">
+
+        {/* Brand */}
+        <div className="login-brand">
+          <div className="login-logo">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="#c8952e" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round"
+              aria-hidden>
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <span className="login-brand-name">ACE</span>
         </div>
-      </div>
+        <p className="login-brand-sub">Academic Counseling Engine</p>
 
-      {/* ── Right form panel ────────────────────── */}
-      <div className="login-form-panel">
+        {/* Card */}
         <div className="login-card">
-
           <h2 className="login-card-title">
             {mode === "signin" ? "Welcome back" : "Create your account"}
           </h2>
@@ -127,7 +113,6 @@ export default function LoginPage() {
               : "Sign up to get started with ACE"}
           </p>
 
-          {/* Google */}
           <button
             className="login-google-btn"
             onClick={handleGoogle}
@@ -140,7 +125,6 @@ export default function LoginPage() {
 
           <div className="login-divider"><span>or</span></div>
 
-          {/* Email / Password form */}
           <form onSubmit={handleSubmit} className="login-form" noValidate>
             {mode === "signup" && (
               <div className="login-field">
@@ -178,7 +162,7 @@ export default function LoginPage() {
                 id="lp-password"
                 className="login-input"
                 type="password"
-                placeholder={mode === "signup" ? "At least 6 characters" : "••••••••"}
+                placeholder={mode === "signup" ? "At least 6 characters" : ""}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete={mode === "signin" ? "current-password" : "new-password"}
@@ -194,7 +178,7 @@ export default function LoginPage() {
               disabled={loading}
             >
               {loading
-                ? "Please wait…"
+                ? "Please wait..."
                 : mode === "signin" ? "Sign In" : "Create Account"}
             </button>
           </form>
@@ -206,8 +190,9 @@ export default function LoginPage() {
               {mode === "signin" ? "Sign up" : "Sign in"}
             </button>
           </p>
-
         </div>
+
+        <p className="login-footer">Built for Penn State students</p>
       </div>
     </div>
   );
