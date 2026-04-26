@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "./AuthContext";
-import AnimatedShaderBackground from "./AnimatedShaderBackground";
+import ParticlesBackground from "./ParticlesBackground";
 
 /* ── Google icon ─────────────────────────────────── */
 function GoogleIcon() {
@@ -89,7 +89,7 @@ export default function LoginPage() {
 
   return (
     <div className="login-page">
-      <AnimatedShaderBackground />
+      <ParticlesBackground />
 
       <div className="login-center">
 
