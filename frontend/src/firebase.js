@@ -2,12 +2,15 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCtEGy6WiWVfhLwXXn4vj3gs-Er-Iz835E",
-  authDomain: "ace-digi0s-projects.vercel.app",
-  projectId: "ace1-a42fc",
-  storageBucket: "ace1-a42fc.firebasestorage.app",
-  messagingSenderId: "779545135129",
-  appId: "1:779545135129:web:784f63ab92ece43172c288",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  // Must be the Firebase-hosted auth handler domain, not the Vercel domain.
+  // The vercel.json rewrite proxies /__/auth/* here so OAuth flows work on
+  // the deployed site without registering each Vercel preview URL with Google.
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
