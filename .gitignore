@@ -11,3 +11,5 @@ __pycache__/
 # backend/data/ace_index.pkl  # committed so Railway doesn't need to rebuild
 backend/uploads/
 psu-cs-academic-advisor-main/
+deploy/
+frontend/nginx.conf
