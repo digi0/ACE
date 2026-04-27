@@ -68,6 +68,50 @@ function AceMark() {
   );
 }
 
+/* ── Bubble placement ───────────────────────────────────────── */
+const BUBBLE_W = 340;
+const BUBBLE_H = 220;
+const GAP = 20;
+const VIEW_MARGIN = 16;
+
+function placeBubble(rect) {
+  if (!rect) return null;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+  // Right of target
+  if (rect.right + GAP + BUBBLE_W <= vw - VIEW_MARGIN) {
+    return {
+      left: rect.right + GAP,
+      top: clamp(rect.top, VIEW_MARGIN, vh - BUBBLE_H - VIEW_MARGIN),
+      side: "right",
+    };
+  }
+  // Left of target
+  if (rect.left - GAP - BUBBLE_W >= VIEW_MARGIN) {
+    return {
+      left: rect.left - GAP - BUBBLE_W,
+      top: clamp(rect.top, VIEW_MARGIN, vh - BUBBLE_H - VIEW_MARGIN),
+      side: "left",
+    };
+  }
+  // Below target
+  if (rect.bottom + GAP + BUBBLE_H <= vh - VIEW_MARGIN) {
+    return {
+      top: rect.bottom + GAP,
+      left: clamp(rect.left, VIEW_MARGIN, vw - BUBBLE_W - VIEW_MARGIN),
+      side: "below",
+    };
+  }
+  // Above target
+  return {
+    top: Math.max(VIEW_MARGIN, rect.top - GAP - BUBBLE_H),
+    left: clamp(rect.left, VIEW_MARGIN, vw - BUBBLE_W - VIEW_MARGIN),
+    side: "above",
+  };
+}
+
 /* ── OnboardingTour ─────────────────────────────────────────── */
 export default function OnboardingTour({ onFinish }) {
   const [step, setStep]             = useState(0);
@@ -76,6 +120,7 @@ export default function OnboardingTour({ onFinish }) {
 
   const current = STEPS[step];
   const isLast  = step === STEPS.length - 1;
+  const bubblePos = placeBubble(targetRect);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 50);
@@ -83,9 +128,18 @@ export default function OnboardingTour({ onFinish }) {
   }, []);
 
   useEffect(() => {
-    if (!current.target) { setTargetRect(null); return; }
-    const el = document.querySelector(current.target);
-    setTargetRect(el ? el.getBoundingClientRect() : null);
+    const measure = () => {
+      if (!current.target) { setTargetRect(null); return; }
+      const el = document.querySelector(current.target);
+      setTargetRect(el ? el.getBoundingClientRect() : null);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    window.addEventListener("scroll", measure, true);
+    return () => {
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("scroll", measure, true);
+    };
   }, [step, current.target]);
 
   const handleNext = useCallback(() => {
@@ -123,8 +177,15 @@ export default function OnboardingTour({ onFinish }) {
         />
       )}
 
-      {/* ── Card (bottom-left) ── */}
-      <div className="tour-mascot-wrap" onClick={e => e.stopPropagation()}>
+      {/* ── Card (follows the highlighted target) ── */}
+      <div
+        className={`tour-mascot-wrap${bubblePos ? " tour-mascot-wrap--anchored" : ""}`}
+        onClick={e => e.stopPropagation()}
+        style={bubblePos
+          ? { top: bubblePos.top, left: bubblePos.left, bottom: "auto", right: "auto" }
+          : undefined}
+        data-side={bubblePos?.side}
+      >
 
         <div className="tour-bubble">
           <div style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem", marginBottom: "0.6rem" }}>
@@ -154,7 +215,7 @@ export default function OnboardingTour({ onFinish }) {
             </div>
           </div>
 
-          <div className="tour-bubble-tail" />
+          {!bubblePos && <div className="tour-bubble-tail" />}
         </div>
 
       </div>

@@ -15,6 +15,7 @@ import GenEdExplorer from "./GenEdExplorer.jsx";
 import { useAuth } from "./AuthContext.jsx";
 import { apiFetch, apiStream } from "./api.js";
 import EmailVerificationScreen from "./EmailVerificationScreen.jsx";
+import Typewriter from "./Typewriter.jsx";
 
 /* ── Icons ─────────────────────────────────────── */
 function GradCapIcon({ size = 16 }) {
@@ -604,11 +605,19 @@ function App() {
           {!hasMessages ? (
             <div className="welcome-screen">
               <AceLogo size={72} />
-              <h1 className="welcome-title">How can I help you today?</h1>
+              <h1 className="welcome-title">
+                How can I help with{" "}
+                <Typewriter
+                  words={["courses?", "deadlines?", "policies?", "planning?"]}
+                  typingSpeed={90}
+                  deletingSpeed={50}
+                  pauseDuration={1500}
+                  style={{ color: "#2563eb" }}
+                />
+              </h1>
               <p className="welcome-subtitle">
-                I'm ACE, your academic advisor assistant. Ask me about
-                <br />
-                courses, deadlines, policies, or academic planning.
+                I'm ACE, your academic advisor assistant. Ask me anything about
+                your degree, schedule, or Penn State.
               </p>
             </div>
           ) : (

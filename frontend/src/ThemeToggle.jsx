@@ -1,25 +1,7 @@
-import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
 
-const STORAGE_KEY = "ace_darkmode";
-
-const readInitial = () => {
-  if (typeof window === "undefined") return false;
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved === "1") return true;
-  if (saved === "0") return false;
-  return window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false;
-};
-
-export default function ThemeToggle({ size = 30, style }) {
-  const [isDark, setIsDark] = useState(readInitial);
-
-  useEffect(() => {
-    const html = document.documentElement;
-    html.setAttribute("data-theme", isDark ? "dark" : "light");
-    localStorage.setItem(STORAGE_KEY, isDark ? "1" : "0");
-  }, [isDark]);
-
+export default function ThemeToggle({ value, onChange, size = 30, style }) {
+  const isDark = !!value;
   const trackWidth = size * 1.8;
   const trackHeight = size;
   const knobSize = size * 0.8;
@@ -32,7 +14,7 @@ export default function ThemeToggle({ size = 30, style }) {
       role="switch"
       aria-checked={isDark}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      onClick={() => setIsDark((v) => !v)}
+      onClick={() => onChange?.(!isDark)}
       style={{
         width: trackWidth,
         height: trackHeight,
@@ -47,6 +29,7 @@ export default function ThemeToggle({ size = 30, style }) {
           : "0 1px 3px rgba(0, 0, 0, 0.12)",
         outline: "none",
         padding: 0,
+        flexShrink: 0,
         ...style,
       }}
     >

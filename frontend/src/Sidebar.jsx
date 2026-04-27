@@ -1,8 +1,9 @@
 import {
-  Sun, Moon, ChevronLeft, GraduationCap, LogOut, Pencil,
+  ChevronLeft, GraduationCap, LogOut, Pencil,
   Plus, Compass, MessageSquare, Calculator, LayoutGrid,
   BookOpen, Upload, AlertCircle, Info, CheckCircle,
 } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 
 /* ── Deadlines (Spring 2026 — calendar scraper will replace) ── */
 const SPRING_DEADLINES = [
@@ -59,7 +60,7 @@ function SbLogo() {
   return (
     <div className="sb-logo">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-        stroke="#c8952e" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
+        stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
         aria-hidden>
         <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
         <path d="M6 12v5c3 3 9 3 12 0v-5" />
@@ -117,10 +118,7 @@ export default function Sidebar({
             <span className="sb-brand-name">ACE</span>
           </div>
           <div className="sb-header-btns">
-            <button className="sb-icon-btn" onClick={() => setDarkMode(v => !v)}
-              title={darkMode ? "Light mode" : "Dark mode"}>
-              {darkMode ? <Sun size={14} /> : <Moon size={14} />}
-            </button>
+            <ThemeToggle value={darkMode} onChange={setDarkMode} size={18} />
             <button className="sb-icon-btn" onClick={onCollapse} title="Collapse sidebar">
               <ChevronLeft size={14} />
             </button>

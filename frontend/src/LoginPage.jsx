@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "./AuthContext";
 import ParticlesBackground from "./ParticlesBackground";
-import ThemeToggle from "./ThemeToggle";
 
 /* ── Google icon ─────────────────────────────────── */
 function GoogleIcon() {
@@ -92,17 +91,13 @@ export default function LoginPage() {
     <div className="login-page">
       <ParticlesBackground />
 
-      <div style={{ position: "absolute", top: 20, right: 20, zIndex: 2 }}>
-        <ThemeToggle size={28} />
-      </div>
-
       <div className="login-center">
 
         {/* Brand */}
         <div className="login-brand">
           <div className="login-logo">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-              stroke="#c8952e" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round"
+              stroke="#ffffff" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round"
               aria-hidden>
               <circle cx="12" cy="12" r="10"/>
               <path d="M12 6v6l4 2"/>
