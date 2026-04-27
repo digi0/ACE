@@ -203,18 +203,12 @@ export default function Sidebar({
             )}
           </div>
         ) : (
-          <div className="sb-upload">
-            <div className="sb-upload-icon-box">
-              <Upload size={14} />
-            </div>
-            <div className="sb-upload-title">Unlock your dashboard</div>
-            <div className="sb-upload-desc">
-              Upload your Degree Audit or What-If Report to see progress, alerts, and course recommendations
-            </div>
-            <button className="sb-upload-btn" onClick={() => onNavigate("chat")}>
-              Upload Document
-            </button>
-          </div>
+          <button className="sb-upload-compact" onClick={() => onNavigate("chat")}>
+            <Upload size={13} className="sb-upload-compact-icon" />
+            <span className="sb-upload-compact-text">
+              Upload audit for personalized dashboard
+            </span>
+          </button>
         )}
 
         {/* Deadlines */}
@@ -224,7 +218,12 @@ export default function Sidebar({
             <button className="sb-section-link" onClick={() => onNavigate("calendar")}>All dates</button>
           </div>
           {upcomingDeadlines.length === 0 ? (
-            <p className="sb-empty">No upcoming deadlines</p>
+            <button
+              className="sb-empty sb-empty-link"
+              onClick={() => onNavigate("calendar")}
+            >
+              Spring 2026 complete — view full calendar
+            </button>
           ) : upcomingDeadlines.map((d, i) => (
             <div key={i} className="sb-dl-row">
               <span className="sb-dl-date">{fmtDate(d.iso)}</span>

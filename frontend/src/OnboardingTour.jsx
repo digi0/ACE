@@ -7,7 +7,7 @@ const STEPS = [
     target: null,
     title: "Welcome to ACE",
     message:
-      "ACE is your Academic Counselling Engine for Penn State. Ask questions about courses, requirements, and deadlines — or upload your degree audit for personalized guidance.",
+      "ACE is your Academic Counseling Engine for Penn State. Ask questions about courses, requirements, and deadlines — or upload your degree audit for personalized guidance.",
   },
   {
     id: "chat",

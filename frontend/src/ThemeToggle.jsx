@@ -18,7 +18,7 @@ export default function ThemeToggle({ value, onChange, size = 30, style }) {
       style={{
         width: trackWidth,
         height: trackHeight,
-        background: isDark ? "#1a1a1a" : "#dbdbdb",
+        background: isDark ? "#3f3f46" : "#dbdbdb",
         border: "none",
         borderRadius: trackHeight / 2,
         position: "relative",

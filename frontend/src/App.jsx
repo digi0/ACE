@@ -193,7 +193,7 @@ function App() {
 
   // Typewriter for top-bar title on mount
   useEffect(() => {
-    const full = ' | Academic Counselling Engine';
+    const full = ' | Academic Counseling Engine';
     let i = 0;
     const start = setTimeout(() => {
       const iv = setInterval(() => {
@@ -280,15 +280,20 @@ function App() {
   // ── Major selection ──
   useEffect(() => {
     if (!user?.uid) return;
+    const cacheKey = `ace_major_${user.uid}`;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) setSelectedMajor(cached);
+
     apiFetch("/user/major")
       .then((r) => r.json())
       .then((data) => {
         if (data.major) {
           setSelectedMajor(data.major);
-        } else {
-          // First time: show modal after a short delay
-          const key = `ace_major_skipped_${user.uid}`;
-          if (!localStorage.getItem(key)) {
+          localStorage.setItem(cacheKey, data.major);
+        } else if (!cached) {
+          // No backend record AND no local cache → first time, show modal
+          const skipKey = `ace_major_skipped_${user.uid}`;
+          if (!localStorage.getItem(skipKey)) {
             setTimeout(() => setShowMajorModal(true), 1200);
           }
         }
@@ -299,7 +304,8 @@ function App() {
   const handleMajorSelect = useCallback((majorName) => {
     setSelectedMajor(majorName);
     setShowMajorModal(false);
-  }, []);
+    if (user?.uid) localStorage.setItem(`ace_major_${user.uid}`, majorName);
+  }, [user?.uid]);
 
   const handleMajorSkip = useCallback(() => {
     setShowMajorModal(false);
@@ -372,14 +378,12 @@ function App() {
           }
 
           if (data.done) {
-            const SOURCED_INTENTS = ["courses", "student_progress", "substitution", "etm", "transfer"];
-            const showSources = SOURCED_INTENTS.includes(data.intent);
             setMessages((prev) => {
               const next = [...prev];
               next[next.length - 1] = {
                 ...next[next.length - 1],
                 streaming: false,
-                sources: showSources ? (data.sources ?? []) : [],
+                sources: data.sources ?? [],
               };
               return next;
             });
