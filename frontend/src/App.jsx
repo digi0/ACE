@@ -167,7 +167,7 @@ function MajorSelectModal({ userId, onSelect, onSkip }) {
 
 /* ── App ───────────────────────────────────────── */
 function App() {
-  const { user, signOut } = useAuth();
+  const { user, syncData, signOut } = useAuth();
   const [showTour, setShowTour] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -278,28 +278,26 @@ function App() {
   };
 
   // ── Major selection ──
+  // Source of truth is syncData from /auth/sync (hydrated before user state
+  // propagates, so no race). localStorage cache is kept as a paint-immediately
+  // hint while syncData is still null on this render.
   useEffect(() => {
     if (!user?.uid) return;
     const cacheKey = `ace_major_${user.uid}`;
     const cached = localStorage.getItem(cacheKey);
-    if (cached) setSelectedMajor(cached);
+    if (cached && !selectedMajor) setSelectedMajor(cached);
 
-    apiFetch("/user/major")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.major) {
-          setSelectedMajor(data.major);
-          localStorage.setItem(cacheKey, data.major);
-        } else if (!cached) {
-          // No backend record AND no local cache → first time, show modal
-          const skipKey = `ace_major_skipped_${user.uid}`;
-          if (!localStorage.getItem(skipKey)) {
-            setTimeout(() => setShowMajorModal(true), 1200);
-          }
-        }
-      })
-      .catch(() => {});
-  }, [user?.uid]);
+    if (!syncData) return;  // wait for /auth/sync to land
+    if (syncData.major) {
+      setSelectedMajor(syncData.major);
+      localStorage.setItem(cacheKey, syncData.major);
+    } else if (!cached) {
+      const skipKey = `ace_major_skipped_${user.uid}`;
+      if (!localStorage.getItem(skipKey)) {
+        setTimeout(() => setShowMajorModal(true), 1200);
+      }
+    }
+  }, [user?.uid, syncData]);
 
   const handleMajorSelect = useCallback((majorName) => {
     setSelectedMajor(majorName);

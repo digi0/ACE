@@ -211,21 +211,33 @@ def sync_user(
     current_user: dict = Depends(get_current_user_any),
     db: Session = Depends(get_db),
 ):
-    """Called after login to upsert user record in the database."""
-    user = db.query(models.User).filter_by(id=current_user["uid"]).first()
+    """Called after login to upsert user record. Returns the user's persisted
+    state (major, doc presence) so the frontend can hydrate without a second
+    round-trip and without racing against this insert."""
+    uid = current_user["uid"]
+    user = db.query(models.User).filter_by(id=uid).first()
     if not user:
         user = models.User(
-            id=current_user["uid"],
+            id=uid,
             email=current_user.get("email"),
             display_name=current_user.get("name"),
         )
         db.add(user)
     else:
-        user.email = current_user.get("email", user.email)
-        user.display_name = current_user.get("name", user.display_name)
+        token_email = current_user.get("email")
+        if token_email:
+            user.email = token_email
+        token_name = current_user.get("name")
+        if token_name:
+            user.display_name = token_name
         user.last_login = datetime.now(timezone.utc)
     db.commit()
-    return {"message": "User synced", "uid": current_user["uid"]}
+    return {
+        "message": "User synced",
+        "uid": uid,
+        "major": user.selected_major,
+        "has_doc": has_student_doc(uid, db=db),
+    }
 
 
 @app.post("/chat/stream")
@@ -365,15 +377,6 @@ def set_major(
     set_user_major(current_user["uid"], req.major, db=db)
     logger.info("set_major | user_id=%r major=%r", current_user["uid"], req.major)
     return {"message": "Major saved", "major": req.major}
-
-
-@app.get("/user/major")
-def get_major(
-    current_user: dict = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    major = get_user_major(current_user["uid"], db=db)
-    return {"major": major}
 
 
 @app.post("/clear-student-doc")

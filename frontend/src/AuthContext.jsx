@@ -19,29 +19,40 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   // undefined = still loading, null = not signed in, object = signed in
   const [user, setUser] = useState(undefined);
+  // Server-side state hydrated from /auth/sync. Null until sync completes for
+  // the current user, so consumers can distinguish "no major" from "not yet
+  // fetched" without racing against the sync insert.
+  const [syncData, setSyncData] = useState(null);
 
   useEffect(() => {
-    // Handle redirect result on mobile after returning from Google
-    getRedirectResult(auth).then(async (result) => {
-      if (result?.user) {
-        try {
-          await apiFetch("/auth/sync", { method: "POST" });
-        } catch (e) {
-          console.warn("User sync failed:", e);
+    const syncAndStore = async (firebaseUser) => {
+      try {
+        const res = await apiFetch("/auth/sync", { method: "POST" });
+        const data = await res.json();
+        if (auth.currentUser?.uid === firebaseUser.uid) {
+          setSyncData(data);
         }
+      } catch (e) {
+        console.warn("User sync failed:", e);
       }
+    };
+
+    // Handle redirect result on mobile after returning from Google
+    getRedirectResult(auth).then((result) => {
+      if (result?.user) syncAndStore(result.user);
     }).catch(() => {});
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setUser(firebaseUser);
-      if (firebaseUser) {
-        // Sync user record to our database (non-blocking)
-        try {
-          await apiFetch("/auth/sync", { method: "POST" });
-        } catch (e) {
-          console.warn("User sync failed:", e);
-        }
+      if (!firebaseUser) {
+        setSyncData(null);
+        setUser(null);
+        return;
       }
+      // Set user immediately so the app renders; syncData hydrates separately
+      // and effects that need server-side state (major, has_doc) gate on it.
+      setSyncData(null);
+      setUser(firebaseUser);
+      syncAndStore(firebaseUser);
     });
     return unsubscribe;
   }, []);
@@ -80,7 +91,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={{
-      user, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut,
+      user, syncData, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut,
       resendVerification,
     }}>
       {children}
