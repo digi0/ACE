@@ -886,7 +886,7 @@ def ask_advisor_stream(question, history=None, user_id: str = None):
 
     history: list of {"role": "user"|"assistant", "content": str} dicts
              representing the prior conversation turns.
-    user_id: Firebase UID of the signed-in student; used to look up their
+    user_id: Clerk user ID of the signed-in student; used to look up their
              uploaded document. If None, no document context is injected.
     """
     intent = detect_question_intent(question)

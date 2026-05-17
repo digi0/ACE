@@ -1607,7 +1607,7 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 420px;
+  max-width: 520px;
   padding: 0 20px;
 }
 
@@ -3654,3 +3654,13 @@ body {
 [data-theme="dark"] .gened-smart-item    { color: #d4d4d4; }
 [data-theme="dark"] .gened-disclaimer    { color: #6e6e6e; }
 
+/* ─────────────────────────────────────────────────────────────
+   Login page — Sparkles background
+   ───────────────────────────────────────────────────────────── */
+
+.login-sparkles-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}

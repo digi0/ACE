@@ -12,7 +12,12 @@ from sqlalchemy.orm import Session
 from backend.config import UPLOAD_DIR, LOG_LEVEL
 from backend.database import engine, Base, get_db
 from backend import models  # noqa: F401 — registers models with Base
-from backend.firebase_auth import get_current_user, get_optional_user, get_current_user_any
+from backend.clerk_auth import (
+    get_current_user,
+    get_optional_user,
+    get_current_user_any,
+    fetch_user_details,
+)
 from backend.services.vault_service import get_all_vault_records, search_vault
 from backend.services.chat_service import ask_advisor, ask_advisor_stream
 from backend.services.student_doc_service import (
@@ -215,21 +220,28 @@ def sync_user(
     state (major, doc presence) so the frontend can hydrate without a second
     round-trip and without racing against this insert."""
     uid = current_user["uid"]
+    # Clerk JWTs only carry `sub`; fetch email/name from the Clerk user API.
+    # Don't fail the sync if Clerk is briefly unreachable — log and proceed
+    # with whatever we already have (or just the uid on first sign-in).
+    try:
+        details = fetch_user_details(uid)
+    except Exception as exc:
+        logger.warning("Clerk user fetch failed for uid=%r: %s", uid, exc)
+        details = {"email": None, "name": None}
+
     user = db.query(models.User).filter_by(id=uid).first()
     if not user:
         user = models.User(
             id=uid,
-            email=current_user.get("email"),
-            display_name=current_user.get("name"),
+            email=details.get("email"),
+            display_name=details.get("name"),
         )
         db.add(user)
     else:
-        token_email = current_user.get("email")
-        if token_email:
-            user.email = token_email
-        token_name = current_user.get("name")
-        if token_name:
-            user.display_name = token_name
+        if details.get("email"):
+            user.email = details["email"]
+        if details.get("name"):
+            user.display_name = details["name"]
         user.last_login = datetime.now(timezone.utc)
     db.commit()
     return {

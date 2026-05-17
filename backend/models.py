@@ -7,7 +7,7 @@ from backend.database import Base
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(String(256), primary_key=True)  # Firebase UID
+    id = Column(String(256), primary_key=True)  # Clerk user ID (sub claim)
     email = Column(String(320), nullable=True)
     display_name = Column(String(256), nullable=True)
     selected_major = Column(String(500), nullable=True)

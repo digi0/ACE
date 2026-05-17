@@ -10,7 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "firebase": "^12.10.0",
+    "@clerk/clerk-react": "^5.61.6",
+    "@clerk/themes": "^2.4.57",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.7.1",
+    "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

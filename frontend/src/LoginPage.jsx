@@ -1,98 +1,61 @@
 import { useState } from "react";
-import { useAuth } from "./AuthContext";
-import ParticlesBackground from "./ParticlesBackground";
+import { SignIn, SignUp } from "@clerk/clerk-react";
+import { dark } from "@clerk/themes";
+import SparklesCore from "./SparklesCore";
 
-/* ── Google icon ─────────────────────────────────── */
-function GoogleIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 18 18" aria-hidden>
-      <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908C16.658 14.013 17.64 11.706 17.64 9.2z" />
-      <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" />
-      <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" />
-      <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" />
-    </svg>
-  );
-}
-
-/* ── Error helper ────────────────────────────────── */
-function friendlyError(code) {
-  switch (code) {
-    case "auth/invalid-email":          return "Invalid email address.";
-    case "auth/user-not-found":         return "No account found with this email.";
-    case "auth/wrong-password":         return "Incorrect password.";
-    case "auth/invalid-credential":     return "Invalid email or password.";
-    case "auth/email-already-in-use":   return "An account with this email already exists.";
-    case "auth/weak-password":          return "Password must be at least 6 characters.";
-    case "auth/popup-closed-by-user":   return "Google sign-in was cancelled.";
-    case "auth/network-request-failed": return "Network error. Check your connection.";
-    case "auth/too-many-requests":      return "Too many attempts. Please try again later.";
-    default:                            return "Something went wrong. Please try again.";
-  }
-}
-
-/* ── LoginPage ───────────────────────────────────── */
 export default function LoginPage() {
-  const { signInWithGoogle, signInWithEmail, signUpWithEmail } = useAuth();
-
   const [mode, setMode] = useState("signin");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [verificationSent, setVerificationSent] = useState(false);
 
-  const handleGoogle = async () => {
-    setError("");
-    setLoading(true);
-    try {
-      await signInWithGoogle();
-    } catch (e) {
-      setError(friendlyError(e.code));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    if (mode === "signup" && !name.trim()) {
-      setError("Please enter your full name.");
-      return;
-    }
-    setLoading(true);
-    try {
-      if (mode === "signin") {
-        await signInWithEmail(email, password);
-      } else {
-        const result = await signUpWithEmail(email, password, name.trim());
-        if (result?.needsVerification) {
-          setVerificationSent(true);
-        }
-      }
-    } catch (e) {
-      setError(friendlyError(e.code));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const switchMode = () => {
-    setMode((m) => (m === "signin" ? "signup" : "signin"));
-    setError("");
-    setName("");
-    setEmail("");
-    setPassword("");
-    setVerificationSent(false);
+  // Always dark on this page — Sparkles needs a dark canvas.
+  // Sized to fit inside the .login-card (max-width 420 minus 56 padding = 364
+  // available). minWidth: 0 + width: 100% on rootBox/card overrides Clerk's
+  // default minimum that otherwise blows out the input boxes.
+  const appearance = {
+    baseTheme: dark,
+    variables: {
+      colorPrimary: "#3b82f6",
+      colorBackground: "transparent",
+      colorInputBackground: "rgba(255,255,255,0.06)",
+      colorInputText: "#fff",
+      borderRadius: "8px",
+      fontFamily: "inherit",
+      fontSize: "13px",
+    },
+    elements: {
+      rootBox: { width: "100%", minWidth: 0 },
+      card: {
+        boxShadow: "none",
+        background: "transparent",
+        padding: 0,
+        width: "100%",
+        minWidth: 0,
+      },
+      headerTitle: { display: "none" },
+      headerSubtitle: { display: "none" },
+      footer: { display: "none" },
+      form: { width: "100%" },
+      formFieldRow: { width: "100%" },
+      formField: { width: "100%" },
+      formFieldInput: { width: "100%", boxSizing: "border-box" },
+      formButtonPrimary: { width: "100%", boxSizing: "border-box" },
+      socialButtons: { width: "100%" },
+      socialButtonsBlockButton: { width: "100%", boxSizing: "border-box" },
+      socialButtonsIconButton: { boxSizing: "border-box" },
+    },
   };
 
   return (
     <div className="login-page">
-      <ParticlesBackground />
+      <SparklesCore
+        background="transparent"
+        minSize={0.8}
+        maxSize={2}
+        particleDensity={180}
+        particleColor="#ffffff"
+        className="login-sparkles-bg"
+      />
 
       <div className="login-center">
-
         {/* Brand */}
         <div className="login-brand">
           <div className="login-logo">
@@ -109,34 +72,6 @@ export default function LoginPage() {
 
         {/* Card */}
         <div className="login-card">
-          {verificationSent ? (
-            <div style={{ textAlign: "center", padding: "8px 0" }}>
-              <div style={{
-                width: 44, height: 44, borderRadius: 10, background: "rgba(59,130,246,0.1)",
-                display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px",
-              }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-                  stroke="#3b82f6" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="2" y="4" width="20" height="16" rx="2" />
-                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                </svg>
-              </div>
-              <p className="login-card-title" style={{ marginBottom: 8 }}>Verification email sent</p>
-              <p className="login-card-subtitle">
-                Check your inbox and click the verification link, then come back and sign in.
-              </p>
-              <button
-                onClick={() => { setVerificationSent(false); setMode("signin"); }}
-                style={{
-                  marginTop: 20, fontSize: 13, color: "#3b82f6", background: "none",
-                  border: "none", cursor: "pointer", fontWeight: 500, fontFamily: "inherit",
-                }}
-              >
-                Back to sign in
-              </button>
-            </div>
-          ) : (
-          <>
           <h2 className="login-card-title">
             {mode === "signin" ? "Welcome back" : "Create your account"}
           </h2>
@@ -146,85 +81,23 @@ export default function LoginPage() {
               : "Sign up to get started with ACE"}
           </p>
 
-          <button
-            className="login-google-btn"
-            onClick={handleGoogle}
-            disabled={loading}
-            type="button"
-          >
-            <GoogleIcon />
-            Continue with Google
-          </button>
-
-          <div className="login-divider"><span>or</span></div>
-
-          <form onSubmit={handleSubmit} className="login-form" noValidate>
-            {mode === "signup" && (
-              <div className="login-field">
-                <label className="login-label" htmlFor="lp-name">Full Name</label>
-                <input
-                  id="lp-name"
-                  className="login-input"
-                  type="text"
-                  placeholder="Jane Smith"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  autoComplete="name"
-                  required
-                />
-              </div>
-            )}
-
-            <div className="login-field">
-              <label className="login-label" htmlFor="lp-email">Email</label>
-              <input
-                id="lp-email"
-                className="login-input"
-                type="email"
-                placeholder="xyz1234@psu.edu"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="email"
-                required
-              />
-            </div>
-
-            <div className="login-field">
-              <label className="login-label" htmlFor="lp-password">Password</label>
-              <input
-                id="lp-password"
-                className="login-input"
-                type="password"
-                placeholder={mode === "signup" ? "At least 6 characters" : ""}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete={mode === "signin" ? "current-password" : "new-password"}
-                required
-              />
-            </div>
-
-            {error && <p className="login-error" role="alert">{error}</p>}
-
-            <button
-              className="login-submit-btn"
-              type="submit"
-              disabled={loading}
-            >
-              {loading
-                ? "Please wait..."
-                : mode === "signin" ? "Sign In" : "Create Account"}
-            </button>
-          </form>
+          {mode === "signin" ? (
+            <SignIn routing="virtual" appearance={appearance} signUpUrl="#signup" />
+          ) : (
+            <SignUp routing="virtual" appearance={appearance} signInUrl="#signin" />
+          )}
 
           <p className="login-switch">
             {mode === "signin" ? "Don't have an account?" : "Already have an account?"}
             {" "}
-            <button className="login-switch-btn" onClick={switchMode} type="button">
+            <button
+              className="login-switch-btn"
+              onClick={() => setMode((m) => (m === "signin" ? "signup" : "signin"))}
+              type="button"
+            >
               {mode === "signin" ? "Sign up" : "Sign in"}
             </button>
           </p>
-          </>
-          )}
         </div>
 
         <p className="login-footer">Built for Penn State students</p>

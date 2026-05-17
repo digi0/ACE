@@ -94,12 +94,12 @@ Upload → `student_doc_service.py` extracts PDF text → `audit_parser_service.
 ### Frontend
 
 Single-page React app (`frontend/src/`). State lives in `App.jsx`. Key patterns:
-- Auth via Firebase (`AuthContext.jsx`/`firebase.js`), Google sign-in
+- Auth via Clerk (`AuthContext.jsx` wraps `@clerk/clerk-react`), prebuilt `<SignIn />` / `<SignUp />` on LoginPage
 - Chat uses SSE via `POST /chat/stream`; responses stream token-by-token
 - Follow-up chips are driven by the `intent` field in the `done` SSE event
 - `activeView` state switches between chat, dashboard, resources, gen-ed, and tool panels (GPA calc, calendar, checklist, prereq map)
 - Sidebar widgets are configurable and persisted to `localStorage` under `ace_widgets3`
-- Conversations are persisted to `localStorage` keyed by Firebase UID (`ace_chats_{uid}`)
+- Conversations are persisted to `localStorage` keyed by Clerk user ID (`ace_chats_{uid}`)
 
 ### Key config (`backend/config.py`)
 
