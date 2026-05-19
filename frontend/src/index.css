@@ -3664,3 +3664,193 @@ body {
   z-index: 0;
   pointer-events: none;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Mobile — sidebar becomes a slide-out drawer below 900px
+   ───────────────────────────────────────────────────────────── */
+
+/* Backdrop hidden on desktop */
+.sidebar-backdrop { display: none; }
+
+@media (max-width: 900px) {
+  /* Sidebar floats over content instead of pushing it. Both open/closed
+     states declare transform explicitly so the transition has known
+     start+end values (transitioning to/from `none` is flaky). */
+  .sidebar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px !important;
+    z-index: 100;
+    transform: translateX(0);
+    transition: transform 0.22s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    border-right: 1px solid var(--border);
+  }
+
+  .app-layout.sidebar-collapsed .sidebar {
+    transform: translateX(-100%);
+    box-shadow: none;
+  }
+
+  /* Main panel takes full width since sidebar overlays */
+  .main-panel { width: 100%; }
+
+  /* Backdrop overlays the main panel when drawer is open */
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 99;
+    animation: sidebar-backdrop-in 0.2s ease;
+  }
+
+  /* Bigger, more obvious hamburger trigger when drawer is closed */
+  .sidebar-expand-btn {
+    top: 14px !important;
+    transform: none !important;
+    padding: 8px 10px;
+    border-radius: 0 8px 8px 0;
+    z-index: 50;
+  }
+}
+
+@keyframes sidebar-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Top bar: tighten brand block + hide subtitle below 700px so it doesn't
+   collide with action buttons */
+@media (max-width: 700px) {
+  .top-bar-subtitle { display: none; }
+  .top-bar-name { font-size: 14px; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Whiteboard welcome — empty chat state redesign
+   ───────────────────────────────────────────────────────────── */
+
+.wb-welcome {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 28px 32px;
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  gap: 48px;
+}
+
+.wb-welcome-head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.wb-headline {
+  font-size: clamp(36px, 6vw, 64px);
+  line-height: 1.02;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  color: var(--text);
+  margin: 0;
+  max-width: 14ch;
+}
+
+.wb-headline-accent {
+  color: var(--accent);
+}
+
+.wb-subline {
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin: 0;
+  letter-spacing: -0.005em;
+}
+
+.wb-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+@media (max-width: 760px) {
+  .wb-card-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .wb-card-grid { grid-template-columns: 1fr; }
+  .wb-welcome { padding: 32px 18px 20px; gap: 32px; }
+}
+
+.wb-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+              border-color 0.15s ease, background 0.15s ease;
+}
+
+.wb-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  border-color: var(--text-muted);
+}
+
+.wb-card-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.wb-card--blue    .wb-card-icon { background: rgba(37, 99, 235, 0.1);   color: #2563eb; }
+.wb-card--green   .wb-card-icon { background: rgba(34, 197, 94, 0.1);   color: #16a34a; }
+.wb-card--orange  .wb-card-icon { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+.wb-card--purple  .wb-card-icon { background: rgba(139, 92, 246, 0.12); color: #7c3aed; }
+.wb-card--neutral .wb-card-icon { background: var(--bg-muted);          color: var(--text-secondary); }
+
+.wb-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.wb-card-title {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.005em;
+}
+
+.wb-card-desc {
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+/* Dark mode: card hover lift effect adjusted */
+[data-theme="dark"] .wb-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}

@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
-import { ChevronRight, GraduationCap } from "lucide-react";
+import {
+  ChevronRight, GraduationCap, BookOpen, CalendarClock,
+  Compass, Upload, MessageSquare,
+} from "lucide-react";
 import { BGPattern } from "./BGPattern.jsx";
 import Dashboard from "./Dashboard.jsx";
 import ResourceHub from "./ResourceHub.jsx";
@@ -55,6 +58,54 @@ const SUGGESTION_CHIPS = [
   "What should I focus on this week?",
   "I'm worried about a deadline",
   "Check my schedule",
+];
+
+// Whiteboard quick-action cards on the empty welcome screen.
+// Each card's `action` is resolved at render time inside App so it can
+// access handleSend / fileInputRef / setActiveView etc.
+const WELCOME_CARDS = [
+  {
+    icon: BookOpen,
+    title: "Plan my semester",
+    desc: "Lay out next term's courses",
+    color: "blue",
+    prompt: "Help me plan my courses for next semester. What should I be taking?",
+  },
+  {
+    icon: GraduationCap,
+    title: "Check graduation",
+    desc: "How close am I to done?",
+    color: "green",
+    prompt: "What courses do I still need to graduate, and am I on track?",
+  },
+  {
+    icon: CalendarClock,
+    title: "Deadlines",
+    desc: "What's due soon",
+    color: "orange",
+    prompt: "What Penn State deadlines should I be tracking right now?",
+  },
+  {
+    icon: Compass,
+    title: "Compare majors",
+    desc: "CMPSC vs DTSCE side-by-side",
+    color: "purple",
+    prompt: "Compare Computer Science (CMPSC) and Computational Data Sciences (DTSCE) — strengths, courses, careers.",
+  },
+  {
+    icon: Upload,
+    title: "Upload your audit",
+    desc: "Personalized analysis",
+    color: "neutral",
+    action: "upload",
+  },
+  {
+    icon: MessageSquare,
+    title: "Ask anything",
+    desc: "Free-form chat",
+    color: "neutral",
+    action: "focus-input",
+  },
 ];
 
 const FOLLOW_UP_MAP = {
@@ -173,7 +224,9 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 900
+  );
   const [conversations, setConversations] = useState([]);
   const [activeConvId, setActiveConvId] = useState(null);
   const [activeView, setActiveView] = useState("chat");
@@ -186,6 +239,7 @@ function App() {
 
   const [headerText, setHeaderText] = useState('');
   const fileInputRef = useRef(null);
+  const chatInputRef = useRef(null);
 
   const messagesEndRef = useRef(null);
   const hasMessages = messages.length > 0;
@@ -509,6 +563,17 @@ function App() {
         </button>
       )}
 
+      {/* Mobile drawer backdrop — only visible when sidebar is open AND
+          viewport is in drawer mode (the .sidebar-backdrop class is hidden
+          via CSS above 900px). */}
+      {!sidebarCollapsed && (
+        <div
+          className="sidebar-backdrop"
+          onClick={() => setSidebarCollapsed(true)}
+          aria-hidden
+        />
+      )}
+
       {/* ── Main panel ──────────────────────── */}
       <div className="main-panel">
 
@@ -599,22 +664,45 @@ function App() {
         <div className="chat-area">
           <BGPattern variant="dots" fill="#e4e4e7" size={20} />
           {!hasMessages ? (
-            <div className="welcome-screen">
-              <AceLogo size={72} />
-              <h1 className="welcome-title">
-                How can I help with{" "}
-                <Typewriter
-                  words={["courses?", "deadlines?", "policies?", "planning?"]}
-                  typingSpeed={90}
-                  deletingSpeed={50}
-                  pauseDuration={1500}
-                  style={{ color: "#2563eb" }}
-                />
-              </h1>
-              <p className="welcome-subtitle">
-                I'm ACE, your academic advisor assistant. Ask me anything about
-                your degree, schedule, or Penn State.
-              </p>
+            <div className="wb-welcome">
+              <div className="wb-welcome-head">
+                <h1 className="wb-headline">
+                  What are we planning <span className="wb-headline-accent">today?</span>
+                </h1>
+                <p className="wb-subline">
+                  Pick a starting point — or just ask.
+                </p>
+              </div>
+
+              <div className="wb-card-grid">
+                {WELCOME_CARDS.map((card) => {
+                  const Icon = card.icon;
+                  const onClick = () => {
+                    if (card.action === "upload") {
+                      fileInputRef.current?.click();
+                    } else if (card.action === "focus-input") {
+                      chatInputRef.current?.focus();
+                    } else if (card.prompt) {
+                      handleSend(card.prompt);
+                    }
+                  };
+                  return (
+                    <button
+                      key={card.title}
+                      className={`wb-card wb-card--${card.color}`}
+                      onClick={onClick}
+                    >
+                      <div className="wb-card-icon">
+                        <Icon size={18} strokeWidth={1.75} />
+                      </div>
+                      <div className="wb-card-text">
+                        <span className="wb-card-title">{card.title}</span>
+                        <span className="wb-card-desc">{card.desc}</span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           ) : (
             <div className="messages-list">
@@ -675,20 +763,6 @@ function App() {
 
         {/* Input */}
         <div className="input-section">
-          {!hasMessages && (
-            <div className="chips-row">
-              {SUGGESTION_CHIPS.map((chip) => (
-                <button
-                  key={chip}
-                  className="suggestion-chip"
-                  onClick={() => handleSend(chip)}
-                >
-                  {chip}
-                </button>
-              ))}
-            </div>
-          )}
-
           {hasMessages && !loading && followUpChips.length > 0 && (
             <div className="followup-chips-row">
               {followUpChips.map((chip) => (
@@ -728,6 +802,7 @@ function App() {
               />
             </label>
             <input
+              ref={chatInputRef}
               className="chat-input"
               type="text"
               placeholder="Type, paste, or upload..."
