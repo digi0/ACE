@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ClerkProvider } from '@clerk/clerk-react'
 import './index.css'
+import './responsive.css'
 import App from './App.jsx'
 import { AuthProvider } from './AuthContext.jsx'
 

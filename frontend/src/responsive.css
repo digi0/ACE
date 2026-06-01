@@ -1,0 +1,70 @@
+/* ════════════════════════════════════════════════════════════════════
+   responsive.css — THE MOBILE LAYER
+   ────────────────────────────────────────────────────────────────────
+   CONTRACT — read before editing:
+
+   • index.css is the DESKTOP baseline and the source of truth for how the
+     app looks on a normal screen. It must NOT be edited to "fix" mobile.
+     Desktop rules stay desktop rules.
+
+   • This file is the ONLY home for mobile / compact overrides. It is
+     imported LAST (see main.jsx), so its rules win the cascade by source
+     order without needing !important or specificity hacks.
+
+   • Canonical mobile breakpoint: 768px. Keep in sync with
+     MOBILE_BREAKPOINT in useIsMobile.js. (CSS @media can't read var(), so
+     the literal lives here.)
+
+   • If you ever feel the urge to edit a desktop rule in index.css to make
+     mobile work — stop, and add an override here instead. A diff that
+     touches index.css during mobile work is a red flag for desktop
+     regressions, which is exactly what this split exists to prevent.
+   ════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Use the dynamic viewport height so the bottom nav and chat input never
+     hide behind mobile browser chrome. No-op where dvh is unsupported. */
+  .app-layout { height: 100dvh; }
+
+  /* The desktop top-tab switcher is replaced by the bottom nav on mobile. */
+  .top-bar-nav { display: none; }
+
+  /* The floating edge "expand" button is replaced by the top-bar hamburger. */
+  .sidebar-expand-btn { display: none; }
+  .top-bar-hamburger  { display: inline-flex; }
+
+  /* Tighter content gutters on small screens. This layer is loaded last, so
+     it supersedes both the desktop base and the legacy ≤700px rule. */
+  .messages-list { padding: 20px 16px; }
+  .input-section { padding: 10px 16px 16px; }
+
+  /* ── Bottom tab bar (rendered only on mobile — see MobileBottomNav.jsx) ── */
+  .mobile-bottom-nav {
+    display: flex;
+    align-items: stretch;
+    flex-shrink: 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg-card);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .mbn-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 8px 4px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    transition: color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mbn-item--active { color: var(--accent); }
+}

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 import {
   ChevronRight, GraduationCap, BookOpen, CalendarClock,
-  Compass, Upload, MessageSquare,
+  Compass, Upload, MessageSquare, Send, Paperclip, X, ExternalLink, Menu,
 } from "lucide-react";
 import { BGPattern } from "./BGPattern.jsx";
 import Dashboard from "./Dashboard.jsx";
@@ -18,6 +18,8 @@ import GenEdExplorer from "./GenEdExplorer.jsx";
 import { useAuth } from "./AuthContext.jsx";
 import { apiFetch, apiStream } from "./api.js";
 import Typewriter from "./Typewriter.jsx";
+import { useIsMobile } from "./useIsMobile.js";
+import MobileBottomNav from "./MobileBottomNav.jsx";
 
 /* ── Icons ─────────────────────────────────────── */
 function GradCapIcon({ size = 16 }) {
@@ -243,6 +245,7 @@ function App() {
 
   const messagesEndRef = useRef(null);
   const hasMessages = messages.length > 0;
+  const isMobile = useIsMobile();
 
   // Typewriter for top-bar title on mount
   useEffect(() => {
@@ -262,6 +265,14 @@ function App() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  // Auto-grow the chat textarea with its content, up to a max height
+  useEffect(() => {
+    const el = chatInputRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
+  }, [input]);
 
   // Keep the active conversation's stored messages in sync
   useEffect(() => {
@@ -511,6 +522,7 @@ function App() {
     setMessages(conv.messages);
     setActiveConvId(conv.id);
     setInput("");
+    if (isMobile) setSidebarCollapsed(true);
   };
 
   const handleNewConversation = () => {
@@ -519,7 +531,14 @@ function App() {
     setUploadedFile(null);
     setUploadStatus("");
     setActiveConvId(null);
+    if (isMobile) setSidebarCollapsed(true);
   };
+
+  // Switch the main view; on mobile this also closes the slide-in drawer.
+  const navigate = useCallback((view) => {
+    setActiveView(view);
+    if (isMobile) setSidebarCollapsed(true);
+  }, [isMobile]);
 
   // Still checking auth state
   if (user === undefined) {
@@ -546,11 +565,11 @@ function App() {
         auditData={auditData}
         darkMode={darkMode} setDarkMode={setDarkMode}
         onCollapse={() => setSidebarCollapsed(true)}
-        onNavigate={setActiveView}
         conversations={conversations} activeConvId={activeConvId}
         onSwitchConversation={handleSwitchConversation}
         onNewConversation={handleNewConversation}
         onStartTour={() => setShowTour(true)}
+        onNavigate={navigate}
       />
 
       {sidebarCollapsed && (
@@ -579,6 +598,13 @@ function App() {
 
         <header className="top-bar">
           <div className="top-bar-brand">
+            <button
+              className="top-bar-hamburger"
+              onClick={() => setSidebarCollapsed(false)}
+              aria-label="Open menu"
+            >
+              <Menu size={20} aria-hidden />
+            </button>
             <AceLogo size={30} />
             <span className="top-bar-name">ACE</span>
             <span className="top-bar-subtitle">{headerText}</span>
@@ -732,8 +758,8 @@ function App() {
                               <div key={si} className="source-chip">
                                 {s.title || "Official Source"}
                                 {s.link && (
-                                  <a href={s.link} target="_blank" rel="noreferrer" className="source-chip-link">
-                                    ↗
+                                  <a href={s.link} target="_blank" rel="noreferrer" className="source-chip-link" aria-label="Open source">
+                                    <ExternalLink size={11} strokeWidth={2.25} aria-hidden />
                                   </a>
                                 )}
                               </div>
@@ -783,7 +809,7 @@ function App() {
                 <>
                   <span>✓</span>
                   <span>{uploadedFile.name}</span>
-                  <button className="upload-badge-x" onClick={handleClearFile}>×</button>
+                  <button className="upload-badge-x" onClick={handleClearFile} aria-label="Remove uploaded file"><X size={14} strokeWidth={2.25} aria-hidden /></button>
                 </>
               ) : (
                 <span>{uploadStatus}</span>
@@ -793,7 +819,7 @@ function App() {
 
           <div className="input-bar" data-tour="chat-input">
             <label className="attach-btn" data-tour="upload-btn" title="Upload degree audit or what-if report">
-              +
+              <Paperclip size={17} strokeWidth={1.75} aria-hidden />
               <input
                 type="file"
                 accept=".pdf,.doc,.docx"
@@ -801,22 +827,28 @@ function App() {
                 onChange={(e) => e.target.files[0] && handleFileUpload(e.target.files[0])}
               />
             </label>
-            <input
+            <textarea
               ref={chatInputRef}
               className="chat-input"
-              type="text"
+              rows={1}
               placeholder="Type, paste, or upload..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
             />
             <button
               className="send-btn"
               onClick={() => handleSend()}
               disabled={loading || !input.trim()}
               title="Send"
+              aria-label="Send message"
             >
-              ➤
+              <Send size={16} strokeWidth={2} aria-hidden />
             </button>
           </div>
 
@@ -824,6 +856,10 @@ function App() {
 
         </div>
         </>
+        )}
+
+        {isMobile && (
+          <MobileBottomNav activeView={activeView} onNavigate={navigate} />
         )}
       </div>
 
