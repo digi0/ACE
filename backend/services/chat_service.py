@@ -6,6 +6,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 from backend.config import OPENAI_CHAT_MODEL
 from backend.services.embedding_service import semantic_search
+from backend.services.cost_service import record_usage
 from backend.services.student_doc_service import (
     has_student_doc,
     build_student_doc_context,
@@ -575,6 +576,7 @@ Write the answer in this style:
         )
 
         answer = completion.choices[0].message.content
+        record_usage("chat", OPENAI_CHAT_MODEL, completion.usage, user_id=user_id)
 
         return {
             "answer": answer,
@@ -998,13 +1000,18 @@ The detected intent for the current question is: {intent}
             model=OPENAI_CHAT_MODEL,
             messages=messages_list,
             temperature=0.0,
-            stream=True
+            stream=True,
+            stream_options={"include_usage": True},
         )
 
+        usage = None
         for chunk in stream:
+            if getattr(chunk, "usage", None) is not None:
+                usage = chunk.usage  # final chunk carries token usage
             if chunk.choices and chunk.choices[0].delta.content:
                 yield f"data: {json.dumps({'text': chunk.choices[0].delta.content})}\n\n"
 
+        record_usage("chat", OPENAI_CHAT_MODEL, usage, user_id=user_id)
         logger.info("ask_advisor_stream | stream complete | sources=%d", len(sources))
         yield f"data: {json.dumps({'done': True, 'sources': sources, 'intent': intent, 'used_student_doc': bool(student_doc_context)})}\n\n"
 

@@ -2,7 +2,7 @@ import logging
 import os
 from datetime import datetime, timezone
 
-from fastapi import FastAPI, Query, Form, UploadFile, File, HTTPException, Depends
+from fastapi import FastAPI, Query, Form, UploadFile, File, HTTPException, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
@@ -207,6 +207,44 @@ def gen_ed(
         resolved_major = get_user_major(current_user["uid"], db=db)
     data = build_gen_ed_response(resolved_major)
     return data
+
+
+# ── Admin: API cost dashboard (key-gated; not user-facing) ────────────────────
+
+def _require_admin(key, x_admin_key):
+    admin_key = os.getenv("ADMIN_KEY")
+    if not admin_key:
+        raise HTTPException(status_code=503, detail="Cost dashboard disabled: set ADMIN_KEY.")
+    if (x_admin_key or key) != admin_key:
+        raise HTTPException(status_code=403, detail="Invalid admin key.")
+
+
+@app.get("/admin/costs")
+def admin_costs(
+    key: str = Query(default=None),
+    x_admin_key: str | None = Header(default=None),
+    db: Session = Depends(get_db),
+):
+    """Live OpenAI spend: totals (all-time / 30d / 24h), per feature+model,
+    avg cost per chat, and a projected monthly figure."""
+    _require_admin(key, x_admin_key)
+    from backend.services.cost_service import summarize
+    return summarize(db)
+
+
+@app.get("/admin/costs/estimate")
+def admin_cost_estimate(
+    users: int = Query(...),
+    msgs_per_user: float = Query(..., description="messages per user per month"),
+    avg_input_tokens: int = Query(default=3000),
+    avg_output_tokens: int = Query(default=450),
+    key: str = Query(default=None),
+    x_admin_key: str | None = Header(default=None),
+):
+    """What-if projection from usage assumptions (no recorded data needed)."""
+    _require_admin(key, x_admin_key)
+    from backend.services.cost_service import estimate
+    return estimate(users, msgs_per_user, avg_input_tokens, avg_output_tokens)
 
 
 # ── Auth-required endpoints ───────────────────────────────────────────────────

@@ -81,7 +81,7 @@ def course_code_score(question, record):
 
 
 def semantic_search(question, top_k=10):
-    question_embedding = get_embedding(question)
+    question_embedding = get_embedding(question, record=True)
     records = get_all_records_with_embeddings()
 
     scored_records = []

@@ -70,3 +70,27 @@ class Message(Base):
     __table_args__ = (
         Index("ix_messages_conversation_id", "conversation_id"),
     )
+
+
+class ApiUsage(Base):
+    """One row per metered OpenAI call (chat completion or query embedding).
+
+    Powers the live cost tracker. Standalone (no FK) so logging never blocks
+    on user rows; created by Base.metadata.create_all at startup.
+    """
+    __tablename__ = "api_usage"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    feature = Column(String(32), nullable=True)   # "chat" | "embedding"
+    model = Column(String(64), nullable=True)
+    input_tokens = Column(Integer, default=0)
+    output_tokens = Column(Integer, default=0)
+    cached_tokens = Column(Integer, default=0)
+    cost_usd = Column(Float, default=0.0)
+    user_id = Column(String(256), nullable=True)
+
+    __table_args__ = (
+        Index("ix_api_usage_created_at", "created_at"),
+        Index("ix_api_usage_feature", "feature"),
+    )

@@ -13,11 +13,19 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 logger = logging.getLogger(__name__)
 
 
-def get_embedding(text):
+def get_embedding(text, record=False):
     response = client.embeddings.create(
         model=OPENAI_EMBEDDING_MODEL,
         input=text
     )
+    # record=True only for query-time embeds (once per search); the bulk
+    # index-build embeds are a one-off and would flood the usage table.
+    if record:
+        try:
+            from backend.services.cost_service import record_usage
+            record_usage("embedding", OPENAI_EMBEDDING_MODEL, response.usage)
+        except Exception:
+            pass
     return response.data[0].embedding
 
 
