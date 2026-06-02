@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 const SECTIONS = [
   {
@@ -79,9 +79,36 @@ const SECTIONS = [
 
 const TOTAL_ITEMS = SECTIONS.reduce((acc, s) => acc + s.items.length, 0);
 
-export default function GraduationChecklist({ userId }) {
+// Normalize a course code for comparison: "ENGL 015" / "ENGL15" -> "ENGL 15"
+function normCode(code) {
+  const m = String(code).toUpperCase().match(/([A-Z]{2,6})\s*0*(\d{1,3}[A-Z]?)/);
+  return m ? `${m[1]} ${m[2]}` : String(code).toUpperCase().trim();
+}
+
+// Expand a checklist code with slash-alternatives into normalized course codes:
+// "CMPSC 121/131" -> ["CMPSC 121","CMPSC 131"]; "CAS 100A/B/C" -> 3 codes.
+// Non-course labels ("GA", "CMPSC Elective") return a single non-matching token.
+function expandCodes(raw) {
+  const parts = String(raw).split("/").map((s) => s.trim()).filter(Boolean);
+  if (!parts.length) return [];
+  const first = normCode(parts[0]);
+  const fm = first.match(/^([A-Z]{2,6})\s+(\d{1,3})([A-Z]?)$/);
+  if (!fm) return [first];
+  const [, subj, baseNum] = fm;
+  const out = [first];
+  for (const p of parts.slice(1)) {
+    const t = p.toUpperCase().trim();
+    if (/^\d/.test(t)) out.push(normCode(`${subj} ${t}`));
+    else if (/^[A-Z]$/.test(t)) out.push(`${subj} ${baseNum}${t}`);
+    else out.push(normCode(t));
+  }
+  return out;
+}
+
+export default function GraduationChecklist({ userId, progress }) {
   const storageKey = `ace_checklist_${userId || "default"}`;
 
+  // Manual overrides only — audit-derived completion is merged at read time.
   const [checked, setChecked] = useState(() => {
     try {
       const stored = localStorage.getItem(storageKey);
@@ -105,7 +132,32 @@ export default function GraduationChecklist({ userId }) {
     }
   }, [checked, storageKey]);
 
-  const totalDone = Object.values(checked).filter(Boolean).length;
+  // Course sets derived from the uploaded audit (normalized for matching).
+  const { completedSet, inProgressSet, hasAudit } = useMemo(() => {
+    const completed = new Set((progress?.completed_courses || []).map(normCode));
+    const inProgress = new Set((progress?.in_progress_courses || []).map(normCode));
+    return {
+      completedSet: completed,
+      inProgressSet: inProgress,
+      hasAudit: completed.size > 0 || inProgress.size > 0,
+    };
+  }, [progress]);
+
+  const auditStatus = (item) => {
+    const codes = expandCodes(item.code);
+    if (codes.some((c) => completedSet.has(c))) return "completed";
+    if (codes.some((c) => inProgressSet.has(c))) return "in_progress";
+    return null;
+  };
+
+  const isDone = (item) => auditStatus(item) === "completed" || !!checked[item.id];
+
+  const totalDone = SECTIONS.reduce(
+    (acc, s) => acc + s.items.filter(isDone).length, 0
+  );
+  const autoCount = SECTIONS.reduce(
+    (acc, s) => acc + s.items.filter((it) => auditStatus(it) === "completed").length, 0
+  );
 
   const toggleItem = (itemId) => {
     setChecked((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
@@ -116,7 +168,7 @@ export default function GraduationChecklist({ userId }) {
   };
 
   const getSectionStatus = (section) => {
-    const done = section.items.filter((item) => checked[item.id]).length;
+    const done = section.items.filter(isDone).length;
     const total = section.items.length;
     if (done === total) return "complete";
     if (done > 0) return "partial";
@@ -134,6 +186,15 @@ export default function GraduationChecklist({ userId }) {
         </p>
       </div>
 
+      {hasAudit && (
+        <div className="audit-banner">
+          <span className="audit-banner-check">✓</span>
+          Auto-filled from your uploaded audit — {autoCount} requirement{autoCount === 1 ? "" : "s"} detected complete
+          {progress?.cumulative_gpa != null ? ` · Cum GPA ${progress.cumulative_gpa.toFixed(2)}` : ""}.
+          <span className="audit-banner-hint">You can still check off the rest manually.</span>
+        </div>
+      )}
+
       <div className="checklist-overall">
         <div className="checklist-overall-label">
           <span>
@@ -150,7 +211,7 @@ export default function GraduationChecklist({ userId }) {
       </div>
 
       {SECTIONS.map((section) => {
-        const doneCnt = section.items.filter((item) => checked[item.id]).length;
+        const doneCnt = section.items.filter(isDone).length;
         const total = section.items.length;
         const status = getSectionStatus(section);
         const isOpen = openSections[section.id];
@@ -183,14 +244,16 @@ export default function GraduationChecklist({ userId }) {
             {isOpen && (
               <div className="checklist-items">
                 {section.items.map((item) => {
-                  const isDone = !!checked[item.id];
+                  const aStatus = auditStatus(item);
+                  const done = aStatus === "completed" || !!checked[item.id];
+                  const ip = aStatus === "in_progress";
                   return (
                     <div
                       key={item.id}
-                      className={`checklist-item${isDone ? " checklist-item--done" : ""}`}
+                      className={`checklist-item${done ? " checklist-item--done" : ""}${ip ? " checklist-item--ip" : ""}`}
                       onClick={() => toggleItem(item.id)}
                       role="checkbox"
-                      aria-checked={isDone}
+                      aria-checked={done}
                       tabIndex={0}
                       onKeyDown={(e) => {
                         if (e.key === " " || e.key === "Enter") {
@@ -199,11 +262,17 @@ export default function GraduationChecklist({ userId }) {
                         }
                       }}
                     >
-                      <span className={`checklist-checkbox${isDone ? " checklist-checkbox--checked" : ""}`}>
-                        {isDone && "✓"}
+                      <span className={`checklist-checkbox${done ? " checklist-checkbox--checked" : ""}`}>
+                        {done && "✓"}
                       </span>
                       <span className="checklist-course-code">{item.code}</span>
                       <span className="checklist-course-name">{item.name}</span>
+                      {aStatus === "completed" && (
+                        <span className="audit-tag audit-tag--audit">audit</span>
+                      )}
+                      {ip && (
+                        <span className="audit-tag audit-tag--ip">in progress</span>
+                      )}
                       <span className="checklist-course-cr">{item.cr} cr</span>
                     </div>
                   );

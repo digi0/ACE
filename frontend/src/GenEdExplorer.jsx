@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { apiFetch } from "./api.js";
 
 /* ── Static fallback courses for categories sparse in the bulletin scrape ── */
@@ -68,8 +68,14 @@ function creditNum(cr) {
   return isNaN(n) ? 0 : n;
 }
 
-function getCatStatus(courses, completed, creditsRequired) {
-  const done = courses.filter((c) => completed[c.code]);
+// Normalize a course code for matching against the audit: "ENGL 015" -> "ENGL 15"
+function normCode(code) {
+  const m = String(code).toUpperCase().match(/([A-Z]{2,6})\s*0*(\d{1,3}[A-Z]?)/);
+  return m ? `${m[1]} ${m[2]}` : String(code).toUpperCase().trim();
+}
+
+function getCatStatus(courses, isDone, creditsRequired) {
+  const done = courses.filter((c) => isDone(c.code));
   const cr   = done.reduce((s, c) => s + creditNum(c.credits), 0);
   if (cr >= creditsRequired) return "satisfied";
   if (done.length > 0)        return "partial";
@@ -87,7 +93,7 @@ function TagBadge({ tag }) {
   return <span className={entry[0]}>{entry[1]}</span>;
 }
 
-function CourseRow({ course, done, onToggle }) {
+function CourseRow({ course, done, auditTag, onToggle }) {
   const tags = (course.tags || []).filter((t) => t in { "major-req": 1, popular: 1, recommended: 1 });
   return (
     <label className={`gened-course-row${done ? " gened-course-row--done" : ""}`}>
@@ -99,6 +105,8 @@ function CourseRow({ course, done, onToggle }) {
       />
       <span className="gened-course-code">{course.code}</span>
       <span className="gened-course-name">{course.title || course.name}</span>
+      {auditTag === "audit" && <span className="audit-tag audit-tag--audit">audit</span>}
+      {auditTag === "ip" && <span className="audit-tag audit-tag--ip">in progress</span>}
       <span className="gened-course-cr">{course.credits} cr</span>
       {tags.length > 0 && (
         <span className="gened-tags">
@@ -109,14 +117,14 @@ function CourseRow({ course, done, onToggle }) {
   );
 }
 
-function CategoryCard({ catCode, catData, completed, onToggle, defaultOpen, programName }) {
+function CategoryCard({ catCode, catData, isDone, courseTag, onToggle, defaultOpen, programName }) {
   const [open, setOpen] = useState(defaultOpen || false);
   const meta   = CAT_META[catCode] || { label: catCode, creditsRequired: 3 };
   const courses = catData?.courses || STATIC_FALLBACK[catCode] || [];
-  const status  = getCatStatus(courses, completed, meta.creditsRequired);
+  const status  = getCatStatus(courses, isDone, meta.creditsRequired);
 
-  const doneCr    = courses.filter((c) => completed[c.code]).reduce((s, c) => s + creditNum(c.credits), 0);
-  const doneCount = courses.filter((c) => completed[c.code]).length;
+  const doneCr    = courses.filter((c) => isDone(c.code)).reduce((s, c) => s + creditNum(c.credits), 0);
+  const doneCount = courses.filter((c) => isDone(c.code)).length;
 
   const overlapCr = catData?.overlap_credits || 0;
   const totalInDb = catData?.course_count || 0;
@@ -164,7 +172,8 @@ function CategoryCard({ catCode, catData, completed, onToggle, defaultOpen, prog
                 <CourseRow
                   key={c.code}
                   course={c}
-                  done={!!completed[c.code]}
+                  done={isDone(c.code)}
+                  auditTag={courseTag(c.code)}
                   onToggle={onToggle}
                 />
               ))
@@ -178,7 +187,7 @@ function CategoryCard({ catCode, catData, completed, onToggle, defaultOpen, prog
 
 /* ── Main Component ──────────────────────────────────────────────────────── */
 
-export default function GenEdExplorer({ userId, selectedMajor }) {
+export default function GenEdExplorer({ userId, selectedMajor, progress }) {
   const storageKey = `ace_gened_${userId}`;
 
   const [completed, setCompleted] = useState(() => {
@@ -191,6 +200,27 @@ export default function GenEdExplorer({ userId, selectedMajor }) {
   const [genEdData, setGenEdData]   = useState(null);   // API response
   const [loading, setLoading]       = useState(false);
   const [filter, setFilter]         = useState("all");  // "all" | "remaining" | "major-dips"
+
+  // Course sets from the uploaded audit (normalized for matching)
+  const { auditCompleted, auditInProgress, hasAudit } = useMemo(() => {
+    const c  = new Set((progress?.completed_courses || []).map(normCode));
+    const ip = new Set((progress?.in_progress_courses || []).map(normCode));
+    return { auditCompleted: c, auditInProgress: ip, hasAudit: c.size > 0 || ip.size > 0 };
+  }, [progress]);
+
+  // A course is done if checked manually OR the audit shows it complete.
+  const isDone = useCallback(
+    (code) => !!completed[code] || auditCompleted.has(normCode(code)),
+    [completed, auditCompleted]
+  );
+  const courseTag = useCallback(
+    (code) => {
+      if (auditCompleted.has(normCode(code))) return "audit";
+      if (auditInProgress.has(normCode(code))) return "ip";
+      return null;
+    },
+    [auditCompleted, auditInProgress]
+  );
 
   // Persist checked courses
   useEffect(() => {
@@ -227,17 +257,24 @@ export default function GenEdExplorer({ userId, selectedMajor }) {
   const satisfiedCount = catCodes.filter((code) => {
     const meta    = CAT_META[code];
     const courses = catMap[code]?.courses || STATIC_FALLBACK[code] || [];
-    return getCatStatus(courses, completed, meta.creditsRequired) === "satisfied";
+    return getCatStatus(courses, isDone, meta.creditsRequired) === "satisfied";
   }).length;
 
   const progressPct = Math.round((satisfiedCount / catCodes.length) * 100);
+
+  // How many shown courses the audit auto-completed (for the banner)
+  let autoCount = 0;
+  for (const code of catCodes) {
+    const courses = catMap[code]?.courses || STATIC_FALLBACK[code] || [];
+    autoCount += courses.filter((c) => auditCompleted.has(normCode(c.code))).length;
+  }
 
   const visibleCodes = catCodes.filter((code) => {
     if (filter === "all") return true;
     const meta    = CAT_META[code];
     const courses = catMap[code]?.courses || STATIC_FALLBACK[code] || [];
     if (filter === "remaining")
-      return getCatStatus(courses, completed, meta.creditsRequired) !== "satisfied";
+      return getCatStatus(courses, isDone, meta.creditsRequired) !== "satisfied";
     if (filter === "major-dips")
       return (catMap[code]?.courses || []).some((c) => c.tags?.includes("major-req"));
     return true;
@@ -271,6 +308,14 @@ export default function GenEdExplorer({ userId, selectedMajor }) {
         </div>
         {loading && <span style={{ fontSize: 12, color: "var(--gray-400)" }}>Loading…</span>}
       </div>
+
+      {hasAudit && (
+        <div className="audit-banner">
+          <span className="audit-banner-check">✓</span>
+          Auto-checked {autoCount} completed course{autoCount === 1 ? "" : "s"} from your uploaded audit.
+          <span className="audit-banner-hint">Check off any others manually.</span>
+        </div>
+      )}
 
       {/* Overall Progress */}
       <div className="gened-overall">
@@ -319,7 +364,8 @@ export default function GenEdExplorer({ userId, selectedMajor }) {
               key={code}
               catCode={code}
               catData={catMap[code] || null}
-              completed={completed}
+              isDone={isDone}
+              courseTag={courseTag}
               onToggle={toggleCourse}
               defaultOpen={false}
               programName={programName}

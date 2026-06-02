@@ -377,6 +377,16 @@ def get_dashboard(
         "in_progress_courses": in_progress,
         "recommended_next_semester": recommended,
         "alerts": alerts,
+        # Normalized progress for the frontend tool views (Checklist, Gen Ed,
+        # Prereq Map, GPA Calc) so they react to the uploaded audit instead of
+        # being manual-only.
+        "progress": {
+            "completed_courses": [c["code"] for c in audit_parse.get("completed_courses", [])],
+            "in_progress_courses": in_progress,
+            "remaining_courses": remaining_required,
+            "cumulative_gpa": audit_parse.get("cumulative_gpa"),
+            "earned_credits": audit_parse.get("earned_credits", 0.0),
+        },
     }
 
 

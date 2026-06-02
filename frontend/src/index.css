@@ -3156,6 +3156,42 @@ body {
 
 .checklist-disclaimer      { font-size: 11.5px; color: var(--text-muted); text-align: center; padding-top: 4px; }
 
+/* ── Audit-wiring: shared banner + tags used wherever an uploaded audit
+      drives a tool view (Checklist, Gen Ed, Prereq Map, GPA Calc) ── */
+.audit-banner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  background: var(--green-bg);
+  border: 1px solid #86efac;
+  border-radius: var(--radius-md);
+  font-size: 12.5px;
+  color: #15803d;
+  font-weight: 500;
+}
+.audit-banner-check { font-weight: 800; }
+.audit-banner-hint  { color: var(--text-muted); font-weight: 400; }
+.audit-tag {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.audit-tag--audit { background: var(--green-bg); color: #15803d; }
+.audit-tag--ip    { background: var(--amber-bg); color: #92400e; }
+.checklist-item--ip .checklist-checkbox { border-color: var(--amber); }
+
+[data-theme="dark"] .audit-banner     { background: rgba(34,197,94,0.12); border-color: rgba(34,197,94,0.3); color: #4ade80; }
+[data-theme="dark"] .audit-tag--audit { background: rgba(34,197,94,0.15); color: #4ade80; }
+[data-theme="dark"] .audit-tag--ip    { background: rgba(245,158,11,0.15); color: #fbbf24; }
+
 /* ═══════════════════════════════════════════════════════════════
    COURSE PREREQUISITE MAP
    ═══════════════════════════════════════════════════════════════ */
@@ -3170,6 +3206,7 @@ body {
 .prereq-legend-dot--completed { background: var(--text); }
 .prereq-legend-dot--available { background: var(--accent); }
 .prereq-legend-dot--locked    { background: var(--border); }
+.prereq-legend-dot--in_progress { background: var(--amber); }
 
 .prereq-scroll     { overflow-x: auto; padding-bottom: 12px; }
 .prereq-map        { display: flex; gap: 16px; min-width: max-content; align-items: flex-start; }
@@ -3189,12 +3226,17 @@ body {
 .prereq-course-name { font-size: 10.5px; color: var(--text-secondary); line-height: 1.3; }
 .prereq-course--completed .prereq-course-name { color: rgba(255,255,255,0.6); }
 .prereq-course-check { position: absolute; top: 6px; right: 8px; font-size: 10px; color: var(--accent); }
+.prereq-course--in_progress { border-color: var(--amber); background: var(--amber-bg); }
+.prereq-course--in_progress:hover { border-color: var(--amber); }
+.prereq-course-ip { position: absolute; top: 6px; right: 8px; font-size: 8.5px; font-weight: 800; letter-spacing: 0.5px; color: var(--amber); }
 
 .prereq-disclaimer { font-size: 11.5px; color: var(--text-muted); text-align: center; }
 
 /* ═══════════════════════════════════════════════════════════════
    GPA HISTORY TAB
    ═══════════════════════════════════════════════════════════════ */
+.gpa-audit-hint { font-size: 11.5px; color: #15803d; font-weight: 500; margin: 0 0 10px; }
+[data-theme="dark"] .gpa-audit-hint { color: #4ade80; }
 .gpa-history-empty    { font-size: 13px; color: var(--text-muted); text-align: center; padding: 20px 0; }
 .gpa-history-list     { display: flex; flex-direction: column; gap: 6px; }
 .gpa-history-row      { display: flex; align-items: center; gap: 10px; padding: 9px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; }

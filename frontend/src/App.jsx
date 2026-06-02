@@ -666,7 +666,7 @@ function App() {
           </div>
         ) : activeView === "gpa" ? (
           <div className="dashboard-area">
-            <GpaCalculator userId={user.uid} />
+            <GpaCalculator userId={user.uid} progress={auditData?.progress} />
           </div>
         ) : activeView === "calendar" ? (
           <div className="dashboard-area">
@@ -674,15 +674,15 @@ function App() {
           </div>
         ) : activeView === "checklist" ? (
           <div className="dashboard-area">
-            <GraduationChecklist userId={user.uid} />
+            <GraduationChecklist userId={user.uid} progress={auditData?.progress} />
           </div>
         ) : activeView === "prereq" ? (
           <div className="dashboard-area">
-            <CoursePrereqMap userId={user.uid} />
+            <CoursePrereqMap userId={user.uid} progress={auditData?.progress} />
           </div>
         ) : activeView === "gened" ? (
           <div className="dashboard-area">
-            <GenEdExplorer userId={user.uid} selectedMajor={selectedMajor} />
+            <GenEdExplorer userId={user.uid} selectedMajor={selectedMajor} progress={auditData?.progress} />
           </div>
         ) : activeView === "dashboard" ? (
           <div className="dashboard-area">

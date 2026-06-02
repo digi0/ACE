@@ -317,12 +317,20 @@ function HistoryTab({ userId }) {
 }
 
 /* ── GpaCalculator ──────────────────────────────────────────── */
-export default function GpaCalculator({ userId = "guest" }) {
-  const [mode, setMode]               = useState("semester");
+export default function GpaCalculator({ userId = "guest", progress }) {
+  const [mode, setMode]               = useState(() => (progress?.cumulative_gpa != null ? "cumulative" : "semester"));
   const [courses, setCourses]         = useState([makeCourse(1)]);
   const [currentGpa, setCurrentGpa]   = useState("");
   const [currentCr, setCurrentCr]     = useState("");
   const idRef = useRef(2);
+
+  // Audit-derived defaults for the cumulative projection — shown when the user
+  // hasn't typed their own. Derived (not stored via an effect), so editing
+  // overrides and there are no cascading renders.
+  const auditGpa = progress?.cumulative_gpa != null ? String(progress.cumulative_gpa) : "";
+  const auditCr  = progress?.earned_credits ? String(Math.round(progress.earned_credits)) : "";
+  const effGpa = currentGpa !== "" ? currentGpa : auditGpa;
+  const effCr  = currentCr !== "" ? currentCr : auditCr;
 
   const addCourse = () => {
     setCourses(prev => [...prev, makeCourse(idRef.current++)]);
@@ -339,8 +347,8 @@ export default function GpaCalculator({ userId = "guest" }) {
   /* cumulative projection */
   let cumResult = null;
   if (mode === "cumulative" && semResult) {
-    const prevGpa = parseFloat(currentGpa);
-    const prevCr  = parseFloat(currentCr);
+    const prevGpa = parseFloat(effGpa);
+    const prevCr  = parseFloat(effCr);
     if (!isNaN(prevGpa) && !isNaN(prevCr) && prevGpa >= 0 && prevGpa <= 4.0 && prevCr >= 0) {
       const totalQP  = prevGpa * prevCr + semResult.totalQP;
       const totalCr  = prevCr + semResult.totalCredits;
@@ -392,6 +400,9 @@ export default function GpaCalculator({ userId = "guest" }) {
       {mode === "cumulative" && (
         <div className="gpa-card">
           <h3 className="gpa-card-title">Current Academic Standing</h3>
+          {progress?.cumulative_gpa != null && (
+            <p className="gpa-audit-hint">✓ Pre-filled from your uploaded audit — edit if needed.</p>
+          )}
           <div className="gpa-standing-row">
             <div className="gpa-field">
               <label className="gpa-label">Current Cumulative GPA</label>
@@ -400,7 +411,7 @@ export default function GpaCalculator({ userId = "guest" }) {
                 type="number"
                 min="0" max="4.0" step="0.01"
                 placeholder="e.g.  3.45"
-                value={currentGpa}
+                value={effGpa}
                 onChange={e => setCurrentGpa(e.target.value)}
               />
             </div>
@@ -411,7 +422,7 @@ export default function GpaCalculator({ userId = "guest" }) {
                 type="number"
                 min="0"
                 placeholder="e.g.  60"
-                value={currentCr}
+                value={effCr}
                 onChange={e => setCurrentCr(e.target.value)}
               />
             </div>

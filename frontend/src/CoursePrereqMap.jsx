@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
 const COURSES = [
   // Tier 1
@@ -54,6 +54,30 @@ const TIER_LABELS = {
   6: 'Year 4',
 };
 
+// Normalize a course code for matching against the audit: "ENGL 015" -> "ENGL 15"
+function normCode(code) {
+  const m = String(code).toUpperCase().match(/([A-Z]{2,6})\s*0*(\d{1,3}[A-Z]?)/);
+  return m ? `${m[1]} ${m[2]}` : String(code).toUpperCase().trim();
+}
+
+// Expand a node code with slash-alternatives: "CMPSC 121/131" -> 2 codes.
+function expandCodes(raw) {
+  const parts = String(raw).split('/').map((s) => s.trim()).filter(Boolean);
+  if (!parts.length) return [];
+  const first = normCode(parts[0]);
+  const fm = first.match(/^([A-Z]{2,6})\s+(\d{1,3})([A-Z]?)$/);
+  if (!fm) return [first];
+  const [, subj, baseNum] = fm;
+  const out = [first];
+  for (const p of parts.slice(1)) {
+    const t = p.toUpperCase().trim();
+    if (/^\d/.test(t)) out.push(normCode(`${subj} ${t}`));
+    else if (/^[A-Z]$/.test(t)) out.push(`${subj} ${baseNum}${t}`);
+    else out.push(normCode(t));
+  }
+  return out;
+}
+
 function isCourseAvailable(course, completed) {
   if (course.prereqs.length === 0) return true;
   if (course.prereqMode === 'any') {
@@ -62,7 +86,7 @@ function isCourseAvailable(course, completed) {
   return course.prereqs.every((pid) => completed.has(pid));
 }
 
-export default function CoursePrereqMap({ userId }) {
+export default function CoursePrereqMap({ userId, progress }) {
   const storageKey = `ace_prereq_${userId}`;
 
   const [completed, setCompleted] = useState(() => {
@@ -93,13 +117,33 @@ export default function CoursePrereqMap({ userId }) {
     }
   }, [completed, storageKey]);
 
+  // Map the audit's completed / in-progress course codes onto node ids.
+  const { auditCompletedIds, auditInProgressIds, hasAudit } = useMemo(() => {
+    const comp = new Set((progress?.completed_courses || []).map(normCode));
+    const ip = new Set((progress?.in_progress_courses || []).map(normCode));
+    const cIds = new Set();
+    const ipIds = new Set();
+    for (const course of COURSES) {
+      const codes = expandCodes(course.code);
+      if (codes.some((c) => comp.has(c))) cIds.add(course.id);
+      else if (codes.some((c) => ip.has(c))) ipIds.add(course.id);
+    }
+    return { auditCompletedIds: cIds, auditInProgressIds: ipIds, hasAudit: comp.size > 0 || ip.size > 0 };
+  }, [progress]);
+
+  // Manual checks ∪ audit-completed — drives availability so audit-completed
+  // prereqs unlock the courses they gate.
+  const effectiveCompleted = useMemo(
+    () => new Set([...completed, ...auditCompletedIds]),
+    [completed, auditCompletedIds]
+  );
+
   const toggleCourse = useCallback(
     (course) => {
-      const isCompleted = completed.has(course.id);
-      const isAvailable = isCourseAvailable(course, completed);
-
+      const isComp = effectiveCompleted.has(course.id);
+      const isAvail = isCourseAvailable(course, effectiveCompleted);
       // Only allow toggle if the course is available or already completed
-      if (!isCompleted && !isAvailable) return;
+      if (!isComp && !isAvail) return;
 
       setCompleted((prev) => {
         const next = new Set(prev);
@@ -111,12 +155,13 @@ export default function CoursePrereqMap({ userId }) {
         return next;
       });
     },
-    [completed],
+    [effectiveCompleted],
   );
 
   function getCourseStatus(course) {
-    if (completed.has(course.id)) return 'completed';
-    if (isCourseAvailable(course, completed)) return 'available';
+    if (effectiveCompleted.has(course.id)) return 'completed';
+    if (auditInProgressIds.has(course.id)) return 'in_progress';
+    if (isCourseAvailable(course, effectiveCompleted)) return 'available';
     return 'locked';
   }
 
@@ -127,10 +172,23 @@ export default function CoursePrereqMap({ userId }) {
         <p className="prereq-subtitle">CMPSC B.S. &middot; Penn State &middot; 2024–2025</p>
       </div>
 
+      {hasAudit && (
+        <div className="audit-banner">
+          <span className="audit-banner-check">✓</span>
+          {auditCompletedIds.size} course{auditCompletedIds.size === 1 ? '' : 's'} marked complete from your audit
+          {auditInProgressIds.size > 0 ? ` · ${auditInProgressIds.size} in progress` : ''}.
+          <span className="audit-banner-hint">Prereqs unlock automatically.</span>
+        </div>
+      )}
+
       <div className="prereq-legend">
         <span className="prereq-legend-item">
           <span className="prereq-legend-dot prereq-legend-dot--completed" />
           Completed
+        </span>
+        <span className="prereq-legend-item">
+          <span className="prereq-legend-dot prereq-legend-dot--in_progress" />
+          In progress
         </span>
         <span className="prereq-legend-item">
           <span className="prereq-legend-dot prereq-legend-dot--available" />
@@ -151,7 +209,7 @@ export default function CoursePrereqMap({ userId }) {
                 <div className="prereq-tier-label">{TIER_LABELS[tier]}</div>
                 {tierCourses.map((course) => {
                   const status = getCourseStatus(course);
-                  const isInteractable = status === 'available' || status === 'completed';
+                  const isInteractable = status !== 'locked';
                   return (
                     <div
                       key={course.id}
@@ -173,6 +231,11 @@ export default function CoursePrereqMap({ userId }) {
                       {status === 'completed' && (
                         <span className="prereq-course-check" aria-hidden="true">
                           ✓
+                        </span>
+                      )}
+                      {status === 'in_progress' && (
+                        <span className="prereq-course-ip" aria-hidden="true">
+                          IP
                         </span>
                       )}
                     </div>
