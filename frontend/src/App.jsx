@@ -1,25 +1,28 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, lazy, Suspense } from "react";
 import ReactMarkdown from "react-markdown";
 import {
   ChevronRight, GraduationCap, BookOpen, CalendarClock,
   Compass, Upload, MessageSquare, Send, Paperclip, X, ExternalLink, Menu,
 } from "lucide-react";
 import { BGPattern } from "./BGPattern.jsx";
-import Dashboard from "./Dashboard.jsx";
-import ResourceHub from "./ResourceHub.jsx";
-import GpaCalculator from "./GpaCalculator.jsx";
-import LoginPage from "./LoginPage.jsx";
-import OnboardingTour from "./OnboardingTour.jsx";
 import Sidebar from "./Sidebar.jsx";
-import AcademicCalendar from "./AcademicCalendar.jsx";
-import GraduationChecklist from "./GraduationChecklist.jsx";
-import CoursePrereqMap from "./CoursePrereqMap.jsx";
-import GenEdExplorer from "./GenEdExplorer.jsx";
 import { useAuth } from "./AuthContext.jsx";
 import { apiFetch, apiStream } from "./api.js";
-import Typewriter from "./Typewriter.jsx";
 import { useIsMobile } from "./useIsMobile.js";
 import MobileBottomNav from "./MobileBottomNav.jsx";
+
+// Lazy-loaded views — each becomes its own chunk fetched on first use, so the
+// initial load stays lean. LoginPage pulls in the ~226 kB tsparticles sparkles,
+// so deferring it keeps that off the path for returning signed-in users.
+const LoginPage           = lazy(() => import("./LoginPage.jsx"));
+const OnboardingTour      = lazy(() => import("./OnboardingTour.jsx"));
+const Dashboard           = lazy(() => import("./Dashboard.jsx"));
+const ResourceHub         = lazy(() => import("./ResourceHub.jsx"));
+const GpaCalculator       = lazy(() => import("./GpaCalculator.jsx"));
+const AcademicCalendar    = lazy(() => import("./AcademicCalendar.jsx"));
+const GraduationChecklist = lazy(() => import("./GraduationChecklist.jsx"));
+const CoursePrereqMap     = lazy(() => import("./CoursePrereqMap.jsx"));
+const GenEdExplorer       = lazy(() => import("./GenEdExplorer.jsx"));
 
 /* ── Icons ─────────────────────────────────────── */
 function GradCapIcon({ size = 16 }) {
@@ -552,7 +555,11 @@ function App() {
 
   // Not signed in → show login page
   if (user === null) {
-    return <LoginPage />;
+    return (
+      <Suspense fallback={<div className="auth-loading"><div className="loading-dots"><span /><span /><span /></div></div>}>
+        <LoginPage />
+      </Suspense>
+    );
   }
 
   return (
@@ -652,6 +659,7 @@ function App() {
           }}
         />
 
+        <Suspense fallback={<div className="dashboard-area"><div className="loading-dots"><span /><span /><span /></div></div>}>
         {activeView === "resources" ? (
           <div className="dashboard-area">
             <ResourceHub />
@@ -857,6 +865,7 @@ function App() {
         </div>
         </>
         )}
+        </Suspense>
 
         {isMobile && (
           <MobileBottomNav activeView={activeView} onNavigate={navigate} />
@@ -864,7 +873,11 @@ function App() {
       </div>
 
       {/* ── Onboarding tour ──────────────────── */}
-      {showTour && <OnboardingTour onFinish={handleTourFinish} />}
+      {showTour && (
+        <Suspense fallback={null}>
+          <OnboardingTour onFinish={handleTourFinish} />
+        </Suspense>
+      )}
 
       {/* ── Major selection modal ─────────────── */}
       {showMajorModal && (
