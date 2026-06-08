@@ -1,58 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-
-const COURSES = [
-  // Tier 1
-  { id: 'CMPSC121', code: 'CMPSC 121/131', name: 'Intro to Programming', tier: 1, prereqs: [] },
-  { id: 'MATH140',  code: 'MATH 140',      name: 'Calculus I',            tier: 1, prereqs: [] },
-  { id: 'ENGL15',   code: 'ENGL 15',       name: 'Rhetoric & Composition', tier: 1, prereqs: [] },
-  { id: 'CAS100',   code: 'CAS 100',       name: 'Effective Speech',       tier: 1, prereqs: [] },
-
-  // Tier 2
-  { id: 'CMPSC122', code: 'CMPSC 122/132', name: 'Intermediate Programming', tier: 2, prereqs: ['CMPSC121'] },
-  { id: 'MATH141',  code: 'MATH 141',      name: 'Calculus II',              tier: 2, prereqs: ['MATH140'] },
-  { id: 'PHYS211',  code: 'PHYS 211',      name: 'General Physics I',        tier: 2, prereqs: ['MATH140'] },
-  { id: 'ENGL202C', code: 'ENGL 202C',     name: 'Technical Writing',        tier: 2, prereqs: ['ENGL15'] },
-
-  // Tier 3
-  { id: 'CMPSC221', code: 'CMPSC 221',  name: 'OOP',              tier: 3, prereqs: ['CMPSC122'] },
-  { id: 'CMPSC360', code: 'CMPSC 360',  name: 'Discrete Math',    tier: 3, prereqs: ['CMPSC122', 'MATH141'] },
-  { id: 'MATH220',  code: 'MATH 220',   name: 'Matrices',         tier: 3, prereqs: ['MATH141'] },
-  { id: 'PHYS212',  code: 'PHYS 212',   name: 'General Physics II', tier: 3, prereqs: ['PHYS211'] },
-  { id: 'STAT318',  code: 'STAT 318',   name: 'Statistics',       tier: 3, prereqs: ['MATH141'] },
-
-  // Tier 4
-  { id: 'CMPSC311', code: 'CMPSC 311', name: 'Systems Programming',   tier: 4, prereqs: ['CMPSC221'] },
-  { id: 'CMPSC312', code: 'CMPSC 312', name: 'Computer Organization', tier: 4, prereqs: ['CMPSC221'] },
-  { id: 'CMPSC462', code: 'CMPSC 462', name: 'Data Structures',       tier: 4, prereqs: ['CMPSC221', 'CMPSC360'] },
-
-  // Tier 5
-  { id: 'CMPSC431W', code: 'CMPSC 431W', name: 'Database Mgmt',    tier: 5, prereqs: ['CMPSC311'] },
-  { id: 'CMPSC461',  code: 'CMPSC 461',  name: 'PL Concepts',      tier: 5, prereqs: ['CMPSC311', 'CMPSC462'] },
-  { id: 'CMPSC463',  code: 'CMPSC 463',  name: 'Algorithm Design', tier: 5, prereqs: ['CMPSC462'] },
-  { id: 'CMPSC473',  code: 'CMPSC 473',  name: 'Operating Systems', tier: 5, prereqs: ['CMPSC311', 'CMPSC312'] },
-
-  // Tier 6
-  { id: 'CMPSC441',  code: 'CMPSC 441',  name: 'AI',            tier: 6, prereqs: ['CMPSC463', 'STAT318'] },
-  {
-    id: 'CMPSC483W',
-    code: 'CMPSC 483W',
-    name: 'Senior Design',
-    tier: 6,
-    // OR logic: any one of these satisfies the prereq
-    prereqs: ['CMPSC431W', 'CMPSC461', 'CMPSC473'],
-    prereqMode: 'any',
-  },
-];
-
-const TIERS = [1, 2, 3, 4, 5, 6];
-const TIER_LABELS = {
-  1: 'Year 1',
-  2: 'Year 1–2',
-  3: 'Year 2',
-  4: 'Year 2–3',
-  5: 'Year 3–4',
-  6: 'Year 4',
-};
+import { apiFetch } from './api.js';
 
 // Normalize a course code for matching against the audit: "ENGL 015" -> "ENGL 15"
 function normCode(code) {
@@ -79,15 +26,43 @@ function expandCodes(raw) {
 }
 
 function isCourseAvailable(course, completed) {
-  if (course.prereqs.length === 0) return true;
+  if (!course.prereqs || course.prereqs.length === 0) return true;
   if (course.prereqMode === 'any') {
     return course.prereqs.some((pid) => completed.has(pid));
   }
   return course.prereqs.every((pid) => completed.has(pid));
 }
 
-export default function CoursePrereqMap({ userId, progress }) {
+export default function CoursePrereqMap({ userId, progress, selectedMajor }) {
   const storageKey = `ace_prereq_${userId}`;
+
+  // ── Dynamic, per-major course graph (fetched from the backend) ──
+  const [courses, setCourses] = useState([]);
+  const [programName, setProgramName] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!selectedMajor) {
+      setCourses([]);
+      setProgramName('');
+      setLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
+    apiFetch(`/prereq-map?major=${encodeURIComponent(selectedMajor)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return;
+        setCourses(Array.isArray(data?.courses) ? data.courses : []);
+        setProgramName(data?.program_name || selectedMajor);
+      })
+      .catch(() => {
+        if (!cancelled) { setCourses([]); setProgramName(selectedMajor); }
+      })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [selectedMajor]);
 
   const [completed, setCompleted] = useState(() => {
     try {
@@ -123,19 +98,24 @@ export default function CoursePrereqMap({ userId, progress }) {
     const ip = new Set((progress?.in_progress_courses || []).map(normCode));
     const cIds = new Set();
     const ipIds = new Set();
-    for (const course of COURSES) {
+    for (const course of courses) {
       const codes = expandCodes(course.code);
       if (codes.some((c) => comp.has(c))) cIds.add(course.id);
       else if (codes.some((c) => ip.has(c))) ipIds.add(course.id);
     }
     return { auditCompletedIds: cIds, auditInProgressIds: ipIds, hasAudit: comp.size > 0 || ip.size > 0 };
-  }, [progress]);
+  }, [progress, courses]);
 
   // Manual checks ∪ audit-completed — drives availability so audit-completed
   // prereqs unlock the courses they gate.
   const effectiveCompleted = useMemo(
     () => new Set([...completed, ...auditCompletedIds]),
     [completed, auditCompletedIds]
+  );
+
+  const tiers = useMemo(
+    () => [...new Set(courses.map((c) => c.tier))].sort((a, b) => a - b),
+    [courses]
   );
 
   const toggleCourse = useCallback(
@@ -165,11 +145,54 @@ export default function CoursePrereqMap({ userId, progress }) {
     return 'locked';
   }
 
+  // ── Empty / loading / no-major states ──
+  if (!selectedMajor) {
+    return (
+      <div className="prereq-page">
+        <div className="prereq-header">
+          <h2 className="prereq-title">Course Prerequisite Map</h2>
+          <p className="prereq-subtitle">Penn State</p>
+        </div>
+        <div className="audit-banner">
+          Select your major to see its course prerequisite map. You can set it from the
+          major prompt, or just ask ACE in chat.
+        </div>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="prereq-page">
+        <div className="prereq-header">
+          <h2 className="prereq-title">Course Prerequisite Map</h2>
+          <p className="prereq-subtitle">{programName || selectedMajor}</p>
+        </div>
+        <div className="audit-banner">Building your prerequisite map…</div>
+      </div>
+    );
+  }
+
+  if (courses.length === 0) {
+    return (
+      <div className="prereq-page">
+        <div className="prereq-header">
+          <h2 className="prereq-title">Course Prerequisite Map</h2>
+          <p className="prereq-subtitle">{programName || selectedMajor}</p>
+        </div>
+        <div className="audit-banner">
+          We don't have a course-level prerequisite map for <strong>{programName || selectedMajor}</strong> yet.
+          See your required courses on the <strong>Dashboard</strong> or ask ACE in chat.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="prereq-page">
       <div className="prereq-header">
         <h2 className="prereq-title">Course Prerequisite Map</h2>
-        <p className="prereq-subtitle">CMPSC B.S. &middot; Penn State &middot; 2024–2025</p>
+        <p className="prereq-subtitle">{programName} &middot; Penn State</p>
       </div>
 
       {hasAudit && (
@@ -202,11 +225,11 @@ export default function CoursePrereqMap({ userId, progress }) {
 
       <div className="prereq-scroll">
         <div className="prereq-map">
-          {TIERS.map((tier) => {
-            const tierCourses = COURSES.filter((c) => c.tier === tier);
+          {tiers.map((tier) => {
+            const tierCourses = courses.filter((c) => c.tier === tier);
             return (
               <div className="prereq-tier" key={tier}>
-                <div className="prereq-tier-label">{TIER_LABELS[tier]}</div>
+                <div className="prereq-tier-label">Level {tier}</div>
                 {tierCourses.map((course) => {
                   const status = getCourseStatus(course);
                   const isInteractable = status !== 'locked';
@@ -249,7 +272,8 @@ export default function CoursePrereqMap({ userId, progress }) {
 
       <p className="prereq-disclaimer">
         Click an available or completed course to toggle its status. Locked courses require their
-        prerequisites to be completed first. CMPSC 483W requires any one of: 431W, 461, or 473.
+        prerequisites first. Levels reflect prerequisite depth, not exact semesters — see the
+        Suggested Plan for a term-by-term layout.
       </p>
     </div>
   );

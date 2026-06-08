@@ -1,7 +1,7 @@
 import {
   ChevronLeft, GraduationCap, LogOut, Pencil,
   Plus, Compass, MessageSquare, Calculator, LayoutGrid,
-  BookOpen, Upload, AlertCircle, Info, CheckCircle,
+  BookOpen, Upload, AlertCircle, Info, CheckCircle, CalendarRange,
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 
@@ -18,21 +18,24 @@ const SPRING_DEADLINES = [
   { iso: "2026-05-10", label: "Summer tuition due" },
 ];
 
+// Major-neutral short labels for the degree-progress widget. Matches are
+// generic requirement-block vocabulary, so they read correctly for any major
+// (a "Prescribed Courses" block → "Required", not "Core CS").
 const REQ_LABEL_MAP = [
-  { match: /prescribed|core\s*cs|cmpsc.*required/i, label: "Core CS"      },
-  { match: /math|quantif/i,                          label: "Math"         },
-  { match: /gen.*ed|general.*educ/i,                 label: "Gen Ed"       },
-  { match: /elective/i,                              label: "Electives"    },
-  { match: /science|physics/i,                       label: "Science"      },
-  { match: /writing|communication|english/i,         label: "Writing"      },
-  { match: /data|cds|computational/i,                label: "Data Science" },
+  { match: /prescribed|required|^core\b/i,    label: "Required"  },
+  { match: /math|quantif/i,                   label: "Math"      },
+  { match: /gen.*ed|general.*educ/i,          label: "Gen Ed"    },
+  { match: /elective/i,                       label: "Electives" },
+  { match: /science|physics|natural\s*sci/i,  label: "Science"   },
+  { match: /writing|communication|english|speak/i, label: "Writing" },
 ];
 
 const TOOLS = [
-  { id: "gpa",       label: "GPA Calc",  Icon: Calculator },
-  { id: "gened",     label: "Gen Ed",    Icon: LayoutGrid },
-  { id: "prereq",    label: "Prereqs",   Icon: Compass    },
-  { id: "resources", label: "Resources", Icon: BookOpen   },
+  { id: "gpa",       label: "GPA Calc",  Icon: Calculator   },
+  { id: "gened",     label: "Gen Ed",    Icon: LayoutGrid   },
+  { id: "prereq",    label: "Prereqs",   Icon: Compass      },
+  { id: "plan",      label: "Plan",      Icon: CalendarRange },
+  { id: "resources", label: "Resources", Icon: BookOpen     },
 ];
 
 /* ── Helpers ── */

@@ -22,6 +22,7 @@ const GpaCalculator       = lazy(() => import("./GpaCalculator.jsx"));
 const AcademicCalendar    = lazy(() => import("./AcademicCalendar.jsx"));
 const GraduationChecklist = lazy(() => import("./GraduationChecklist.jsx"));
 const CoursePrereqMap     = lazy(() => import("./CoursePrereqMap.jsx"));
+const SuggestedPlan       = lazy(() => import("./SuggestedPlan.jsx"));
 const GenEdExplorer       = lazy(() => import("./GenEdExplorer.jsx"));
 
 /* ── Icons ─────────────────────────────────────── */
@@ -92,10 +93,10 @@ const WELCOME_CARDS = [
   },
   {
     icon: Compass,
-    title: "Compare majors",
-    desc: "CMPSC vs DTSCE side-by-side",
+    title: "Explore my major",
+    desc: "Key requirements & courses",
     color: "purple",
-    prompt: "Compare Computer Science (CMPSC) and Computational Data Sciences (DTSCE) — strengths, courses, careers.",
+    prompt: "Give me an overview of my major — the key required courses, electives, and what to focus on.",
   },
   {
     icon: Upload,
@@ -120,7 +121,7 @@ const FOLLOW_UP_MAP = {
   substitution:     ["Who approves substitutions?", "What's the petition process?", "Can a different course count instead?"],
   etm:              ["What elective options do I have?", "How many elective credits do I need?", "Suggest related courses"],
   transfer:         ["Will this transfer credit count?", "How do I request a transfer evaluation?", "What documentation do I need?"],
-  gen_ed:           ["What Gen Ed counts for CS students?", "Which courses double-dip?", "What's the easiest way to finish Gen Ed?"],
+  gen_ed:           ["What Gen Ed do I still need?", "Which courses double-dip with my major?", "What's the easiest way to finish Gen Ed?"],
   general:          ["Tell me more", "How does this affect my graduation?", "What should I do next?"],
 };
 
@@ -205,7 +206,7 @@ function MajorSelectModal({ userId, onSelect, onSkip }) {
         </div>
         <div className="major-modal-actions">
           <button className="major-modal-skip" onClick={onSkip}>
-            Skip for now
+            I haven't declared a major yet
           </button>
           <button
             className="major-modal-confirm"
@@ -692,7 +693,11 @@ function App() {
           </div>
         ) : activeView === "prereq" ? (
           <div className="dashboard-area">
-            <CoursePrereqMap userId={user.uid} progress={auditData?.progress} />
+            <CoursePrereqMap userId={user.uid} progress={auditData?.progress} selectedMajor={selectedMajor} />
+          </div>
+        ) : activeView === "plan" ? (
+          <div className="dashboard-area">
+            <SuggestedPlan selectedMajor={selectedMajor} progress={auditData?.progress} />
           </div>
         ) : activeView === "gened" ? (
           <div className="dashboard-area">

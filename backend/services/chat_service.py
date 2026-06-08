@@ -868,6 +868,38 @@ Official source: https://bulletins.psu.edu/undergraduate/general-education/
 """
 
 
+NEUTRAL_GEN_ED_SNIPPET = """
+=== PENN STATE GENERAL EDUCATION (university-wide, 2024-2025) ===
+
+Every Penn State undergraduate completes Gen Ed across these categories
+(specific credit counts and overlaps vary by major):
+
+FOUNDATIONS:
+- First-Year Writing (FYW): e.g. ENGL 015 or ENGL 030 (3 cr)
+- Quantification (GQ): math/logic/quantitative reasoning (6 cr)
+- Speaking / Writing-Across-the-Curriculum where required by the major
+
+KNOWLEDGE DOMAINS (students choose courses that carry the designation):
+- Arts (GA): 3 credits
+- Humanities (GH): 3 credits
+- Social & Behavioral Sciences (GS): 3 credits
+- Natural Sciences (GN): 6 credits (at least one course with a lab)
+- Health & Wellness (GHW): 3 credits (or two 1.5-cr courses)
+- United States Cultures (US): 3 credits
+- International Cultures (IL): 3 credits
+
+KEY RULES:
+- Many courses carry more than one designation — check the Schedule of Courses
+  for current designations, and look for courses that "double-dip" with the
+  student's own major requirements.
+- Exact Gen Ed credit totals and which major courses overlap depend on the
+  student's specific program — direct them to LionPATH or their advisor, or to
+  select their major in ACE for tailored Gen Ed guidance.
+
+Official source: https://bulletins.psu.edu/undergraduate/general-education/
+"""
+
+
 def _build_dynamic_gen_ed_snippet(program_name: str, prog: dict | None, double_dips: list[dict]) -> str:
     """Build a gen-ed context snippet from live program data."""
     lines = [f"=== PENN STATE GEN ED — {program_name.upper()} ==="]
@@ -933,22 +965,33 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     user_major = major or (get_user_major(user_id) if user_id else None)
     major_kind = classify_major(user_major)        # 'cs' | 'ds' | 'other' | None
     structured_only = major_kind == "other"
+    # The RAG index is 100% CMPSC/DTSCE. We only let it drive the answer for
+    # declared CS/DS students. For any other major ('other') AND for students
+    # with no major at all (None), we keep those records out so the model does
+    # not silently treat the student as a CS/DS student.
+    suppress_cs_ds = major_kind in (None, "other")
     logger.info(
         "ask_advisor_stream | intent=%r | major=%r (%s) | question=%r",
         intent, user_major, major_kind or "none", question[:80],
     )
 
-    if structured_only:
-        # This major has no indexed handbook/bulletin/vault content, so pulling
-        # in the CMPSC/DTSCE records would skew the answer toward CS/DS. Answer
-        # purely from the structured programs.json requirements injected below.
+    if suppress_cs_ds:
         records = []
-        context = (
-            "(No indexed handbook records exist for this program. Use the "
-            "PROGRAM REQUIREMENTS section below as the authoritative source.)"
-        )
         rule_summary = ""
-        sources = build_program_sources(user_major)
+        if structured_only:
+            # Has a known program — ground on its programs.json requirements.
+            context = (
+                "(No indexed handbook records exist for this program. Use the "
+                "PROGRAM REQUIREMENTS section below as the authoritative source.)"
+            )
+            sources = build_program_sources(user_major)
+        else:
+            # No major declared — stay neutral, no program to cite.
+            context = (
+                "(The student has not selected a major, so no major-specific "
+                "records are available. Do not assume any particular program.)"
+            )
+            sources = []
     else:
         retrieved_records = semantic_search(question, top_k=10)
         records = select_top_records(retrieved_records, intent)
@@ -1005,8 +1048,23 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
             f"- If the PROGRAM REQUIREMENTS section lacks the detail needed, say so plainly and "
             f"suggest they confirm on the Penn State Bulletin or with their advisor."
         )
+    elif major_kind is None:
+        # No major declared: do NOT default to CS/DS framing.
+        major_guidance = (
+            "\n\nNO MAJOR SELECTED (important):\n"
+            "- The student has not told us their major. Do NOT assume they study Computer "
+            "Science or Data Sciences, and do NOT describe yourself as a CS/DS advisor.\n"
+            "- Answer university-wide questions (deadlines, policies, general Gen Ed, campus "
+            "resources) directly.\n"
+            "- For anything that depends on a specific major (required courses, a degree plan), "
+            "give general guidance and invite the student to select their major — or upload "
+            "their What-If / Degree Audit — so you can tailor the answer.\n"
+            "- Never reference CMPSC or DTSCE courses/requirements unless the student explicitly asks."
+        )
 
-    # Gen-ed snippet: use dynamic program data if available, else static fallback
+    # Gen-ed snippet: prefer the student's own program data. Only fall back to
+    # the CMPSC/DTSCE static tables for declared CS/DS students — everyone else
+    # (other major or no major) gets the neutral university-wide block.
     if intent == "gen_ed":
         if user_major:
             try:
@@ -1014,11 +1072,13 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
                 prog = get_program(user_major)
                 gen_ed_snippet = _build_dynamic_gen_ed_snippet(user_major, prog, double_dips)
             except Exception:
-                gen_ed_snippet = GEN_ED_SNIPPET
+                gen_ed_snippet = (
+                    GEN_ED_SNIPPET if major_kind == "cs"
+                    else DS_GEN_ED_SNIPPET if major_kind == "ds"
+                    else NEUTRAL_GEN_ED_SNIPPET
+                )
         else:
-            q_lower = question.lower()
-            is_ds = any(kw in q_lower for kw in ["dtsce", "data sciences", "data science"])
-            gen_ed_snippet = DS_GEN_ED_SNIPPET if is_ds else GEN_ED_SNIPPET
+            gen_ed_snippet = NEUTRAL_GEN_ED_SNIPPET
     else:
         gen_ed_snippet = ""
 

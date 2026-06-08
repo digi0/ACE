@@ -36,13 +36,13 @@ const STATIC_FALLBACK = {
 /* ── Universal smart picks (shown when no major is selected) ─────────────── */
 const UNIVERSAL_SMART_PICKS = [
   { code: "PHIL 010",  cat: "GH",  name: "Ethics",
-    reason: "Directly relevant to AI ethics, computing ethics, and tech careers." },
+    reason: "A broadly useful ethics course relevant across many fields and careers." },
   { code: "ECON 102",  cat: "GS",  name: "Microeconomics",
-    reason: "Great foundation for product thinking, startups, and tech business." },
+    reason: "A strong foundation for understanding markets, business, and decision-making." },
   { code: "KINES 082", cat: "GHW", name: "Health for Living",
     reason: "Quick 2-credit online checkbox — low workload." },
   { code: "MUSC 008",  cat: "GA",  name: "History of Rock Music",
-    reason: "Popular, low-stress mental break from a demanding course load." },
+    reason: "Popular, low-stress course — a nice balance to a heavier schedule." },
   { code: "INTL 100",  cat: "IL",  name: "Introduction to International Relations",
     reason: "Useful global perspective for international careers." },
 ];

@@ -33,6 +33,8 @@ from backend.services.program_service import (
     get_all_programs,
     get_course,
     build_gen_ed_response,
+    build_prereq_map,
+    build_suggested_plan,
     search_programs,
 )
 from backend.services.calendar_scraper import (
@@ -209,6 +211,46 @@ def gen_ed(
     return data
 
 
+# ── Prerequisite map (major-aware) ────────────────────────────────────────────
+
+@app.get("/prereq-map")
+def prereq_map(
+    major: str = Query(default=None),
+    current_user: dict | None = Depends(get_optional_user),
+    db: Session = Depends(get_db),
+):
+    resolved_major = major
+    if not resolved_major and current_user:
+        resolved_major = get_user_major(current_user["uid"], db=db)
+    if not resolved_major:
+        return {"program_name": None, "courses": [], "found": False}
+    data = build_prereq_map(resolved_major)
+    if data is None:
+        return {"program_name": resolved_major, "courses": [], "found": False}
+    data["found"] = True
+    return data
+
+
+# ── Suggested academic plan (major-aware) ─────────────────────────────────────
+
+@app.get("/suggested-plan")
+def suggested_plan(
+    major: str = Query(default=None),
+    current_user: dict | None = Depends(get_optional_user),
+    db: Session = Depends(get_db),
+):
+    resolved_major = major
+    if not resolved_major and current_user:
+        resolved_major = get_user_major(current_user["uid"], db=db)
+    if not resolved_major:
+        return {"program_name": None, "plans": [], "found": False}
+    data = build_suggested_plan(resolved_major)
+    if data is None:
+        return {"program_name": resolved_major, "plans": [], "found": False}
+    data["found"] = True
+    return data
+
+
 # ── Admin: API cost dashboard (key-gated; not user-facing) ────────────────────
 
 def _require_admin(key, x_admin_key):
@@ -360,7 +402,7 @@ def get_dashboard(
             if not or_group_seen:
                 or_group_seen = True
                 remaining_requirements.append({
-                    "title": "400-Level Non-CMPSC/CMPEN Electives (complete one 6-cr group with advisor)",
+                    "title": "Upper-Level Electives (complete one group in consultation with your advisor)",
                     "credits_needed": units.get("needed", 6.0),
                     "credits_required": units.get("required", 6.0),
                     "courses": [],

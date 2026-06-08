@@ -69,11 +69,11 @@ const RESOURCES = [
         link: "https://math.psu.edu/undergraduate/calculus-central",
       },
       {
-        name: "EECS Advising",
-        full: "Engineering Advising Office",
+        name: "Academic Advising",
+        full: "Penn State University Advising",
         description:
-          "Academic advising specific to CS and Engineering undergraduates at Penn State.",
-        link: "https://www.eecs.psu.edu/students/undergraduate/advising/",
+          "Find and connect with your college or department advising office for course planning, requirements, and degree questions.",
+        link: "https://advising.psu.edu/",
       },
     ],
   },

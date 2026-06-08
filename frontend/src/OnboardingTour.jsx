@@ -14,7 +14,7 @@ const STEPS = [
     target: '[data-tour="chat-input"]',
     title: "Ask a question",
     message:
-      "Type your questions here — courses, requirements, deadlines, policies. ACE responds with guidance grounded in Penn State CS academics.",
+      "Type your questions here — courses, requirements, deadlines, policies. ACE responds with guidance grounded in Penn State academics for your major.",
   },
   {
     id: "upload",

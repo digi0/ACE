@@ -30,8 +30,28 @@ _popular_courses: set[str] = set()            # codes appearing in 5+ programs
 # ── Internal helpers ───────────────────────────────────────────────────────────
 
 def _normalize_code(code: str) -> str:
-    """'CMPSC  465N' → 'CMPSC 465N'"""
-    return re.sub(r"\s+", " ", code.strip().upper())
+    """'CMPSC  465N' → 'CMPSC 465N' (tolerates None / non-str)."""
+    return re.sub(r"\s+", " ", (code or "").strip().upper())
+
+
+# Honors/section suffixes that denote a *variant* of the same course (MATH 141H
+# is Calc II, honors). We collapse these to the base course in graphs so they
+# don't appear as separate nodes. 'W' (writing) is intentionally excluded — a
+# W-course is a distinct requirement, not a variant.
+_VARIANT_SUFFIXES = set("ABEGHMST")
+
+
+def _canonical_code(code: str) -> str:
+    """Collapse a lettered course variant to its base when the base exists.
+
+    'MATH 141H' → 'MATH 141' (base in catalog); 'CMPSC 431W' stays (W kept,
+    and no base 'CMPSC 431'); codes with no trailing letter are unchanged.
+    """
+    c = _normalize_code(code)
+    m = re.match(r"^([A-Z]{2,8} \d{1,3})([A-Z])$", c)
+    if m and m.group(2) in _VARIANT_SUFFIXES and m.group(1) in _courses_by_code:
+        return m.group(1)
+    return c
 
 
 def _load_data() -> None:
@@ -392,3 +412,194 @@ def build_program_context_snippet(program_name: str) -> str:
             )
 
     return "\n".join(lines)
+
+
+# ── Major-aware Prerequisite Map ───────────────────────────────────────────────
+
+_PREREQ_MAP_MAX_NODES = 40
+
+
+def build_prereq_map(program_name: str) -> dict | None:
+    """
+    Build a dependency graph of a program's required courses for the Prereq Map
+    tool. Nodes are the program's prescribed courses plus its choice-group
+    options; edges are prerequisites that are themselves in the node set (so the
+    graph stays self-contained, like the old hardcoded CMPSC map). Tier = the
+    course's depth in the prerequisite chain (0-based depth + 1 for display).
+
+    Returns None if the program is unknown.
+    """
+    prog = get_program(program_name)
+    if not prog:
+        return None
+
+    reqs = prog.get("requirements", {})
+    node_codes: list[str] = []
+    kind_of: dict[str, str] = {}
+    seen: set[str] = set()
+
+    def _add(raw_code: str, kind: str) -> bool:
+        c = _normalize_code(raw_code)
+        if c and c not in seen:
+            seen.add(c)
+            node_codes.append(c)
+            kind_of[c] = kind
+            return True
+        return False
+
+    # Backbone: the program's prescribed (required) courses.
+    for item in reqs.get("prescribed", []):
+        if item.get("code"):
+            _add(_canonical_code(item["code"]), "required")
+
+    # Expand transitively through prerequisites that exist in the catalog, so
+    # the dependency chain (e.g. CMPSC 121 → 122 → 221) is visible even when the
+    # feeder courses are entrance-to-major rather than prescribed. Lettered
+    # variants (MATH 141H) are collapsed to their base. Bounded by a node cap so
+    # dense majors don't produce an unreadable graph.
+    queue = list(node_codes)
+    while queue and len(node_codes) < _PREREQ_MAP_MAX_NODES:
+        course = _courses_by_code.get(queue.pop(0))
+        if not course:
+            continue
+        for pr in course.get("prerequisites", []):
+            pc = _canonical_code(pr.get("code", ""))
+            if pc and pc in _courses_by_code and pc not in seen:
+                if _add(pc, "prereq"):
+                    queue.append(pc)
+                if len(node_codes) >= _PREREQ_MAP_MAX_NODES:
+                    break
+
+    node_set = set(node_codes)
+
+    # In-set prerequisites per course (collapsed to canonical, deduped)
+    prereq_codes: dict[str, list[str]] = {}
+    for code in node_codes:
+        course = _courses_by_code.get(code)
+        prs: list[str] = []
+        if course:
+            for pr in course.get("prerequisites", []):
+                pc = _canonical_code(pr.get("code", ""))
+                if pc in node_set and pc != code and pc not in prs:
+                    prs.append(pc)
+        prereq_codes[code] = prs
+
+    # Tier = longest prerequisite chain depth (memoized, cycle-guarded)
+    tier: dict[str, int] = {}
+
+    def _depth(code: str, stack: frozenset) -> int:
+        if code in tier:
+            return tier[code]
+        if code in stack:
+            return 0  # defensive: prereq cycle
+        prs = prereq_codes.get(code, [])
+        d = 0 if not prs else 1 + max(_depth(p, stack | {code}) for p in prs)
+        tier[code] = d
+        return d
+
+    for code in node_codes:
+        _depth(code, frozenset())
+
+    id_of = {c: c.replace(" ", "") for c in node_codes}
+    nodes: list[dict] = []
+    for code in node_codes:
+        course = _courses_by_code.get(code)
+        prs = prereq_codes[code]
+        # Unlock mode. Require ALL prereqs only when the condition is a pure
+        # conjunction ("X and Y"). Pure-OR or mixed AND/OR conditions → 'any',
+        # so a set of alternative prereqs (e.g. the first-year-writing options
+        # before ENGL 202C) never keeps a course permanently locked.
+        mode = "all"
+        if course and prs:
+            prs_set = set(prs)
+            conds = " ".join(
+                p.get("condition", "")
+                for p in course.get("prerequisites", [])
+                if _canonical_code(p.get("code", "")) in prs_set
+            ).lower()
+            if not (" and " in conds and " or " not in conds):
+                mode = "any"
+        nodes.append({
+            "id": id_of[code],
+            "code": code,
+            "name": (course or {}).get("title", ""),
+            "credits": (course or {}).get("credits", ""),
+            "tier": tier[code] + 1,
+            "prereqs": [id_of[p] for p in prs],
+            "prereqMode": mode,
+            "kind": kind_of[code],
+        })
+
+    return {
+        "program_name": prog["program_name"],
+        "college": (prog.get("college", "") or "").replace("-", " "),
+        "max_tier": max((n["tier"] for n in nodes), default=0),
+        "courses": nodes,
+    }
+
+
+# ── Suggested Academic Plan ────────────────────────────────────────────────────
+
+_YEAR_ORDINAL = {
+    "first": 1, "second": 2, "third": 3, "fourth": 4, "fifth": 5, "sixth": 6,
+}
+_SEASON_ORDER = {"fall": 0, "winter": 1, "spring": 2, "summer": 3}
+
+
+def _clean_text(s) -> str:
+    return re.sub(r"\s+", " ", str(s).replace("\xa0", " ")).strip()
+
+
+def _semester_label(key: str) -> str:
+    """'first_year_fall' → 'Year 1 · Fall'."""
+    parts = key.split("_")
+    yr = _YEAR_ORDINAL.get(parts[0]) if parts else None
+    season = parts[-1].capitalize() if parts else ""
+    if yr and season:
+        return f"Year {yr} · {season}"
+    return key.replace("_", " ").title()
+
+
+def _semester_sort_key(key: str) -> tuple:
+    parts = key.split("_")
+    return (_YEAR_ORDINAL.get(parts[0], 99), _SEASON_ORDER.get(parts[-1], 9))
+
+
+def build_suggested_plan(program_name: str) -> dict | None:
+    """
+    Build the college's suggested semester-by-semester academic plan for a
+    program, from programs.json `suggested_plan`. A program may have more than
+    one plan variant (e.g. University Park vs Commonwealth campuses); all are
+    returned. Returns None if the program is unknown.
+    """
+    prog = get_program(program_name)
+    if not prog:
+        return None
+
+    raw = prog.get("suggested_plan") or {}
+    plans: list[dict] = []
+    for label, semesters in raw.items():
+        if not isinstance(semesters, dict):
+            continue
+        sem_out: list[dict] = []
+        for key, courses in sorted(semesters.items(), key=lambda kv: _semester_sort_key(kv[0])):
+            cleaned: list[dict] = []
+            total = 0.0
+            for c in courses or []:
+                cr = c.get("credits")
+                if isinstance(cr, (int, float)):
+                    total += cr
+                cleaned.append({"description": _clean_text(c.get("description", "")), "credits": cr})
+            sem_out.append({
+                "key": key,
+                "label": _semester_label(key),
+                "courses": cleaned,
+                "total_credits": round(total, 1),
+            })
+        plans.append({"label": _clean_text(label), "semesters": sem_out})
+
+    return {
+        "program_name": prog["program_name"],
+        "total_credits": prog.get("total_credits"),
+        "plans": plans,
+    }
