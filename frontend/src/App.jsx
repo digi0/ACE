@@ -122,6 +122,8 @@ const FOLLOW_UP_MAP = {
   etm:              ["What elective options do I have?", "How many elective credits do I need?", "Suggest related courses"],
   transfer:         ["Will this transfer credit count?", "How do I request a transfer evaluation?", "What documentation do I need?"],
   gen_ed:           ["What Gen Ed do I still need?", "Which courses double-dip with my major?", "What's the easiest way to finish Gen Ed?"],
+  financial_aid:    ["How do I contact the Office of Student Aid?", "Where do I start with FAFSA?", "What scholarships does Penn State offer?"],
+  international:     ["How do I reach an international student adviser?", "Where do I ask about my visa status?", "What support does Penn State Global offer?"],
   general:          ["Tell me more", "How does this affect my graduation?", "What should I do next?"],
 };
 

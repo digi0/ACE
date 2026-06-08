@@ -42,9 +42,14 @@ def detect_question_intent(question):
     ]
 
     transfer_keywords = [
-        "transfer", "transferring", "credit transfer",
-        "ap", "ib", "transfer credit", "credits from another school"
+        "transfer", "transferring", "credit transfer", "transfer credit",
+        "credits from another school", "advanced placement",
+        "international baccalaureate", "ap credit", "ib credit",
+        "ap exam", "ap score", "ap scores",
     ]
+    # "ap"/"ib" alone need word boundaries — bare substrings match
+    # "apply"/"flexible". Match only the standalone acronyms.
+    transfer_acronym = re.search(r"\b(ap|ib)\b", q)
 
     etm_keywords = [
         "etm", "entrance to major", "major entry"
@@ -140,6 +145,35 @@ def detect_question_intent(question):
         "calc", "calculus help",
     ]
 
+    # Visa/immigration — unambiguous, checked first; ACE refers, never advises.
+    # Visa/immigration acronyms need WORD BOUNDARIES — bare substrings like "opt"
+    # or "ead" false-match "option"/"deadline". Regex for the short tokens,
+    # plain phrases for the longer ones.
+    intl_acronym = re.search(
+        r"\b(opt|cpt|ead|dso|sevis|uscis|dissa|visas?|i-?20|i-?94|ds-?2019|f-?1|j-?1|h-?1b)\b",
+        q,
+    )
+    international_phrases = [
+        "international student", "optional practical training",
+        "curricular practical training", "immigration", "travel signature",
+        "out of status", "study permit", "work authorization",
+        "penn state global", "designated school official",
+    ]
+
+    financial_aid_keywords = [
+        "financial aid", "fafsa", "scholarship", "scholarships", "grant", "grants",
+        "student loan", "student loans", "work study", "work-study", "student aid",
+        "net price", "cost of attendance", "pay for college", "pay for school",
+        "paying for college", "afford tuition", "aid package", "aid eligibility",
+        "pell grant", "subsidized loan", "loan forgiveness", "tuition assistance",
+    ]
+
+    if intl_acronym or any(p in q for p in international_phrases):
+        return "international"
+
+    if any(keyword in q for keyword in financial_aid_keywords):
+        return "financial_aid"
+
     if any(keyword in q for keyword in deadline_keywords):
         return "deadline"
 
@@ -155,7 +189,7 @@ def detect_question_intent(question):
     if any(keyword in q for keyword in contact_keywords):
         return "contact"
 
-    if any(keyword in q for keyword in transfer_keywords):
+    if transfer_acronym or any(keyword in q for keyword in transfer_keywords):
         return "transfer"
 
     if any(keyword in q for keyword in etm_keywords):
@@ -713,6 +747,35 @@ Mention the most relevant 1–2 resources naturally at the end of your response.
 """
 
 
+FINANCIAL_AID_RESOURCES_SNIPPET = """
+=== FINANCIAL AID — REFER TO THE OFFICE OF STUDENT AID (do NOT give personalized aid advice) ===
+ACE does NOT calculate, estimate, or advise on a student's individual financial aid, eligibility,
+amounts, or appeals. Those are personal and handled by the official office. Answer by pointing the
+student to the right place and how to reach it:
+- Office of Student Aid (primary contact for aid questions): https://studentaid.psu.edu/  | 814-865-6301
+- FAFSA — federal aid application (required for most aid): https://studentaid.gov/
+- Billing & payment (tuition bills, payment plans): Bursar — https://bursar.psu.edu/
+- Scholarships at Penn State: https://studentaid.psu.edu/types-of-aid/scholarships
+- Emergency financial help: https://studentaffairs.psu.edu/student-care/emergency-fund
+Give the 1–2 most relevant links and tell the student to contact the Office of Student Aid for their
+specific situation. Do not quote dollar amounts, eligibility rules, or deadlines from memory.
+"""
+
+INTERNATIONAL_RESOURCES_SNIPPET = """
+=== INTERNATIONAL STUDENTS / VISA — REFER TO PENN STATE GLOBAL / DISSA (do NOT give immigration advice) ===
+ACE is NOT an immigration adviser. Visa and work-authorization matters (F-1, J-1, OPT, CPT, I-20,
+SEVIS, travel signatures, maintaining status) are governed by federal law, are individualized, and
+wrong guidance can put a student OUT OF STATUS. Do NOT state visa rules, eligibility, timelines, or
+deadlines, and do NOT tell the student what to file. Always route them to the official advisers:
+- Penn State Global / DISSA (Directorate of International Student & Scholar Advising): https://global.psu.edu/
+  — schedule with an international student adviser (DSO/ARO) for any visa/SEVIS/work-authorization question.
+- Each campus has a designated international student adviser; University Park is served by Penn State Global.
+For non-immigration questions (academics, campus life, English support), help normally — but for anything
+touching visa status, your answer is: "that's handled by your international student adviser at Penn State
+Global; here's how to reach them." Be warm and reassuring; do not attempt the immigration answer yourself.
+"""
+
+
 _DEADLINES_STATIC_NOTES = """
 IMPORTANT NOTES:
 - "W" grades (course withdrawals) appear on transcript but do NOT affect GPA.
@@ -1060,6 +1123,8 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
 
     resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
     deadline_snippet = _get_deadlines_snippet() if intent == "deadline" else ""
+    aid_snippet = FINANCIAL_AID_RESOURCES_SNIPPET if intent == "financial_aid" else ""
+    intl_snippet = INTERNATIONAL_RESOURCES_SNIPPET if intent == "international" else ""
 
     # Build program requirements context if user has a major selected
     program_snippet = ""
@@ -1150,7 +1215,7 @@ The detected intent for the current question is: {intent}
 {rule_summary}
 
 === STUDENT DOCUMENT ===
-{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{program_snippet if program_snippet else ""}{resources_snippet}{deadline_snippet}{gen_ed_snippet}
+{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{program_snippet if program_snippet else ""}{resources_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
 
 === ANSWER RULES ===
 - You may use the conversation history above to understand follow-up context, but ground every answer in the advising records, extracted rules, and student document provided.
