@@ -2,6 +2,7 @@ import logging
 import os
 import re
 import json
+from datetime import date, timedelta
 from openai import OpenAI
 from dotenv import load_dotenv
 from backend.config import OPENAI_CHAT_MODEL
@@ -728,18 +729,32 @@ OFFICIAL LINKS:
 - Tuition/Billing: https://bursar.psu.edu/
 """
 
-_deadlines_cache: str | None = None
+# (today_iso, snippet) — recomputed when the calendar day changes so a
+# long-running worker always derives "today" correctly.
+_deadlines_cache: tuple[str, str] | None = None
+
+
+def _semester_date_bounds(sem: dict) -> tuple[str | None, str | None]:
+    """(min_iso, max_iso) of a semester's events, or (None, None)."""
+    isos = [e["iso_date"] for e in sem.get("events", []) if e.get("iso_date")]
+    return (min(isos), max(isos)) if isos else (None, None)
 
 
 def _build_deadlines_snippet() -> str:
     """
-    Build the DEADLINES_SNIPPET from backend/data/calendar.json.
-    Falls back to a generic header if the file is missing.
-    Results are cached in-process so the file is read once per worker.
+    Build the deadlines snippet from backend/data/calendar.json.
+
+    Picks the CURRENT term from today's date (not the frozen `current_semester`
+    baked in at scrape time), and applies a freshness guard: if the file's data
+    is entirely in the past, ACE is told NOT to state specific dates and to defer
+    to the registrar — so it never confidently emits last term's deadlines.
+
+    Cached per calendar-day.
     """
     global _deadlines_cache
-    if _deadlines_cache is not None:
-        return _deadlines_cache
+    today_iso = date.today().isoformat()
+    if _deadlines_cache is not None and _deadlines_cache[0] == today_iso:
+        return _deadlines_cache[1]
 
     try:
         from backend.services.calendar_scraper import load_calendar
@@ -747,23 +762,54 @@ def _build_deadlines_snippet() -> str:
     except Exception:
         data = None
 
-    if not data:
-        _deadlines_cache = (
+    def _finish(snippet: str) -> str:
+        global _deadlines_cache
+        _deadlines_cache = (today_iso, snippet)
+        return snippet
+
+    if not data or not data.get("semesters"):
+        return _finish(
             "=== PENN STATE ACADEMIC CALENDAR ===\n"
-            "(Calendar data unavailable — advise student to check registrar.psu.edu)"
+            "(Calendar data unavailable — tell the student you don't have verified "
+            "dates and to check https://registrar.psu.edu/academic-calendar/)"
             + _DEADLINES_STATIC_NOTES
         )
-        return _deadlines_cache
 
-    lines = ["=== PENN STATE ACADEMIC CALENDAR — KEY DEADLINES ==="]
-    current_name = data.get("current_semester", "")
-
-    # Include current + any upcoming semesters (up to 3 total)
     semesters = data.get("semesters", [])
-    current_idx = next(
-        (i for i, s in enumerate(semesters) if s["semester"] == current_name), 0
-    )
-    for sem in semesters[current_idx: current_idx + 3]:
+    scraped_at = (data.get("scraped_at") or "")[:10] or "unknown"
+    bounded = [(_semester_date_bounds(s), s) for s in semesters]
+    latest = max((hi for (_, hi), _ in bounded if hi), default=None)
+
+    # Freshness guard — all events are in the past → don't emit stale dates.
+    if latest is not None and latest < today_iso:
+        return _finish(
+            "=== PENN STATE ACADEMIC CALENDAR — DATA OUT OF DATE ===\n"
+            f"ACE's calendar data only runs through {latest}, but today is {today_iso}. "
+            "It does NOT have verified dates for the current or upcoming term. Do NOT "
+            "state specific deadline dates; tell the student to check the official "
+            "calendar at https://registrar.psu.edu/academic-calendar/."
+            + _DEADLINES_STATIC_NOTES
+        )
+
+    # Relevant terms = ongoing or starting within ~8 months, by start date.
+    # (Time-windowed, not index-based, so summer's many sub-sessions don't crowd
+    # out the next major term — e.g. a June question still sees Fall.)
+    ordered = sorted(bounded, key=lambda b: (b[0][0] or "9999"))
+    horizon = (date.today() + timedelta(days=245)).isoformat()
+    relevant = [
+        sem for (lo, hi), sem in ordered
+        if hi and hi >= today_iso and lo and lo <= horizon
+    ][:8]
+    if not relevant:  # safety net; the freshness guard above usually catches this
+        relevant = [sem for _, sem in ordered[:3]]
+
+    lines = [
+        "=== PENN STATE ACADEMIC CALENDAR — KEY DEADLINES ===",
+        f"(Today is {today_iso}. Calendar data current as of {scraped_at}. If the "
+        "student asks about a term not listed below, say you don't have those dates "
+        "yet and point them to registrar.psu.edu — do NOT guess.)",
+    ]
+    for sem in relevant:
         lines.append(f"\n{sem['semester'].upper()}:")
         for ev in sem.get("events", []):
             date_str = ev.get("date", "")
@@ -772,8 +818,7 @@ def _build_deadlines_snippet() -> str:
             lines.append(f"- {ev['event']}: {date_str}{suffix}")
 
     lines.append(_DEADLINES_STATIC_NOTES)
-    _deadlines_cache = "\n".join(lines)
-    return _deadlines_cache
+    return _finish("\n".join(lines))
 
 
 def _get_deadlines_snippet() -> str:

@@ -1,7 +1,7 @@
 {
-  "scraped_at": "2026-04-17T11:17:05.705885Z",
-  "source_url": "https://www.registrar.psu.edu/academic-calendars/2025-26.cfm",
-  "current_semester": "Spring 2026 - Regular Session",
+  "scraped_at": "2026-06-08T13:04:46.158843+00:00",
+  "source_url": "https://www.registrar.psu.edu/academic-calendars/2025-26.cfm, https://www.registrar.psu.edu/academic-calendars/2026-27.cfm",
+  "current_semester": "Summer 2026 - Maymester",
   "semesters": [
     {
       "semester": "Fall 2025 - Regular Session",
@@ -987,8 +987,8 @@
         },
         {
           "event": "Registration - Deadline",
-          "date": "Sunday, May 10",
-          "iso_date": "2026-05-10"
+          "date": "Sunday, May 17",
+          "iso_date": "2026-05-17"
         },
         {
           "event": "Classes Begin",
@@ -1087,6 +1087,889 @@
           "event": "Commencement",
           "date": "Saturday, August 15",
           "iso_date": "2026-08-15"
+        }
+      ],
+      "footnotes": {
+        "1": "These dates apply to full semester courses."
+      }
+    },
+    {
+      "semester": "Fall 2026 - Regular Session",
+      "year": 2026,
+      "events": [
+        {
+          "event": "Intent to Graduate - Activation Period",
+          "date": "Monday, August 17 - Tuesday, September 15",
+          "iso_date": "2026-08-17",
+          "end_iso_date": "2026-09-15"
+        },
+        {
+          "event": "Leave of Absence - Deadline",
+          "date": "Friday, August 21",
+          "iso_date": "2026-08-21"
+        },
+        {
+          "event": "Registration - Deadline",
+          "date": "Sunday, August 23",
+          "iso_date": "2026-08-23"
+        },
+        {
+          "event": "Classes Begin",
+          "date": "Monday, August 24",
+          "iso_date": "2026-08-24"
+        },
+        {
+          "event": "Regular Drop - Deadline",
+          "date": "Saturday, August 29 at 11:59 p.m. (ET)",
+          "iso_date": "2026-08-29",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Regular Add - Deadline",
+          "date": "Sunday, August 30 at 11:59 p.m. (ET)",
+          "iso_date": "2026-08-30",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Late Drop Begins",
+          "date": "Sunday, August 30",
+          "iso_date": "2026-08-30",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Late Registration Begins",
+          "date": "Monday, August 31",
+          "iso_date": "2026-08-31",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Labor Day Holiday - No Classes",
+          "date": "Monday, September 7",
+          "iso_date": "2026-09-07"
+        },
+        {
+          "event": "Final Exam Conflict - Filing Period",
+          "date": "Monday, September 28 - Sunday, October 25",
+          "iso_date": "2026-09-28",
+          "end_iso_date": "2026-10-25"
+        },
+        {
+          "event": "Late Registration - Deadline",
+          "date": "Friday, November 13 at 11:59 p.m. (ET)",
+          "iso_date": "2026-11-13",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Late Add - Deadline",
+          "date": "Friday, November 13 at 11:59 p.m. (ET)",
+          "iso_date": "2026-11-13",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Late Drop - Deadline",
+          "date": "Friday, November 13 at 11:59 p.m. (ET)",
+          "iso_date": "2026-11-13",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Declare Concurrent Majors, Minors, or Certificates - Deadline (Graduating Students)",
+          "date": "Friday, November 13",
+          "iso_date": "2026-11-13"
+        },
+        {
+          "event": "Thanksgiving Holiday - No Classes",
+          "date": "Sunday, November 22 - Saturday, November 28",
+          "iso_date": "2026-11-22",
+          "end_iso_date": "2026-11-28"
+        },
+        {
+          "event": "Withdrawal - Deadline",
+          "date": "Friday, December 11 at 5:00 p.m. (ET)",
+          "iso_date": "2026-12-11",
+          "time": "5:00 p.m. (ET)"
+        },
+        {
+          "event": "Classes End",
+          "date": "Friday, December 11",
+          "iso_date": "2026-12-11"
+        },
+        {
+          "event": "Study Days",
+          "date": "Saturday, December 12 - Sunday, December 13",
+          "iso_date": "2026-12-12",
+          "end_iso_date": "2026-12-13"
+        },
+        {
+          "event": "Final Exams",
+          "date": "Monday, December 14 - Friday, December 18",
+          "iso_date": "2026-12-14",
+          "end_iso_date": "2026-12-18"
+        },
+        {
+          "event": "Commencement",
+          "date": "Sunday, December 20",
+          "iso_date": "2026-12-20",
+          "footnote": "These dates may vary among campuses."
+        }
+      ],
+      "footnotes": {
+        "1": "These dates apply to full semester courses.",
+        "2": "These dates may vary among campuses."
+      }
+    },
+    {
+      "semester": "Fall 2026 - First 7-Week Session",
+      "year": 2026,
+      "events": [
+        {
+          "event": "Intent to Graduate - Activation Period",
+          "date": "Monday, August 17 - Tuesday, September 15",
+          "iso_date": "2026-08-17",
+          "end_iso_date": "2026-09-15"
+        },
+        {
+          "event": "Leave of Absence - Deadline",
+          "date": "Friday, August 21",
+          "iso_date": "2026-08-21"
+        },
+        {
+          "event": "Registration - Deadline",
+          "date": "Sunday, August 23",
+          "iso_date": "2026-08-23"
+        },
+        {
+          "event": "Classes Begin",
+          "date": "Monday, August 24",
+          "iso_date": "2026-08-24"
+        },
+        {
+          "event": "Regular Drop - Deadline",
+          "date": "Wednesday, August 26 at 11:59 p.m. (ET)",
+          "iso_date": "2026-08-26",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Regular Add - Deadline",
+          "date": "Thursday, August 27 at 11:59 p.m. (ET)",
+          "iso_date": "2026-08-27",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Drop Begins",
+          "date": "Thursday, August 27",
+          "iso_date": "2026-08-27"
+        },
+        {
+          "event": "Late Registration Begins",
+          "date": "Friday, August 28",
+          "iso_date": "2026-08-28"
+        },
+        {
+          "event": "Labor Day Holiday - No Classes",
+          "date": "Monday, September 7",
+          "iso_date": "2026-09-07"
+        },
+        {
+          "event": "Late Registration - Deadline",
+          "date": "Tuesday, September 29 at 11:59 p.m. (ET)",
+          "iso_date": "2026-09-29",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Add - Deadline",
+          "date": "Tuesday, September 29 at 11:59 p.m. (ET)",
+          "iso_date": "2026-09-29",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Drop - Deadline",
+          "date": "Tuesday, September 29 at 11:59 p.m. (ET)",
+          "iso_date": "2026-09-29",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Withdrawal - Deadline",
+          "date": "Friday, October 9 at 5:00 p.m. (ET)",
+          "iso_date": "2026-10-09",
+          "time": "5:00 p.m. (ET)"
+        },
+        {
+          "event": "Classes End",
+          "date": "Friday, October 9",
+          "iso_date": "2026-10-09"
+        },
+        {
+          "event": "Commencement",
+          "date": "Sunday, December 20",
+          "iso_date": "2026-12-20",
+          "footnote": "These dates may vary among campuses."
+        }
+      ],
+      "footnotes": {
+        "1": "These dates may vary among campuses."
+      }
+    },
+    {
+      "semester": "Fall 2026 - Second 7-Week Session",
+      "year": 2026,
+      "events": [
+        {
+          "event": "Intent to Graduate - Activation Period",
+          "date": "Monday, August 17 - Tuesday, September 15",
+          "iso_date": "2026-08-17",
+          "end_iso_date": "2026-09-15"
+        },
+        {
+          "event": "Leave of Absence - Deadline",
+          "date": "Friday, August 21",
+          "iso_date": "2026-08-21"
+        },
+        {
+          "event": "Registration - Deadline",
+          "date": "Sunday, October 18",
+          "iso_date": "2026-10-18"
+        },
+        {
+          "event": "Classes Begin",
+          "date": "Monday, October 19",
+          "iso_date": "2026-10-19"
+        },
+        {
+          "event": "Regular Drop - Deadline",
+          "date": "Wednesday, October 21 at 11:59 p.m. (ET)",
+          "iso_date": "2026-10-21",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Regular Add - Deadline",
+          "date": "Thursday, October 22 at 11:59 p.m. (ET)",
+          "iso_date": "2026-10-22",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Drop Begins",
+          "date": "Thursday, October 22",
+          "iso_date": "2026-10-22"
+        },
+        {
+          "event": "Late Registration Begins",
+          "date": "Friday, October 23",
+          "iso_date": "2026-10-23"
+        },
+        {
+          "event": "Final Exam Conflict - Filing Period",
+          "date": "Monday, September 28 - Sunday, October 25",
+          "iso_date": "2026-09-28",
+          "end_iso_date": "2026-10-25"
+        },
+        {
+          "event": "Thanksgiving Holiday - No Classes",
+          "date": "Sunday, November 22 - Saturday, November 28",
+          "iso_date": "2026-11-22",
+          "end_iso_date": "2026-11-28"
+        },
+        {
+          "event": "Late Registration - Deadline",
+          "date": "Wednesday, November 25 at 11:59 p.m. (ET)",
+          "iso_date": "2026-11-25",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Add - Deadline",
+          "date": "Wednesday, November 25 at 11:59 p.m. (ET)",
+          "iso_date": "2026-11-25",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Drop - Deadline",
+          "date": "Wednesday, November 25 at 11:59 p.m. (ET)",
+          "iso_date": "2026-11-25",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Withdrawal - Deadline",
+          "date": "Friday, December 11 at 5:00 p.m. (ET)",
+          "iso_date": "2026-12-11",
+          "time": "5:00 p.m. (ET)"
+        },
+        {
+          "event": "Classes End",
+          "date": "Friday, December 11",
+          "iso_date": "2026-12-11"
+        },
+        {
+          "event": "Study Days",
+          "date": "Saturday, December 12 - Sunday, December 13",
+          "iso_date": "2026-12-12",
+          "end_iso_date": "2026-12-13"
+        },
+        {
+          "event": "Final Exams",
+          "date": "Monday, December 14 - Friday, December 18",
+          "iso_date": "2026-12-14",
+          "end_iso_date": "2026-12-18"
+        },
+        {
+          "event": "Commencement",
+          "date": "Sunday, December 20",
+          "iso_date": "2026-12-20",
+          "footnote": "These dates may vary among campuses."
+        }
+      ],
+      "footnotes": {
+        "1": "These dates may vary among campuses."
+      }
+    },
+    {
+      "semester": "Spring 2027 - Regular Session",
+      "year": 2027,
+      "events": [
+        {
+          "event": "Intent to Graduate - Activation Period",
+          "date": "Saturday, January 2 - Monday, January 25",
+          "iso_date": "2027-01-02",
+          "end_iso_date": "2027-01-25"
+        },
+        {
+          "event": "Leave of Absence - Deadline",
+          "date": "Friday, January 8",
+          "iso_date": "2027-01-08"
+        },
+        {
+          "event": "Registration - Deadline",
+          "date": "Sunday, January 10",
+          "iso_date": "2027-01-10"
+        },
+        {
+          "event": "Classes Begin",
+          "date": "Monday, January 11",
+          "iso_date": "2027-01-11"
+        },
+        {
+          "event": "Regular Drop - Deadline",
+          "date": "Saturday, January 16 at 11:59 p.m. (ET)",
+          "iso_date": "2027-01-16",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Regular Add - Deadline",
+          "date": "Sunday, January 17 at 11:59 p.m. (ET)",
+          "iso_date": "2027-01-17",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Late Drop Begins",
+          "date": "Sunday, January 17",
+          "iso_date": "2027-01-17",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Late Registration Begins",
+          "date": "Monday, January 18",
+          "iso_date": "2027-01-18",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Martin Luther King Jr. Day Holiday - No Classes",
+          "date": "Monday, January 18",
+          "iso_date": "2027-01-18"
+        },
+        {
+          "event": "Final Exam Conflict - Filing Period",
+          "date": "Monday, February 15 - Sunday, March 7",
+          "iso_date": "2027-02-15",
+          "end_iso_date": "2027-03-07"
+        },
+        {
+          "event": "Spring Break - No Classes",
+          "date": "Sunday, March 7 - Saturday, March 13",
+          "iso_date": "2027-03-07",
+          "end_iso_date": "2027-03-13"
+        },
+        {
+          "event": "Late Registration - Deadline",
+          "date": "Friday, April 9 at 11:59 p.m. (ET)",
+          "iso_date": "2027-04-09",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Late Add - Deadline",
+          "date": "Friday, April 9 at 11:59 p.m. (ET)",
+          "iso_date": "2027-04-09",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Late Drop - Deadline",
+          "date": "Friday, April 9 at 11:59 p.m. (ET)",
+          "iso_date": "2027-04-09",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Declare Concurrent Majors, Minors, or Certificates - Deadline (Graduating Students)",
+          "date": "Friday, April 9",
+          "iso_date": "2027-04-09"
+        },
+        {
+          "event": "Withdrawal - Deadline",
+          "date": "Friday, April 30 at 5:00 p.m. (ET)",
+          "iso_date": "2027-04-30",
+          "time": "5:00 p.m. (ET)"
+        },
+        {
+          "event": "Classes End",
+          "date": "Friday, April 30",
+          "iso_date": "2027-04-30"
+        },
+        {
+          "event": "Study Days",
+          "date": "Saturday, May 1 - Sunday, May 2",
+          "iso_date": "2027-05-01",
+          "end_iso_date": "2027-05-02"
+        },
+        {
+          "event": "Final Exams",
+          "date": "Monday, May 3 - Friday, May 7",
+          "iso_date": "2027-05-03",
+          "end_iso_date": "2027-05-07"
+        },
+        {
+          "event": "Commencement",
+          "date": "Friday, May 7 - Sunday, May 9",
+          "iso_date": "2027-05-07",
+          "end_iso_date": "2027-05-09",
+          "footnote": "These dates may vary among campuses."
+        }
+      ],
+      "footnotes": {
+        "1": "These dates apply to full semester courses.",
+        "2": "These dates may vary among campuses."
+      }
+    },
+    {
+      "semester": "Summer 2027 - Maymester",
+      "year": 2027,
+      "events": [
+        {
+          "event": "Registration - Deadline",
+          "date": "Sunday, May 9",
+          "iso_date": "2027-05-09"
+        },
+        {
+          "event": "Intent to Graduate - Activation Period",
+          "date": "Monday, May 10 - Friday, June 18",
+          "iso_date": "2027-05-10",
+          "end_iso_date": "2027-06-18"
+        },
+        {
+          "event": "Classes Begin",
+          "date": "Monday, May 10",
+          "iso_date": "2027-05-10"
+        },
+        {
+          "event": "Regular Drop - Deadline",
+          "date": "Tuesday, May 11 at 11:59 p.m. (ET)",
+          "iso_date": "2027-05-11",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Regular Add - Deadline",
+          "date": "Wednesday, May 12 at 11:59 p.m. (ET)",
+          "iso_date": "2027-05-12",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Drop Begins",
+          "date": "Wednesday, May 12",
+          "iso_date": "2027-05-12"
+        },
+        {
+          "event": "Late Registration Begins",
+          "date": "Thursday, May 13",
+          "iso_date": "2027-05-13"
+        },
+        {
+          "event": "Memorial Day Holiday - No Classes",
+          "date": "Monday, May 31",
+          "iso_date": "2027-05-31"
+        },
+        {
+          "event": "Late Registration - Deadline",
+          "date": "Tuesday, June 1 at 11:59 p.m. (ET)",
+          "iso_date": "2027-06-01",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Add - Deadline",
+          "date": "Tuesday, June 1 at 11:59 p.m. (ET)",
+          "iso_date": "2027-06-01",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Drop - Deadline",
+          "date": "Tuesday, June 1 at 11:59 p.m. (ET)",
+          "iso_date": "2027-06-01",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Withdrawal - Deadline",
+          "date": "Monday, June 7 at 5:00 p.m. (ET)",
+          "iso_date": "2027-06-07",
+          "time": "5:00 p.m. (ET)"
+        },
+        {
+          "event": "Classes End",
+          "date": "Monday, June 7",
+          "iso_date": "2027-06-07"
+        },
+        {
+          "event": "Study Days",
+          "date": "Tuesday, June 8",
+          "iso_date": "2027-06-08"
+        },
+        {
+          "event": "Final Exams",
+          "date": "Wednesday, June 9",
+          "iso_date": "2027-06-09"
+        },
+        {
+          "event": "Declare Concurrent Majors, Minors, or Certificates - Deadline (Graduating Students)",
+          "date": "Monday, August 2",
+          "iso_date": "2027-08-02"
+        },
+        {
+          "event": "Commencement",
+          "date": "Saturday, August 14",
+          "iso_date": "2027-08-14"
+        }
+      ],
+      "footnotes": {}
+    },
+    {
+      "semester": "Summer 2027 - First 6-Week Session",
+      "year": 2027,
+      "events": [
+        {
+          "event": "Registration - Deadline",
+          "date": "Sunday, May 16",
+          "iso_date": "2027-05-16"
+        },
+        {
+          "event": "Intent to Graduate - Activation Period",
+          "date": "Monday, May 10 - Friday, June 18",
+          "iso_date": "2027-05-10",
+          "end_iso_date": "2027-06-18"
+        },
+        {
+          "event": "Classes Begin",
+          "date": "Monday, May 17",
+          "iso_date": "2027-05-17"
+        },
+        {
+          "event": "Regular Drop - Deadline",
+          "date": "Wednesday, May 19 at 11:59 p.m. (ET)",
+          "iso_date": "2027-05-19",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Regular Add - Deadline",
+          "date": "Thursday, May 20 at 11:59 p.m. (ET)",
+          "iso_date": "2027-05-20",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Drop Begins",
+          "date": "Thursday, May 20",
+          "iso_date": "2027-05-20"
+        },
+        {
+          "event": "Late Registration Begins",
+          "date": "Friday, May 21",
+          "iso_date": "2027-05-21"
+        },
+        {
+          "event": "Memorial Day Holiday - No Classes",
+          "date": "Monday, May 31",
+          "iso_date": "2027-05-31"
+        },
+        {
+          "event": "Late Registration - Deadline",
+          "date": "Wednesday, June 16 at 11:59 p.m. (ET)",
+          "iso_date": "2027-06-16",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Add - Deadline",
+          "date": "Wednesday, June 16 at 11:59 p.m. (ET)",
+          "iso_date": "2027-06-16",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Drop - Deadline",
+          "date": "Wednesday, June 16 at 11:59 p.m. (ET)",
+          "iso_date": "2027-06-16",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Juneteenth Holiday - No Classes",
+          "date": "Friday, June 18",
+          "iso_date": "2027-06-18"
+        },
+        {
+          "event": "Withdrawal - Deadline",
+          "date": "Friday, June 25 at 5:00 p.m. (ET)",
+          "iso_date": "2027-06-25",
+          "time": "5:00 p.m. (ET)"
+        },
+        {
+          "event": "Classes End",
+          "date": "Friday, June 25",
+          "iso_date": "2027-06-25"
+        },
+        {
+          "event": "Study Days",
+          "date": "Saturday, June 26 - Sunday, June 27",
+          "iso_date": "2027-06-26",
+          "end_iso_date": "2027-06-27"
+        },
+        {
+          "event": "Final Exams",
+          "date": "Monday, June 28",
+          "iso_date": "2027-06-28"
+        },
+        {
+          "event": "Declare Concurrent Majors, Minors, or Certificates - Deadline (Graduating Students)",
+          "date": "Monday, August 2",
+          "iso_date": "2027-08-02"
+        },
+        {
+          "event": "Commencement",
+          "date": "Saturday, August 14",
+          "iso_date": "2027-08-14"
+        }
+      ],
+      "footnotes": {}
+    },
+    {
+      "semester": "Summer 2027 - Second 6-Week Session",
+      "year": 2027,
+      "events": [
+        {
+          "event": "Registration - Deadline",
+          "date": "Tuesday, June 29",
+          "iso_date": "2027-06-29"
+        },
+        {
+          "event": "Intent to Graduate - Activation Period",
+          "date": "Monday, May 10 - Friday, June 18",
+          "iso_date": "2027-05-10",
+          "end_iso_date": "2027-06-18"
+        },
+        {
+          "event": "Classes Begin",
+          "date": "Wednesday, June 30",
+          "iso_date": "2027-06-30"
+        },
+        {
+          "event": "Regular Drop - Deadline",
+          "date": "Friday, July 2 at 11:59 p.m. (ET)",
+          "iso_date": "2027-07-02",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Regular Add - Deadline",
+          "date": "Saturday, July 3 at 11:59 p.m. (ET)",
+          "iso_date": "2027-07-03",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Drop Begins",
+          "date": "Saturday, July 3",
+          "iso_date": "2027-07-03"
+        },
+        {
+          "event": "Late Registration Begins",
+          "date": "Sunday, July 4",
+          "iso_date": "2027-07-04"
+        },
+        {
+          "event": "Independence Day Holiday - No Classes",
+          "date": "Monday, July 5",
+          "iso_date": "2027-07-05"
+        },
+        {
+          "event": "Late Registration - Deadline",
+          "date": "Monday, August 2 at 11:59 p.m. (ET)",
+          "iso_date": "2027-08-02",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Add - Deadline",
+          "date": "Monday, August 2 at 11:59 p.m. (ET)",
+          "iso_date": "2027-08-02",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Late Drop - Deadline",
+          "date": "Monday, August 2 at 11:59 p.m. (ET)",
+          "iso_date": "2027-08-02",
+          "time": "11:59 p.m. (ET)"
+        },
+        {
+          "event": "Declare Concurrent Majors, Minors, or Certificates - Deadline (Graduating Students)",
+          "date": "Monday, August 2",
+          "iso_date": "2027-08-02"
+        },
+        {
+          "event": "Withdrawal - Deadline",
+          "date": "Wednesday, August 11 at 5:00 p.m. (ET)",
+          "iso_date": "2027-08-11",
+          "time": "5:00 p.m. (ET)"
+        },
+        {
+          "event": "Classes End",
+          "date": "Wednesday, August 11",
+          "iso_date": "2027-08-11"
+        },
+        {
+          "event": "Study Days",
+          "date": "Thursday, August 12",
+          "iso_date": "2027-08-12"
+        },
+        {
+          "event": "Final Exams",
+          "date": "Friday, August 13",
+          "iso_date": "2027-08-13"
+        },
+        {
+          "event": "Commencement",
+          "date": "Saturday, August 14",
+          "iso_date": "2027-08-14"
+        }
+      ],
+      "footnotes": {}
+    },
+    {
+      "semester": "Summer 2027 - Regular Session",
+      "year": 2027,
+      "events": [
+        {
+          "event": "Intent to Graduate - Activation Period",
+          "date": "Monday, May 10 - Friday, June 18",
+          "iso_date": "2027-05-10",
+          "end_iso_date": "2027-06-18"
+        },
+        {
+          "event": "Registration - Deadline",
+          "date": "Sunday, May 16",
+          "iso_date": "2027-05-16"
+        },
+        {
+          "event": "Classes Begin",
+          "date": "Monday, May 17",
+          "iso_date": "2027-05-17"
+        },
+        {
+          "event": "Regular Drop - Deadline",
+          "date": "Friday, May 21 at 11:59 p.m. (ET)",
+          "iso_date": "2027-05-21",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Regular Add - Deadline",
+          "date": "Saturday, May 22 at 11:59 p.m. (ET)",
+          "iso_date": "2027-05-22",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Late Drop Begins",
+          "date": "Saturday, May 22",
+          "iso_date": "2027-05-22",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Late Registration Begins",
+          "date": "Sunday, May 23",
+          "iso_date": "2027-05-23",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Memorial Day Holiday - No Classes",
+          "date": "Monday, May 31",
+          "iso_date": "2027-05-31"
+        },
+        {
+          "event": "Juneteenth Holiday - No Classes",
+          "date": "Friday, June 18",
+          "iso_date": "2027-06-18"
+        },
+        {
+          "event": "Independence Day Holiday - No Classes",
+          "date": "Monday, July 5",
+          "iso_date": "2027-07-05"
+        },
+        {
+          "event": "Late Registration - Deadline",
+          "date": "Friday, July 23 at 11:59 p.m. (ET)",
+          "iso_date": "2027-07-23",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Late Add - Deadline",
+          "date": "Friday, July 23 at 11:59 p.m. (ET)",
+          "iso_date": "2027-07-23",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Late Drop - Deadline",
+          "date": "Friday, July 23 at 11:59 p.m. (ET)",
+          "iso_date": "2027-07-23",
+          "time": "11:59 p.m. (ET)",
+          "footnote": "These dates apply to full semester courses."
+        },
+        {
+          "event": "Declare Concurrent Majors, Minors, or Certificates - Deadline (Graduating Students)",
+          "date": "Monday, August 2",
+          "iso_date": "2027-08-02"
+        },
+        {
+          "event": "Withdrawal - Deadline",
+          "date": "Wednesday, August 11 at 5:00 p.m. (ET)",
+          "iso_date": "2027-08-11",
+          "time": "5:00 p.m. (ET)"
+        },
+        {
+          "event": "Classes End",
+          "date": "Wednesday, August 11",
+          "iso_date": "2027-08-11"
+        },
+        {
+          "event": "Study Days",
+          "date": "Thursday, August 12",
+          "iso_date": "2027-08-12"
+        },
+        {
+          "event": "Final Exams",
+          "date": "Friday, August 13",
+          "iso_date": "2027-08-13"
+        },
+        {
+          "event": "Commencement",
+          "date": "Saturday, August 14",
+          "iso_date": "2027-08-14"
         }
       ],
       "footnotes": {

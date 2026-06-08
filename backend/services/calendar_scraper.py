@@ -22,8 +22,30 @@ from bs4 import BeautifulSoup, Tag
 
 logger = logging.getLogger(__name__)
 
-CALENDAR_URL   = "https://www.registrar.psu.edu/academic-calendars/2025-26.cfm"
+_CAL_BASE_URL  = "https://www.registrar.psu.edu/academic-calendars/"
 CALENDAR_FILE  = Path(__file__).parent.parent / "data" / "calendar.json"
+
+
+def _academic_year_start(today: date | None = None) -> int:
+    """PSU academic year starts with fall (August). E.g. June 2026 → 2025-26 → 2025."""
+    today = today or date.today()
+    return today.year if today.month >= 8 else today.year - 1
+
+
+def _year_url(start_year: int) -> str:
+    """2025 → '.../2025-26.cfm'."""
+    return f"{_CAL_BASE_URL}{start_year}-{str(start_year + 1)[-2:]}.cfm"
+
+
+def _target_urls(today: date | None = None) -> list[str]:
+    """Current academic year + the next, so next fall is picked up the moment
+    PSU publishes it (and the rolling window is always covered)."""
+    start = _academic_year_start(today)
+    return [_year_url(start), _year_url(start + 1)]
+
+
+# Back-compat default: the CURRENT academic year (computed, not hardcoded).
+CALENDAR_URL = _year_url(_academic_year_start())
 
 HEADERS = {
     "User-Agent": (
@@ -300,18 +322,52 @@ def load_calendar(path: Path = CALENDAR_FILE) -> dict | None:
         return None
 
 
-def refresh_calendar(url: str = CALENDAR_URL) -> dict:
+def refresh_calendar(url: str | None = None) -> dict:
     """
-    Re-scrape and save. If the scrape fails and an existing file exists,
-    keep the old file and re-raise.
+    Re-scrape and save. With no explicit url, scrapes the current AND next
+    academic year (so next fall's calendar is picked up as soon as PSU
+    publishes it) and merges them by semester. A missing next-year page (not
+    yet published → 404) is tolerated. If every scrape fails, the existing file
+    is kept and the error re-raised.
     """
-    try:
-        data = scrape_calendar(url)
-    except Exception as exc:
-        logger.error("calendar_scraper: scrape failed (%s), keeping existing file", exc)
-        raise
+    urls = [url] if url else _target_urls()
+    merged: dict[str, dict] = {}
+    source_urls: list[str] = []
+    errors: list[str] = []
 
+    for u in urls:
+        try:
+            d = scrape_calendar(u)
+        except Exception as exc:
+            logger.warning("calendar_scraper: %s failed (%s)", u, exc)
+            errors.append(f"{u}: {exc}")
+            continue
+        source_urls.append(u)
+        for sem in d["semesters"]:
+            merged[sem["semester"]] = sem  # dedup by semester name
+
+    if not merged:
+        logger.error("calendar_scraper: all scrapes failed, keeping existing file")
+        raise RuntimeError(f"calendar scrape failed for all targets: {errors}")
+
+    semesters = sorted(
+        merged.values(),
+        key=lambda s: min(
+            (e["iso_date"] for e in s.get("events", []) if e.get("iso_date")),
+            default="9999",
+        ),
+    )
+    data = {
+        "scraped_at":       datetime.now(UTC).isoformat(),
+        "source_url":       ", ".join(source_urls),
+        "current_semester": _pick_current_semester(semesters),
+        "semesters":        semesters,
+    }
     save_calendar(data)
+    logger.info(
+        "calendar_scraper: merged %d semesters from %d source(s)",
+        len(semesters), len(source_urls),
+    )
     return data
 
 
