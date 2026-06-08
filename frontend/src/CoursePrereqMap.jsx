@@ -39,6 +39,7 @@ export default function CoursePrereqMap({ userId, progress, selectedMajor }) {
   // ── Dynamic, per-major course graph (fetched from the backend) ──
   const [courses, setCourses] = useState([]);
   const [programName, setProgramName] = useState('');
+  const [tierLabels, setTierLabels] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -56,9 +57,10 @@ export default function CoursePrereqMap({ userId, progress, selectedMajor }) {
         if (cancelled) return;
         setCourses(Array.isArray(data?.courses) ? data.courses : []);
         setProgramName(data?.program_name || selectedMajor);
+        setTierLabels(data?.tier_labels || {});
       })
       .catch(() => {
-        if (!cancelled) { setCourses([]); setProgramName(selectedMajor); }
+        if (!cancelled) { setCourses([]); setProgramName(selectedMajor); setTierLabels({}); }
       })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
@@ -229,7 +231,7 @@ export default function CoursePrereqMap({ userId, progress, selectedMajor }) {
             const tierCourses = courses.filter((c) => c.tier === tier);
             return (
               <div className="prereq-tier" key={tier}>
-                <div className="prereq-tier-label">Level {tier}</div>
+                <div className="prereq-tier-label">{tierLabels[tier] || `Level ${tier}`}</div>
                 {tierCourses.map((course) => {
                   const status = getCourseStatus(course);
                   const isInteractable = status !== 'locked';
@@ -272,8 +274,8 @@ export default function CoursePrereqMap({ userId, progress, selectedMajor }) {
 
       <p className="prereq-disclaimer">
         Click an available or completed course to toggle its status. Locked courses require their
-        prerequisites first. Levels reflect prerequisite depth, not exact semesters — see the
-        Suggested Plan for a term-by-term layout.
+        prerequisites first. Columns follow your major's suggested academic plan where available
+        (otherwise prerequisite order); arrows are prerequisites. Always confirm with LionPATH.
       </p>
     </div>
   );

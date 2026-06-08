@@ -416,47 +416,133 @@ def build_program_context_snippet(program_name: str) -> str:
 
 # ── Major-aware Prerequisite Map ───────────────────────────────────────────────
 
-_PREREQ_MAP_MAX_NODES = 40
+_PREREQ_MAP_MAX_NODES = 60
+_CODE_RE = re.compile(r"[A-Z]{2,8}\s*\d{1,3}[A-Z]?")
+
+
+def _prereq_mode(course: dict | None, prereq_set: set) -> str:
+    """'all' only when the prereq condition is a pure conjunction, else 'any'.
+
+    Keeps alternative prereqs (X or Y) from permanently locking a course.
+    """
+    if not (course and prereq_set):
+        return "all"
+    conds = " ".join(
+        p.get("condition", "")
+        for p in course.get("prerequisites", [])
+        if _canonical_code(p.get("code", "")) in prereq_set
+    ).lower()
+    return "all" if (" and " in conds and " or " not in conds) else "any"
+
+
+def _extract_catalog_codes(text: str) -> list[str]:
+    """Course codes in `text` that exist in the catalog, canonicalized, in order."""
+    out: list[str] = []
+    for m in _CODE_RE.finditer(_clean_text(text).upper()):
+        c = _canonical_code(m.group(0))
+        if c in _courses_by_code and c not in out:
+            out.append(c)
+    return out
+
+
+def _build_map_nodes(node_tiers: dict[str, int], kind_of: dict[str, str]) -> list[dict]:
+    """Build node dicts (with in-set prerequisite edges) from {code: tier}."""
+    node_set = set(node_tiers)
+    id_of = {c: c.replace(" ", "") for c in node_tiers}
+    nodes: list[dict] = []
+    for code, t in node_tiers.items():
+        course = _courses_by_code.get(code)
+        prs: list[str] = []
+        if course:
+            for pr in course.get("prerequisites", []):
+                pc = _canonical_code(pr.get("code", ""))
+                if pc in node_set and pc != code and pc not in prs:
+                    prs.append(pc)
+        nodes.append({
+            "id": id_of[code],
+            "code": code,
+            "name": (course or {}).get("title", ""),
+            "credits": (course or {}).get("credits", ""),
+            "tier": t,
+            "prereqs": [id_of[p] for p in prs],
+            "prereqMode": _prereq_mode(course, set(prs)),
+            "kind": kind_of.get(code, "course"),
+        })
+    return nodes
 
 
 def build_prereq_map(program_name: str) -> dict | None:
     """
-    Build a dependency graph of a program's required courses for the Prereq Map
-    tool. Nodes are the program's prescribed courses plus its choice-group
-    options; edges are prerequisites that are themselves in the node set (so the
-    graph stays self-contained, like the old hardcoded CMPSC map). Tier = the
-    course's depth in the prerequisite chain (0-based depth + 1 for display).
+    Build a course dependency graph for ANY major, two ways:
 
-    Returns None if the program is unknown.
+    1. PLAN-DRIVEN (preferred) — read the college's suggested academic plan,
+       place each real course at its plan semester (tier), and draw prerequisite
+       edges between plan courses from courses.json. This gives a term-by-term
+       map that matches what the department actually publishes.
+    2. REQUIREMENTS fallback — for majors with no suggested plan, use the
+       prescribed courses + their transitive prerequisites, tiered by
+       prerequisite depth.
+
+    Returns None only if the program is unknown; an empty `courses` list means
+    the major has no mappable course data (≈110 of 749, mostly minors).
     """
     prog = get_program(program_name)
     if not prog:
         return None
 
+    base = {
+        "program_name": prog["program_name"],
+        "college": (prog.get("college", "") or "").replace("-", " "),
+    }
+
+    # ── 1. Plan-driven (semester tiers) ──────────────────────────────────────
+    plan = prog.get("suggested_plan") or {}
+    variant = next((v for v in plan.values() if isinstance(v, dict) and v), None)
+    if variant:
+        sems = sorted(variant.items(), key=lambda kv: _semester_sort_key(kv[0]))
+        node_tiers: dict[str, int] = {}
+        kind_of: dict[str, str] = {}
+        tier_labels: dict[str, str] = {}
+        for i, (key, courses) in enumerate(sems, start=1):
+            tier_labels[str(i)] = _semester_label(key)
+            for c in courses or []:
+                for code in _extract_catalog_codes(c.get("description", "")):
+                    if code not in node_tiers:
+                        node_tiers[code] = i
+                        kind_of[code] = "plan"
+        if node_tiers:
+            return {
+                **base,
+                "source": "suggested_plan",
+                "tier_labels": tier_labels,
+                "max_tier": max(node_tiers.values()),
+                "courses": _build_map_nodes(node_tiers, kind_of),
+            }
+
+    # ── 2. Requirements fallback (prerequisite-depth tiers) ──────────────────
     reqs = prog.get("requirements", {})
     node_codes: list[str] = []
-    kind_of: dict[str, str] = {}
+    kind_of = {}
     seen: set[str] = set()
 
     def _add(raw_code: str, kind: str) -> bool:
-        c = _normalize_code(raw_code)
-        if c and c not in seen:
+        c = _canonical_code(raw_code)
+        if c and c in _courses_by_code and c not in seen:
             seen.add(c)
             node_codes.append(c)
             kind_of[c] = kind
             return True
         return False
 
-    # Backbone: the program's prescribed (required) courses.
     for item in reqs.get("prescribed", []):
         if item.get("code"):
-            _add(_canonical_code(item["code"]), "required")
+            _add(item["code"], "required")
+    for item in reqs.get("additional", []):
+        for opt in item.get("options", []) or []:
+            if opt.get("code"):
+                _add(opt["code"], "choice")
 
-    # Expand transitively through prerequisites that exist in the catalog, so
-    # the dependency chain (e.g. CMPSC 121 → 122 → 221) is visible even when the
-    # feeder courses are entrance-to-major rather than prescribed. Lettered
-    # variants (MATH 141H) are collapsed to their base. Bounded by a node cap so
-    # dense majors don't produce an unreadable graph.
+    # Transitive feeders so chains like CMPSC 121 → 122 → 221 are visible.
     queue = list(node_codes)
     while queue and len(node_codes) < _PREREQ_MAP_MAX_NODES:
         course = _courses_by_code.get(queue.pop(0))
@@ -470,71 +556,41 @@ def build_prereq_map(program_name: str) -> dict | None:
                 if len(node_codes) >= _PREREQ_MAP_MAX_NODES:
                     break
 
+    if not node_codes:
+        return {**base, "source": "none", "tier_labels": {}, "max_tier": 0, "courses": []}
+
     node_set = set(node_codes)
+    prereq_codes = {
+        code: [
+            pc for pr in (_courses_by_code.get(code) or {}).get("prerequisites", [])
+            for pc in [_canonical_code(pr.get("code", ""))]
+            if pc in node_set and pc != code
+        ]
+        for code in node_codes
+    }
+    # dedup preserving order
+    prereq_codes = {k: list(dict.fromkeys(v)) for k, v in prereq_codes.items()}
 
-    # In-set prerequisites per course (collapsed to canonical, deduped)
-    prereq_codes: dict[str, list[str]] = {}
-    for code in node_codes:
-        course = _courses_by_code.get(code)
-        prs: list[str] = []
-        if course:
-            for pr in course.get("prerequisites", []):
-                pc = _canonical_code(pr.get("code", ""))
-                if pc in node_set and pc != code and pc not in prs:
-                    prs.append(pc)
-        prereq_codes[code] = prs
-
-    # Tier = longest prerequisite chain depth (memoized, cycle-guarded)
     tier: dict[str, int] = {}
 
     def _depth(code: str, stack: frozenset) -> int:
         if code in tier:
             return tier[code]
         if code in stack:
-            return 0  # defensive: prereq cycle
+            return 0
         prs = prereq_codes.get(code, [])
         d = 0 if not prs else 1 + max(_depth(p, stack | {code}) for p in prs)
         tier[code] = d
         return d
 
-    for code in node_codes:
-        _depth(code, frozenset())
-
-    id_of = {c: c.replace(" ", "") for c in node_codes}
-    nodes: list[dict] = []
-    for code in node_codes:
-        course = _courses_by_code.get(code)
-        prs = prereq_codes[code]
-        # Unlock mode. Require ALL prereqs only when the condition is a pure
-        # conjunction ("X and Y"). Pure-OR or mixed AND/OR conditions → 'any',
-        # so a set of alternative prereqs (e.g. the first-year-writing options
-        # before ENGL 202C) never keeps a course permanently locked.
-        mode = "all"
-        if course and prs:
-            prs_set = set(prs)
-            conds = " ".join(
-                p.get("condition", "")
-                for p in course.get("prerequisites", [])
-                if _canonical_code(p.get("code", "")) in prs_set
-            ).lower()
-            if not (" and " in conds and " or " not in conds):
-                mode = "any"
-        nodes.append({
-            "id": id_of[code],
-            "code": code,
-            "name": (course or {}).get("title", ""),
-            "credits": (course or {}).get("credits", ""),
-            "tier": tier[code] + 1,
-            "prereqs": [id_of[p] for p in prs],
-            "prereqMode": mode,
-            "kind": kind_of[code],
-        })
-
+    node_tiers = {code: _depth(code, frozenset()) + 1 for code in node_codes}
+    max_tier = max(node_tiers.values(), default=0)
     return {
-        "program_name": prog["program_name"],
-        "college": (prog.get("college", "") or "").replace("-", " "),
-        "max_tier": max((n["tier"] for n in nodes), default=0),
-        "courses": nodes,
+        **base,
+        "source": "requirements",
+        "tier_labels": {str(t): f"Level {t}" for t in range(1, max_tier + 1)},
+        "max_tier": max_tier,
+        "courses": _build_map_nodes(node_tiers, kind_of),
     }
 
 
