@@ -224,6 +224,10 @@ function MajorSelectModal({ userId, onSelect, onSkip }) {
 function App() {
   const { user, syncData, signOut } = useAuth();
   const [showTour, setShowTour] = useState(false);
+  // tourDone gates the major modal: it must not appear until the first-time
+  // tour has been taken or skipped (otherwise the two overlay each other).
+  // For returning (already-onboarded) users it flips true immediately.
+  const [tourDone, setTourDone] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -297,6 +301,9 @@ function App() {
     setUploadedFile(null);
     setUploadStatus("");
     setActiveView("chat");
+    setShowTour(false);
+    setShowMajorModal(false);
+    setTourDone(false);
   }, [user?.uid]);
 
   // ── Dark mode ──
@@ -337,10 +344,13 @@ function App() {
       const t = setTimeout(() => setShowTour(true), 900);
       return () => clearTimeout(t);
     }
+    // Already onboarded — no tour, so the major modal may proceed immediately.
+    setTourDone(true);
   }, [user?.uid]);
 
   const handleTourFinish = () => {
     setShowTour(false);
+    setTourDone(true);   // unblocks the major modal (see major-selection effect)
     if (user?.uid) localStorage.setItem(`ace_onboarded_${user.uid}`, "1");
   };
 
@@ -358,13 +368,17 @@ function App() {
     if (syncData.major) {
       setSelectedMajor(syncData.major);
       localStorage.setItem(cacheKey, syncData.major);
-    } else if (!cached) {
+    } else if (!cached && tourDone) {
+      // Only prompt for major AFTER the tour is taken/skipped, so the two
+      // don't pop over one another. tourDone is in the deps, so finishing the
+      // tour re-runs this effect and surfaces the modal then.
       const skipKey = `ace_major_skipped_${user.uid}`;
       if (!localStorage.getItem(skipKey)) {
-        setTimeout(() => setShowMajorModal(true), 1200);
+        const t = setTimeout(() => setShowMajorModal(true), 500);
+        return () => clearTimeout(t);
       }
     }
-  }, [user?.uid, syncData]);
+  }, [user?.uid, syncData, tourDone]);
 
   const handleMajorSelect = useCallback((majorName) => {
     setSelectedMajor(majorName);
