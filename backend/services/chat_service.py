@@ -279,6 +279,41 @@ def build_sources(records):
     return sources
 
 
+def classify_major(major_name):
+    """Classify the student's selected major by how ACE can ground answers for it.
+
+    Only CMPSC and DTSCE have content in the RAG index (handbooks, the PSU-CMPSC
+    vault, those two bulletins). Every other major is answered from the
+    structured programs.json data instead, so the CS/DS handbook records don't
+    leak into and skew answers for unrelated majors.
+
+    Returns:
+        'cs'    — a Computer Science program (any campus) → RAG handbook applies
+        'ds'    — a Data Sciences program (any campus)    → RAG handbook applies
+        'other' — any other program → answer from programs.json only
+        None    — no major selected → keep the default (question-driven) behavior
+    """
+    if not major_name:
+        return None
+    nl = major_name.lower()
+    if "computer science" in nl and "engineering" not in nl:
+        return "cs"
+    if "data scien" in nl or "computational data" in nl:
+        return "ds"
+    return "other"
+
+
+def build_program_sources(major_name):
+    """Build the source link for a structured-only major from programs.json."""
+    prog = get_program(major_name) if major_name else None
+    if not prog:
+        return []
+    url = str(prog.get("url") or "").strip()
+    if not url:
+        return []
+    return [{"title": f"{prog['program_name']} — Penn State Bulletin", "link": url}]
+
+
 def extract_course_codes(text):
     pattern = r"\b([A-Za-z]{2,6}\s?\d{3})\b"
     matches = re.findall(pattern, text)
@@ -892,16 +927,33 @@ def ask_advisor_stream(question, history=None, user_id: str = None):
              uploaded document. If None, no document context is injected.
     """
     intent = detect_question_intent(question)
-    logger.info("ask_advisor_stream | intent=%r | question=%r", intent, question[:80])
+    user_major = get_user_major(user_id) if user_id else None
+    major_kind = classify_major(user_major)        # 'cs' | 'ds' | 'other' | None
+    structured_only = major_kind == "other"
+    logger.info(
+        "ask_advisor_stream | intent=%r | major=%r (%s) | question=%r",
+        intent, user_major, major_kind or "none", question[:80],
+    )
 
-    retrieved_records = semantic_search(question, top_k=10)
-    records = select_top_records(retrieved_records, intent)
-    logger.debug("ask_advisor_stream | retrieved=%d selected=%d", len(retrieved_records), len(records))
-
-    context = build_context_from_records(records)
-    rules = extract_requirement_rules(records)
-    rule_summary = build_rule_summary(rules)
-    sources = build_sources(records)
+    if structured_only:
+        # This major has no indexed handbook/bulletin/vault content, so pulling
+        # in the CMPSC/DTSCE records would skew the answer toward CS/DS. Answer
+        # purely from the structured programs.json requirements injected below.
+        records = []
+        context = (
+            "(No indexed handbook records exist for this program. Use the "
+            "PROGRAM REQUIREMENTS section below as the authoritative source.)"
+        )
+        rule_summary = ""
+        sources = build_program_sources(user_major)
+    else:
+        retrieved_records = semantic_search(question, top_k=10)
+        records = select_top_records(retrieved_records, intent)
+        logger.debug("ask_advisor_stream | retrieved=%d selected=%d", len(retrieved_records), len(records))
+        context = build_context_from_records(records)
+        rules = extract_requirement_rules(records)
+        rule_summary = build_rule_summary(rules)
+        sources = build_sources(records)
 
     student_doc_context = ""
     student_doc = get_current_student_doc(user_id) if (user_id and has_student_doc(user_id)) else {}
@@ -919,13 +971,37 @@ def ask_advisor_stream(question, history=None, user_id: str = None):
     deadline_snippet = _get_deadlines_snippet() if intent == "deadline" else ""
 
     # Build program requirements context if user has a major selected
-    user_major = get_user_major(user_id) if user_id else None
     program_snippet = ""
     if user_major:
         try:
             program_snippet = build_program_context_snippet(user_major)
         except Exception:
             pass
+
+    # For structured-only majors, steer the model onto the program data and off
+    # the CS/DS framing the rest of the index is built around.
+    major_guidance = ""
+    if structured_only:
+        college = ""
+        try:
+            college = (get_program(user_major) or {}).get("college", "").replace("-", " ")
+        except Exception:
+            pass
+        if not program_snippet:
+            logger.warning("ask_advisor_stream | structured-only major has no program data: %r", user_major)
+        major_guidance = (
+            f"\n\nMAJOR-SPECIFIC GROUNDING (important):\n"
+            f"- The student's major is {user_major}. No Computer Science or Data Sciences "
+            f"records are relevant here.\n"
+            f"- Answer course and requirement questions using ONLY the PROGRAM REQUIREMENTS "
+            f"section below. Never mention CMPSC or DTSCE courses/requirements unless the "
+            f"student explicitly asks about them.\n"
+            f"- For advisor or contact questions, point the student to their college's advising "
+            f"office" + (f" ({college})" if college else "") + " and the advisor named in their "
+            f"uploaded document if one is present.\n"
+            f"- If the PROGRAM REQUIREMENTS section lacks the detail needed, say so plainly and "
+            f"suggest they confirm on the Penn State Bulletin or with their advisor."
+        )
 
     # Gen-ed snippet: use dynamic program data if available, else static fallback
     if intent == "gen_ed":
@@ -957,7 +1033,7 @@ def ask_advisor_stream(question, history=None, user_id: str = None):
     # All context lives in the system prompt so history messages stay lightweight
     system_prompt = f"""You are ACE, the Academic Counselling Engine for Penn State University students.
 The detected intent for the current question is: {intent}
-{"The student's selected major is: " + user_major if user_major else ""}
+{"The student's selected major is: " + user_major if user_major else ""}{major_guidance}
 
 === ADVISING RECORDS (current question) ===
 {context}
