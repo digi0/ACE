@@ -7,9 +7,13 @@ export default function LoginPage() {
   const [mode, setMode] = useState("signin");
 
   // Always dark on this page — Sparkles needs a dark canvas.
-  // Sized to fit inside the .login-card (max-width 420 minus 56 padding = 364
-  // available). minWidth: 0 + width: 100% on rootBox/card overrides Clerk's
-  // default minimum that otherwise blows out the input boxes.
+  // The Clerk widget must fit inside the .login-card. Clerk sizes its own
+  // wrapper (.cl-cardBox) to the *viewport* — width 25rem with a viewport-based
+  // max-width — not to its parent, so inside our padded glass card it overflows
+  // to the right on phones. Pinning rootBox + cardBox + card to width:100% /
+  // minWidth:0 / maxWidth:100% makes the widget shrink to the card. cardBox is
+  // the wrapper the original fix missed: it sits BETWEEN rootBox and card and is
+  // the element that actually carries the width.
   const appearance = {
     baseTheme: dark,
     variables: {
@@ -22,13 +26,15 @@ export default function LoginPage() {
       fontSize: "13px",
     },
     elements: {
-      rootBox: { width: "100%", minWidth: 0 },
+      rootBox: { width: "100%", minWidth: 0, maxWidth: "100%" },
+      cardBox: { width: "100%", minWidth: 0, maxWidth: "100%" },
       card: {
         boxShadow: "none",
         background: "transparent",
         padding: 0,
         width: "100%",
         minWidth: 0,
+        maxWidth: "100%",
       },
       headerTitle: { display: "none" },
       headerSubtitle: { display: "none" },
