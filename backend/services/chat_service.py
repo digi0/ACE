@@ -918,16 +918,19 @@ def build_degree_audit_advisory(doc_type, declared):
     return ""
 
 
-def ask_advisor_stream(question, history=None, user_id: str = None):
+def ask_advisor_stream(question, history=None, user_id: str = None, major: str = None):
     """Generator that yields SSE-formatted chunks for the chat response.
 
     history: list of {"role": "user"|"assistant", "content": str} dicts
              representing the prior conversation turns.
     user_id: Clerk user ID of the signed-in student; used to look up their
-             uploaded document. If None, no document context is injected.
+             uploaded document and (if `major` is not given) their major.
+    major:   Optional explicit program name to ground on, bypassing the DB
+             lookup. Used by the eval harness to test a major without a
+             persisted user. Falls back to the user's stored major when None.
     """
     intent = detect_question_intent(question)
-    user_major = get_user_major(user_id) if user_id else None
+    user_major = major or (get_user_major(user_id) if user_id else None)
     major_kind = classify_major(user_major)        # 'cs' | 'ds' | 'other' | None
     structured_only = major_kind == "other"
     logger.info(

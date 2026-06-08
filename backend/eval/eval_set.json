@@ -1,0 +1,136 @@
+{
+  "_about": "ACE answer-quality eval set. Each item runs through ask_advisor_stream with the given major, then is scored two ways: hard assertions (must_contain / must_not, exact substrings, case-insensitive) and an LLM judge (gpt-4o-mini) scoring 0-1 against expected_points. Start simulated; replace with real student questions as usage data arrives. Keep a spread of majors + intents so the per-major routing stays regression-tested.",
+  "items": [
+    {
+      "id": "cs-courses-math",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "courses",
+      "question": "What math courses are required for my major?",
+      "expected_points": [
+        "lists specific required math courses by code (e.g. MATH 140, MATH 141)",
+        "answer is specific to Computer Science requirements"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "cs-gened-doubledip",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "gen_ed",
+      "question": "Which gen ed courses also count toward my major?",
+      "expected_points": [
+        "identifies at least one double-dip course that satisfies both Gen Ed and a CMPSC requirement",
+        "names specific course codes"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "ds-courses-stats",
+      "major": "Data Sciences, B.S. (Science)",
+      "intent": "courses",
+      "question": "What statistics or data courses do I need to take?",
+      "expected_points": [
+        "lists specific required courses relevant to Data Sciences (e.g. STAT or DS courses)",
+        "answer is specific to the Data Sciences program"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "psych-courses-core",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "courses",
+      "question": "What courses do I need to take for my major?",
+      "expected_points": [
+        "lists requirements specific to the Psychology program (e.g. PSYCH courses)",
+        "does not describe a computing curriculum"
+      ],
+      "must_not": ["CMPSC", "DTSCE"]
+    },
+    {
+      "id": "psych-contact-advisor",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "contact",
+      "question": "Who do I talk to about my degree requirements?",
+      "expected_points": [
+        "directs the student to their college's advising office or a general advising resource",
+        "does not name a Computer Science department advisor"
+      ],
+      "must_not": ["CMPSC", "DTSCE"]
+    },
+    {
+      "id": "nursing-courses",
+      "major": "Nursing, B.S.N.",
+      "intent": "courses",
+      "question": "What are the required courses for my degree?",
+      "expected_points": [
+        "lists requirements specific to the Nursing program (e.g. NURS courses)",
+        "answer is grounded in the Nursing program requirements"
+      ],
+      "must_not": ["CMPSC", "DTSCE"]
+    },
+    {
+      "id": "mecheng-credits",
+      "major": "Mechanical Engineering, B.S. (Engineering)",
+      "intent": "courses",
+      "question": "How many total credits do I need to graduate?",
+      "expected_points": [
+        "states a specific total credit number for the Mechanical Engineering program"
+      ],
+      "must_not": ["CMPSC", "DTSCE"]
+    },
+    {
+      "id": "biology-gened",
+      "major": "Biology, B.S. (Science)",
+      "intent": "gen_ed",
+      "question": "What gen ed categories do I still need to think about?",
+      "expected_points": [
+        "describes Penn State Gen Ed categories (e.g. GA, GH, GS, GN, GHW, GQ)",
+        "relates the answer to the Biology program where possible"
+      ],
+      "must_not": ["CMPSC", "DTSCE"]
+    },
+    {
+      "id": "finance-courses",
+      "major": "Finance, B.S. (Abington)",
+      "intent": "courses",
+      "question": "What finance courses are required for my major?",
+      "expected_points": [
+        "lists requirements specific to the Finance program (e.g. FIN courses)",
+        "answer is grounded in the Finance program requirements"
+      ],
+      "must_not": ["CMPSC", "DTSCE"]
+    },
+    {
+      "id": "cs-deadline-drop",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "deadline",
+      "question": "When is the last day to drop a class?",
+      "expected_points": [
+        "explains the drop / late-drop deadline concept",
+        "points to the official academic calendar or LionPATH for exact dates"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "psych-wellbeing-stress",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "wellbeing",
+      "question": "I'm feeling really stressed and overwhelmed with school. What can I do?",
+      "expected_points": [
+        "mentions a relevant Penn State support resource (e.g. CAPS / counseling)",
+        "responds with an empathetic, helpful tone"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "kinesiology-credits",
+      "major": "Kinesiology, B.S. (Health and Human Development)",
+      "intent": "courses",
+      "question": "What does my degree require — give me an overview of the courses.",
+      "expected_points": [
+        "describes requirements specific to the Kinesiology program",
+        "answer is grounded in the program requirements, not a generic answer"
+      ],
+      "must_not": ["CMPSC", "DTSCE"]
+    }
+  ]
+}
