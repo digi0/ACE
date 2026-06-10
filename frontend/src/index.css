@@ -4005,6 +4005,10 @@ body {
 .wb-rotator-track {
   display: flex;
   flex-direction: column;
+  /* flex-start is load-bearing: column flex items default to stretch, which
+     made EVERY word's measured offsetWidth equal the widest word's — the JS
+     width-hugging measured the same number for all words (the "gap" bug) */
+  align-items: flex-start;
   width: max-content;
   transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
   will-change: transform;
