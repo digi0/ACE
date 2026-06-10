@@ -87,3 +87,8 @@
   .set-seg { width: 100%; }
   .set-seg-btn { flex: 1; }
 }
+
+/* ── Hero headline (mobile): one forced line would overflow a phone ─────────── */
+@media (max-width: 768px) {
+  .wb-headline { white-space: normal; }
+}

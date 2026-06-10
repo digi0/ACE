@@ -51,20 +51,49 @@ function GradCapIcon({ size = 16 }) {
 }
 
 
-/* Rotating hero keyword: "What are we <planning|scheduling|…> today?" */
+/* Rotating hero keyword: "What are we <planning|scheduling|…> today?"
+   Slot-machine roll: all words sit in a vertical track inside a one-line
+   window; the track slides up by one row each tick. The first word is
+   duplicated at the end so the loop wraps seamlessly (snap back without
+   transition while the duplicate is showing). */
 const ROTATING_WORDS = ["planning", "scheduling", "mapping", "tracking", "solving", "exploring"];
 
 function RotatingWord() {
   const [idx, setIdx] = useState(0);
+  const [snap, setSnap] = useState(false);
+
   useEffect(() => {
-    const iv = setInterval(() => setIdx((i) => (i + 1) % ROTATING_WORDS.length), 4000);
+    const iv = setInterval(() => setIdx((i) => i + 1), 4000);
     return () => clearInterval(iv);
   }, []);
+
+  // Rolled onto the duplicate first word → instantly reset to the real one.
+  const handleEnd = () => {
+    if (idx >= ROTATING_WORDS.length) {
+      setSnap(true);
+      setIdx(0);
+    }
+  };
+
+  // Re-enable the transition one frame after the silent snap-back.
+  useEffect(() => {
+    if (!snap) return;
+    const raf = requestAnimationFrame(() => requestAnimationFrame(() => setSnap(false)));
+    return () => cancelAnimationFrame(raf);
+  }, [snap]);
+
   return (
     <span className="wb-rotator" aria-live="polite">
-      {/* key change re-mounts the span so the roll-in animation replays */}
-      <span key={ROTATING_WORDS[idx]} className="wb-rotator-word">
-        {ROTATING_WORDS[idx]}
+      <span
+        className={`wb-rotator-track${snap ? " wb-rotator-track--snap" : ""}`}
+        // each row is exactly 1.22em tall — translate per ROW (em), not by
+        // track-height percentages
+        style={{ transform: `translateY(calc(${snap ? 0 : idx} * -1.22em))` }}
+        onTransitionEnd={handleEnd}
+      >
+        {[...ROTATING_WORDS, ROTATING_WORDS[0]].map((w, i) => (
+          <span className="wb-rotator-item" key={i}>{w}</span>
+        ))}
       </span>
     </span>
   );

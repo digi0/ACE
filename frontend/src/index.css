@@ -3964,36 +3964,48 @@ body {
 }
 
 .wb-headline {
-  font-size: clamp(36px, 6vw, 64px);
-  line-height: 1.02;
+  /* one line: sized so "What are we scheduling today?" never wraps */
+  font-size: clamp(28px, 4.2vw, 56px);
+  line-height: 1.1;
   font-weight: 800;
   letter-spacing: -0.035em;
   color: var(--text);
   margin: 0;
-  max-width: 14ch;
+  white-space: nowrap;
 }
 
 .wb-headline-accent {
   color: var(--accent);
 }
 
-/* Rotating hero keyword ("planning" → "scheduling" → …) */
+/* Rotating hero keyword ("planning" → "scheduling" → …)
+   A fixed one-row window over a vertical track of words; the track slides up
+   one row per tick. Window height 1.22em leaves room for descenders (g, p)
+   so nothing clips; vertical-align compensates so the word sits on the
+   sentence baseline. */
 .wb-rotator {
   display: inline-block;
   color: var(--accent);
   overflow: hidden;
-  vertical-align: bottom;
+  height: 1.22em;
+  vertical-align: -0.26em;
 }
-.wb-rotator-word {
-  display: inline-block;
-  animation: wb-roll-in 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+.wb-rotator-track {
+  display: flex;
+  flex-direction: column;
+  width: max-content;            /* window width = widest word: no reflow */
+  transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform;
 }
-@keyframes wb-roll-in {
-  from { transform: translateY(105%); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+.wb-rotator-track--snap { transition: none; }
+.wb-rotator-item {
+  display: block;
+  height: 1.22em;
+  line-height: 1.22em;
+  text-align: left;
 }
 @media (prefers-reduced-motion: reduce) {
-  .wb-rotator-word { animation: none; }
+  .wb-rotator-track { transition: none; }
 }
 
 .wb-subline {
