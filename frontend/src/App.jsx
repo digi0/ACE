@@ -25,6 +25,8 @@ const GraduationChecklist = lazy(() => import("./GraduationChecklist.jsx"));
 const CoursePrereqMap     = lazy(() => import("./CoursePrereqMap.jsx"));
 const SuggestedPlan       = lazy(() => import("./SuggestedPlan.jsx"));
 const GenEdExplorer       = lazy(() => import("./GenEdExplorer.jsx"));
+const SettingsPanel       = lazy(() => import("./SettingsPanel.jsx"));
+const StickyBoard         = lazy(() => import("./StickyBoard.jsx"));
 
 /* ── Icons ─────────────────────────────────────── */
 function GradCapIcon({ size = 16 }) {
@@ -48,6 +50,25 @@ function GradCapIcon({ size = 16 }) {
   );
 }
 
+
+/* Rotating hero keyword: "What are we <planning|scheduling|…> today?" */
+const ROTATING_WORDS = ["planning", "scheduling", "mapping", "tracking", "solving", "exploring"];
+
+function RotatingWord() {
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const iv = setInterval(() => setIdx((i) => (i + 1) % ROTATING_WORDS.length), 2400);
+    return () => clearInterval(iv);
+  }, []);
+  return (
+    <span className="wb-rotator" aria-live="polite">
+      {/* key change re-mounts the span so the roll-in animation replays */}
+      <span key={ROTATING_WORDS[idx]} className="wb-rotator-word">
+        {ROTATING_WORDS[idx]}
+      </span>
+    </span>
+  );
+}
 
 function AceLogo({ size = 36 }) {
   const iconSize = Math.round(size * 0.52);
@@ -248,6 +269,7 @@ function App() {
   const [activeView, setActiveView] = useState("chat");
   const [followUpChips, setFollowUpChips] = useState([]);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("ace_darkmode") === "1");
+  const [chatFont, setChatFont] = useState(() => localStorage.getItem("ace_chatfont") || "md");
   const [auditData, setAuditData] = useState(null);
 
   const [selectedMajor, setSelectedMajor] = useState(null);
@@ -318,6 +340,12 @@ function App() {
     document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");
     localStorage.setItem("ace_darkmode", darkMode ? "1" : "0");
   }, [darkMode]);
+
+  // ── Chat text size (set in Settings; sm | md | lg) ──
+  useEffect(() => {
+    document.documentElement.setAttribute("data-chatfont", chatFont);
+    localStorage.setItem("ace_chatfont", chatFont);
+  }, [chatFont]);
 
   // ── Fetch audit data on mount (document may already be uploaded) ──
   useEffect(() => {
@@ -716,6 +744,30 @@ function App() {
           <div className="dashboard-area">
             <GenEdExplorer userId={user.uid} selectedMajor={selectedMajor} progress={auditData?.progress} />
           </div>
+        ) : activeView === "notes" ? (
+          <div className="dashboard-area" style={{ padding: 0 }}>
+            <StickyBoard userId={user.uid} />
+          </div>
+        ) : activeView === "settings" ? (
+          <div className="dashboard-area">
+            <SettingsPanel
+              user={user}
+              selectedMajor={selectedMajor}
+              onChangeMajor={() => setShowMajorModal(true)}
+              darkMode={darkMode}
+              setDarkMode={setDarkMode}
+              chatFont={chatFont}
+              setChatFont={setChatFont}
+              onClearChats={() => {
+                setConversations([]);
+                setMessages([]);
+                setActiveConvId(null);
+                if (user?.uid) localStorage.removeItem(`ace_chats_${user.uid}`);
+              }}
+              onRemoveDoc={handleClearFile}
+              signOut={signOut}
+            />
+          </div>
         ) : activeView === "dashboard" ? (
           <div className="dashboard-area">
             <Dashboard
@@ -733,7 +785,7 @@ function App() {
             <div className="wb-welcome">
               <div className="wb-welcome-head">
                 <h1 className="wb-headline">
-                  What are we planning <span className="wb-headline-accent">today?</span>
+                  What are we <RotatingWord /> today?
                 </h1>
                 <p className="wb-subline">
                   Pick a starting point — or just ask.
@@ -745,7 +797,10 @@ function App() {
                   const Icon = card.icon;
                   const onClick = () => {
                     if (card.action === "upload") {
-                      fileInputRef.current?.click();
+                      // The dashboard owns the upload experience (empty state +
+                      // parsed results live there) — clicking a hidden input
+                      // from the welcome screen did nothing visible.
+                      navigate("dashboard");
                     } else if (card.action === "focus-input") {
                       chatInputRef.current?.focus();
                     } else if (card.prompt) {

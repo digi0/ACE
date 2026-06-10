@@ -66,7 +66,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_methods=["GET", "POST", "PATCH", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type"],
 )
 
@@ -250,6 +250,41 @@ def suggested_plan(
         return {"program_name": resolved_major, "plans": [], "found": False}
     data["found"] = True
     return data
+
+
+# ── User profile (settings page; user-initiated, NOT called on login) ────────
+
+class ProfileUpdate(BaseModel):
+    display_name: str = Field(..., min_length=1, max_length=120)
+
+
+@app.get("/user/profile")
+def get_profile(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    user = db.query(models.User).filter(models.User.id == current_user["uid"]).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {
+        "email": user.email,
+        "display_name": user.display_name,
+        "major": user.selected_major,
+    }
+
+
+@app.patch("/user/profile")
+def update_profile(
+    req: ProfileUpdate,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    user = db.query(models.User).filter(models.User.id == current_user["uid"]).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    user.display_name = req.display_name.strip()
+    db.commit()
+    return {"ok": True, "display_name": user.display_name}
 
 
 # ── Access gate (pilot: app is closed; code is checked server-side) ──────────

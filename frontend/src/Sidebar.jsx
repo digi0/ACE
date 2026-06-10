@@ -2,6 +2,7 @@ import {
   ChevronLeft, GraduationCap, LogOut, Pencil,
   Plus, Compass, MessageSquare, Calculator, LayoutGrid,
   BookOpen, Upload, AlertCircle, Info, CheckCircle, CalendarRange,
+  StickyNote, Settings,
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 
@@ -35,7 +36,9 @@ const TOOLS = [
   { id: "gened",     label: "Gen Ed",    Icon: LayoutGrid   },
   { id: "prereq",    label: "Prereqs",   Icon: Compass      },
   { id: "plan",      label: "Plan",      Icon: CalendarRange },
+  { id: "notes",     label: "Notes",     Icon: StickyNote   },
   { id: "resources", label: "Resources", Icon: BookOpen     },
+  { id: "settings",  label: "Settings",  Icon: Settings     },
 ];
 
 /* ── Helpers ── */
