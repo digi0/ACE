@@ -3961,11 +3961,16 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 14px;
+  /* cqi container for the headline font sizing; width must come from the
+     parent (not the contents) for inline-size containment to work */
+  container-type: inline-size;
+  width: 100%;
 }
 
 .wb-headline {
-  /* one line: sized so "What are we scheduling today?" never wraps */
-  font-size: clamp(28px, 4.2vw, 56px);
+  /* one line: sized against the CONTAINER (not the viewport) so
+     "What are we scheduling today?" always fits, sidebar open or closed */
+  font-size: clamp(26px, 3.4vw, 56px);
   line-height: 1.1;
   font-weight: 800;
   letter-spacing: -0.035em;
@@ -3973,39 +3978,46 @@ body {
   margin: 0;
   white-space: nowrap;
 }
+@supports (font-size: 1cqi) {
+  .wb-headline { font-size: clamp(24px, 6cqi, 56px); }
+}
 
 .wb-headline-accent {
   color: var(--accent);
 }
 
 /* Rotating hero keyword ("planning" → "scheduling" → …)
-   A fixed one-row window over a vertical track of words; the track slides up
-   one row per tick. Window height 1.22em leaves room for descenders (g, p)
-   so nothing clips; vertical-align compensates so the word sits on the
-   sentence baseline. */
+   A one-row window over a vertical track of words; the track slides up one
+   row per tick. Row height 1.35em > Inter's natural glyph box (~1.21em), so
+   each word's descender (g, p) stays INSIDE its own row — nothing bleeds
+   into the window above the next word. The window's width is set from JS to
+   the active word's width and animates, so "today?" hugs every word with no
+   gap. vertical-align drops the window so the word sits on the sentence
+   baseline (half-leading 0.07em + descent 0.24em ≈ 0.31em). */
 .wb-rotator {
   display: inline-block;
   color: var(--accent);
   overflow: hidden;
-  height: 1.22em;
-  vertical-align: -0.26em;
+  height: 1.35em;
+  vertical-align: -0.31em;
+  transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
 }
 .wb-rotator-track {
   display: flex;
   flex-direction: column;
-  width: max-content;            /* window width = widest word: no reflow */
+  width: max-content;
   transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
   will-change: transform;
 }
 .wb-rotator-track--snap { transition: none; }
 .wb-rotator-item {
   display: block;
-  height: 1.22em;
-  line-height: 1.22em;
+  height: 1.35em;
+  line-height: 1.35em;
   text-align: left;
 }
 @media (prefers-reduced-motion: reduce) {
-  .wb-rotator-track { transition: none; }
+  .wb-rotator, .wb-rotator-track { transition: none; }
 }
 
 .wb-subline {

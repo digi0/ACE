@@ -61,11 +61,28 @@ const ROTATING_WORDS = ["planning", "scheduling", "mapping", "tracking", "solvin
 function RotatingWord() {
   const [idx, setIdx] = useState(0);
   const [snap, setSnap] = useState(false);
+  const [winW, setWinW] = useState(null);
+  const itemRefs = useRef([]);
 
   useEffect(() => {
     const iv = setInterval(() => setIdx((i) => i + 1), 4000);
     return () => clearInterval(iv);
   }, []);
+
+  // The window's width follows the ACTIVE word (animated in CSS), so the rest
+  // of the sentence stays snug — no gap after short words. Re-measured when
+  // fonts finish loading and on resize (the font size is container-relative).
+  const measure = useCallback(() => {
+    const el = itemRefs.current[idx % ROTATING_WORDS.length];
+    if (el) setWinW(el.offsetWidth);
+  }, [idx]);
+
+  useEffect(() => { measure(); }, [measure]);
+  useEffect(() => {
+    if (document.fonts?.ready) document.fonts.ready.then(measure);
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [measure]);
 
   // Rolled onto the duplicate first word → instantly reset to the real one.
   const handleEnd = () => {
@@ -83,16 +100,25 @@ function RotatingWord() {
   }, [snap]);
 
   return (
-    <span className="wb-rotator" aria-live="polite">
+    <span
+      className="wb-rotator"
+      aria-live="polite"
+      style={winW == null ? undefined : { width: winW }}
+    >
       <span
         className={`wb-rotator-track${snap ? " wb-rotator-track--snap" : ""}`}
-        // each row is exactly 1.22em tall — translate per ROW (em), not by
-        // track-height percentages
-        style={{ transform: `translateY(calc(${snap ? 0 : idx} * -1.22em))` }}
+        // each row is exactly 1.35em tall — translate per ROW (em-based)
+        style={{ transform: `translateY(calc(${snap ? 0 : idx} * -1.35em))` }}
         onTransitionEnd={handleEnd}
       >
         {[...ROTATING_WORDS, ROTATING_WORDS[0]].map((w, i) => (
-          <span className="wb-rotator-item" key={i}>{w}</span>
+          <span
+            className="wb-rotator-item"
+            key={i}
+            ref={(el) => { itemRefs.current[i] = el; }}
+          >
+            {w}
+          </span>
         ))}
       </span>
     </span>
