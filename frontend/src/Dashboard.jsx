@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { AlertTriangle, Info, CheckCircle, FileText, Upload, Trash2 } from "lucide-react";
 import { apiFetch } from "./api.js";
 
@@ -71,8 +71,9 @@ export default function Dashboard({ uploadedFile, onUploadClick, onRemoveClick, 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
+  const [removing, setRemoving] = useState(false);
 
-  useEffect(() => {
+  const load = useCallback(() => {
     if (!userId) {
       setData(null);
       setLoading(false);
@@ -84,7 +85,24 @@ export default function Dashboard({ uploadedFile, onUploadClick, onRemoveClick, 
       .then((r) => r.json())
       .then((d) => { setData(d); setLoading(false); })
       .catch(() => { setFetchError("Could not connect to the backend."); setLoading(false); });
-  }, [uploadedFile, userId]);
+  }, [userId]);
+
+  useEffect(() => { load(); }, [load, uploadedFile]);
+
+  // Await the delete, then refetch from the server — the view always reflects
+  // reality even when `uploadedFile` was already null (doc from a previous
+  // session), which previously left the removed doc frozen on screen.
+  const handleRemove = async () => {
+    if (removing) return;
+    if (!window.confirm("Remove your uploaded document? Your dashboard will reset until you upload a new one.")) return;
+    setRemoving(true);
+    try {
+      await onRemoveClick();
+    } finally {
+      setRemoving(false);
+      load();
+    }
+  };
 
   if (loading) {
     return (
@@ -132,9 +150,9 @@ export default function Dashboard({ uploadedFile, onUploadClick, onRemoveClick, 
             <Upload size={14} strokeWidth={2} aria-hidden />
             Upload new
           </button>
-          <button className="dash-doc-btn dash-doc-btn--remove" onClick={onRemoveClick}>
+          <button className="dash-doc-btn dash-doc-btn--remove" onClick={handleRemove} disabled={removing}>
             <Trash2 size={14} strokeWidth={2} aria-hidden />
-            Remove
+            {removing ? "Removing…" : "Remove"}
           </button>
         </div>
       </div>

@@ -1348,6 +1348,7 @@ body {
   cursor: pointer;
   transition: background 0.15s, color 0.15s, border-color 0.15s, opacity 0.15s;
 }
+.dash-doc-btn:disabled { opacity: 0.55; cursor: default; }
 .dash-doc-btn--replace {
   background: var(--text);
   color: var(--bg-card);
