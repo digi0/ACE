@@ -68,3 +68,12 @@
   }
   .mbn-item--active { color: var(--accent); }
 }
+
+/* ── Dashboard: uploaded-document actions (mobile) ───────────────────────────
+   Long filenames + two buttons can overflow a narrow screen; let the bar wrap
+   and give the buttons a full-width row beneath the filename. */
+@media (max-width: 768px) {
+  .dash-doc-actions { flex-wrap: wrap; }
+  .dash-doc-btns { width: 100%; }
+  .dash-doc-btns .dash-doc-btn { flex: 1; justify-content: center; }
+}

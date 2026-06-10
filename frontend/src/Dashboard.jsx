@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { AlertTriangle, Info, CheckCircle } from "lucide-react";
+import { AlertTriangle, Info, CheckCircle, FileText, Upload, Trash2 } from "lucide-react";
 import { apiFetch } from "./api.js";
 
 /* ── Degree Progress Bar ────────────────────────────────────── */
@@ -123,13 +123,18 @@ export default function Dashboard({ uploadedFile, onUploadClick, onRemoveClick, 
 
       {/* ── Document actions ──────────────────────────── */}
       <div className="dash-doc-actions">
-        <span className="dash-doc-label">{data.filename || "Uploaded document"}</span>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+        <span className="dash-doc-label">
+          <FileText size={15} strokeWidth={1.75} aria-hidden />
+          {data.filename || "Uploaded document"}
+        </span>
+        <div className="dash-doc-btns">
           <button className="dash-doc-btn dash-doc-btn--replace" onClick={onUploadClick}>
-            ↑ Upload new
+            <Upload size={14} strokeWidth={2} aria-hidden />
+            Upload new
           </button>
           <button className="dash-doc-btn dash-doc-btn--remove" onClick={onRemoveClick}>
-            × Remove
+            <Trash2 size={14} strokeWidth={2} aria-hidden />
+            Remove
           </button>
         </div>
       </div>
