@@ -18,3 +18,4 @@ backend/uploads/
 psu-cs-academic-advisor-main/
 deploy/
 frontend/nginx.conf
+dist/
