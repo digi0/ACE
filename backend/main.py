@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 from datetime import datetime, timezone
 
 from fastapi import FastAPI, Query, Form, UploadFile, File, HTTPException, Depends, Header
@@ -249,6 +250,75 @@ def suggested_plan(
         return {"program_name": resolved_major, "plans": [], "found": False}
     data["found"] = True
     return data
+
+
+# ── Waitlist (public; landing-page signups) ───────────────────────────────────
+
+_EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]{2,}$")
+
+
+class WaitlistRequest(BaseModel):
+    email: str = Field(..., min_length=5, max_length=320)
+    major: Optional[str] = Field(default=None, max_length=500)
+    referral: Optional[str] = Field(default=None, max_length=120)
+
+
+@app.post("/waitlist")
+def join_waitlist(req: WaitlistRequest, db: Session = Depends(get_db)):
+    """Public signup from the landing page. Dedupes by email; returns the
+    signer's position so the page can show 'You're #N'."""
+    email = req.email.strip().lower()
+    if not _EMAIL_RE.match(email):
+        raise HTTPException(status_code=422, detail="That doesn't look like a valid email.")
+
+    existing = db.query(models.WaitlistEntry).filter(models.WaitlistEntry.email == email).first()
+    if existing:
+        position = (
+            db.query(models.WaitlistEntry)
+            .filter(models.WaitlistEntry.id <= existing.id)
+            .count()
+        )
+        return {"ok": True, "already": True, "position": position}
+
+    entry = models.WaitlistEntry(
+        email=email,
+        major=(req.major or "").strip()[:500] or None,
+        referral=(req.referral or "").strip()[:120] or None,
+    )
+    db.add(entry)
+    db.commit()
+    position = db.query(models.WaitlistEntry).count()
+    logger.info("waitlist | new signup #%d | referral=%r", position, entry.referral)
+    return {"ok": True, "already": False, "position": position}
+
+
+@app.get("/admin/waitlist")
+def admin_waitlist(
+    key: str = Query(default=None),
+    x_admin_key: str | None = Header(default=None),
+    db: Session = Depends(get_db),
+):
+    """Key-gated export of all signups (pick your first-100 cohort from this)."""
+    _require_admin(key, x_admin_key)
+    rows = (
+        db.query(models.WaitlistEntry)
+        .order_by(models.WaitlistEntry.id.asc())
+        .all()
+    )
+    return {
+        "total": len(rows),
+        "entries": [
+            {
+                "position": i + 1,
+                "email": r.email,
+                "major": r.major,
+                "referral": r.referral,
+                "created_at": r.created_at.isoformat() if r.created_at else None,
+                "invited_at": r.invited_at.isoformat() if r.invited_at else None,
+            }
+            for i, r in enumerate(rows)
+        ],
+    }
 
 
 # ── Admin: API cost dashboard (key-gated; not user-facing) ────────────────────

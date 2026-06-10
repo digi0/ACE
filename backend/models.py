@@ -72,6 +72,26 @@ class Message(Base):
     )
 
 
+class WaitlistEntry(Base):
+    """One row per landing-page waitlist signup.
+
+    Standalone (no FK to users) — signups happen before an account exists.
+    `invited_at` is set manually/by admin tooling when early access is granted.
+    """
+    __tablename__ = "waitlist"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    email = Column(String(320), nullable=False, unique=True)
+    major = Column(String(500), nullable=True)       # optional, helps pick the first cohort
+    referral = Column(String(120), nullable=True)    # ?ref= source tag from the landing page
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    invited_at = Column(DateTime, nullable=True)
+
+    __table_args__ = (
+        Index("ix_waitlist_created_at", "created_at"),
+    )
+
+
 class ApiUsage(Base):
     """One row per metered OpenAI call (chat completion or query embedding).
 
