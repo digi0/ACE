@@ -7,6 +7,7 @@ import {
 import { BGPattern } from "./BGPattern.jsx";
 import Sidebar from "./Sidebar.jsx";
 import { useAuth } from "./AuthContext.jsx";
+import AccessGate from "./AccessGate.jsx";
 import { apiFetch, apiStream } from "./api.js";
 import { useIsMobile } from "./useIsMobile.js";
 import MobileBottomNav from "./MobileBottomNav.jsx";
@@ -226,6 +227,9 @@ function MajorSelectModal({ userId, onSelect, onSkip }) {
 /* ── App ───────────────────────────────────────── */
 function App() {
   const { user, syncData, signOut } = useAuth();
+  const [accessOk, setAccessOk] = useState(
+    () => typeof window !== "undefined" && localStorage.getItem("ace_access_ok") === "1"
+  );
   const [showTour, setShowTour] = useState(false);
   // tourDone gates the major modal: it must not appear until the first-time
   // tour has been taken or skipped (otherwise the two overlay each other).
@@ -559,6 +563,13 @@ function App() {
     setActiveView(view);
     if (isMobile) setSidebarCollapsed(true);
   }, [isMobile]);
+
+  // ── Pilot access gate: ACE is invite-only until the first cohort is in.
+  // The code is verified server-side (ACCESS_CODE on the backend); a
+  // successful unlock is remembered per-browser.
+  if (!accessOk) {
+    return <AccessGate onUnlock={() => setAccessOk(true)} />;
+  }
 
   // Still checking auth state
   if (user === undefined) {

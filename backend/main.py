@@ -252,6 +252,24 @@ def suggested_plan(
     return data
 
 
+# ── Access gate (pilot: app is closed; code is checked server-side) ──────────
+
+class AccessRequest(BaseModel):
+    code: str = Field(..., min_length=1, max_length=120)
+
+
+@app.post("/access/verify")
+def verify_access(req: AccessRequest):
+    """Pilot access gate. The code lives in the ACCESS_CODE env var on Railway —
+    never in the frontend bundle. Unset var = gate closed (fail safe)."""
+    expected = os.getenv("ACCESS_CODE")
+    if not expected:
+        raise HTTPException(status_code=503, detail="Access not configured yet.")
+    if req.code.strip() != expected:
+        raise HTTPException(status_code=403, detail="That code isn't valid.")
+    return {"ok": True}
+
+
 # ── Waitlist (public; landing-page signups) ───────────────────────────────────
 
 _EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]{2,}$")

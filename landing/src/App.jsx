@@ -358,7 +358,7 @@ export default function App() {
           <span className="nav-name">ACE</span>
           <span className="nav-tag">your AI academic counselor</span>
         </a>
-        <a className="nav-cta" href={APP_URL}>Open ACE →</a>
+        <a className="nav-cta" href={APP_URL}>Early access? Sign in →</a>
       </nav>
 
       {/* Hero */}
@@ -449,7 +449,7 @@ export default function App() {
           endorsed by Penn State University</strong>. Always confirm academic decisions with your adviser.
         </p>
         <p className="footer-links">
-          <a href={APP_URL}>Open ACE</a> · <a href="mailto:mrmalpani25@gmail.com">Contact</a>
+          <a href={APP_URL}>Early-access sign in</a> · <a href="mailto:access@acecollege.app?subject=ACE%20access%20request">Request access</a>
         </p>
       </footer>
     </div>
