@@ -3986,7 +3986,7 @@ body {
 }
 .wb-rotator-word {
   display: inline-block;
-  animation: wb-roll-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: wb-roll-in 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 }
 @keyframes wb-roll-in {
   from { transform: translateY(105%); opacity: 0; }

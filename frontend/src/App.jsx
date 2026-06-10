@@ -57,7 +57,7 @@ const ROTATING_WORDS = ["planning", "scheduling", "mapping", "tracking", "solvin
 function RotatingWord() {
   const [idx, setIdx] = useState(0);
   useEffect(() => {
-    const iv = setInterval(() => setIdx((i) => (i + 1) % ROTATING_WORDS.length), 2400);
+    const iv = setInterval(() => setIdx((i) => (i + 1) % ROTATING_WORDS.length), 4000);
     return () => clearInterval(iv);
   }, []);
   return (
