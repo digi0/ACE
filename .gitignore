@@ -19,3 +19,12 @@ psu-cs-academic-advisor-main/
 deploy/
 frontend/nginx.conf
 dist/
+.gstack/
+
+# Local-only asset/experiment dirs (large; not part of the deployed app)
+ace-landing/
+landing-v2/
+ad/
+brag-output/
+ACE.COWORK/
+ACE.code-workspace
