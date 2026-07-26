@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Caveat:wght@500;600;700&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <!-- bump ?v= when editing so browsers don't serve a stale cached copy -->
-  <link rel="stylesheet" href="/styles.css?v=16">
+  <link rel="stylesheet" href="/styles.css?v=17">
 </head>
 <body>
 
@@ -39,7 +39,10 @@
     <a href="#different">Why ACE</a>
     <a href="#coverage">For students</a>
   </div>
-  <a class="btn nav-cta" href="#cta">Join the waitlist</a>
+  <div class="nav-actions">
+    <a class="btn btn-ghost nav-access" href="https://app.acecollege.app">Click for access</a>
+    <a class="btn nav-cta" href="#cta">Join the waitlist</a>
+  </div>
 </nav>
 
 <!-- ============ HERO (pinned zoom-into-screen) ============ -->
@@ -425,6 +428,9 @@
         <p class="wl-error" id="wlError" role="alert" hidden></p>
         <p class="wl-done" id="wlDone" role="status" hidden></p>
         <p class="wl-note">Free for students. No spam. <em>First 100 get early access.</em></p>
+        <p class="wl-have-code">Already have an access code?
+          <a class="access-link" href="https://app.acecollege.app">Click for access →</a>
+        </p>
       </div>
     </div>
     <svg class="final-doodle doodle-arrow" viewBox="0 0 120 140"><path d="M14 128 C 40 96 70 62 100 26 M 66 30 C 80 24 92 22 102 24 C 104 34 102 46 96 60" fill="none" stroke="var(--blue)" stroke-width="11" stroke-linecap="round"/></svg>
@@ -453,6 +459,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="/app.js?v=16"></script>
+<script src="/app.js?v=17"></script>
 </body>
 </html>
