@@ -2,7 +2,11 @@
 
 Run: python -m backend.test_routing
 """
-from backend.services.chat_service import classify_major, select_top_records
+from backend.services.chat_service import (
+    classify_major,
+    filter_records_by_scope,
+    select_top_records,
+)
 
 
 def test_classify_major():
@@ -28,7 +32,23 @@ def test_select_top_records():
             f"{intent} still selects retired excel_vault records"
 
 
+def test_filter_records_by_scope():
+    records = [
+        {"source_name": "CMPSC-handbook-2024-2025.pdf"},
+        {"source_name": "CMPSC University Bulletin"},
+        {"source_name": "DTSCE-handbook-2024-2025.pdf"},
+        {"source_name": "DTSCE University Bulletin"},
+    ]
+    assert all("CMPSC" in r["source_name"] for r in filter_records_by_scope(records, "cs"))
+    assert all("DTSCE" in r["source_name"] for r in filter_records_by_scope(records, "ds"))
+    # Unscoped majors are untouched, and an empty scoped set falls back rather
+    # than answering from nothing.
+    assert filter_records_by_scope(records, "other") == records
+    assert filter_records_by_scope(records[:1], "ds") == records[:1]
+
+
 if __name__ == "__main__":
     test_classify_major()
     test_select_top_records()
+    test_filter_records_by_scope()
     print("routing self-check OK")

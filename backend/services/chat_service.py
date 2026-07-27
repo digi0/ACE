@@ -19,6 +19,7 @@ from backend.services.program_service import (
     build_program_context_snippet,
     get_double_dips,
 )
+from backend.services.policy_service import build_policy_snippet, policy_sources
 
 load_dotenv()
 
@@ -202,6 +203,21 @@ def detect_question_intent(question):
         return "courses"
 
     return "general"
+
+
+def filter_records_by_scope(records, major_kind):
+    """Keep only the records belonging to the student's own program.
+
+    The index holds CMPSC and DTSCE material side by side, so without this a CS
+    student can be answered from — and cited to — the Data Sciences handbook.
+    Falls back to the unfiltered set rather than answering from nothing.
+    """
+    if major_kind not in ("cs", "ds"):
+        return records
+
+    marker = "cmpsc" if major_kind == "cs" else "dtsce"
+    scoped = [r for r in records if marker in str(r.get("source_name", "")).lower()]
+    return scoped or records
 
 
 def select_top_records(records, intent):
@@ -1102,7 +1118,9 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
             )
             sources = []
     else:
-        retrieved_records = semantic_search(question, top_k=10)
+        # Retrieve wide, then drop the other program's handbook/bulletin before
+        # selecting — top_k=16 so the scoped set is still deep enough.
+        retrieved_records = filter_records_by_scope(semantic_search(question, top_k=16), major_kind)
         records = select_top_records(retrieved_records, intent)
         logger.debug("ask_advisor_stream | retrieved=%d selected=%d", len(retrieved_records), len(records))
         context = build_context_from_records(records)
@@ -1121,6 +1139,15 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     degree_audit_advisory = build_degree_audit_advisory(doc_type, declared)
     if degree_audit_advisory:
         logger.info("ask_advisor_stream | degree audit advisory injected | doc_type=%r", doc_type)
+
+    # Structured handbook policies — ETM, petitions, substitutions, contacts.
+    # Deterministic lookup by (intent, major_kind); no retrieval involved. Only
+    # CS/DS have handbooks, so this is empty for every other major.
+    policy_snippet = build_policy_snippet(intent, major_kind)
+    if policy_snippet:
+        for src in policy_sources(major_kind):
+            if src["link"] not in {s["link"] for s in sources}:
+                sources.append(src)
 
     resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
     deadline_snippet = _get_deadlines_snippet() if intent == "deadline" else ""
@@ -1216,7 +1243,7 @@ The detected intent for the current question is: {intent}
 {rule_summary}
 
 === STUDENT DOCUMENT ===
-{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{program_snippet if program_snippet else ""}{resources_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
+{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{program_snippet if program_snippet else ""}{policy_snippet}{resources_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
 
 === ANSWER RULES ===
 - You may use the conversation history above to understand follow-up context, but ground every answer in the advising records, extracted rules, and student document provided.
@@ -1228,6 +1255,7 @@ The detected intent for the current question is: {intent}
   - Option B
 - For contact questions, use the advisor name from the student document first; only mention department contacts as secondary.
 - Quote exact handbook language when available. Do not say "typically" or "likely" unless the records themselves are uncertain.
+- When a DEPARTMENT HANDBOOK POLICIES block is present, it outranks the advising records for procedure questions (ETM, petitions, substitutions, transfer credit, who to contact). Use its exact numbers and name the step the student has to take.
 - Never invent courses, policies, contacts, grades, or substitutions not present in the records.
 - If records are insufficient, say so clearly.
 - Do not mention internal record numbers.

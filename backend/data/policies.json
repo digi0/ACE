@@ -1,0 +1,879 @@
+{
+  "_about": "Structured advising policies extracted from the CMPSC/DTSCE handbook PDFs by backend/data/policy_extractor.py. `scope` matches classify_major() and `topic` matches detect_question_intent(), so policy_service.py can relay them by intent without a retrieval step. Regenerate whenever the handbook PDFs change: python -m backend.data.policy_extractor",
+  "model": "gpt-4o-mini",
+  "sources": [
+    {
+      "document": "CMPSC-handbook-2024-2025.pdf",
+      "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+      "scope": "cs"
+    },
+    {
+      "document": "DTSCE-handbook-2024-2025.pdf",
+      "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+      "scope": "ds"
+    }
+  ],
+  "policy_count": 46,
+  "policies": [
+    {
+      "topic": "etm",
+      "title": "Entrance to Major Requirements",
+      "statement": "Due to over enrollment, the computer science and computer engineering majors are controlled majors. This means for entrance to the major you must successfully complete the required ETM courses AND you must have the needed minimum cumulative GPA for your ETM year when you are in the ETM credit window specified in the Bulletin.",
+      "details": [],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          6
+        ]
+      },
+      "policy_id": "cs-etm-entrance-to-major-requirements"
+    },
+    {
+      "topic": "etm",
+      "title": "Transfer and Change of Major Restrictions",
+      "statement": "The CSE Department will not approve requests for transfers from other colleges and universities, requests for change of major after a student has been admitted to a major, requests for computer engineering or science as a second (or later) concurrent major, nor for either major as a sequential major.",
+      "details": [],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          6
+        ]
+      },
+      "policy_id": "cs-etm-transfer-and-change-of-major-restrictions"
+    },
+    {
+      "topic": "transfer",
+      "title": "Transfer Course Restrictions",
+      "statement": "Note that CMPSC 473, CMPSC 461, CMPSC 464, CMPSC 465 and the writing courses (CMPSC 431W or CMPSC 483W) must be taken at Penn State.",
+      "details": [],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          8
+        ]
+      },
+      "policy_id": "cs-transfer-transfer-course-restrictions"
+    },
+    {
+      "topic": "transfer",
+      "title": "Transfer Credit Approval",
+      "statement": "If you hope to use a transfer course that you have not taken yet to replace a CMPSC or CMPEN course, email a copy of the course syllabus to the Department Associate Head, Professor John Hannan (jjh9@psu.edu) before enrolling in the course to check whether it will be allowed to count for that requirement.",
+      "details": [
+        "If Professor Hannan approves the use of the transfer credit, you will then need to fill out a petition at https://coursesub.psu.edu/ to have the transfer credit count correctly on your degree audit."
+      ],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          8
+        ]
+      },
+      "policy_id": "cs-transfer-transfer-credit-approval"
+    },
+    {
+      "topic": "contact",
+      "title": "Contact for Non-Advising Issues",
+      "statement": "For non-advising issues (questions about e-petition status, course controls, etc.) see one of the CSE staff in W209 Westgate during regular business hours.",
+      "details": [],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          5
+        ]
+      },
+      "policy_id": "cs-contact-contact-for-non-advising-issues"
+    },
+    {
+      "topic": "courses",
+      "title": "400-Level CMPSC/CMPEN Course Selection",
+      "statement": "Select 3 credits from any 400-level CMPSC or CMPEN course, excluding 494, 495, 496, 499 and courses offered at non-UP locations which cover duplicate material (unless prior approval has been given for you to use a CMPSC or CMPEN 499 course).",
+      "details": [
+        "The course you use for this requirement cannot double count with any other requirement for the CMPSC major.",
+        "Check with your advisor before planning on taking CMPSC 497 or CMPEN 497 for this requirement."
+      ],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          13
+        ]
+      },
+      "policy_id": "cs-courses-400-level-cmpsc-cmpen-course-selection"
+    },
+    {
+      "topic": "courses",
+      "title": "Course Credit Limitation for CMPSC/MATH 451 and CMPSC/MATH 455",
+      "statement": "You may not use both CMPSC/MATH 451 and CMPSC/MATH 455 toward degree requirements.",
+      "details": [],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          13
+        ]
+      },
+      "policy_id": "cs-courses-course-credit-limitation-for-cmpsc-math-451-and-cmpsc-math-4"
+    },
+    {
+      "topic": "courses",
+      "title": "Department List (General Elective) Guidelines",
+      "statement": "Choose enough credits to bring the total number of credits up to at least 127.",
+      "details": [
+        "At least 127 total credits required.",
+        "No courses not satisfying minimum requirements for baccalaureate degree program.",
+        "No courses described as intended for non-science or non-technical majors in the course description in the Bulletin.",
+        "No courses similar or remedial to a required course or course already taken.",
+        "Not ENGL 4, 5, or any other remedial English.",
+        "No more than 3 additional credits of physical education.",
+        "No more than 3 credits of Cooperative Education.",
+        "No more than 2 credits of Engineering Internship.",
+        "No more than 3 credits of CHEM 106."
+      ],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          17
+        ]
+      },
+      "policy_id": "cs-courses-department-list-general-elective-guidelines"
+    },
+    {
+      "topic": "courses",
+      "title": "Department List (General Elective) Restrictions",
+      "statement": "The following courses are not eligible for the department list requirement: Astronomy (ASTRO) 1, 6, 7N, 10, 11, 120, 140; Biological Science (BISC) 1, 2, 3, 4; Chemistry (CHEM) 1, 3, 101, 108; Communication Arts and Sciences (CAS) 126, 283; Computer Science (CMPSC) 100, 101, 200, 201, 203; Cybersecurity Analytics and Operations (CYBER) 100; Earth and Mineral Sciences (EMSC) 150; Electrical Engineering (EE) 465; English as a Second Language (ESL) 4; Information Science & Technology (IST) 140, 210, 220, 230, 240, 242, 261, 311, 361; Language and Literacy Education (LLED) 5, 10; Mathematics (MATH) 200, 201, MATH below 140; Philosophy (PHIL) 12; Physical Science (PHSC) 7; Physics (PHYS) 250, 251, PHYS below 211; Science, Technology, and Society (STS) 150; Statistics (STAT) below 318 except for STAT 200; Statistics (STAT) 401, 487; STAT (MATH) 318, STAT (MATH) 319, STAT (MATH) 414, STAT (MATH) 415, STAT (MATH) 418.",
+      "details": [],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          17
+        ]
+      },
+      "policy_id": "cs-courses-department-list-general-elective-restrictions"
+    },
+    {
+      "topic": "courses",
+      "title": "Foreign Language Proficiency Requirement",
+      "statement": "CMPSC majors are required to demonstrate proficiency equivalent to two semesters of a single foreign language.",
+      "details": [
+        "Complete the 4th or higher year of a single foreign language in high school and submit a petition with your high school transcript.",
+        "Complete the 2nd (or higher) semester of one foreign language.",
+        "Complete two semesters (8 credits) of a NEW foreign language.",
+        "Successfully complete Penn State\u2019s proficiency testing in a foreign language."
+      ],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          16
+        ]
+      },
+      "policy_id": "cs-courses-foreign-language-proficiency-requirement"
+    },
+    {
+      "topic": "courses",
+      "title": "Supporting Courses Requirement",
+      "statement": "Choose six credits of 400-level non-CMPSC/CMPEN/DS courses, having a common theme, that support a career in computer science.",
+      "details": [
+        "Independent study credits may not be used.",
+        "Using any course that does not automatically count on your audit as a supporting course requires a petition at https://coursesub.psu.edu/.",
+        "Most approved 400-level Math classes will automatically count as supporting courses on your degree audit."
+      ],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          15
+        ]
+      },
+      "policy_id": "cs-courses-supporting-courses-requirement"
+    },
+    {
+      "topic": "petition",
+      "title": "Petition for Course Substitution",
+      "statement": "If you hope to use a course in a way that it does not automatically fill in on your audit, you must submit a petition at https://coursesub.psu.edu/ so that it can be determined whether the substitution you are requesting will be permitted and, if so, your degree audit can be updated.",
+      "details": [
+        "Submit course substitution petitions prior to taking courses and prior to the semester in which you plan to graduate.",
+        "Petitions that require College level approval must be submitted BEFORE the semester in which you plan to graduate."
+      ],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          9
+        ]
+      },
+      "policy_id": "cs-petition-petition-for-course-substitution"
+    },
+    {
+      "topic": "advising",
+      "title": "Advising for Students Intending to Major in Computer Science",
+      "statement": "If you are a student at University Park who is intending to major in computer science but who has not yet officially entered the major, you can make an appointment through Starfish to meet with an adviser at the Engineering Advising Center (EAC), 208 Hammond Building, 863-1033.",
+      "details": [],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          5
+        ]
+      },
+      "policy_id": "cs-advising-advising-for-students-intending-to-major-in-computer-science"
+    },
+    {
+      "topic": "advising",
+      "title": "Advising for Students Who Have Entered the Major",
+      "statement": "If you are a student who has officially entered the computer science major, you can find your assigned adviser\u2019s name and email address in LionPATH.",
+      "details": [
+        "Always use your Penn State account for email communication."
+      ],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          5
+        ]
+      },
+      "policy_id": "cs-advising-advising-for-students-who-have-entered-the-major"
+    },
+    {
+      "topic": "internship",
+      "title": "Cooperative Education Program",
+      "statement": "The cooperative education program provides work experience by alternating periods of academic study and full-time employment in industry or government.",
+      "details": [
+        "The program typically starts at the beginning of the junior year and consists of three rotations, providing a cumulative work experience of one year.",
+        "Up to 3 credits of co-op may be used for your department list requirement."
+      ],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          8
+        ]
+      },
+      "policy_id": "cs-internship-cooperative-education-program"
+    },
+    {
+      "topic": "internship",
+      "title": "Internship Credit",
+      "statement": "If you prefer less of a time commitment, you can pursue one or more summer internships. You earn 1 credit per internship (maximum of 2 credits total) that can be used for your department list requirement.",
+      "details": [],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          8
+        ]
+      },
+      "policy_id": "cs-internship-internship-credit"
+    },
+    {
+      "topic": "graduation",
+      "title": "Degree Audit Responsibility",
+      "statement": "The final responsibility for selecting courses and meeting degree requirements is yours. You must have your degree audit reviewed by your advisor periodically.",
+      "details": [],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          6
+        ]
+      },
+      "policy_id": "cs-graduation-degree-audit-responsibility"
+    },
+    {
+      "topic": "graduation",
+      "title": "First Year Seminar Requirement",
+      "statement": "Most CMPSC majors take a 1-credit first-year seminar in either their first or second semester at Penn State.",
+      "details": [
+        "If you did not take a first-year seminar that was a separate 1-credit course, you must make up the first-year seminar credit by taking an extra credit of coursework that is acceptable for the department list requirement.",
+        "Submit a petition at https://coursesub.psu.edu/ requesting to use the extra credit of department list coursework to fulfill the first-year seminar requirement on your degree audit."
+      ],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          18
+        ]
+      },
+      "policy_id": "cs-graduation-first-year-seminar-requirement"
+    },
+    {
+      "topic": "graduation",
+      "title": "Graduation Requirements",
+      "statement": "To graduate from the University, every student must: (1) Complete the course requirements for his or her major (including earning Cs or higher in all C-required courses) and (2) Earn at least a 2.0 cumulative grade-point average for all courses taken at the University.",
+      "details": [
+        "Complete the course requirements for the major, earning Cs or higher in all C-required courses.",
+        "Earn at least a 2.0 cumulative GPA."
+      ],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          11
+        ]
+      },
+      "policy_id": "cs-graduation-graduation-requirements"
+    },
+    {
+      "topic": "graduation",
+      "title": "Petition for Mis-Categorization",
+      "statement": "You should submit petitions to correct any mis-categorization by LionPATH. Failure to do so may result in delaying your graduation until degree requirements are met.",
+      "details": [],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          6
+        ]
+      },
+      "policy_id": "cs-graduation-petition-for-mis-categorization"
+    },
+    {
+      "topic": "general",
+      "title": "C-requirements",
+      "statement": "Some courses for the major require a grade of C or higher to graduate.",
+      "details": [
+        "Check your degree audit to see which classes require a grade of C or higher.",
+        "If a class is being used in a section of the degree audit that does not have a label about a C or higher being required, a D or above will fulfill that requirement."
+      ],
+      "courses": [],
+      "scope": "cs",
+      "program": "Computer Science, B.S.",
+      "source": {
+        "document": "CMPSC-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/CMPSC-handbook-2024-2025.pdf",
+        "pages": [
+          11
+        ]
+      },
+      "policy_id": "cs-general-c-requirements"
+    },
+    {
+      "topic": "etm",
+      "title": "Concurrent Majors Policy",
+      "statement": "Concurrent majors will not be allowed in Computational Data Sciences and Computer Engineering or Computational Data Sciences and Computer Science, although it is possible to obtain a concurrent major with another non-enrollment-controlled program.",
+      "details": [],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          7
+        ]
+      },
+      "policy_id": "ds-etm-concurrent-majors-policy"
+    },
+    {
+      "topic": "etm",
+      "title": "Entrance to Major Requirements",
+      "statement": "For the entrance-to-major requirements, see the 'How to Get in' section of the Data Sciences major page in the University Bulletin for the year that you began at Penn State.",
+      "details": [
+        "https://bulletins.psu.edu/undergraduate/archive/"
+      ],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          6
+        ]
+      },
+      "policy_id": "ds-etm-entrance-to-major-requirements"
+    },
+    {
+      "topic": "transfer",
+      "title": "Transfer Course Syllabus Submission",
+      "statement": "If you hope to use a transfer course that you have not taken yet to replace a CMPSC, CMPEN, or DS course, email a copy of the course syllabus to CSE Associate Department Head Professor John Hannan (jjh9@psu.edu) before enrolling in the course to check whether it will be allowed to count for that requirement.",
+      "details": [],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          7
+        ]
+      },
+      "policy_id": "ds-transfer-transfer-course-syllabus-submission"
+    },
+    {
+      "topic": "transfer",
+      "title": "Transfer Credit Approval",
+      "statement": "Before taking a course at another university, use the transfer credit tool in LionPATH and check with your adviser to be sure the course will transfer usefully.",
+      "details": [],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          7
+        ]
+      },
+      "policy_id": "ds-transfer-transfer-credit-approval"
+    },
+    {
+      "topic": "contact",
+      "title": "Advising Appointment for Intending Majors",
+      "statement": "If you are a student at University Park who is intending to major in Computational Data Sciences but who has not yet officially entered the major, you can make an appointment through Starfish to meet with an adviser at the Engineering Advising Center (EAC), 208 Hammond Building, 863-1033.",
+      "details": [],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          5
+        ]
+      },
+      "policy_id": "ds-contact-advising-appointment-for-intending-majors"
+    },
+    {
+      "topic": "contact",
+      "title": "Assigned Adviser for Official Majors",
+      "statement": "If you are a student who has officially entered the DTSCE major, you can find your assigned adviser\u2019s name and email address in LionPATH.",
+      "details": [],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          5
+        ]
+      },
+      "policy_id": "ds-contact-assigned-adviser-for-official-majors"
+    },
+    {
+      "topic": "contact",
+      "title": "Non-Advising Issues Contact",
+      "statement": "For non-advising issues (questions about e-petition status, course controls, etc.) see one of the CSE staff in W209 Westgate during regular business hours.",
+      "details": [],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          5
+        ]
+      },
+      "policy_id": "ds-contact-non-advising-issues-contact"
+    },
+    {
+      "topic": "courses",
+      "title": "Course Prerequisites Sequence",
+      "statement": "In particular, students should proceed through the Math 140 > Math 141 > Math 230 > Stat 414 > Stat 415 > CMPSC 448 > DS 340W sequence by taking the next course in the sequence each semester.",
+      "details": [],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          7
+        ]
+      },
+      "policy_id": "ds-courses-course-prerequisites-sequence"
+    },
+    {
+      "topic": "courses",
+      "title": "Department List (General Elective) Guidelines",
+      "statement": "Choose enough credits to bring the total number of credits up to at least 126.",
+      "details": [
+        "no courses not satisfying minimum requirements for baccalaureate degree program",
+        "no courses described as intended for non-science or non-technical majors in course description in University Bulletin",
+        "no courses similar or remedial to a required course or course already taken",
+        "not ENGL 4, 5, or any other remedial English",
+        "no more than 3 credits of ROTC",
+        "no more than 6 credits of music performance courses",
+        "no more than 3 additional credits of physical education",
+        "no more than 3 credits of Cooperative Education",
+        "no more than 2 credits of Engineering Internship",
+        "no more than 3 credits of CHEM 106",
+        "none of the following: Astronomy (ASTRO) 1, 6, 7N, 10, 11, 120, 140; Biological Science (BISC) 1, 2, 3, 4; Chemistry (CHEM) 1, 3, 108, 101; Computer Science (CMPSC) 100, 101, 200, 201, 203; Cybersecurity Analytics and Operations (CYBER) 100; Earth and Mineral Sciences (EMSC) 150; English as a Second Language (ESL) 4; Electrical Engineering (EE) 465; Information Science & Technology (IST) 140, 220, 230, 240, 242, 261, 311, 361; Language and Literacy Education (LLED) 5, 10; Mathematics (MATH) 200, 201, MATH below 140; Philosophy (PHIL) 12; Physical Science (PHSC) 7; Physics (PHYS) 250, 251, PHYS below 211; Science, Technology, and Society (S T S) 150; Speech Communication (CAS) 126, 283; Statistics (STAT) below 318; Statistics (STAT) 401, 487; STAT (MATH) 318, STAT (MATH) 319, STAT (MATH) 414, STAT (MATH) 415, STAT (MATH) 418."
+      ],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          13
+        ]
+      },
+      "policy_id": "ds-courses-department-list-general-elective-guidelines"
+    },
+    {
+      "topic": "courses",
+      "title": "Prerequisite Course Requirement",
+      "statement": "If a CMPEN or CMPSC course has prerequisites, you must complete the prerequisite course before taking the successor course.",
+      "details": [
+        "For most courses an appropriate grade is a grade of D or higher."
+      ],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          7
+        ]
+      },
+      "policy_id": "ds-courses-prerequisite-course-requirement"
+    },
+    {
+      "topic": "courses",
+      "title": "Prerequisite Override Requests",
+      "statement": "Prerequisite override requests are submitted through LionPATH.",
+      "details": [
+        "For instructions about that process, see the document 'Requesting a Prerequisite Override' at https://lionpathsupport.psu.edu/student-help/."
+      ],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          7
+        ]
+      },
+      "policy_id": "ds-courses-prerequisite-override-requests"
+    },
+    {
+      "topic": "petition",
+      "title": "Petition for Course Substitution",
+      "statement": "If you hope to use a course in a way that it does not automatically fill in on your audit, you must submit a petition at https://coursesub.psu.edu/ so that it can be determined whether the substitution you are requesting will be permitted.",
+      "details": [
+        "Be sure to submit course substitution petitions prior to taking courses and prior to the semester in which you plan to graduate."
+      ],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          8
+        ]
+      },
+      "policy_id": "ds-petition-petition-for-course-substitution"
+    },
+    {
+      "topic": "petition",
+      "title": "Petition Submission Deadline",
+      "statement": "Petitions that require College level approval must be submitted BEFORE the semester in which you plan to graduate.",
+      "details": [],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          8
+        ]
+      },
+      "policy_id": "ds-petition-petition-submission-deadline"
+    },
+    {
+      "topic": "advising",
+      "title": "Course Registration Timing",
+      "statement": "At least several weeks before it is time to register for the next semester\u2019s courses, refer to this handbook and consult with your adviser to determine an appropriate set of courses.",
+      "details": [
+        "It is very important to schedule on your assigned scheduling date."
+      ],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          7
+        ]
+      },
+      "policy_id": "ds-advising-course-registration-timing"
+    },
+    {
+      "topic": "advising",
+      "title": "Degree Audit Instructions",
+      "statement": "Instructions on how to run a degree audit are available at https://tutorials.lionpath.psu.edu/public/S_RunningDegreeAudit/.",
+      "details": [],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          6
+        ]
+      },
+      "policy_id": "ds-advising-degree-audit-instructions"
+    },
+    {
+      "topic": "advising",
+      "title": "Degree Audit Responsibility",
+      "statement": "The final responsibility for selecting courses and meeting degree requirements is yours.",
+      "details": [],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          6
+        ]
+      },
+      "policy_id": "ds-advising-degree-audit-responsibility"
+    },
+    {
+      "topic": "advising",
+      "title": "Degree Audit Review",
+      "statement": "You must have your degree audit reviewed by your advisor periodically.",
+      "details": [],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          6
+        ]
+      },
+      "policy_id": "ds-advising-degree-audit-review"
+    },
+    {
+      "topic": "advising",
+      "title": "What-If Reports Usage",
+      "statement": "Do not use a what-if report to check your degree requirements once you are in your major.",
+      "details": [],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          6
+        ]
+      },
+      "policy_id": "ds-advising-what-if-reports-usage"
+    },
+    {
+      "topic": "internship",
+      "title": "Cooperative Education Program",
+      "statement": "The cooperative education program provides work experience by alternating periods of academic study and full-time employment in industry or government.",
+      "details": [
+        "The program typically starts at the beginning of the junior year and consists of three rotations, providing a cumulative work experience of one year."
+      ],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          8
+        ]
+      },
+      "policy_id": "ds-internship-cooperative-education-program"
+    },
+    {
+      "topic": "internship",
+      "title": "Internship Credit",
+      "statement": "You earn 1 credit per internship (maximum of 2 credits total) toward graduation in the Department List requirements.",
+      "details": [],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          8
+        ]
+      },
+      "policy_id": "ds-internship-internship-credit"
+    },
+    {
+      "topic": "honors",
+      "title": "Honors Program Thesis Requirement",
+      "statement": "Students in the Schreyer Honors College may earn honors in Computational Data Sciences by completing a thesis with a member of the CSE faculty.",
+      "details": [
+        "See an honors adviser if you are interested in finding out more."
+      ],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          8
+        ]
+      },
+      "policy_id": "ds-honors-honors-program-thesis-requirement"
+    },
+    {
+      "topic": "graduation",
+      "title": "C-requirements",
+      "statement": "Some courses for the major require a grade of C or higher to graduate.",
+      "details": [
+        "Check your degree audit for C-required classes if you have officially entered your major",
+        "A D or above will fulfill requirements for classes not labeled as C-required"
+      ],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          9
+        ]
+      },
+      "policy_id": "ds-graduation-c-requirements"
+    },
+    {
+      "topic": "graduation",
+      "title": "First Year Seminar Requirement",
+      "statement": "Most DTSCE majors take a 1-credit first-year seminar in either their first or second semester at Penn State.",
+      "details": [
+        "If you did not take a first-year seminar that was a separate 1-credit course, you must make up the first-year seminar credit by taking an extra credit of coursework that is acceptable for the department list requirement.",
+        "Then, submit a petition at https://coursesub.psu.edu/ requesting to use the extra credit of department list coursework to fulfill the first-year seminar requirement on your degree audit."
+      ],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          14
+        ]
+      },
+      "policy_id": "ds-graduation-first-year-seminar-requirement"
+    },
+    {
+      "topic": "graduation",
+      "title": "Graduation Requirements",
+      "statement": "To graduate from the University, every student must: (1) Complete the course requirements for his or her major (including earning Cs or higher in all C-required courses) and (2) Earn at least a 2.0 cumulative grade-point average for all courses taken at the University.",
+      "details": [
+        "Complete the course requirements for the major",
+        "Earn at least a 2.0 cumulative GPA"
+      ],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          9
+        ]
+      },
+      "policy_id": "ds-graduation-graduation-requirements"
+    },
+    {
+      "topic": "graduation",
+      "title": "Petition for Mis-Categorization",
+      "statement": "You should submit petitions to correct any mis-categorization by LionPATH.",
+      "details": [
+        "Failure to do so may result in delaying your graduation until degree requirements are met."
+      ],
+      "courses": [],
+      "scope": "ds",
+      "program": "Data Sciences, B.S.",
+      "source": {
+        "document": "DTSCE-handbook-2024-2025.pdf",
+        "link": "https://www.eecs.psu.edu/assets/docs/handbooks/DTSCE-handbook-2024-2025.pdf",
+        "pages": [
+          6
+        ]
+      },
+      "policy_id": "ds-graduation-petition-for-mis-categorization"
+    }
+  ]
+}

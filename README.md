@@ -91,14 +91,17 @@ flowchart TD
     subgraph S["Structured data — all 749 programs"]
       J["programs.json <i>(749)</i><br/>courses.json <i>(9,439)</i>"] --> PS["program_service.py<br/><i>requirements, plans, prereq map, gen-ed</i>"]
     end
-    subgraph R["RAG — CMPSC / DTSCE only"]
-      B["CMPSC / DTSCE<br/>handbook PDFs"] --> V
+    subgraph H["CMPSC / DTSCE handbooks — two consumers"]
+      B["handbook PDFs"] --> X["policy_extractor.py<br/><i>build step, gpt-4o-mini + JSON schema</i>"]
+      X --> PJ["policies.json <i>(46 rules)</i>"] --> POL["policy_service.py<br/><i>lookup by (intent, scope)</i>"]
+      B --> V
       C["PSU bulletins<br/>scraped at index time"] --> V
       V["vault_loader.py<br/><i>chunk + merge</i>"] --> I
       I["index_service.py<br/>→ ace_index.pkl <i>(committed)</i>"] --> E
       E["embedding_service.py<br/><i>cosine sim + keyword + course-code boosts</i>"]
     end
     PS --> C2
+    POL --> C2
     E --> C2
     D["Student upload<br/><i>Degree Audit / What-If</i>"] --> P
     P["student_doc_service.py<br/>audit_parser_service.py"] --> C2
@@ -112,18 +115,25 @@ flowchart TD
 requirements with min grades, semester-by-semester suggested plans, gen-ed overlap, bulletin URL)
 and 9,439 course records. They serve every major and back every tool.
 
-**The RAG index is a CMPSC/DTSCE-only supplement** — 73 records that exist because the handbooks
-carry procedural content the bulletins don't (Entrance-to-Major rules, petitions, substitution
-process, department contacts):
+**Handbook policies are structured too.** `policies.json` holds 46 extracted rules — Entrance to
+Major, petitions, substitutions, transfer credit, contacts, internships, honors, graduation — each
+with `scope` (`cs`/`ds`), `topic`, the handbook's own wording, and a page-level source. Built offline
+by `backend/data/policy_extractor.py`; relayed into answers by `policy_service.py` as a **dict lookup
+on (intent, scope)** — no retrieval involved.
+
+**The RAG index is the remaining CMPSC/DTSCE fallback** — 73 records covering handbook prose the
+extractor deliberately skips (narrative advising guidance, course sequencing discussion):
 
 | `source_type`  | Records | Origin                                       |
 |----------------|---------|----------------------------------------------|
 | `pdf_handbook` | 47      | CMPSC / DTSCE handbook PDFs (chunked)        |
 | `web_bulletin` | 26      | PSU bulletin pages scraped at index time     |
 
-`classify_major()` decides which path runs: `cs` / `ds` majors get RAG + structured, everyone else
-(and anyone with no major declared) gets structured only, so CS/DS handbook text can't leak into an
-unrelated major's answer. The pre-built index (`backend/data/ace_index.pkl`) is committed so
+`classify_major()` decides which paths run: `cs` / `ds` majors get policies + RAG + structured,
+everyone else (and anyone with no major declared) gets structured only, so CS/DS handbook text can't
+leak into an unrelated major's answer. Within CS/DS, `filter_records_by_scope()` drops the *other*
+program's handbook and bulletin before selection — a Data Sciences student is never answered from,
+or cited to, the CMPSC handbook. The pre-built index (`backend/data/ace_index.pkl`) is committed so
 production deploys skip the cold-start embedding rebuild.
 
 > [!NOTE]
@@ -233,10 +243,36 @@ cd landing && npm install && npm run dev
 
 </details>
 
+## Data refresh runbook
+
+Every data file ACE answers from is produced by a **build step**, never at request time. Each one is
+idempotent, prints what it wrote, and commits its output. Run them in this order after PSU publishes
+new material:
+
+| # | When | Command | Writes |
+|---|------|---------|--------|
+| 1 | PSU publishes a new academic year calendar | `python -m backend.services.calendar_scraper` | `backend/data/calendar.json` |
+| 2 | New handbook PDFs land (update the paths in `backend/config.py` first) | `python -m backend.data.policy_extractor` | `backend/data/policies.json` |
+| 3 | Handbook PDFs or bulletin pages changed | `python -c "from backend.services.index_service import build_index; build_index()"` | `backend/data/ace_index.pkl` |
+| 4 | Always, before committing | `python -m backend.test_policies && python -m backend.test_routing` | — |
+
+`programs.json` / `courses.json` come from `backend/scraper/` (bulletin scraper) and change rarely —
+regenerate them only for a new bulletin edition, and re-run steps 2–4 afterwards.
+
+> [!TIP]
+> `policy_extractor` is an LLM extraction pass (gpt-4o-mini, `temperature=0`, strict JSON schema),
+> so reruns can differ slightly. Diff `policies.json` before committing — the self-check enforces the
+> schema and that both handbooks still yield ETM and petition/substitution rules, but it can't tell
+> you a rule silently changed wording. Cost is ~$0.006 per full run.
+
 ## Common tasks
 
 ```bash
-# Rebuild the vector index (after changing vault / handbook / bulletin data)
+# Extract handbook policies → policies.json (see runbook above)
+python -m backend.data.policy_extractor              # write
+python -m backend.data.policy_extractor --dry-run    # preview, no write
+
+# Rebuild the vector index (after changing handbook / bulletin data)
 python -c "from backend.services.index_service import build_index; build_index()"
 
 # Refresh the PSU academic calendar JSON
@@ -246,7 +282,8 @@ python -m backend.services.calendar_scraper
 python -m backend.scripts.estimate_cost --users 100 --msgs 20
 
 # Backend self-checks (plain asserts / print scripts — no pytest)
-python -m backend.test_routing     # major classification + record selection
+python -m backend.test_policies    # policies.json schema + snippet relay
+python -m backend.test_routing     # major classification, scope filter, record selection
 python -m backend.test_rules       # dumps extracted requirement rules
 
 # Frontend

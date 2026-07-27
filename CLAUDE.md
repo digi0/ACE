@@ -23,8 +23,14 @@ python -c "from backend.services.index_service import build_index; build_index()
 # Refresh the PSU academic calendar JSON
 python -m backend.services.calendar_scraper
 
+# Data build steps (never run at request time — see the runbook in README)
+python -m backend.data.policy_extractor    # handbook PDFs → policies.json
+python -m backend.services.calendar_scraper
+python -c "from backend.services.index_service import build_index; build_index()"
+
 # Self-checks (plain asserts / print scripts — pytest is not installed)
-python -m backend.test_routing    # major classification + record selection
+python -m backend.test_policies   # policies.json schema + snippet relay
+python -m backend.test_routing    # major classification, scope filter, record selection
 python -m backend.test_rules      # dumps extracted requirement rules
 ```
 
@@ -66,6 +72,9 @@ VITE_API_URL=http://127.0.0.1:8000   # optional, defaults to this
 programs.json (749) + courses.json (9,439)  ──►  program_service.py
        │  structured path — every major, and every tool
        │
+CMPSC/DTSCE handbook PDFs ──► policy_extractor.py ──► policies.json ──► policy_service.py
+       │  policy path — CMPSC/DTSCE only, lookup by (intent, scope), no retrieval
+       │
 CMPSC-handbook-*.pdf  +  PSU bulletins (scraped)     RAG path — CMPSC/DTSCE only
        └──────── vault_loader.py ────────────────────┘
                         │
@@ -82,7 +91,9 @@ CMPSC-handbook-*.pdf  +  PSU bulletins (scraped)     RAG path — CMPSC/DTSCE on
 
 **Structured data is the backbone.** `backend/data/programs.json` (749 programs — prescribed/additional requirements with min grades, semester suggested plans, gen-ed overlap, bulletin URL) and `courses.json` (9,439 course records) are read by `program_service.py`. They serve every major and back every tool (prereq map, gen-ed explorer, suggested plan, dashboard).
 
-**The RAG index is a CMPSC/DTSCE-only supplement** (73 records) — it exists for procedural content the structured data lacks: Entrance-to-Major rules, petitions, substitution process, department contacts. Records carry a `source_type` that drives weighting in `select_top_records()`:
+**Handbook policies are structured, not retrieved.** `backend/data/policies.json` (46 rules) is built offline by `backend/data/policy_extractor.py` — an LLM extraction pass over the handbook PDFs (gpt-4o-mini, temperature 0, strict JSON schema, ~$0.006/run) that emits one record per rule with `scope` (`cs`/`ds`), `topic`, the handbook's own wording, supporting details, named courses, and page-level source. `backend/services/policy_service.py` relays them into the prompt via `INTENT_TOPICS[intent]` → topic list → `get_policies(scope, topics)`; there is no embedding or similarity step on this path. Regenerate with `python -m backend.data.policy_extractor` whenever the PDFs change, and diff the output before committing (extraction is not bit-for-bit reproducible).
+
+**The RAG index is the remaining CMPSC/DTSCE fallback** (73 records) — it exists for procedural content the structured data lacks: Entrance-to-Major rules, petitions, substitution process, department contacts. Records carry a `source_type` that drives weighting in `select_top_records()`:
 
 | `source_type`   | Records | Origin                                   |
 |-----------------|---------|------------------------------------------|
@@ -91,7 +102,7 @@ CMPSC-handbook-*.pdf  +  PSU bulletins (scraped)     RAG path — CMPSC/DTSCE on
 
 **Fixed alongside the retirement:** `classify_major()` used to read `if "computer science" in nl and "engineering" not in nl`, which excluded `Computer Science, B.S. (Engineering)` — the University Park program the CMPSC handbook and `BULLETIN_URL` actually document. That one major silently fell through to structured-only answers. The `engineering` exclusion is gone; don't re-add it.
 
-`classify_major()` gates which path runs — `cs`/`ds` get RAG + structured; every other major, and any student with no major declared, gets structured only (`suppress_cs_ds`), so CS/DS handbook text can't leak into an unrelated major's answer. The pre-built index (`backend/data/ace_index.pkl`) is committed to avoid cold-start timeouts on Railway.
+`classify_major()` gates which paths run — `cs`/`ds` get policies + RAG + structured; every other major, and any student with no major declared, gets structured only (`suppress_cs_ds`), so CS/DS handbook text can't leak into an unrelated major's answer. Within CS/DS, `filter_records_by_scope()` runs between `semantic_search(top_k=16)` and `select_top_records()` and drops the other program's records — the index holds CMPSC and DTSCE side by side, so without it a DS student gets cited to the CMPSC handbook. The pre-built index (`backend/data/ace_index.pkl`) is committed to avoid cold-start timeouts on Railway.
 
 **Retired (July 2026):** an `excel_vault` source (`ACE_vlt.xlsx`, sheet "PSU CMPSC") plus `vault_service.py` and the `/vault` + `/vault/search` endpoints. The sheet had no `Content` column, so all 13 records embedded and retrieved as empty text while still occupying the top context slots for the `etm` / `transfer` / `contact` / `deadline` / `general` intents. `vault_service` also ran `load_psu_cmpsc_vault()` at import time, so every backend boot re-parsed the PDFs and re-scraped two PSU URLs. Don't reintroduce either pattern — put new advising knowledge in the structured JSON.
 
