@@ -13,29 +13,15 @@
   <meta property="og:image" content="https://www.acecollege.app/poster.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://www.acecollege.app/poster.jpg">
-  <meta name="theme-color" content="#1B1218">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%231B1218'/%3E%3Cpath d='M7 3H17A4 4 0 0 1 21 7V11A4 4 0 0 1 17 15H13.5L12 20.4L10.5 15H7A4 4 0 0 1 3 11V7A4 4 0 0 1 7 3Z' fill='none' stroke='%23FFC978' stroke-width='1.8' stroke-linejoin='round'/%3E%3Cpath d='M9.2 10.4 12 6.7l2.8 3.7' fill='none' stroke='%23FFC978' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <meta name="theme-color" content="#fbfaf7">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230f1013'/%3E%3Cpath d='M7 3H17A4 4 0 0 1 21 7V11A4 4 0 0 1 17 15H13.5L12 20.4L10.5 15H7A4 4 0 0 1 3 11V7A4 4 0 0 1 7 3Z' fill='none' stroke='white' stroke-width='1.8' stroke-linejoin='round'/%3E%3Cpath d='M9.2 10.4 12 6.7l2.8 3.7' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Caveat:wght@500;600;700&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="/assets/maggie-front.png" fetchpriority="high">
   <!-- bump ?v= when editing so browsers don't serve a stale cached copy -->
-  <link rel="stylesheet" href="/styles.css?v=23">
+  <link rel="stylesheet" href="/styles.css?v=24">
 </head>
 <body>
-
-<!-- ============================================================
-     THE WORLD — one fixed ground for the whole page. Every chapter
-     inherits it; no section ever paints its own background. The
-     light arc (night -> paper -> daylight) is three scrubbed
-     custom properties on :root, nothing else.
-     ============================================================ -->
-<div class="world" aria-hidden="true">
-  <div class="pass-warm"></div>
-  <div class="pass-pool"></div>
-  <div class="falloff"></div>
-  <div class="day"></div>
-</div>
 
 <!-- ============ NAV ============ -->
 <nav class="nav" id="nav">
@@ -49,8 +35,9 @@
     <span class="nav-logo">ACE</span>
   </a>
   <div class="nav-links">
-    <a href="#clarity">Where you stand</a>
-    <a href="#reminders">What's coming</a>
+    <a href="#steps">How it works</a>
+    <a href="#different">Why ACE</a>
+    <a href="#coverage">For students</a>
   </div>
   <div class="nav-actions">
     <a class="btn btn-ghost nav-access" href="https://app.acecollege.app">Click for access</a>
@@ -58,209 +45,401 @@
   </div>
 </nav>
 
-<!-- ============================================================
-     CH 1–3 — one pinned camera move: the desk at 11:47pm, the
-     dive into the screen, and Maggie answering. One trigger,
-     one timeline, one continuous room.
-     ============================================================ -->
+<!-- ============ HERO (pinned zoom-into-screen) ============ -->
 <section class="hero" id="hero">
-
-  <!-- ---------- Ch1 + Ch2: the desk ---------- -->
-  <div class="desk-stage" id="deskStage">
-
-    <div class="softboard">
-      <div class="board-sheet">
-        <h1 class="hero-headline">Somewhere in this mess is your degree.</h1>
-      </div>
-      <!-- the six canonical notes. These exact strings are answered
-           word-for-word in Ch4 — nothing here is decorative. -->
-      <div class="sticky s-gold"  data-note="math"   style="--x:3%;  --y:12%; --r:-6deg">MATH 230 → needs 141?</div>
-      <div class="sticky s-paper" data-note="geneds" style="--x:73%; --y:9%;  --r:5deg">which gen-ed counts??</div>
-      <div class="sticky s-gold"  data-note="reg"    style="--x:80%; --y:52%; --r:-4deg">register NOV 3 · 7:30am</div>
-      <div class="sticky s-paper" data-note="advis"  style="--x:6%;  --y:58%; --r:7deg">advisor appt<br>= 3 wks out</div>
-    </div>
-
-    <div class="desk-band"></div>
-
-    <!-- fallen flat on the wood — the two the student stopped pinning up -->
-    <div class="sticky fallen s-gold"  data-note="dropadd" style="--x:12%; --y:6%;  --r:-9deg">drop/add ends FRI</div>
-    <div class="sticky fallen s-paper" data-note="credits" style="--x:70%; --y:16%; --r:6deg">24 cr left?? or 27</div>
-
-    <div class="laptop">
-      <div class="laptop-screen" id="laptopScreen">
-        <div class="mini-app">
-          <div class="app-bar"><i></i><i></i><i></i><span>ACE</span></div>
-          <div class="app-body">
-            <p class="app-empty">Ask ACE anything</p>
-          </div>
+  <div class="hero-inner">
+    <!-- the student's desk: sticky-note chaos on the softboard, one clean route
+         inside the laptop. Scroll dives the camera into the screen. -->
+    <div class="desk-stage" id="deskStage">
+      <div class="softboard">
+        <div class="board-sheet">
+          <h1 class="hero-headline">The way you navigate college is about to change forever<span class="type-cursor"></span></h1>
+          <span class="pin pin-a"></span><span class="pin pin-b"></span>
+        </div>
+        <div class="sticky s-amber" style="--x:2%;  --y:7%;  --r:-7deg">register NOV 3!!</div>
+        <div class="sticky s-pink"  style="--x:16%; --y:44%; --r:5deg">MATH 230 prereq??</div>
+        <div class="sticky s-blue"  style="--x:1%;  --y:66%; --r:-4deg">advisor appt<br>= 3 weeks out</div>
+        <div class="sticky s-paper" style="--x:20%; --y:75%; --r:8deg">which gen-ed<br>counts?!</div>
+        <div class="sticky s-amber" style="--x:74%; --y:60%; --r:6deg">drop/add<br>ends FRI</div>
+        <div class="sticky s-paper" style="--x:85%; --y:4%;  --r:-5deg">email prof<br>back!!</div>
+        <div class="sticky s-pink"  style="--x:84%; --y:34%; --r:9deg">credits left = ??</div>
+        <div class="sticky s-blue"  style="--x:44%; --y:80%; --r:-8deg">orientation 9am??</div>
+        <div class="sticky s-paper" style="--x:58%; --y:64%; --r:4deg">run what-if<br>report</div>
+        <div class="board-polaroid">
+          <img src="/assets/maggie-front.png" alt="">
+          <span class="polaroid-caption">ask Maggie!</span>
         </div>
       </div>
-      <div class="laptop-base"></div>
+      <div class="desk-band"></div>
+      <div class="laptop">
+        <div class="laptop-screen">
+          <div class="screen-bar"><i></i><i></i><i></i><span>ACECOLLEGE.APP</span></div>
+          <div class="app">
+            <aside class="app-side">
+              <span class="app-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3H17A4 4 0 0 1 21 7V11A4 4 0 0 1 17 15H13.5L12 20.4L10.5 15H7A4 4 0 0 1 3 11V7A4 4 0 0 1 7 3Z"/><path d="M9.2 10.4 12 6.7l2.8 3.7"/></svg>
+                ACE
+              </span>
+              <span class="app-item is-on">Chat</span>
+              <span class="app-item">Dashboard</span>
+              <span class="app-item">Planner</span>
+              <span class="app-item">Gen-eds</span>
+            </aside>
+            <div class="app-main">
+              <div class="app-msg me">Can I graduate by Spring 2027?</div>
+              <div class="app-msg bot">Yes — you have 24 credits left. Take 12 this fall and 12 in spring. Slot MATH 230 first.</div>
+              <div class="app-chips"><i>MATH 230 · Fall</i><i>Gen-eds ×2</i><i class="c-ok">balanced ✓</i></div>
+              <div class="app-input">Ask ACE anything<span class="mini-cursor"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="laptop-base"></div>
+      </div>
+      <svg class="desk-prop pen-cup" viewBox="0 0 130 150" fill="none" aria-hidden="true">
+        <line x1="52" y1="66" x2="30" y2="12" stroke="var(--ink)" stroke-width="9" stroke-linecap="round"/>
+        <line x1="30" y1="18" x2="26" y2="8"  stroke="var(--amber)" stroke-width="9" stroke-linecap="round"/>
+        <line x1="70" y1="62" x2="76" y2="6"  stroke="var(--blue)" stroke-width="9" stroke-linecap="round"/>
+        <line x1="88" y1="66" x2="108" y2="20" stroke="var(--pink)" stroke-width="11" stroke-linecap="round"/>
+        <path d="M30 60 H 104 L 98 134 C 97 142 91 148 83 148 L 51 148 C 43 148 37 142 36 134 Z" fill="var(--purple)" stroke="var(--ink)" stroke-width="7" stroke-linejoin="round"/>
+        <path d="M38 84 H 96" stroke="rgba(255,255,255,.5)" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+      <div class="desk-prop notebooks">
+        <div class="notebook nb-blue"><i></i><i></i><i></i></div>
+        <div class="notebook nb-pink"><i></i><i></i><i></i></div>
+      </div>
+      <svg class="desk-prop desk-mug" viewBox="0 0 120 140" fill="none" aria-hidden="true">
+        <path class="steam s1" d="M52 34 C 58 24 48 18 54 8"  stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>
+        <path class="steam s2" d="M78 36 C 84 26 74 20 80 10" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>
+        <path d="M34 52 H 96 L 92 118 C 91 126 85 132 77 132 L 53 132 C 45 132 39 126 38 118 Z" fill="#fff" stroke="var(--ink)" stroke-width="7" stroke-linejoin="round"/>
+        <path d="M96 62 C 112 60 116 88 94 92" stroke="var(--ink)" stroke-width="7" stroke-linecap="round"/>
+        <path d="M14.2 9.4 17 5.7l2.8 3.7 M12 3H22A4 4 0 0 1 26 7V10A4 4 0 0 1 22 14H18.5L17 18.4L15.5 14H12A4 4 0 0 1 8 10V7A4 4 0 0 1 12 3Z" transform="translate(38,68) scale(1.6)" stroke="var(--blue)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="scroll-hint">Scroll down<span class="hint-arrow">↓</span></div>
+
+    <!-- hover easter eggs: wander to either edge of the hero -->
+    <div class="peek-zone peek-zone-left" aria-hidden="true">
+      <svg class="peek-item peek-coffee" viewBox="0 0 300 340" fill="none">
+        <g class="coffee-inner">
+          <!-- arm reaching in from the left -->
+          <path d="M-10 320 C 60 300 96 268 122 224" stroke="#0B0B0B" stroke-width="13" stroke-linecap="round"/>
+          <path d="M-10 345 C 70 330 118 296 146 246" stroke="#0B0B0B" stroke-width="13" stroke-linecap="round"/>
+          <!-- hand wrapped around the cup -->
+          <path d="M112 236 C 108 208 128 190 152 192 L 196 200 C 214 206 220 226 212 242 C 220 244 222 258 214 264 C 220 270 218 282 208 286 C 212 294 206 304 194 304 L 150 298 C 126 294 112 272 112 252 Z"
+                fill="#F6EFDC" stroke="#0B0B0B" stroke-width="9" stroke-linejoin="round"/>
+          <!-- to-go cup -->
+          <path d="M150 106 L 234 106 L 224 210 C 223 222 214 230 202 230 L 174 228 C 163 227 156 219 155 208 Z"
+                fill="var(--amber)" stroke="#0B0B0B" stroke-width="9" stroke-linejoin="round"/>
+          <path d="M152 128 L 231 128 L 227 162 L 156 160 Z" fill="#fff" stroke="#0B0B0B" stroke-width="8" stroke-linejoin="round"/>
+          <path d="M142 78 L 242 78 L 236 108 L 147 108 Z" fill="var(--amber)" stroke="#0B0B0B" stroke-width="9" stroke-linejoin="round"/>
+          <path d="M186 78 L 186 60 C 186 52 196 52 198 60 L 198 78" stroke="#0B0B0B" stroke-width="8" stroke-linecap="round"/>
+          <!-- steam: two wisps that rise on loop while hovered -->
+          <path class="steam s1" d="M166 40 C 172 30 162 24 168 14" stroke="#0B0B0B" stroke-width="6" stroke-linecap="round"/>
+          <path class="steam s2" d="M210 42 C 216 32 206 26 212 16" stroke="#0B0B0B" stroke-width="6" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+    <div class="peek-zone peek-zone-right" aria-hidden="true">
+      <div class="peek-item peek-maggie">
+        <img class="peek-maggie-img" src="/assets/maggie-point.png" alt="">
+      </div>
     </div>
 
-    <svg class="desk-prop desk-mug" viewBox="0 0 120 140" fill="none" aria-hidden="true">
-      <path class="steam s1" d="M52 34 C 58 24 48 18 54 8"  stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
-      <path class="steam s2" d="M78 36 C 84 26 74 20 80 10" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
-      <path d="M34 52 H 96 L 92 118 C 91 126 85 132 77 132 L 53 132 C 45 132 39 126 38 118 Z" fill="#F6EFDC" stroke="#16110E" stroke-width="7" stroke-linejoin="round"/>
-      <path d="M96 62 C 112 60 116 88 94 92" stroke="#16110E" stroke-width="7" stroke-linecap="round"/>
-    </svg>
+    <!-- full-viewport scenes revealed after the zoom -->
 
-    <svg class="desk-prop pen-cup" viewBox="0 0 130 150" fill="none" aria-hidden="true">
-      <line x1="52" y1="66" x2="30" y2="12" stroke="#16110E" stroke-width="9" stroke-linecap="round"/>
-      <line x1="70" y1="62" x2="76" y2="6"  stroke="#E3A02B" stroke-width="9" stroke-linecap="round"/>
-      <line x1="88" y1="66" x2="108" y2="20" stroke="#7C77C4" stroke-width="11" stroke-linecap="round"/>
-      <path d="M30 60 H 104 L 98 134 C 97 142 91 148 83 148 L 51 148 C 43 148 37 142 36 134 Z" fill="#3A2A2E" stroke="#16110E" stroke-width="7" stroke-linejoin="round"/>
-    </svg>
+    <!-- the dive's payoff: the laptop's interface, now at real size. Same
+         near-white as the screen, so the handoff has no visible cut. -->
+    <div class="plate" id="plate" aria-hidden="true">
+      <div class="plate-app">
+        <aside class="plate-side">
+          <span class="plate-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3H17A4 4 0 0 1 21 7V11A4 4 0 0 1 17 15H13.5L12 20.4L10.5 15H7A4 4 0 0 1 3 11V7A4 4 0 0 1 7 3Z"/><path d="M9.2 10.4 12 6.7l2.8 3.7"/></svg>
+            ACE
+          </span>
+          <span class="plate-item is-on">Chat</span>
+          <span class="plate-item">Dashboard</span>
+          <span class="plate-item">Planner</span>
+        </aside>
+        <div class="plate-main">
+          <div class="plate-input"><span id="typedQuestion"></span><span class="plate-caret"></span></div>
+        </div>
+      </div>
+    </div>
 
-    <div class="desk-prop notebooks">
-      <div class="notebook nb-a"></div>
-      <div class="notebook nb-b"></div>
+    <div class="hero-scenes">
+      <div class="scene scene-flood"></div>
+
+      <div class="scene scene-meet">
+        <img class="profile" src="/assets/maggie-front.png" alt="Maggie, your ACE advisor">
+        <h2 class="meet-line serif">Meet <span class="accent">ACE.</span></h2>
+      </div>
+
+      <div class="scene scene-tagline">
+        <h2 class="serif">ACE tells you exactly<br>what to do next</h2>
+      </div>
     </div>
   </div>
+</section>
 
-  <p class="scroll-hint"><span class="rule"></span>Scroll</p>
-
-  <!-- ---------- Ch2 payoff: the interface at real size ---------- -->
-  <div class="plate" id="plate" aria-hidden="true">
-    <div class="plate-app">
-      <aside class="plate-side">
-        <span class="plate-logo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3H17A4 4 0 0 1 21 7V11A4 4 0 0 1 17 15H13.5L12 20.4L10.5 15H7A4 4 0 0 1 3 11V7A4 4 0 0 1 7 3Z"/><path d="M9.2 10.4 12 6.7l2.8 3.7"/></svg>
-          ACE
+<!-- ============ STATEMENT (pinned, word rotator) ============ -->
+<section class="statement" id="statement">
+  <div class="statement-inner">
+    <h2 class="serif statement-h">
+      <span class="line">Getting in is easy.</span>
+      <span class="line">Knowing <em>how to navigate it</em> is hard.</span>
+    </h2>
+    <div class="statement-sub">
+      <p>Every semester, the same panic:<br>
+        <span class="rotator">
+          <span class="rot-word is-active">Which courses do I take?</span>
+          <span class="rot-word">What prereqs am I missing?</span>
+          <span class="rot-word">Which gen-eds actually count?</span>
+          <span class="rot-word">When do I register?</span>
         </span>
-        <span class="plate-item is-on">Chat</span>
-        <span class="plate-item">Dashboard</span>
-        <span class="plate-item">Planner</span>
-      </aside>
-      <div class="plate-main">
-        <div class="plate-input"><span id="typedQuestion"></span><span class="caret"></span></div>
-      </div>
+      </p>
+      <p class="statement-kicker">That's called navigating college.<br><strong>And you've been doing it alone.</strong></p>
     </div>
-  </div>
-
-  <!-- ---------- Ch3: she answers ---------- -->
-  <div class="answer" id="answer">
-    <div class="answer-panel">
-      <span class="answer-pin" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3H17A4 4 0 0 1 21 7V11A4 4 0 0 1 17 15H13.5L12 20.4L10.5 15H7A4 4 0 0 1 3 11V7A4 4 0 0 1 7 3Z"/><path d="M9.2 10.4 12 6.7l2.8 3.7"/></svg>
-      </span>
-      <p class="answer-line">I've already read your audit.</p>
-      <p class="answer-spec"><span class="lit">24 CREDITS LEFT</span> · 1 PREREQ BLOCKING 2 COURSES</p>
-      <p class="answer-line answer-line-2">Let's fix your fall first.</p>
-    </div>
-    <span class="answer-sign">— Maggie</span>
-    <img class="answer-maggie" src="/assets/maggie-front.png" alt="Maggie, your ACE advisor" width="653" height="740" decoding="async">
   </div>
 </section>
 
-<!-- ============================================================
-     CH 4 — THE LEDGER. Daylight. The board's own notes resolve
-     into ordered rows. Pinned, because the notes must travel to
-     measured targets inside a stationary frame.
-     ============================================================ -->
-<section class="clarity" id="clarity">
-  <div class="clarity-inner">
-    <h2 class="chapter-h">Here's where you actually stand.</h2>
-    <p class="chapter-p">Every note on that board, answered in order.</p>
-    <p class="chapter-spec">96 / 120 CREDITS · CATALOG 2024–25 · ON TRACK FOR SPRING 2027</p>
-
-    <div class="plan-sheet" id="planSheet">
-      <div class="plan-row" data-row="math">
-        <span class="row-note">MATH 230 → needs 141?</span>
-        <span class="row-answer">prereq met · unlocks 2</span>
-      </div>
-      <div class="plan-row" data-row="geneds">
-        <span class="row-note">which gen-ed counts??</span>
-        <span class="row-answer">2 courses left</span>
-      </div>
-      <div class="plan-row" data-row="credits">
-        <span class="row-note">24 cr left?? or 27</span>
-        <span class="row-answer">96 / 120 credits</span>
-      </div>
-      <div class="plan-row is-done" data-row="grad">
-        <span class="row-note plain">on track to finish</span>
-        <span class="row-answer good">Spring 2027</span>
-      </div>
-      <p class="plan-next" id="planNext">NEXT → take MATH 230 this fall.</p>
-    </div>
+<!-- ============ LET ME SHOW YOU ============ -->
+<section class="show">
+  <h2 class="serif">Let me show you</h2>
+  <div class="show-arrows">
+    <svg viewBox="0 0 120 140" class="arrow arrow-amber"><path d="M14 128 C 40 96 70 62 100 26 M 66 30 C 80 24 92 22 102 24 C 104 34 102 46 96 60" fill="none" stroke="var(--amber)" stroke-width="11" stroke-linecap="round"/></svg>
+    <svg viewBox="0 0 120 140" class="arrow arrow-purple"><path d="M60 132 C 56 96 56 62 62 22 M 38 52 C 44 38 52 28 62 22 C 70 30 76 42 78 56" fill="none" stroke="var(--purple)" stroke-width="11" stroke-linecap="round"/></svg>
+    <svg viewBox="0 0 120 140" class="arrow arrow-blue"><path d="M106 128 C 82 96 52 62 22 26 M 22 62 C 18 46 18 34 22 24 C 32 22 44 24 58 30" fill="none" stroke="var(--blue)" stroke-width="11" stroke-linecap="round"/></svg>
   </div>
-  <img class="plan-maggie" src="/assets/maggie-point.png" alt="" width="653" height="740" loading="lazy" decoding="async">
+  <img class="maggie-point" src="/assets/maggie-point.png" alt="">
 </section>
 
-<!-- ============================================================
-     CH 5 — THE WATCH. Daylight, banded. A semester on one line.
-     Unpinned: ordinary one-shot reveals.
-     ============================================================ -->
-<section class="reminders" id="reminders">
-  <div class="watch-copy">
-    <h2 class="chapter-h">You'll see it coming.</h2>
-    <p class="chapter-p">ACE watches the dates you didn't write down.</p>
-    <p class="chapter-spec">REGISTRATION · DROP/ADD · PREREQ GATES</p>
-  </div>
+<!-- ============ STEP STACK (sticky folder cards) ============ -->
+<section class="steps" id="steps">
 
-  <div class="rail-wrap">
-    <div class="rail" aria-hidden="true">
-      <span class="rail-past"></span>
-      <span class="rail-future"></span>
-      <span class="rail-today"><i>TODAY</i></span>
-      <span class="mark is-past" style="--p:6%"></span>
-      <span class="mark is-past" style="--p:14%"></span>
-      <span class="mark" style="--p:34%"></span>
-      <span class="mark" style="--p:58%"></span>
-      <span class="mark" style="--p:82%"></span>
-      <span class="mark" style="--p:94%"></span>
+  <article class="step-card step-1">
+    <header class="step-tab tab-amber"><h2 class="serif">Step 1 · Upload</h2></header>
+    <div class="step-body">
+      <div class="step-text">
+        <p>First, upload your degree audit.</p>
+        <p>ACE reads all of it.<br>Every requirement.<br>Every credit earned.<br>What's done. What's left.</p>
+        <p>No more decoding a 12-page PDF.</p>
+      </div>
+      <div class="step-media checker">
+        <div class="mock-window">
+          <div class="mock-bar"><i></i><i></i><i></i><span class="mock-title">Degree audit — parsed</span></div>
+          <div class="audit-row"><span>Credits earned</span><strong>96 / 120</strong></div>
+          <div class="audit-row"><span>Major requirements</span><strong class="ok">On track</strong></div>
+          <div class="audit-row"><span>Gen-eds remaining</span><strong>2</strong></div>
+          <div class="audit-row"><span>Est. graduation</span><strong>Spring 2027</strong></div>
+        </div>
+      </div>
     </div>
+  </article>
 
-    <article class="watch-card c1" style="--p:34%">
-      <p class="wc-meta"><span class="dot clay"></span>DROP/ADD · FRI SEP 12 · in 4 days</p>
-      <p class="wc-fact">Drop/add closes Friday.</p>
-      <p class="wc-offer">You're carrying 18 credits — want to look at it together?</p>
-    </article>
+  <article class="step-card step-2">
+    <header class="step-tab tab-purple"><h2 class="serif">Step 2 · Ask</h2></header>
+    <div class="step-body">
+      <div class="step-text">
+        <p>Then, ask ACE anything.</p>
+        <p>"Can I still graduate on time?"<br>"What gen-eds do I need?"<br>"Which class unlocks the most?"</p>
+        <p>Real answers about your plan, in seconds.</p>
+      </div>
+      <div class="step-media checker">
+        <div class="mock-window">
+          <div class="mock-bar"><i></i><i></i><i></i><span class="mock-title">Chat with ACE</span></div>
+          <div class="mock-chat me">Can I graduate by Spring 2027?</div>
+          <div class="mock-chat bot">Yes — you have 24 credits left. Take 12 this fall and 12 in spring. One catch: MATH 230 is a prereq for two of them, so slot it this fall.</div>
+          <div class="mock-chat me">What gen-eds am I missing?</div>
+        </div>
+      </div>
+    </div>
+  </article>
 
-    <article class="watch-card c2" style="--p:58%">
-      <p class="wc-meta"><span class="dot green"></span>COURSE · MATH 230 · this fall</p>
-      <p class="wc-fact">MATH 230 has a seat.</p>
-      <p class="wc-offer">It's the prereq that unlocks two spring courses.</p>
-    </article>
+  <article class="step-card step-3">
+    <header class="step-tab tab-blue"><h2 class="serif">Step 3 · Stay on track</h2></header>
+    <div class="step-body">
+      <div class="step-text">
+        <p>And ACE keeps you ahead.</p>
+        <p>Registration windows.<br>Drop/add deadlines.<br>Prereq chains.<br>Orientation &amp; key dates.</p>
+        <p>Nothing sneaks up on you.</p>
+      </div>
+      <div class="step-media checker">
+        <div class="mock-window">
+          <div class="mock-bar"><i></i><i></i><i></i><span class="mock-title">Your semester</span></div>
+          <div class="audit-row"><span class="badge b-purple">▲</span><span>Registration opens <strong>Nov 3 · 7:00 AM</strong></span></div>
+          <div class="audit-row"><span class="badge b-amber">!</span><span>Drop/add ends in <strong>4 days</strong></span></div>
+          <div class="audit-row"><span class="badge b-blue">✓</span><span>MATH 230 — prereq met, <strong>ready to enroll</strong></span></div>
+        </div>
+      </div>
+    </div>
+  </article>
 
-    <article class="watch-card c3" style="--p:82%">
-      <p class="wc-meta"><span class="dot purple"></span>REGISTRATION · NOV 3 · 7:00 AM</p>
-      <p class="wc-fact">Your registration window opens Nov 3.</p>
-      <p class="wc-offer">Cart's already built. Want a nudge the night before?</p>
-    </article>
-  </div>
+</section>
 
-  <img class="desk-maggie" src="/assets/maggie-desk.png" alt="" width="1025" height="740" loading="lazy" decoding="async">
-
-  <!-- the honest roadmap, as a slip of paper rather than a pricing grid -->
-  <div class="cover-slip">
-    <p class="slip-label">What ACE covers today</p>
-    <ul>
-      <li class="is-done"><svg class="slip-tick" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6 6.4 12 13 4.6"/></svg><span>Courses &amp; degree progress <em>every major, every catalog year</em></span></li>
-      <li class="is-done"><svg class="slip-tick" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6 6.4 12 13 4.6"/></svg><span>College logistics <em>enroll, register, orientation, dates</em></span></li>
-      <li class="is-next"><span class="slip-arrow" aria-hidden="true">→</span><span>Career &amp; activities <em>next</em></span></li>
-    </ul>
+<!-- ============ BACKGROUND (purple) ============ -->
+<section class="bgwork">
+  <h2 class="serif">ACE works in the background<br>and keeps you on track</h2>
+  <div class="bgwork-stage">
+    <div class="monitor">
+      <img class="maggie-desk-img" src="/assets/maggie-desk.png" alt="Maggie at her computer">
+      <div class="notif-col">
+        <div class="notif notif-1">
+          <span class="notif-dot"></span>
+          <div><strong>Registration opens Nov 3 · 7:00 AM.</strong>
+          <p>Your shopping cart is ready — want a reminder the night before?</p></div>
+        </div>
+        <div class="notif notif-2">
+          <span class="notif-dot dot-blue"></span>
+          <div><strong>A seat just opened in MATH 230.</strong>
+          <p>It's the prereq that unlocks two of your spring classes.</p></div>
+        </div>
+        <div class="notif notif-3">
+          <span class="notif-dot dot-amber"></span>
+          <div><strong>Drop/add ends in 4 days.</strong>
+          <p>You're still enrolled in 18 credits — want to talk it through?</p></div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ============================================================
-     CH 6 — MORNING AT THE SAME DESK. The page ends where it
-     began, with the board cleared.
-     ============================================================ -->
-<section class="dawn" id="cta">
-  <div class="dawn-inner">
-    <div class="dawn-board">
-      <div class="plan-card">
-        <p class="pc-label">FALL 2026</p>
-        <p class="pc-row"><svg class="pc-tick" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6 6.4 12 13 4.6"/></svg>MATH 230</p>
-        <p class="pc-row"><svg class="pc-tick" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6 6.4 12 13 4.6"/></svg>Gen-ed · 2 of 2</p>
-        <p class="pc-row"><svg class="pc-tick" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6 6.4 12 13 4.6"/></svg>Registration · Nov 3</p>
-      </div>
+<!-- ============ DIFFERENT (pinned phases w/ Maggie) ============ -->
+<section class="different" id="different">
+  <div class="diff-inner">
+    <div class="tape-title">
+      <span class="tape">What makes</span>
+      <span class="tape"><span class="accent">ACE</span> different?</span>
+    </div>
+    <div class="callout">
+      <p class="callout-line co-1 is-active">First, ACE reads your degree audit — every credit, every requirement.</p>
+      <p class="callout-line co-2">Then it learns your school's rules — the catalog, the calendar, the fine print.</p>
+      <p class="callout-line co-3">And it covers all 749 majors. Every catalog year. Yours included.</p>
     </div>
 
-    <div class="cta-card">
-      <h2 class="chapter-h">Now you just show up.</h2>
-      <p class="chapter-p">First cohort starts this fall.</p>
+    <div class="dome dome-pink"></div>
+    <div class="dome dome-amber"></div>
+    <div class="dome dome-purple"></div>
+
+    <div class="head-stage">
+      <img class="maggie-think-img" src="/assets/maggie-think.png" alt="Maggie thinking">
+
+      <!-- labels ring Maggie in the outer columns; the centre band (x 28–72%)
+           is where she sits, so nothing is placed across her face -->
+      <div class="labels labels-1 is-active">
+        <span class="label" style="--x:2%;  --y:14%; --r:-7deg">Credits earned</span>
+        <span class="label" style="--x:70%; --y:10%; --r:4deg">Requirements left</span>
+        <span class="label" style="--x:7%;  --y:38%; --r:-3deg">Catalog year</span>
+        <span class="label" style="--x:78%; --y:34%; --r:7deg">Gen-eds</span>
+        <span class="label" style="--x:1%;  --y:62%; --r:-5deg">What-if reports</span>
+        <span class="label" style="--x:73%; --y:58%; --r:5deg">Transfer credits</span>
+        <span class="label" style="--x:8%;  --y:85%; --r:-8deg">Est. graduation</span>
+        <span class="label" style="--x:69%; --y:83%; --r:3deg">Course history</span>
+      </div>
+      <div class="labels labels-2">
+        <span class="label" style="--x:2%;  --y:12%; --r:-6deg">The course catalog</span>
+        <span class="label" style="--x:71%; --y:10%; --r:5deg">Prereq chains</span>
+        <span class="label" style="--x:6%;  --y:37%; --r:2deg">Substitutions</span>
+        <span class="label" style="--x:74%; --y:34%; --r:6deg">Registration windows</span>
+        <span class="label" style="--x:2%;  --y:61%; --r:-4deg">Drop/add dates</span>
+        <span class="label" style="--x:72%; --y:59%; --r:4deg">Orientation</span>
+        <span class="label" style="--x:9%;  --y:85%; --r:-7deg">Key deadlines</span>
+      </div>
+      <div class="labels labels-3">
+        <span class="label" style="--x:36%; --y:1%;  --r:-2deg">All 749 majors</span>
+        <span class="label" style="--x:2%;  --y:24%; --r:-6deg">Every catalog year</span>
+        <span class="label" style="--x:72%; --y:22%; --r:6deg">What-if scenarios</span>
+        <span class="label" style="--x:0%;  --y:52%; --r:3deg">Minors &amp; double majors</span>
+        <span class="label" style="--x:75%; --y:50%; --r:-4deg">Transfer credits</span>
+        <span class="label" style="--x:4%;  --y:80%; --r:-5deg">Fastest path to graduate</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Built by students who got lost in the course catalog&nbsp;&nbsp;✳&nbsp;&nbsp;</span><span>Built by students who got lost in the course catalog&nbsp;&nbsp;✳&nbsp;&nbsp;</span><span>Built by students who got lost in the course catalog&nbsp;&nbsp;✳&nbsp;&nbsp;</span><span>Built by students who got lost in the course catalog&nbsp;&nbsp;✳&nbsp;&nbsp;</span>
+  </div>
+</div>
+
+<!-- ============ COVERAGE (what's included + roadmap) ============ -->
+<section class="pricing" id="coverage">
+  <div class="pricing-head">
+    <div class="tape-title">
+      <span class="tape">Free for the</span>
+      <span class="tape"><span class="accent">first cohort.</span></span>
+    </div>
+    <p class="pricing-sub">Courses are the wedge — logistics is live,<br>careers is next. The honest roadmap.</p>
+  </div>
+
+  <div class="pricing-grid">
+    <div class="card included">
+      <h2 class="serif">What's Included</h2>
+      <ul>
+        <li>Reads your degree audit + what-if reports</li>
+        <li>Answers about your exact major &amp; catalog year</li>
+        <li>Prereq chains &amp; the fastest path to graduate</li>
+        <li>Gen-ed &amp; requirement tracking</li>
+        <li>Registration windows &amp; deadline reminders</li>
+        <li>Orientation &amp; college-logistics answers</li>
+        <li>Works for all 749 majors</li>
+        <li>Free for the first cohort</li>
+      </ul>
+    </div>
+
+    <div class="tiers">
+      <div class="card tier">
+        <div class="tier-top"><h2 class="serif">Courses &amp; degree progress</h2><span class="chip chip-blue">Shipped</span></div>
+        <p class="tier-note">The wedge. Upload your audit, ask anything, always know what's left.</p>
+        <a class="btn tier-btn btn-hover-amber" href="#cta">Join the waitlist</a>
+      </div>
+      <div class="card tier">
+        <div class="tier-top"><h2 class="serif">College logistics</h2><span class="chip chip-amber">Live</span></div>
+        <p class="tier-note">How to enroll, register, orientation, key dates — how the machine actually works.</p>
+        <a class="btn tier-btn btn-hover-purple" href="#cta">Join the waitlist</a>
+      </div>
+      <div class="card tier">
+        <div class="tier-top"><h2 class="serif">Career &amp; activities</h2><span class="chip chip-purple">Roadmap</span></div>
+        <p class="tier-note">Clubs, research, internships matched to your record and where you want to go.</p>
+        <a class="btn tier-btn btn-hover-blue" href="#cta">Join the waitlist</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="enterprise">
+    <h2 class="serif">Faculty or advisor?</h2>
+    <p>Want ACE for your students? Let's talk.</p>
+    <a class="btn" href="#cta">Get in touch</a>
+  </div>
+</section>
+
+<!-- ============ BUILT BY STUDENTS ============ -->
+<section class="testimonials" id="testimonials">
+  <div class="testi-head">
+    <div class="tape-title testi-sticky">
+      <span class="tape">Built by students who</span>
+      <span class="tape"><span class="accent">got lost</span> in the catalog.</span>
+    </div>
+    <p class="testi-sub">We spent four years decoding degree audits, chasing advisors, and guessing at prereqs.<br><br>ACE is the tool we wish we'd had freshman year.</p>
+  </div>
+  <div class="stickers">
+    <span class="starburst sb-amber">OK!</span>
+    <span class="starburst sb-pink">nice!</span>
+    <span class="starburst sb-blue">A+</span>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="final" id="cta">
+  <div class="final-inner">
+    <div class="tape-title">
+      <span class="tape">Ready to stop</span>
+      <span class="tape"><span class="accent">guessing?</span></span>
+    </div>
+    <div class="final-copy">
+      <p>Four years of trial and error.<br>Every requirement mapped.<br>Every deadline tracked.<br>Advice you'd pay for, free.</p>
+      <p><strong>First cohort starts this fall.</strong></p>
       <div class="wl-zone">
         <form class="wl-form" id="waitlistForm" novalidate>
           <input class="wl-input" id="wlEmail" type="email" required placeholder="you@psu.edu" aria-label="Email address" autocomplete="email">
@@ -268,20 +447,18 @@
         </form>
         <p class="wl-error" id="wlError" role="alert" hidden></p>
         <p class="wl-done" id="wlDone" role="status" hidden></p>
-        <p class="wl-note">Free for students. Every major, every catalog year. First 100 get early access.</p>
+        <p class="wl-note">Free for students. No spam. <em>First 100 get early access.</em></p>
         <p class="wl-have-code">Already have an access code?
           <a class="access-link" href="https://app.acecollege.app">Click for access →</a>
         </p>
       </div>
     </div>
-
-    <img class="dawn-maggie" src="/assets/maggie-celebrate.png" alt="" width="836" height="740" loading="lazy" decoding="async">
-    <span class="maggie-note">you've got this.</span>
+    <svg class="final-doodle doodle-arrow" viewBox="0 0 120 140"><path d="M14 128 C 40 96 70 62 100 26 M 66 30 C 80 24 92 22 102 24 C 104 34 102 46 96 60" fill="none" stroke="var(--blue)" stroke-width="11" stroke-linecap="round"/></svg>
+    <span class="final-doodle doodle-spark">✦</span>
+    <span class="final-doodle doodle-hash">#</span>
+    <img class="final-head" src="/assets/maggie-celebrate.png" alt="Maggie celebrating">
   </div>
-</section>
-
-<footer class="footer">
-  <div class="footer-top">
+  <footer class="footer">
     <a class="brand" href="#">
       <span class="logo-square">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -291,21 +468,17 @@
       </span>
       <span class="nav-logo">ACE</span>
     </a>
-    <p class="footer-credit">built by students who got lost in the course catalog.</p>
-  </div>
-  <div class="footer-bottom">
     <div class="footer-links">
-      <a href="#clarity">Where you stand</a>
-      <a href="#reminders">What's coming</a>
-      <a href="https://app.acecollege.app">Sign in</a>
-      <a href="mailto:access@acecollege.app">Faculty &amp; advisors</a>
+      <a href="#steps">How it works</a>
+      <a href="#different">Why ACE</a>
+      <a href="#coverage">For students</a>
     </div>
-    <p class="footer-legal">The navigation layer for college. © 2026 ACE.</p>
-  </div>
-</footer>
+    <p>The navigation layer for college. © 2026 ACE.</p>
+  </footer>
+</section>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="/app.js?v=23"></script>
+<script src="/app.js?v=24"></script>
 </body>
 </html>
