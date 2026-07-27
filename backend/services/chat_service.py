@@ -206,30 +206,28 @@ def detect_question_intent(question):
 
 def select_top_records(records, intent):
     handbook = [r for r in records if r.get("source_type") == "pdf_handbook"]
-    bulletin  = [r for r in records if r.get("source_type") == "web_bulletin"]
-    vault     = [r for r in records if r.get("source_type") == "excel_vault"]
+    bulletin = [r for r in records if r.get("source_type") == "web_bulletin"]
 
     if intent in ["courses", "student_progress"]:
-        # Handbook is primary, bulletin secondary, vault for policy context
-        return handbook[:4] + bulletin[:3] + vault[:2]
+        # Handbook is primary, bulletin secondary
+        return handbook[:4] + bulletin[:3]
 
     if intent == "substitution":
-        return handbook[:4] + bulletin[:2] + vault[:1]
+        return handbook[:4] + bulletin[:2]
 
-    if intent in ["transfer", "etm"]:
-        return vault[:3] + bulletin[:2] + handbook[:2]
-
-    if intent == "contact":
-        return vault[:4] + handbook[:1] + bulletin[:1]
+    if intent in ["transfer", "etm", "contact"]:
+        # Procedural questions — the handbooks carry ETM rules, petitions,
+        # substitution process, and department contacts; the bulletins don't.
+        return handbook[:4] + bulletin[:2]
 
     if intent == "gen_ed":
-        return handbook[:3] + bulletin[:3] + vault[:2]
+        return handbook[:3] + bulletin[:3]
 
     if intent == "deadline":
-        return vault[:3] + bulletin[:2] + handbook[:1]
+        return bulletin[:2] + handbook[:2]
 
     # general
-    return bulletin[:2] + handbook[:2] + vault[:3]
+    return bulletin[:2] + handbook[:3]
 
 
 def format_record_for_context(record, index):
@@ -317,10 +315,10 @@ def build_sources(records):
 def classify_major(major_name):
     """Classify the student's selected major by how ACE can ground answers for it.
 
-    Only CMPSC and DTSCE have content in the RAG index (handbooks, the PSU-CMPSC
-    vault, those two bulletins). Every other major is answered from the
-    structured programs.json data instead, so the CS/DS handbook records don't
-    leak into and skew answers for unrelated majors.
+    Only CMPSC and DTSCE have content in the RAG index (the two handbooks and
+    their bulletins). Every other major is answered from the structured
+    programs.json data instead, so the CS/DS handbook records don't leak into
+    and skew answers for unrelated majors.
 
     Returns:
         'cs'    — a Computer Science program (any campus) → RAG handbook applies
@@ -331,7 +329,10 @@ def classify_major(major_name):
     if not major_name:
         return None
     nl = major_name.lower()
-    if "computer science" in nl and "engineering" not in nl:
+    # NB: this must match "Computer Science, B.S. (Engineering)" — the UP program
+    # the CMPSC handbook and BULLETIN_URL actually document. An earlier
+    # `and "engineering" not in nl` guard excluded exactly that one program.
+    if "computer science" in nl:
         return "cs"
     if "data scien" in nl or "computational data" in nl:
         return "ds"

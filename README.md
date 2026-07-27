@@ -34,10 +34,10 @@ and get answers grounded in *your* actual progress.
 
 ## What it does
 
-ACE pairs **RAG** — retrieval over advising records, handbooks, and PSU bulletins — with **personalized
-analysis** of a student's uploaded academic documents. It covers all **749** Penn State majors via
-structured program data, with deeper support for the College of IST / Computer Science programs the
-engine was first built around.
+ACE answers from a structured dataset of all **749** Penn State programs and **9,439** courses,
+supplemented by **RAG** over the CMPSC/DTSCE advising handbooks, and combined with **personalized
+analysis** of a student's uploaded academic documents. Every major is covered; Computer Science and
+Data Sciences get the extra handbook grounding the engine was first built around.
 
 - 💬 **Grounded chat** — streaming answers with intent-aware retrieval
 - 📄 **Degree Audit upload** — parsed into credits, remaining requirements, and a suggested plan
@@ -75,7 +75,7 @@ non-obvious (a gotcha, a convention), add it to `CLAUDE.md` rather than to a cha
 | Gotcha | Why |
 |--------|-----|
 | Don't add a per-field `GET /user/major`-style endpoint | It races `/auth/sync` and breaks major selection — see [How auth works](#how-auth-works) |
-| `backend/data/ace_index.pkl` is **committed** | Rebuilding it costs OpenAI embedding calls and re-commits a large binary; only rebuild when vault/handbook/bulletin data actually changed |
+| `backend/data/ace_index.pkl` is **committed** | Rebuilding it costs OpenAI embedding calls and re-commits a large binary; only rebuild when handbook/bulletin data actually changed |
 | No Alembic migrations | A new non-nullable column needs a manual `ALTER TABLE` on prod Postgres |
 | Frontend is **plain CSS**, not Tailwind | `SparklesCore.jsx` was hand-ported for exactly this reason — don't pull in shadcn/Tailwind |
 | Never commit `.env`, the SQLite DB, or files under `backend/uploads/` | Real student documents; all gitignored |
@@ -84,32 +84,51 @@ non-obvious (a gotcha, a convention), add it to `CLAUDE.md` rather than to a cha
 
 ## Architecture
 
+ACE answers from **two** grounding paths, picked by the student's declared major:
+
 ```mermaid
 flowchart TD
-    A["ACE_vlt.xlsx<br/>curated advising records"] --> V
-    B["CMPSC / DTSCE<br/>handbook PDFs"] --> V
-    C["PSU bulletins<br/>scraped at index time"] --> V
-    V["vault_loader.py<br/><i>merge + chunk</i>"] --> I
-    I["index_service.py<br/>→ ace_index.pkl <i>(committed)</i>"] --> E
-    E["embedding_service.py<br/><i>cosine sim + keyword + course-code boosts</i>"] --> C2
-    C2["chat_service.py<br/>→ OpenAI gpt-4o-mini <i>(streaming SSE)</i>"] --> M
+    subgraph S["Structured data — all 749 programs"]
+      J["programs.json <i>(749)</i><br/>courses.json <i>(9,439)</i>"] --> PS["program_service.py<br/><i>requirements, plans, prereq map, gen-ed</i>"]
+    end
+    subgraph R["RAG — CMPSC / DTSCE only"]
+      B["CMPSC / DTSCE<br/>handbook PDFs"] --> V
+      C["PSU bulletins<br/>scraped at index time"] --> V
+      V["vault_loader.py<br/><i>chunk + merge</i>"] --> I
+      I["index_service.py<br/>→ ace_index.pkl <i>(committed)</i>"] --> E
+      E["embedding_service.py<br/><i>cosine sim + keyword + course-code boosts</i>"]
+    end
+    PS --> C2
+    E --> C2
     D["Student upload<br/><i>Degree Audit / What-If</i>"] --> P
     P["student_doc_service.py<br/>audit_parser_service.py"] --> C2
+    C2["chat_service.py<br/>→ OpenAI gpt-4o-mini <i>(streaming SSE)</i>"] --> M
     M["main.py <i>(FastAPI)</i>"] --> F["React frontend"]
 ```
 
 ### Knowledge base
 
-Three source types, merged by `vault_loader.py`, each weighted differently per question intent:
+**`programs.json` + `courses.json` are the backbone** — 749 programs (prescribed/additional
+requirements with min grades, semester-by-semester suggested plans, gen-ed overlap, bulletin URL)
+and 9,439 course records. They serve every major and back every tool.
 
-| `source_type`  | Origin                                       |
-|----------------|----------------------------------------------|
-| `excel_vault`  | `ACE_vlt.xlsx` — curated advising records    |
-| `pdf_handbook` | CMPSC / DTSCE handbook PDFs (chunked)        |
-| `web_bulletin` | PSU bulletin pages scraped at index time     |
+**The RAG index is a CMPSC/DTSCE-only supplement** — 73 records that exist because the handbooks
+carry procedural content the bulletins don't (Entrance-to-Major rules, petitions, substitution
+process, department contacts):
 
-The pre-built index (`backend/data/ace_index.pkl`) is committed so production deploys skip the
-cold-start embedding rebuild.
+| `source_type`  | Records | Origin                                       |
+|----------------|---------|----------------------------------------------|
+| `pdf_handbook` | 47      | CMPSC / DTSCE handbook PDFs (chunked)        |
+| `web_bulletin` | 26      | PSU bulletin pages scraped at index time     |
+
+`classify_major()` decides which path runs: `cs` / `ds` majors get RAG + structured, everyone else
+(and anyone with no major declared) gets structured only, so CS/DS handbook text can't leak into an
+unrelated major's answer. The pre-built index (`backend/data/ace_index.pkl`) is committed so
+production deploys skip the cold-start embedding rebuild.
+
+> [!NOTE]
+> An `excel_vault` source (`ACE_vlt.xlsx`) was retired in July 2026 — the sheet had no `Content`
+> column, so all 13 of its records were empty yet still occupied top context slots.
 
 ### Intent routing
 
@@ -151,8 +170,7 @@ backend/            FastAPI app
   eval/               retrieval/answer evaluation harness
 frontend/           React + Vite single-page app (the product)
 landing/            React + Vite waitlist / marketing site (acecollege.app)
-ACE_vlt.xlsx        Excel knowledge base
-*-handbook-*.pdf    CMPSC / DTSCE advising handbooks
+*-handbook-*.pdf    CMPSC / DTSCE advising handbooks (RAG source)
 requirements.txt    backend Python deps
 Procfile            Railway start command
 ```
@@ -227,8 +245,9 @@ python -m backend.services.calendar_scraper
 # Estimate OpenAI cost for N users / M messages
 python -m backend.scripts.estimate_cost --users 100 --msgs 20
 
-# Backend tests
-python -m pytest backend/test_rules.py -v
+# Backend self-checks (plain asserts / print scripts — no pytest)
+python -m backend.test_routing     # major classification + record selection
+python -m backend.test_rules       # dumps extracted requirement rules
 
 # Frontend
 cd frontend && npm run build      # production build

@@ -19,7 +19,6 @@ from backend.clerk_auth import (
     get_current_user_any,
     fetch_user_details,
 )
-from backend.services.vault_service import get_all_vault_records, search_vault
 from backend.services.chat_service import ask_advisor, ask_advisor_stream
 from backend.services.student_doc_service import (
     load_student_document,
@@ -94,22 +93,6 @@ class MajorRequest(BaseModel):
 @app.get("/")
 def root():
     return {"message": "PSU Academic Advisor Backend Running"}
-
-
-@app.get("/vault")
-def get_vault_records():
-    records = get_all_vault_records()
-    return {"total_records": len(records), "data": records}
-
-
-@app.get("/vault/search")
-def search_vault_records(
-    category: str = Query(default=None),
-    used_for: str = Query(default=None),
-    keyword: str = Query(default=None)
-):
-    results = search_vault(category=category, used_for=used_for, keyword=keyword)
-    return {"total_results": len(results), "data": results}
 
 
 @app.get("/chat")

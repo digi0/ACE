@@ -1,8 +1,6 @@
 import os
 
 # ── Data files ────────────────────────────────────────────
-VAULT_FILE    = "ACE_vlt.xlsx"
-SHEET_NAME    = "PSU CMPSC"
 INDEX_FILE    = "backend/data/ace_index.pkl"
 UPLOAD_DIR    = "backend/uploads"
 

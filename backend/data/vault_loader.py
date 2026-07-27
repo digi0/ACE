@@ -1,10 +1,7 @@
 import logging
 import os
 
-import pandas as pd
-
 from backend.config import (
-    VAULT_FILE, SHEET_NAME,
     HANDBOOK_FILE, HANDBOOK_SOURCE_NAME, HANDBOOK_SOURCE_LINK, BULLETIN_URL, BULLETIN_NAME,
     DS_HANDBOOK_FILE, DS_HANDBOOK_SOURCE_NAME, DS_HANDBOOK_SOURCE_LINK, DS_BULLETIN_URL, DS_BULLETIN_NAME,
 )
@@ -14,28 +11,13 @@ from backend.data.web_scraper import fetch_web_chunks
 logger = logging.getLogger(__name__)
 
 
-def normalize_excel_record(record, index):
-    return {
-        "record_id": f"excel_{index + 1}",
-        "source_type": "excel_vault",
-        "source_name": VAULT_FILE,
-        "Title": str(record.get("Title", "")).strip(),
-        "Category": str(record.get("Category", "")).strip(),
-        "Subcategory": str(record.get("Subcategory", "")).strip(),
-        "Used_for": str(record.get("Used_for", "")).strip(),
-        "Content": str(record.get("Content", "")).strip(),
-        "Source_link": str(record.get("Source_link", "")).strip(),
-    }
-
-
 def load_psu_cmpsc_vault():
-    # ── CMPSC Excel vault ──────────────────────────────────────────────
-    logger.info("Loading vault from %r (sheet=%r)", VAULT_FILE, SHEET_NAME)
-    df = pd.read_excel(VAULT_FILE, sheet_name=SHEET_NAME)
-    excel_records_raw = df.fillna("").to_dict(orient="records")
-    excel_records = [normalize_excel_record(r, i) for i, r in enumerate(excel_records_raw)]
-    logger.info("Loaded %d Excel vault records", len(excel_records))
+    """Build the CMPSC/DTSCE retrieval corpus: handbook chunks + bulletin chunks.
 
+    This corpus only covers Computer Science and Data Sciences. Every other
+    program is answered from the structured programs.json / courses.json data
+    in program_service.py — see classify_major() in chat_service.py.
+    """
     # ── CMPSC handbook ─────────────────────────────────────────────────
     logger.info("Loading CMPSC handbook from %r", HANDBOOK_FILE)
     handbook_records = load_handbook_chunks(
@@ -66,15 +48,14 @@ def load_psu_cmpsc_vault():
     # ── DTSCE bulletin ────────────────────────────────────────────────
     ds_bulletin_records = fetch_web_chunks(DS_BULLETIN_URL, DS_BULLETIN_NAME, source_type="web_bulletin")
 
-    # Priority: handbooks → bulletins → vault
+    # Priority: handbooks → bulletins
     all_records = (
         handbook_records + ds_handbook_records
         + bulletin_records + ds_bulletin_records
-        + excel_records
     )
     logger.info(
-        "Total records: %d (cmpsc_handbook=%d, ds_handbook=%d, cmpsc_bulletin=%d, ds_bulletin=%d, vault=%d)",
+        "Total records: %d (cmpsc_handbook=%d, ds_handbook=%d, cmpsc_bulletin=%d, ds_bulletin=%d)",
         len(all_records), len(handbook_records), len(ds_handbook_records),
-        len(bulletin_records), len(ds_bulletin_records), len(excel_records),
+        len(bulletin_records), len(ds_bulletin_records),
     )
     return all_records

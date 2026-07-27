@@ -23,11 +23,9 @@ python -c "from backend.services.index_service import build_index; build_index()
 # Refresh the PSU academic calendar JSON
 python -m backend.services.calendar_scraper
 
-# Quick test of vault loading
-python test_vault.py
-
-# Rule extraction tests
-python -m pytest backend/test_rules.py -v
+# Self-checks (plain asserts / print scripts — pytest is not installed)
+python -m backend.test_routing    # major classification + record selection
+python -m backend.test_rules      # dumps extracted requirement rules
 ```
 
 ### Frontend
@@ -65,7 +63,10 @@ VITE_API_URL=http://127.0.0.1:8000   # optional, defaults to this
 ### Data flow
 
 ```
-ACE_vlt.xlsx  +  CMPSC-handbook-*.pdf  +  PSU bulletins (scraped)
+programs.json (749) + courses.json (9,439)  ──►  program_service.py
+       │  structured path — every major, and every tool
+       │
+CMPSC-handbook-*.pdf  +  PSU bulletins (scraped)     RAG path — CMPSC/DTSCE only
        └──────── vault_loader.py ────────────────────┘
                         │
                index_service.py (builds ace_index.pkl with OpenAI embeddings)
@@ -77,17 +78,22 @@ ACE_vlt.xlsx  +  CMPSC-handbook-*.pdf  +  PSU bulletins (scraped)
                main.py (FastAPI) ──► React frontend
 ```
 
-### Knowledge base (three source types)
+### Knowledge base (two grounding paths)
 
-Records in the index carry a `source_type` field that drives retrieval weighting in `select_top_records()`:
+**Structured data is the backbone.** `backend/data/programs.json` (749 programs — prescribed/additional requirements with min grades, semester suggested plans, gen-ed overlap, bulletin URL) and `courses.json` (9,439 course records) are read by `program_service.py`. They serve every major and back every tool (prereq map, gen-ed explorer, suggested plan, dashboard).
 
-| `source_type`   | Origin                                   |
-|-----------------|------------------------------------------|
-| `excel_vault`   | `ACE_vlt.xlsx` (sheet: PSU CMPSC)        |
-| `pdf_handbook`  | CMPSC / DTSCE handbook PDFs (chunked)    |
-| `web_bulletin`  | PSU bulletin pages scraped at index time |
+**The RAG index is a CMPSC/DTSCE-only supplement** (73 records) — it exists for procedural content the structured data lacks: Entrance-to-Major rules, petitions, substitution process, department contacts. Records carry a `source_type` that drives weighting in `select_top_records()`:
 
-`vault_loader.py` merges all three sources. The pre-built index (`backend/data/ace_index.pkl`) is committed to avoid cold-start timeouts on Railway.
+| `source_type`   | Records | Origin                                   |
+|-----------------|---------|------------------------------------------|
+| `pdf_handbook`  | 47      | CMPSC / DTSCE handbook PDFs (chunked)    |
+| `web_bulletin`  | 26      | PSU bulletin pages scraped at index time |
+
+**Fixed alongside the retirement:** `classify_major()` used to read `if "computer science" in nl and "engineering" not in nl`, which excluded `Computer Science, B.S. (Engineering)` — the University Park program the CMPSC handbook and `BULLETIN_URL` actually document. That one major silently fell through to structured-only answers. The `engineering` exclusion is gone; don't re-add it.
+
+`classify_major()` gates which path runs — `cs`/`ds` get RAG + structured; every other major, and any student with no major declared, gets structured only (`suppress_cs_ds`), so CS/DS handbook text can't leak into an unrelated major's answer. The pre-built index (`backend/data/ace_index.pkl`) is committed to avoid cold-start timeouts on Railway.
+
+**Retired (July 2026):** an `excel_vault` source (`ACE_vlt.xlsx`, sheet "PSU CMPSC") plus `vault_service.py` and the `/vault` + `/vault/search` endpoints. The sheet had no `Content` column, so all 13 records embedded and retrieved as empty text while still occupying the top context slots for the `etm` / `transfer` / `contact` / `deadline` / `general` intents. `vault_service` also ran `load_psu_cmpsc_vault()` at import time, so every backend boot re-parsed the PDFs and re-scraped two PSU URLs. Don't reintroduce either pattern — put new advising knowledge in the structured JSON.
 
 ### Intent routing
 
@@ -136,7 +142,6 @@ Single-page React app (`frontend/src/`). State lives in `App.jsx`. Key patterns:
 
 ### Key config (`backend/config.py`)
 
-- `VAULT_FILE` — path to the Excel knowledge base
 - `INDEX_FILE` — path to the serialized embedding index (`backend/data/ace_index.pkl`)
 - `OPENAI_CHAT_MODEL` — `gpt-4o-mini`
 - `OPENAI_EMBEDDING_MODEL` — `text-embedding-3-small`
