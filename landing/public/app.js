@@ -43,7 +43,7 @@ ScrollTrigger.create({
     scrollTrigger: {
       trigger: ".hero",
       start: "top top",
-      end: "+=310%",
+      end: "+=380%",
       scrub: 1,
       pin: true,
       anticipatePin: 1,
@@ -102,29 +102,47 @@ ScrollTrigger.create({
      the screen already is. Both rects coincident and both still moving, so it
      reads as focus resolving rather than a swap. No flat colour card. */
   tl.fromTo("#plate", { autoAlpha: 0, scale: 0.94 },
-                      { autoAlpha: 1, scale: 1, ease: "power2.out", duration: 0.5 }, 2.35);
-  tl.to(".desk-stage", { autoAlpha: 0, duration: 0.3 }, 2.6);
+                      { autoAlpha: 1, scale: 1, ease: "power2.out", duration: 0.5 }, 2.3);
+  tl.to(".desk-stage", { autoAlpha: 0, duration: 0.3 }, 2.55);
+
+  /* The screen has to EARN the dive, so it plays a real exchange rather than
+     sitting empty: the student types, sends, and ACE answers with a plan. */
+  const thread = ["#pmsgMe", "#pmsgBot", "#pplan", "#pchips"];
+  gsap.set(thread, { autoAlpha: 0 });
 
   // the student asks — steps(), never a per-character chatbot typer
   const question = "Can I graduate by Spring 2027?";
   const typed = { n: 0 };
   tl.to(typed, {
-    n: question.length, ease: "steps(" + question.length + ")", duration: 0.6,
+    n: question.length, ease: "steps(" + question.length + ")", duration: 0.65,
     onUpdate() { document.getElementById("typedQuestion").textContent = question.slice(0, Math.round(typed.n)); },
-  }, 2.75);
-  tl.to("#plate", { autoAlpha: 0, duration: 0.35 }, 3.5);
+  }, 2.6);
+
+  // it sends: the input empties and the question becomes the first message
+  tl.add(() => { document.getElementById("typedQuestion").textContent = ""; }, 3.35);
+  tl.fromTo("#pmsgMe", { autoAlpha: 0, y: 10 },
+                       { autoAlpha: 1, y: 0, ease: "power2.out", duration: 0.3 }, 3.35);
+  // ACE answers, then the plan and the verdict land in sequence
+  tl.fromTo("#pmsgBot", { autoAlpha: 0, y: 12 },
+                        { autoAlpha: 1, y: 0, ease: "power2.out", duration: 0.4 }, 3.7);
+  tl.fromTo("#pplan",   { autoAlpha: 0, y: 8 },
+                        { autoAlpha: 1, y: 0, ease: "power2.out", duration: 0.35 }, 4.05);
+  tl.fromTo("#pchips",  { autoAlpha: 0, y: 6 },
+                        { autoAlpha: 1, y: 0, ease: "power2.out", duration: 0.3 }, 4.35);
+  tl.to({}, { duration: 0.55 }, 4.65);          // read it before we move on
+  tl.to("#plate", { autoAlpha: 0, duration: 0.4 }, 5.3);
 
   tl
     // Meet ACE — she settles up into frame
-    .to(".scene-meet", { autoAlpha: 1, duration: 0.6 }, 3.7)
+    .to(".scene-meet", { autoAlpha: 1, duration: 0.6 }, 5.55)
     .fromTo(".scene-meet .profile",
       { yPercent: 14, opacity: 0 },
-      { yPercent: 0, opacity: 1, ease: "power2.out", duration: 1.2 }, 3.7)
-    .fromTo(".meet-line", { yPercent: 30, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1 }, 4.2)
-    .to(".scene-meet", { autoAlpha: 0, duration: 0.5 }, 5.6)
+      { yPercent: 0, opacity: 1, ease: "power2.out", duration: 1.2 }, 5.55)
+    .fromTo(".meet-line", { yPercent: 30, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1 }, 6.05)
+    .to(".scene-meet", { autoAlpha: 0, duration: 0.5 }, 7.4)
 
-    .to(".scene-tagline", { autoAlpha: 1, duration: 0.5 }, 5.9)
-    .fromTo(".scene-tagline h2", { scale: 0.9 }, { scale: 1, duration: 1.2 }, 5.9)
+    .to(".scene-tagline", { autoAlpha: 1, duration: 0.5 }, 7.7)
+    .fromTo(".scene-tagline h2", { scale: 0.9 }, { scale: 1, duration: 1.2 }, 7.7)
     .to({}, { duration: 0.6 }); // hold before unpin
 
   /* Embedded panes sometimes lay the page out at 0x0 and stall the rAF ticker,

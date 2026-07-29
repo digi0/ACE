@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Caveat:wght@500;600;700&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <!-- bump ?v= when editing so browsers don't serve a stale cached copy -->
-  <link rel="stylesheet" href="/styles.css?v=24">
+  <link rel="stylesheet" href="/styles.css?v=25">
 </head>
 <body>
 
@@ -161,6 +161,20 @@
           <span class="plate-item">Planner</span>
         </aside>
         <div class="plate-main">
+          <div class="plate-thread">
+            <div class="pmsg me" id="pmsgMe">Can I graduate by Spring 2027?</div>
+            <div class="pmsg bot" id="pmsgBot">
+              <p class="pmsg-lead">Yes — 24 credits left. Twelve this fall, twelve in spring.</p>
+              <p class="pmsg-note">One catch: <b>MATH 230</b> gates two of your spring courses, so take it first.</p>
+              <div class="pplan" id="pplan">
+                <div class="pplan-row"><span>Fall 2026</span><b>MATH 230 · CMPSC 221 · Gen-ed</b></div>
+                <div class="pplan-row"><span>Spring 2027</span><b>CMPSC 360 · CMPSC 431 · Gen-ed</b></div>
+              </div>
+              <div class="pchips" id="pchips">
+                <i>24 credits left</i><i>prereq cleared</i><i class="ok">on track ✓</i>
+              </div>
+            </div>
+          </div>
           <div class="plate-input"><span id="typedQuestion"></span><span class="plate-caret"></span></div>
         </div>
       </div>
@@ -479,6 +493,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="/app.js?v=24"></script>
+<script src="/app.js?v=25"></script>
 </body>
 </html>
