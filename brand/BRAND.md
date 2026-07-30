@@ -9,7 +9,7 @@ session's work.
 ## 1. The mark — LOCKED
 
 A geometric single-story lowercase **a**, leaning, followed by an oversized
-**orange period** on the baseline.
+**emerald period** on the baseline.
 
 **The a leans −11°. The box and the period never tilt. The spelled-out wordmark
 never tilts.** (The letter leans when it's alone; the word stands together.)
@@ -21,7 +21,7 @@ never tilts.** (The letter leans when it's alone; the word stands together.)
 | Lean | `rotate(-11 5 12)` — applied to bowl + stem only |
 | Period | `circle cx=82 cy=38 r=18` (0.58R), bottom on baseline `y=56` |
 | Ink | `#0A0A0A` — never pure black |
-| Period | `#FF5A1F` — identical in light and dark |
+| Period | `#00875A` — identical in light and dark |
 | Paper | `#F6F6F6` |
 | Clearspace | one bowl-radius (R) all sides |
 | Minimum | 24px — below that use the favicon cut (dot grows to 0.7R = r22, cy34) |
@@ -62,8 +62,8 @@ Tokens live in **`brand/tokens.css`** — import it, don't retype the values.
 
 The rules that make it work:
 
-- **Orange appears once per view, and it is always the period.** Send button, due
-  date, destination, done. A second orange element in a view means one is wrong.
+- **The emerald appears once per view, and it is always the period.** Send button,
+  due date, destination, done. A second emerald element in a view means one is wrong.
   This is enforceable in review and impossible to copy without copying the whole
   philosophy.
 - **Cards sit lighter than the page** (`#FFFFFF` on `#F6F6F6`) — never raised by
@@ -79,15 +79,15 @@ The rules that make it work:
 
 ### Voice
 Lowercase. Short sentences. No exclamation marks — confidence doesn't shout.
-The orange period lands on the line that *resolves* the stress; grey periods carry
-the rest. One orange period per screen.
+The emerald period lands on the line that *resolves* the stress; grey periods carry
+the rest. One emerald period per screen.
 
 > college, sorted. · your 2am question. answered. · failed it? rerouted. ·
 > 12 credits left. you're fine. · 0 warnings.
 
-### Illustration — grey = possible · ink = yours · orange = the point
+### Illustration — grey = possible · ink = yours · emerald = the point
 Ghost grey draws every path the catalog allows; ink draws the student's actual route;
-the orange dot marks the destination.
+the emerald dot marks the destination.
 
 **The law, learned the hard way:** *lines run centre-to-centre and nodes sit on top —
 the route is never broken. Style may not disconnect what the feature connects.* An
@@ -119,7 +119,7 @@ Commit `3916de6` replaced the grad-cap across the product:
   were invisible
 - `landing/` — nav + footer take the naked mark; the two glyphs inside the
   illustrated app mockups sit at 8–12px (below the 24px minimum) so they became
-  miniature ink tiles. Brand name blue→ink so it stops fighting the orange dot.
+  miniature ink tiles. Brand name blue→ink so it stops fighting the accent dot.
 
 **Gotcha:** `landing/index.html` links `/styles.css?v=N` — a query-string
 cache-buster. **Bump N on every landing CSS edit** or open browsers keep the stale
@@ -136,12 +136,12 @@ Nothing below has been started.
 1. **Landing (`landing/`)** is still the old brand — blue/amber/purple, Bricolage
    Grotesque, the desk-scene hero. The new mark now sits inside it, which is a
    deliberate but temporary mismatch. Port it to Zero Chroma: swap the palette for
-   `tokens.css`, drop the coloured accents to greys, let the orange survive only as
+   `tokens.css`, drop the coloured accents to greys, let the emerald survive only as
    the period, and rebuild the hero around the oversized `ace.` wordmark.
 2. **Product UI (`frontend/src/`)** — `index.css` is ~3200 lines with a `#2563eb`
    blue accent throughout, plus `App.css` and `responsive.css`. Migration path:
    import `tokens.css`, then replace the blue accent role by role, auditing each
-   against the one-orange-per-view law (the chat send button is the canonical
+   against the one-accent-per-view law (the chat send button is the canonical
    period; most other blue is *not* an accent role and should become ink or grey).
    Preserve the desktop-isolation contract in `responsive.css` (@768px).
 3. **The illustration system** — build the route/pile/doors/week pieces as real

@@ -7,7 +7,7 @@
 <style>
   :root{
     --g0:#F6F6F6; --card:#FFFFFF; --g2:#E4E4E4; --g3:#B2B2B2; --g4:#666666; --ink:#0A0A0A;
-    --orange:#FF5A1F;
+    --period:#00875A;
     --mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,monospace;
     --sans:-apple-system,'Helvetica Neue',system-ui,sans-serif;
     --ease:cubic-bezier(.165,.84,.44,1);
@@ -44,7 +44,7 @@
   .chip{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;border:1px solid var(--ink);padding:6px 10px}
   .inputrow{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--g2);padding:10px 14px;margin-top:22px}
   .inputrow span{font-size:14px;color:var(--g3)}
-  .send{width:22px;height:22px;background:var(--orange);border-radius:50%}
+  .send{width:22px;height:22px;background:var(--period);border-radius:50%}
   .chatR{padding:26px 28px;background:var(--card)}
   .statrow{display:flex;justify-content:space-between;border-bottom:1px solid var(--g2);padding:11px 0;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em}
   .statrow b{font-weight:700}
@@ -84,17 +84,17 @@
   <!-- loud-period a. : R11-02 -->
   <g id="LA"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
     <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/></g>
-  <g id="LAdot"><use href="#LA"/><circle cx="82" cy="38" r="18" fill="var(--orange)"/></g>
+  <g id="LAdot"><use href="#LA"/><circle cx="82" cy="38" r="18" fill="var(--period)"/></g>
   <mask id="zc"><rect x="-50" y="-50" width="110" height="120" fill="white"/><path d="M0 12 L60 -12 L60 36 Z" fill="black"/></mask>
   <g id="LC"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22" mask="url(#zc)"/></g>
   <mask id="ze"><rect x="-50" y="-50" width="110" height="120" fill="white"/><path d="M0 12 L60 34 L34 66 Z" fill="black"/></mask>
   <g id="LE"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22" mask="url(#ze)"/>
     <rect x="-30" y="2" width="60" height="20" rx="10" fill="currentColor"/></g>
   <g id="LWORD"><use href="#LA"/><g transform="translate(112,0)"><use href="#LC"/></g>
-    <g transform="translate(214,0)"><use href="#LE"/></g><circle cx="298" cy="36" r="18" fill="var(--orange)"/></g>
+    <g transform="translate(214,0)"><use href="#LE"/></g><circle cx="298" cy="36" r="18" fill="var(--period)"/></g>
 </defs></svg>
 
-<!-- NAV : no orange here — the hero owns this view's period -->
+<!-- NAV : no accent here — the hero owns this view's period -->
 <nav>
   <svg viewBox="-40 -42 104 104" width="30" style="color:var(--ink)"><use href="#LA"/></svg>
   <div class="links"><span>MAJORS 749</span><span>COURSES 9439</span><span>TOOLS 07</span><span>SIGN IN</span></div>
@@ -136,7 +136,7 @@
 <div class="secgap"></div>
 
 <!-- DASHBOARD PREVIEW -->
-<div class="sechead"><h2>your degree, live<span style="color:var(--orange)">.</span></h2><span class="label">LIVE SYSTEM · DASHBOARD</span></div>
+<div class="sechead"><h2>your degree, live<span style="color:var(--period)">.</span></h2><span class="label">LIVE SYSTEM · DASHBOARD</span></div>
 <section class="card dash">
   <div class="dcell">
     <span class="label">CREDITS</span>
@@ -197,8 +197,8 @@
     <g stroke="#0A0A0A" stroke-width="3" fill="none">
       <path d="M76 143 L230 183"/><path d="M256 183 L410 143"/><path d="M436 143 L590 163"/><path d="M616 163 L770 163"/>
     </g>
-    <!-- the destination: this view's single orange -->
-    <circle cx="788" cy="163" r="18" fill="#FF5A1F"/>
+    <!-- the destination: this view's single accent -->
+    <circle cx="788" cy="163" r="18" fill="#00875A"/>
     <g font-family="ui-monospace,Menlo,monospace" font-size="10" letter-spacing="1" fill="#666666">
       <text x="44" y="180">MATH 140</text><text x="222" y="220">MATH 230</text><text x="398" y="120">CMPSC 311</text><text x="576" y="140">CMPSC 465</text><text x="762" y="204">YOU, HIRED</text>
     </g>
@@ -216,7 +216,7 @@
 <section class="card stats">
   <div class="scell"><div class="snum">749</div><div class="slabel">MAJORS COVERED · EVERY ONE</div></div>
   <div class="scell"><div class="snum">9439</div><div class="slabel">COURSES IN THE GRAPH</div></div>
-  <div class="scell"><div class="snum">0246</div><div class="slabel">AM · STILL ANSWERING<span style="color:var(--orange)">.</span></div></div>
+  <div class="scell"><div class="snum">0246</div><div class="slabel">AM · STILL ANSWERING<span style="color:var(--period)">.</span></div></div>
 </section>
 
 <div class="secgap"></div>

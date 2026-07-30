@@ -8,5 +8,5 @@
   <path d="M 123.93 -11.75 A 31 31 0 1 0 123.93 35.75" fill="none" stroke="#F6F6F6" stroke-width="22" stroke-linecap="round"/>
   <path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#F6F6F6" stroke-width="22" stroke-linecap="round"/>
   <rect x="150.93" y="1" width="72" height="22" rx="11" fill="#F6F6F6"/>
-  <circle cx="248.93" cy="38" r="18" fill="#FF5A1F"/>
+  <circle cx="248.93" cy="38" r="18" fill="#00875A"/>
 </svg>

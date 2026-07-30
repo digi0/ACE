@@ -11,6 +11,7 @@ import AccessGate from "./AccessGate.jsx";
 import { apiFetch, apiStream } from "./api.js";
 import { useIsMobile } from "./useIsMobile.js";
 import MobileBottomNav from "./MobileBottomNav.jsx";
+import { viewLabel } from "./nav.js";
 
 // Lazy-loaded views — each becomes its own chunk fetched on first use, so the
 // initial load stays lean. LoginPage pulls in the ~226 kB tsparticles sparkles,
@@ -42,7 +43,7 @@ function AceMark({ size = 16, ink = "#F6F6F6" }) {
         <circle cx="0" cy="12" r="31" fill="none" stroke={ink} strokeWidth="22" />
         <rect x="30" y="-32" width="22" height="88" rx="11" fill={ink} />
       </g>
-      <circle cx="82" cy="38" r="18" fill="#FF5A1F" />
+      <circle cx="82" cy="38" r="18" fill="#00875A" />
     </svg>
   );
 }
@@ -327,28 +328,12 @@ function App() {
   const [selectedMajor, setSelectedMajor] = useState(null);
   const [showMajorModal, setShowMajorModal] = useState(false);
 
-  const [headerText, setHeaderText] = useState('');
   const fileInputRef = useRef(null);
   const chatInputRef = useRef(null);
 
   const messagesEndRef = useRef(null);
   const hasMessages = messages.length > 0;
   const isMobile = useIsMobile();
-
-  // Typewriter for top-bar title on mount
-  useEffect(() => {
-    const full = ' | Academic Counseling Engine';
-    let i = 0;
-    const start = setTimeout(() => {
-      const iv = setInterval(() => {
-        i++;
-        setHeaderText(full.slice(0, i));
-        if (i >= full.length) clearInterval(iv);
-      }, 45);
-      return () => clearInterval(iv);
-    }, 700);
-    return () => clearTimeout(start);
-  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -685,6 +670,7 @@ function App() {
         onNewConversation={handleNewConversation}
         onStartTour={() => setShowTour(true)}
         onNavigate={navigate}
+        activeView={activeView}
       />
 
       {sidebarCollapsed && (
@@ -711,6 +697,10 @@ function App() {
       {/* ── Main panel ──────────────────────── */}
       <div className="main-panel">
 
+        {/* The top bar names where you are; the sidebar is the only thing that
+            moves you. It used to carry a second tab strip that could only
+            represent four of the eleven views, so it sat blank or stale
+            whenever a tool was open. */}
         <header className="top-bar">
           <div className="top-bar-brand">
             <button
@@ -722,35 +712,8 @@ function App() {
             </button>
             <AceLogo size={30} />
             <span className="top-bar-name">ACE</span>
-            <span className="top-bar-subtitle">{headerText}</span>
+            <span className="top-bar-view" aria-live="polite">{viewLabel(activeView)}</span>
           </div>
-          <nav className="top-bar-nav">
-            <button
-              className={`top-bar-tab${activeView === "chat" ? " top-bar-tab--active" : ""}`}
-              onClick={() => setActiveView("chat")}
-            >
-              Chat
-            </button>
-            <button
-              data-tour="dashboard-tab"
-              className={`top-bar-tab${activeView === "dashboard" ? " top-bar-tab--active" : ""}`}
-              onClick={() => setActiveView("dashboard")}
-            >
-              Dashboard
-            </button>
-            <button
-              className={`top-bar-tab${activeView === "resources" ? " top-bar-tab--active" : ""}`}
-              onClick={() => setActiveView("resources")}
-            >
-              Resources
-            </button>
-            <button
-              className={`top-bar-tab${activeView === "gened" ? " top-bar-tab--active" : ""}`}
-              onClick={() => setActiveView("gened")}
-            >
-              Gen Ed
-            </button>
-          </nav>
         </header>
 
         {/* Hidden file input reused by dashboard empty state */}

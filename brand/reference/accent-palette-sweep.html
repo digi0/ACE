@@ -1,0 +1,311 @@
+<!doctype html><html><head><meta charset="utf-8"><title>palette sweep</title><style>
+*{box-sizing:border-box;margin:0}
+body{background:#F6F6F6;color:#0A0A0A;font-family:-apple-system,'Helvetica Neue',system-ui;padding:28px}
+.mono,.hx,.bg,h2,.lab,.mini,.vd,.role{font-family:ui-monospace,'SF Mono',Menlo,monospace}
+.head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #0A0A0A;padding-bottom:10px}
+.sub{font-size:9.5px;letter-spacing:.1em;color:#666;line-height:1.95;margin:12px 0 16px;font-family:ui-monospace,Menlo,monospace}
+h2{font-size:11px;letter-spacing:.16em;margin:30px 0 10px}
+.grid{border:1px solid #E4E4E4;background:#fff}
+.prow{display:grid;grid-template-columns:190px repeat(5,1fr);border-bottom:1px solid #E4E4E4}
+.prow:last-child{border-bottom:none}
+.pname{padding:14px;border-right:1px solid #E4E4E4;display:flex;flex-direction:column;justify-content:center;gap:5px}
+.pname b{font-size:11.5px;letter-spacing:.04em}
+.role{font-size:8.5px;letter-spacing:.06em;color:#666;line-height:1.4}
+.sw{padding:12px 10px;border-right:1px solid #E4E4E4;display:flex;flex-direction:column;gap:4px}
+.sw:last-child{border-right:none}.swd{opacity:.42}
+.chip{height:30px;border:1px solid rgba(0,0,0,.1)}
+.sw b{font-size:9px}.hx{font-size:8.5px;color:#666;letter-spacing:.06em}
+.mini{font-size:8.5px;color:#0A0A0A;letter-spacing:.04em}
+.vd{font-size:7.5px;letter-spacing:.1em;color:#0A0A0A}
+.pair{display:grid;grid-template-columns:1fr 1fr 236px;border:1px solid #E4E4E4;margin-bottom:11px;background:#fff}
+.side{padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.lt{border-right:1px solid #E4E4E4}.dkk{background:#0E0E0D}
+.meta{border-left:1px solid #E4E4E4;gap:6px;justify-content:center}
+.meta b{font-size:12px}.meta p{font-size:10.5px;line-height:1.45;color:#666;margin-top:3px}
+.bg{font-size:8.5px;letter-spacing:.07em;padding:3px 6px;border:1px solid #0A0A0A;align-self:flex-start}
+.inp{display:flex;justify-content:space-between;align-items:center;border:1px solid #E4E4E4;padding:7px 11px;width:224px}
+.inp.d{border-color:rgba(244,239,228,.18)}.inp span{font-size:11.5px;color:#B2B2B2}
+.inp i{width:16px;height:16px;border-radius:50%}
+.sys{display:grid;grid-template-columns:1fr 240px 300px;border:1px solid #E4E4E4;margin-bottom:12px;padding:22px 24px;gap:22px}
+.syscol{display:flex;flex-direction:column;gap:13px;justify-content:center}
+.card{border:1px solid;padding:14px 16px;display:flex;flex-direction:column;gap:7px}
+.lab{font-size:8.5px;letter-spacing:.14em}
+.big{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1;font-family:ui-monospace,Menlo,monospace}
+.big small{font-size:15px;font-weight:400}
+.bar{height:8px;position:relative}.bar i{position:absolute;left:0;top:0;bottom:0}
+.ramp{display:flex;height:20px}.ramp span{flex:1}
+.meta2{gap:7px}.meta2 b{font-size:12px}.meta2 p{font-size:10.5px;line-height:1.45}
+svg{display:block}
+</style></head><body>
+<div class="head"><span style="font-size:20px;font-weight:600">eight palettes, swept<span style="color:#328282">.</span></span>
+<span class="mono" style="font-size:10px;letter-spacing:.14em;color:#666">40 VALUES · SAME BOTH-MODES TEST</span></div>
+<p class="sub">EACH CELL SHOWS ITS CONTRAST AS LIGHT / DARK. A STEP IS ACCENT-USABLE ONLY IF BOTH CLEAR 3.0 — FADED CELLS FAIL.<br>
+THE PATTERN IS CONSISTENT: STEPS 1–2 DIE ON DARK, STEP 5 USUALLY DIES ON LIGHT. THE MIDDLE OF EVERY RAMP IS WHERE THE ACCENT LIVES.</p>
+<h2>1 — ALL FORTY VALUES</h2>
+<div class="grid"><div class="prow"><div class="pname"><b>FOREST MONO</b><span class="role">2 usable accent step(s)</span></div><div class="sw swd">
+        <span class="chip" style="background:#1a2f1a"></span>
+        <b>1</b><span class="hx">#1a2f1a</span>
+        <span class="mini">13.3 / 1.3</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#2d4a2d"></span>
+        <b>2</b><span class="hx">#2d4a2d</span>
+        <span class="mini">9.1 / 2.0</span>
+        <span class="vd">&nbsp;</span></div><div class="sw">
+        <span class="chip" style="background:#3f6b3f"></span>
+        <b>3</b><span class="hx">#3f6b3f</span>
+        <span class="mini">5.7 / 3.1</span>
+        <span class="vd">ACCENT OK</span></div><div class="sw">
+        <span class="chip" style="background:#5a8f5a"></span>
+        <b>4</b><span class="hx">#5a8f5a</span>
+        <span class="mini">3.5 / 5.1</span>
+        <span class="vd">ACCENT OK</span></div><div class="sw swd">
+        <span class="chip" style="background:#7ab67a"></span>
+        <b>5</b><span class="hx">#7ab67a</span>
+        <span class="mini">2.2 / 8.1</span>
+        <span class="vd">&nbsp;</span></div></div><div class="prow"><div class="pname"><b>RUST MONO</b><span class="role">2 usable accent step(s)</span></div><div class="sw swd">
+        <span class="chip" style="background:#4a1a0a"></span>
+        <b>1</b><span class="hx">#4a1a0a</span>
+        <span class="mini">13.5 / 1.3</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#7a2d14"></span>
+        <b>2</b><span class="hx">#7a2d14</span>
+        <span class="mini">8.8 / 2.0</span>
+        <span class="vd">&nbsp;</span></div><div class="sw">
+        <span class="chip" style="background:#aa4020"></span>
+        <b>3</b><span class="hx">#aa4020</span>
+        <span class="mini">5.6 / 3.2</span>
+        <span class="vd">ACCENT OK</span></div><div class="sw">
+        <span class="chip" style="background:#da5430"></span>
+        <b>4</b><span class="hx">#da5430</span>
+        <span class="mini">3.7 / 4.9</span>
+        <span class="vd">ACCENT OK</span></div><div class="sw swd">
+        <span class="chip" style="background:#ea7850"></span>
+        <b>5</b><span class="hx">#ea7850</span>
+        <span class="mini">2.7 / 6.7</span>
+        <span class="vd">&nbsp;</span></div></div><div class="prow"><div class="pname"><b>OLIVE MONO</b><span class="role">2 usable accent step(s)</span></div><div class="sw swd">
+        <span class="chip" style="background:#2a2e1a"></span>
+        <b>1</b><span class="hx">#2a2e1a</span>
+        <span class="mini">12.9 / 1.4</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#3f452a"></span>
+        <b>2</b><span class="hx">#3f452a</span>
+        <span class="mini">9.3 / 1.9</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#545c3a"></span>
+        <b>3</b><span class="hx">#545c3a</span>
+        <span class="mini">6.5 / 2.7</span>
+        <span class="vd">&nbsp;</span></div><div class="sw">
+        <span class="chip" style="background:#69734a"></span>
+        <b>4</b><span class="hx">#69734a</span>
+        <span class="mini">4.7 / 3.8</span>
+        <span class="vd">ACCENT OK</span></div><div class="sw">
+        <span class="chip" style="background:#7e8a5a"></span>
+        <b>5</b><span class="hx">#7e8a5a</span>
+        <span class="mini">3.4 / 5.2</span>
+        <span class="vd">ACCENT OK</span></div></div><div class="prow"><div class="pname"><b>INDIGO MONO</b><span class="role">2 usable accent step(s)</span></div><div class="sw swd">
+        <span class="chip" style="background:#1a1a4a"></span>
+        <b>1</b><span class="hx">#1a1a4a</span>
+        <span class="mini">15.1 / 1.2</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#2e2e6b"></span>
+        <b>2</b><span class="hx">#2e2e6b</span>
+        <span class="mini">11.3 / 1.6</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#42428c"></span>
+        <b>3</b><span class="hx">#42428c</span>
+        <span class="mini">8.1 / 2.2</span>
+        <span class="vd">&nbsp;</span></div><div class="sw">
+        <span class="chip" style="background:#5656ad"></span>
+        <b>4</b><span class="hx">#5656ad</span>
+        <span class="mini">5.8 / 3.1</span>
+        <span class="vd">ACCENT OK</span></div><div class="sw">
+        <span class="chip" style="background:#6a6ace"></span>
+        <b>5</b><span class="hx">#6a6ace</span>
+        <span class="mini">4.3 / 4.2</span>
+        <span class="vd">ACCENT OK</span></div></div><div class="prow"><div class="pname"><b>TEAL MONO</b><span class="role">2 usable accent step(s)</span></div><div class="sw swd">
+        <span class="chip" style="background:#0a2a2a"></span>
+        <b>1</b><span class="hx">#0a2a2a</span>
+        <span class="mini">14.1 / 1.3</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#144040"></span>
+        <b>2</b><span class="hx">#144040</span>
+        <span class="mini">10.6 / 1.7</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#1e5656"></span>
+        <b>3</b><span class="hx">#1e5656</span>
+        <span class="mini">7.7 / 2.3</span>
+        <span class="vd">&nbsp;</span></div><div class="sw">
+        <span class="chip" style="background:#286c6c"></span>
+        <b>4</b><span class="hx">#286c6c</span>
+        <span class="mini">5.6 / 3.2</span>
+        <span class="vd">ACCENT OK</span></div><div class="sw">
+        <span class="chip" style="background:#328282"></span>
+        <b>5</b><span class="hx">#328282</span>
+        <span class="mini">4.2 / 4.3</span>
+        <span class="vd">ACCENT OK</span></div></div><div class="prow"><div class="pname"><b>CHAMOMILE</b><span class="role">PAPER FAMILY — no step can be the accent</span></div><div class="sw swd">
+        <span class="chip" style="background:#fdfcf0"></span>
+        <b>1</b><span class="hx">#fdfcf0</span>
+        <span class="mini">1.0 / 18.7</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#faf8e0"></span>
+        <b>2</b><span class="hx">#faf8e0</span>
+        <span class="mini">1.0 / 18.0</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#f7f4d0"></span>
+        <b>3</b><span class="hx">#f7f4d0</span>
+        <span class="mini">1.0 / 17.3</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#f4f0c0"></span>
+        <b>4</b><span class="hx">#f4f0c0</span>
+        <span class="mini">1.1 / 16.6</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#f1ecb0"></span>
+        <b>5</b><span class="hx">#f1ecb0</span>
+        <span class="mini">1.1 / 16.0</span>
+        <span class="vd">&nbsp;</span></div></div><div class="prow"><div class="pname"><b>EASY APPLY</b><span class="role">1 usable accent step(s)</span></div><div class="sw swd">
+        <span class="chip" style="background:#1a365d"></span>
+        <b>1</b><span class="hx">#1a365d</span>
+        <span class="mini">11.2 / 1.6</span>
+        <span class="vd">&nbsp;</span></div><div class="sw">
+        <span class="chip" style="background:#2b6cb0"></span>
+        <b>2</b><span class="hx">#2b6cb0</span>
+        <span class="mini">5.0 / 3.6</span>
+        <span class="vd">ACCENT OK</span></div><div class="sw swd">
+        <span class="chip" style="background:#4299e1"></span>
+        <b>3</b><span class="hx">#4299e1</span>
+        <span class="mini">2.8 / 6.3</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#bee3f8"></span>
+        <b>4</b><span class="hx">#bee3f8</span>
+        <span class="mini">1.3 / 14.3</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#ebf8ff"></span>
+        <b>5</b><span class="hx">#ebf8ff</span>
+        <span class="mini">1.0 / 17.8</span>
+        <span class="vd">&nbsp;</span></div></div><div class="prow"><div class="pname"><b>PANTANAL</b><span class="role">2 usable accent step(s)</span></div><div class="sw swd">
+        <span class="chip" style="background:#1a2e1a"></span>
+        <b>1</b><span class="hx">#1a2e1a</span>
+        <span class="mini">13.4 / 1.3</span>
+        <span class="vd">&nbsp;</span></div><div class="sw swd">
+        <span class="chip" style="background:#2e4a2e"></span>
+        <b>2</b><span class="hx">#2e4a2e</span>
+        <span class="mini">9.1 / 2.0</span>
+        <span class="vd">&nbsp;</span></div><div class="sw">
+        <span class="chip" style="background:#4a6b4a"></span>
+        <b>3</b><span class="hx">#4a6b4a</span>
+        <span class="mini">5.6 / 3.2</span>
+        <span class="vd">ACCENT OK</span></div><div class="sw">
+        <span class="chip" style="background:#6b8b6b"></span>
+        <b>4</b><span class="hx">#6b8b6b</span>
+        <span class="mini">3.5 / 5.1</span>
+        <span class="vd">ACCENT OK</span></div><div class="sw swd">
+        <span class="chip" style="background:#8bb88b"></span>
+        <b>5</b><span class="hx">#8bb88b</span>
+        <span class="mini">2.1 / 8.6</span>
+        <span class="vd">&nbsp;</span></div></div></div>
+<h2>2 — BEST NEW ACCENTS, DROPPED INTO ZERO CHROMA UNCHANGED</h2>
+<div class="pair">
+<div class="side lt"><svg viewBox="-46 -44 328 104" width="172"><circle cx="0" cy="12" r="31" fill="none" stroke="#0A0A0A" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="#0A0A0A"/><path d="M 123.92 -11.75 A 31 31 0 1 0 123.92 35.75" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/><rect x="150.93" y="1" width="72" height="22" rx="11" fill="#0A0A0A"/><circle cx="248.93" cy="38" r="18" fill="#da5430"/></svg>
+<div class="inp"><span>ask anything</span><i style="background:#da5430"></i></div>
+<svg viewBox="0 0 196 100" width="158"><g stroke="#E4E4E4" stroke-width="2" fill="none"><path d="M14 16 L74 30 L134 16"/><path d="M14 72 L74 86 L134 72"/></g><g fill="#E4E4E4"><rect x="8" y="10" width="12" height="12"/><rect x="68" y="24" width="12" height="12"/><rect x="128" y="10" width="12" height="12"/><rect x="8" y="66" width="12" height="12"/><rect x="68" y="80" width="12" height="12"/></g><path d="M14 44 L74 58 L134 48 L176 48" stroke="#0A0A0A" stroke-width="3" fill="none"/><g fill="#0A0A0A"><rect x="8" y="38" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><rect x="128" y="42" width="12" height="12"/></g><circle cx="180" cy="48" r="9" fill="#da5430"/></svg></div>
+<div class="side dkk"><svg viewBox="-46 -44 328 104" width="172"><circle cx="0" cy="12" r="31" fill="none" stroke="#F6F6F6" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="#F6F6F6"/><path d="M 123.92 -11.75 A 31 31 0 1 0 123.92 35.75" fill="none" stroke="#F6F6F6" stroke-width="22" stroke-linecap="round"/><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#F6F6F6" stroke-width="22" stroke-linecap="round"/><rect x="150.93" y="1" width="72" height="22" rx="11" fill="#F6F6F6"/><circle cx="248.93" cy="38" r="18" fill="#da5430"/></svg>
+<div class="inp d"><span>ask anything</span><i style="background:#da5430"></i></div>
+<svg viewBox="0 0 196 100" width="158"><g stroke="#2C2B28" stroke-width="2" fill="none"><path d="M14 16 L74 30 L134 16"/><path d="M14 72 L74 86 L134 72"/></g><g fill="#2C2B28"><rect x="8" y="10" width="12" height="12"/><rect x="68" y="24" width="12" height="12"/><rect x="128" y="10" width="12" height="12"/><rect x="8" y="66" width="12" height="12"/><rect x="68" y="80" width="12" height="12"/></g><path d="M14 44 L74 58 L134 48 L176 48" stroke="#F6F6F6" stroke-width="3" fill="none"/><g fill="#F6F6F6"><rect x="8" y="38" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><rect x="128" y="42" width="12" height="12"/></g><circle cx="180" cy="48" r="9" fill="#da5430"/></svg></div>
+<div class="side meta"><b>RUST 4</b><span class="hx">#da5430</span>
+<span class="bg">LIGHT 3.67</span><span class="bg">DARK 4.87</span><p>the tamed orange — closest to what we shipped, so nothing else changes</p></div></div><div class="pair">
+<div class="side lt"><svg viewBox="-46 -44 328 104" width="172"><circle cx="0" cy="12" r="31" fill="none" stroke="#0A0A0A" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="#0A0A0A"/><path d="M 123.92 -11.75 A 31 31 0 1 0 123.92 35.75" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/><rect x="150.93" y="1" width="72" height="22" rx="11" fill="#0A0A0A"/><circle cx="248.93" cy="38" r="18" fill="#328282"/></svg>
+<div class="inp"><span>ask anything</span><i style="background:#328282"></i></div>
+<svg viewBox="0 0 196 100" width="158"><g stroke="#E4E4E4" stroke-width="2" fill="none"><path d="M14 16 L74 30 L134 16"/><path d="M14 72 L74 86 L134 72"/></g><g fill="#E4E4E4"><rect x="8" y="10" width="12" height="12"/><rect x="68" y="24" width="12" height="12"/><rect x="128" y="10" width="12" height="12"/><rect x="8" y="66" width="12" height="12"/><rect x="68" y="80" width="12" height="12"/></g><path d="M14 44 L74 58 L134 48 L176 48" stroke="#0A0A0A" stroke-width="3" fill="none"/><g fill="#0A0A0A"><rect x="8" y="38" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><rect x="128" y="42" width="12" height="12"/></g><circle cx="180" cy="48" r="9" fill="#328282"/></svg></div>
+<div class="side dkk"><svg viewBox="-46 -44 328 104" width="172"><circle cx="0" cy="12" r="31" fill="none" stroke="#F6F6F6" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="#F6F6F6"/><path d="M 123.92 -11.75 A 31 31 0 1 0 123.92 35.75" fill="none" stroke="#F6F6F6" stroke-width="22" stroke-linecap="round"/><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#F6F6F6" stroke-width="22" stroke-linecap="round"/><rect x="150.93" y="1" width="72" height="22" rx="11" fill="#F6F6F6"/><circle cx="248.93" cy="38" r="18" fill="#328282"/></svg>
+<div class="inp d"><span>ask anything</span><i style="background:#328282"></i></div>
+<svg viewBox="0 0 196 100" width="158"><g stroke="#2C2B28" stroke-width="2" fill="none"><path d="M14 16 L74 30 L134 16"/><path d="M14 72 L74 86 L134 72"/></g><g fill="#2C2B28"><rect x="8" y="10" width="12" height="12"/><rect x="68" y="24" width="12" height="12"/><rect x="128" y="10" width="12" height="12"/><rect x="8" y="66" width="12" height="12"/><rect x="68" y="80" width="12" height="12"/></g><path d="M14 44 L74 58 L134 48 L176 48" stroke="#F6F6F6" stroke-width="3" fill="none"/><g fill="#F6F6F6"><rect x="8" y="38" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><rect x="128" y="42" width="12" height="12"/></g><circle cx="180" cy="48" r="9" fill="#328282"/></svg></div>
+<div class="side meta"><b>TEAL 5</b><span class="hx">#328282</span>
+<span class="bg">LIGHT 4.18</span><span class="bg">DARK 4.28</span><p>4.18 / 4.28 — near-perfectly balanced. calm, clinical, unusual for edtech</p></div></div><div class="pair">
+<div class="side lt"><svg viewBox="-46 -44 328 104" width="172"><circle cx="0" cy="12" r="31" fill="none" stroke="#0A0A0A" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="#0A0A0A"/><path d="M 123.92 -11.75 A 31 31 0 1 0 123.92 35.75" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/><rect x="150.93" y="1" width="72" height="22" rx="11" fill="#0A0A0A"/><circle cx="248.93" cy="38" r="18" fill="#6a6ace"/></svg>
+<div class="inp"><span>ask anything</span><i style="background:#6a6ace"></i></div>
+<svg viewBox="0 0 196 100" width="158"><g stroke="#E4E4E4" stroke-width="2" fill="none"><path d="M14 16 L74 30 L134 16"/><path d="M14 72 L74 86 L134 72"/></g><g fill="#E4E4E4"><rect x="8" y="10" width="12" height="12"/><rect x="68" y="24" width="12" height="12"/><rect x="128" y="10" width="12" height="12"/><rect x="8" y="66" width="12" height="12"/><rect x="68" y="80" width="12" height="12"/></g><path d="M14 44 L74 58 L134 48 L176 48" stroke="#0A0A0A" stroke-width="3" fill="none"/><g fill="#0A0A0A"><rect x="8" y="38" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><rect x="128" y="42" width="12" height="12"/></g><circle cx="180" cy="48" r="9" fill="#6a6ace"/></svg></div>
+<div class="side dkk"><svg viewBox="-46 -44 328 104" width="172"><circle cx="0" cy="12" r="31" fill="none" stroke="#F6F6F6" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="#F6F6F6"/><path d="M 123.92 -11.75 A 31 31 0 1 0 123.92 35.75" fill="none" stroke="#F6F6F6" stroke-width="22" stroke-linecap="round"/><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#F6F6F6" stroke-width="22" stroke-linecap="round"/><rect x="150.93" y="1" width="72" height="22" rx="11" fill="#F6F6F6"/><circle cx="248.93" cy="38" r="18" fill="#6a6ace"/></svg>
+<div class="inp d"><span>ask anything</span><i style="background:#6a6ace"></i></div>
+<svg viewBox="0 0 196 100" width="158"><g stroke="#2C2B28" stroke-width="2" fill="none"><path d="M14 16 L74 30 L134 16"/><path d="M14 72 L74 86 L134 72"/></g><g fill="#2C2B28"><rect x="8" y="10" width="12" height="12"/><rect x="68" y="24" width="12" height="12"/><rect x="128" y="10" width="12" height="12"/><rect x="8" y="66" width="12" height="12"/><rect x="68" y="80" width="12" height="12"/></g><path d="M14 44 L74 58 L134 48 L176 48" stroke="#F6F6F6" stroke-width="3" fill="none"/><g fill="#F6F6F6"><rect x="8" y="38" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><rect x="128" y="42" width="12" height="12"/></g><circle cx="180" cy="48" r="9" fill="#6a6ace"/></svg></div>
+<div class="side meta"><b>INDIGO 5</b><span class="hx">#6a6ace</span>
+<span class="bg">LIGHT 4.26</span><span class="bg">DARK 4.20</span><p>4.26 / 4.20 — equally balanced, but lands near the AI-purple crowd</p></div></div><div class="pair">
+<div class="side lt"><svg viewBox="-46 -44 328 104" width="172"><circle cx="0" cy="12" r="31" fill="none" stroke="#0A0A0A" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="#0A0A0A"/><path d="M 123.92 -11.75 A 31 31 0 1 0 123.92 35.75" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/><rect x="150.93" y="1" width="72" height="22" rx="11" fill="#0A0A0A"/><circle cx="248.93" cy="38" r="18" fill="#5a8f5a"/></svg>
+<div class="inp"><span>ask anything</span><i style="background:#5a8f5a"></i></div>
+<svg viewBox="0 0 196 100" width="158"><g stroke="#E4E4E4" stroke-width="2" fill="none"><path d="M14 16 L74 30 L134 16"/><path d="M14 72 L74 86 L134 72"/></g><g fill="#E4E4E4"><rect x="8" y="10" width="12" height="12"/><rect x="68" y="24" width="12" height="12"/><rect x="128" y="10" width="12" height="12"/><rect x="8" y="66" width="12" height="12"/><rect x="68" y="80" width="12" height="12"/></g><path d="M14 44 L74 58 L134 48 L176 48" stroke="#0A0A0A" stroke-width="3" fill="none"/><g fill="#0A0A0A"><rect x="8" y="38" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><rect x="128" y="42" width="12" height="12"/></g><circle cx="180" cy="48" r="9" fill="#5a8f5a"/></svg></div>
+<div class="side dkk"><svg viewBox="-46 -44 328 104" width="172"><circle cx="0" cy="12" r="31" fill="none" stroke="#F6F6F6" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="#F6F6F6"/><path d="M 123.92 -11.75 A 31 31 0 1 0 123.92 35.75" fill="none" stroke="#F6F6F6" stroke-width="22" stroke-linecap="round"/><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#F6F6F6" stroke-width="22" stroke-linecap="round"/><rect x="150.93" y="1" width="72" height="22" rx="11" fill="#F6F6F6"/><circle cx="248.93" cy="38" r="18" fill="#5a8f5a"/></svg>
+<div class="inp d"><span>ask anything</span><i style="background:#5a8f5a"></i></div>
+<svg viewBox="0 0 196 100" width="158"><g stroke="#2C2B28" stroke-width="2" fill="none"><path d="M14 16 L74 30 L134 16"/><path d="M14 72 L74 86 L134 72"/></g><g fill="#2C2B28"><rect x="8" y="10" width="12" height="12"/><rect x="68" y="24" width="12" height="12"/><rect x="128" y="10" width="12" height="12"/><rect x="8" y="66" width="12" height="12"/><rect x="68" y="80" width="12" height="12"/></g><path d="M14 44 L74 58 L134 48 L176 48" stroke="#F6F6F6" stroke-width="3" fill="none"/><g fill="#F6F6F6"><rect x="8" y="38" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><rect x="128" y="42" width="12" height="12"/></g><circle cx="180" cy="48" r="9" fill="#5a8f5a"/></svg></div>
+<div class="side meta"><b>FOREST 4</b><span class="hx">#5a8f5a</span>
+<span class="bg">LIGHT 3.53</span><span class="bg">DARK 5.07</span><p>softer than deep emerald, keeps the “done” semantics</p></div></div><div class="pair">
+<div class="side lt"><svg viewBox="-46 -44 328 104" width="172"><circle cx="0" cy="12" r="31" fill="none" stroke="#0A0A0A" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="#0A0A0A"/><path d="M 123.92 -11.75 A 31 31 0 1 0 123.92 35.75" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/><rect x="150.93" y="1" width="72" height="22" rx="11" fill="#0A0A0A"/><circle cx="248.93" cy="38" r="18" fill="#69734a"/></svg>
+<div class="inp"><span>ask anything</span><i style="background:#69734a"></i></div>
+<svg viewBox="0 0 196 100" width="158"><g stroke="#E4E4E4" stroke-width="2" fill="none"><path d="M14 16 L74 30 L134 16"/><path d="M14 72 L74 86 L134 72"/></g><g fill="#E4E4E4"><rect x="8" y="10" width="12" height="12"/><rect x="68" y="24" width="12" height="12"/><rect x="128" y="10" width="12" height="12"/><rect x="8" y="66" width="12" height="12"/><rect x="68" y="80" width="12" height="12"/></g><path d="M14 44 L74 58 L134 48 L176 48" stroke="#0A0A0A" stroke-width="3" fill="none"/><g fill="#0A0A0A"><rect x="8" y="38" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><rect x="128" y="42" width="12" height="12"/></g><circle cx="180" cy="48" r="9" fill="#69734a"/></svg></div>
+<div class="side dkk"><svg viewBox="-46 -44 328 104" width="172"><circle cx="0" cy="12" r="31" fill="none" stroke="#F6F6F6" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="#F6F6F6"/><path d="M 123.92 -11.75 A 31 31 0 1 0 123.92 35.75" fill="none" stroke="#F6F6F6" stroke-width="22" stroke-linecap="round"/><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#F6F6F6" stroke-width="22" stroke-linecap="round"/><rect x="150.93" y="1" width="72" height="22" rx="11" fill="#F6F6F6"/><circle cx="248.93" cy="38" r="18" fill="#69734a"/></svg>
+<div class="inp d"><span>ask anything</span><i style="background:#69734a"></i></div>
+<svg viewBox="0 0 196 100" width="158"><g stroke="#2C2B28" stroke-width="2" fill="none"><path d="M14 16 L74 30 L134 16"/><path d="M14 72 L74 86 L134 72"/></g><g fill="#2C2B28"><rect x="8" y="10" width="12" height="12"/><rect x="68" y="24" width="12" height="12"/><rect x="128" y="10" width="12" height="12"/><rect x="8" y="66" width="12" height="12"/><rect x="68" y="80" width="12" height="12"/></g><path d="M14 44 L74 58 L134 48 L176 48" stroke="#F6F6F6" stroke-width="3" fill="none"/><g fill="#F6F6F6"><rect x="8" y="38" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><rect x="128" y="42" width="12" height="12"/></g><circle cx="180" cy="48" r="9" fill="#69734a"/></svg></div>
+<div class="side meta"><b>OLIVE 4</b><span class="hx">#69734a</span>
+<span class="bg">LIGHT 4.68</span><span class="bg">DARK 3.82</span><p>4.68 / 3.82 — earthy and genuinely rare as a UI accent</p></div></div>
+<h2>3 — WHAT THESE RAMPS ACTUALLY UNLOCK · TINTED SYSTEMS (LIGHT MODE)</h2>
+<p class="sub">A MONO RAMP ISN'T AN ACCENT — IT'S A TINTED NEUTRAL FAMILY. USED THAT WAY IT REPLACES OUR SIX GREYS, AND THE PERIOD MUST THEN COME FROM OUTSIDE THE RAMP. CHAMOMILE IS THE ONLY RAMP LIGHT ENOUGH TO BE A GROUND — WHICH IS EXACTLY WHAT MAKES THESE PAIRINGS POSSIBLE.</p>
+<div class="sys" style="background:#FDFCF0">
+<div class="syscol">
+  <svg viewBox="-46 -44 328 104" width="196"><circle cx="0" cy="12" r="31" fill="none" stroke="#1a2f1a" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="#1a2f1a"/><path d="M 123.92 -11.75 A 31 31 0 1 0 123.92 35.75" fill="none" stroke="#1a2f1a" stroke-width="22" stroke-linecap="round"/><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#1a2f1a" stroke-width="22" stroke-linecap="round"/><rect x="150.93" y="1" width="72" height="22" rx="11" fill="#1a2f1a"/><circle cx="248.93" cy="38" r="18" fill="#BE1E2D"/></svg>
+  <div class="inp" style="border-color:#f1ecb0;background:#FAF8E0"><span style="color:#7ab67a">ask anything</span><i style="background:#BE1E2D"></i></div>
+  <svg viewBox="0 0 196 100" width="176"><g stroke="#7ab67a" stroke-width="2" fill="none"><path d="M14 16 L74 30 L134 16"/><path d="M14 72 L74 86 L134 72"/></g><g fill="#7ab67a"><rect x="8" y="10" width="12" height="12"/><rect x="68" y="24" width="12" height="12"/><rect x="128" y="10" width="12" height="12"/><rect x="8" y="66" width="12" height="12"/><rect x="68" y="80" width="12" height="12"/></g><path d="M14 44 L74 58 L134 48 L176 48" stroke="#1a2f1a" stroke-width="3" fill="none"/><g fill="#1a2f1a"><rect x="8" y="38" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><rect x="128" y="42" width="12" height="12"/></g><circle cx="180" cy="48" r="9" fill="#BE1E2D"/></svg>
+</div>
+<div class="syscol">
+  <div class="card" style="background:#FAF8E0;border-color:#f1ecb0">
+    <span class="lab" style="color:#3f6b3f">CREDITS</span>
+    <div class="big" style="color:#1a2f1a">087<small style="color:#7ab67a">/120</small></div>
+    <div class="bar" style="background:#f1ecb0"><i style="background:#1a2f1a;width:72%"></i></div>
+    <span class="lab" style="color:#3f6b3f">72% · ON PACE FOR SP27<span style="color:#BE1E2D">.</span></span>
+  </div>
+  <div class="ramp"><span style="background:#FDFCF0"></span><span style="background:#FAF8E0"></span><span style="background:#f1ecb0"></span><span style="background:#7ab67a"></span><span style="background:#3f6b3f"></span><span style="background:#1a2f1a"></span><span style="background:#BE1E2D;outline:1px solid rgba(0,0,0,.15)"></span></div>
+</div>
+<div class="syscol meta2">
+  <b style="color:#1a2f1a">FOREST ON CHAMOMILE</b>
+  <span class="hx" style="color:#3f6b3f">GROUND #FDFCF0 · INK #1a2f1a · PERIOD #BE1E2D</span>
+  <p style="color:#3f6b3f">ink is the darkest step of a hue, not neutral black — the highest-leverage substitution in the taste library. green ink reads calm and academic; oxblood carries the period.</p>
+  <span class="hx" style="color:#3f6b3f">INK/GROUND 13.9 · PERIOD/GROUND 6.0 — DARK TWIN NOT YET DEFINED</span>
+</div></div><div class="sys" style="background:#FDFCF0">
+<div class="syscol">
+  <svg viewBox="-46 -44 328 104" width="196"><circle cx="0" cy="12" r="31" fill="none" stroke="#2a2e1a" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="#2a2e1a"/><path d="M 123.92 -11.75 A 31 31 0 1 0 123.92 35.75" fill="none" stroke="#2a2e1a" stroke-width="22" stroke-linecap="round"/><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#2a2e1a" stroke-width="22" stroke-linecap="round"/><rect x="150.93" y="1" width="72" height="22" rx="11" fill="#2a2e1a"/><circle cx="248.93" cy="38" r="18" fill="#aa4020"/></svg>
+  <div class="inp" style="border-color:#f4f0c0;background:#faf8e0"><span style="color:#7e8a5a">ask anything</span><i style="background:#aa4020"></i></div>
+  <svg viewBox="0 0 196 100" width="176"><g stroke="#7e8a5a" stroke-width="2" fill="none"><path d="M14 16 L74 30 L134 16"/><path d="M14 72 L74 86 L134 72"/></g><g fill="#7e8a5a"><rect x="8" y="10" width="12" height="12"/><rect x="68" y="24" width="12" height="12"/><rect x="128" y="10" width="12" height="12"/><rect x="8" y="66" width="12" height="12"/><rect x="68" y="80" width="12" height="12"/></g><path d="M14 44 L74 58 L134 48 L176 48" stroke="#2a2e1a" stroke-width="3" fill="none"/><g fill="#2a2e1a"><rect x="8" y="38" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><rect x="128" y="42" width="12" height="12"/></g><circle cx="180" cy="48" r="9" fill="#aa4020"/></svg>
+</div>
+<div class="syscol">
+  <div class="card" style="background:#faf8e0;border-color:#f4f0c0">
+    <span class="lab" style="color:#545c3a">CREDITS</span>
+    <div class="big" style="color:#2a2e1a">087<small style="color:#7e8a5a">/120</small></div>
+    <div class="bar" style="background:#f4f0c0"><i style="background:#2a2e1a;width:72%"></i></div>
+    <span class="lab" style="color:#545c3a">72% · ON PACE FOR SP27<span style="color:#aa4020">.</span></span>
+  </div>
+  <div class="ramp"><span style="background:#FDFCF0"></span><span style="background:#faf8e0"></span><span style="background:#f4f0c0"></span><span style="background:#7e8a5a"></span><span style="background:#545c3a"></span><span style="background:#2a2e1a"></span><span style="background:#aa4020;outline:1px solid rgba(0,0,0,.15)"></span></div>
+</div>
+<div class="syscol meta2">
+  <b style="color:#2a2e1a">OLIVE ON CHAMOMILE</b>
+  <span class="hx" style="color:#545c3a">GROUND #FDFCF0 · INK #2a2e1a · PERIOD #aa4020</span>
+  <p style="color:#545c3a">warmer and drier. olive ink on cream is closer to a field notebook than an app — distinctive, and it dodges every competitor.</p>
+  <span class="hx" style="color:#545c3a">INK/GROUND 13.5 · PERIOD/GROUND 5.9 — DARK TWIN NOT YET DEFINED</span>
+</div></div><div class="sys" style="background:#F6F6F6">
+<div class="syscol">
+  <svg viewBox="-46 -44 328 104" width="196"><circle cx="0" cy="12" r="31" fill="none" stroke="#0a2a2a" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="#0a2a2a"/><path d="M 123.92 -11.75 A 31 31 0 1 0 123.92 35.75" fill="none" stroke="#0a2a2a" stroke-width="22" stroke-linecap="round"/><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#0a2a2a" stroke-width="22" stroke-linecap="round"/><rect x="150.93" y="1" width="72" height="22" rx="11" fill="#0a2a2a"/><circle cx="248.93" cy="38" r="18" fill="#da5430"/></svg>
+  <div class="inp" style="border-color:#E4E4E4;background:#FFFFFF"><span style="color:#328282">ask anything</span><i style="background:#da5430"></i></div>
+  <svg viewBox="0 0 196 100" width="176"><g stroke="#328282" stroke-width="2" fill="none"><path d="M14 16 L74 30 L134 16"/><path d="M14 72 L74 86 L134 72"/></g><g fill="#328282"><rect x="8" y="10" width="12" height="12"/><rect x="68" y="24" width="12" height="12"/><rect x="128" y="10" width="12" height="12"/><rect x="8" y="66" width="12" height="12"/><rect x="68" y="80" width="12" height="12"/></g><path d="M14 44 L74 58 L134 48 L176 48" stroke="#0a2a2a" stroke-width="3" fill="none"/><g fill="#0a2a2a"><rect x="8" y="38" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><rect x="128" y="42" width="12" height="12"/></g><circle cx="180" cy="48" r="9" fill="#da5430"/></svg>
+</div>
+<div class="syscol">
+  <div class="card" style="background:#FFFFFF;border-color:#E4E4E4">
+    <span class="lab" style="color:#1e5656">CREDITS</span>
+    <div class="big" style="color:#0a2a2a">087<small style="color:#328282">/120</small></div>
+    <div class="bar" style="background:#E4E4E4"><i style="background:#0a2a2a;width:72%"></i></div>
+    <span class="lab" style="color:#1e5656">72% · ON PACE FOR SP27<span style="color:#da5430">.</span></span>
+  </div>
+  <div class="ramp"><span style="background:#F6F6F6"></span><span style="background:#FFFFFF"></span><span style="background:#E4E4E4"></span><span style="background:#328282"></span><span style="background:#1e5656"></span><span style="background:#0a2a2a"></span><span style="background:#da5430;outline:1px solid rgba(0,0,0,.15)"></span></div>
+</div>
+<div class="syscol meta2">
+  <b style="color:#0a2a2a">TEAL ON PAPER</b>
+  <span class="hx" style="color:#1e5656">GROUND #F6F6F6 · INK #0a2a2a · PERIOD #da5430</span>
+  <p style="color:#1e5656">keeps our neutral paper but tints ink and ghosts teal; rust carries the period. the least radical of the three.</p>
+  <span class="hx" style="color:#1e5656">INK/GROUND 14.1 · PERIOD/GROUND 3.7 — DARK TWIN NOT YET DEFINED</span>
+</div></div>
+</body></html>

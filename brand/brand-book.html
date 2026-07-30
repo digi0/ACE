@@ -7,7 +7,7 @@
 <style>
   :root{
     --g0:#F6F6F6; --card:#FFFFFF; --g2:#E4E4E4; --g3:#B2B2B2; --g4:#666666; --ink:#0A0A0A;
-    --orange:#FF5A1F;
+    --period:#00875A;
     --mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,monospace;
     --sans:-apple-system,'Helvetica Neue',system-ui,sans-serif;
   }
@@ -30,7 +30,7 @@
   .sw{height:64px;border:1px solid var(--g2);position:relative}
   .sw span{position:absolute;left:8px;bottom:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em}
   .voice li{font-size:16px;line-height:2.1;list-style:none}
-  .voice li b{color:var(--orange)}
+  .voice li b{color:var(--period)}
   .poster{aspect-ratio:3/4.1;background:var(--card);border:1px solid var(--g2);position:relative;overflow:hidden}
   .donot{aspect-ratio:1/0.9;border-right:1px solid var(--g2);display:flex;align-items:center;justify-content:center;position:relative}
   .donot:last-child{border-right:none}
@@ -45,7 +45,7 @@
   <!-- THE MARK: loud-period a. (R11-02, locked) -->
   <g id="MA"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
     <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/></g>
-  <g id="MAdot"><use href="#MA"/><circle cx="82" cy="38" r="18" fill="var(--orange)"/></g>
+  <g id="MAdot"><use href="#MA"/><circle cx="82" cy="38" r="18" fill="var(--period)"/></g>
   <!-- REDRAWN c : true open arc, round terminals, no mask chops -->
   <g id="MC"><path d="M 19.9 -11.7 A 31 31 0 1 0 19.9 35.7" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/></g>
   <!-- REDRAWN e : full geometric ring opening lower-right + rounded center bar -->
@@ -53,7 +53,7 @@
     <rect x="-30" y="2" width="61" height="20" rx="10" fill="currentColor"/></g>
   <!-- WORDMARK ace. -->
   <g id="MWORD"><use href="#MA"/><g transform="translate(114,0)"><use href="#MC"/></g>
-    <g transform="translate(222,0)"><use href="#ME"/></g><circle cx="300" cy="36" r="18" fill="var(--orange)"/></g>
+    <g transform="translate(222,0)"><use href="#ME"/></g><circle cx="300" cy="36" r="18" fill="var(--period)"/></g>
 </defs></svg>
 
 <!-- ============ COVER ============ -->
@@ -104,8 +104,8 @@
   <div class="card grid4" style="border-top:none">
     <div class="donot"><span class="x">✕ RECOLOR</span><svg viewBox="-46 -46 160 116" width="52%" style="color:var(--g3)"><use href="#MA"/><circle cx="82" cy="38" r="18" fill="#B2B2B2"/></svg></div>
     <div class="donot"><span class="x">✕ ROTATE</span><svg viewBox="-46 -46 160 116" width="52%" style="color:var(--ink);transform:rotate(-14deg)"><use href="#MAdot"/></svg></div>
-    <div class="donot"><span class="x">✕ OUTLINE</span><svg viewBox="-46 -46 160 116" width="52%"><circle cx="0" cy="12" r="31" fill="none" stroke="#0A0A0A" stroke-width="4"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="none" stroke="#0A0A0A" stroke-width="4"/><circle cx="82" cy="38" r="18" fill="none" stroke="#FF5A1F" stroke-width="4"/></svg></div>
-    <div class="donot"><span class="x">✕ DETACH DOT</span><svg viewBox="-46 -46 160 116" width="52%" style="color:var(--ink)"><use href="#MA"/><circle cx="104" cy="-24" r="18" fill="#FF5A1F"/></svg></div>
+    <div class="donot"><span class="x">✕ OUTLINE</span><svg viewBox="-46 -46 160 116" width="52%"><circle cx="0" cy="12" r="31" fill="none" stroke="#0A0A0A" stroke-width="4"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="none" stroke="#0A0A0A" stroke-width="4"/><circle cx="82" cy="38" r="18" fill="none" stroke="#00875A" stroke-width="4"/></svg></div>
+    <div class="donot"><span class="x">✕ DETACH DOT</span><svg viewBox="-46 -46 160 116" width="52%" style="color:var(--ink)"><use href="#MA"/><circle cx="104" cy="-24" r="18" fill="#00875A"/></svg></div>
   </div>
 </section>
 
@@ -140,13 +140,13 @@
       <div style="display:flex;height:26px;margin-top:14px;border:1px solid var(--g2)">
         <div style="flex:58;background:#F6F6F6"></div><div style="flex:28;background:#FFFFFF"></div>
         <div style="flex:7;background:#B2B2B2"></div><div style="flex:6;background:#0A0A0A"></div>
-        <div style="flex:1;background:#FF5A1F"></div>
+        <div style="flex:1;background:#00875A"></div>
       </div>
-      <span class="label" style="font-size:9px">PROPORTION · GROUND 58 · CARD 28 · GHOST 7 · INK 6 · ORANGE 1</span>
+      <span class="label" style="font-size:9px">PROPORTION · GROUND 58 · CARD 28 · GHOST 7 · INK 6 · EMERALD 1</span>
     </div>
     <div class="pcell">
-      <div class="sw" style="background:#FF5A1F;height:64px"><span style="color:#fff">FF5A1F · THE PERIOD</span></div>
-      <p class="rule-big" style="margin-top:14px;font-size:15px"><b>the law: orange appears once per view, and it is always the period</b> — the send button, the due date, the destination, the done.</p>
+      <div class="sw" style="background:#00875A;height:64px"><span style="color:#fff">00875A · THE PERIOD</span></div>
+      <p class="rule-big" style="margin-top:14px;font-size:15px"><b>the law: the emerald appears once per view, and it is always the period</b> — the send button, the due date, the destination, the done.</p>
       <p class="body13" style="margin-top:8px">cards sit lighter than the ground. no shadows. no gradients. ever.</p>
     </div>
   </div>
@@ -158,7 +158,7 @@
   <div class="card grid2">
     <div class="pcell">
       <span class="label">VOICE 1 · SANS — SPEAKS</span>
-      <div style="font-size:26px;font-weight:600;letter-spacing:-.02em;margin:14px 0 6px">due friday<span style="color:var(--orange)">.</span> handled<span style="color:var(--g3)">.</span></div>
+      <div style="font-size:26px;font-weight:600;letter-spacing:-.02em;margin:14px 0 6px">due friday<span style="color:var(--period)">.</span> handled<span style="color:var(--g3)">.</span></div>
       <p style="font-size:15px;line-height:1.4;max-width:44ch">Helvetica Neue / system. 15–17px body at 1.40. headlines cap at 26–28px, weight 600, −0.02em. anything bigger is the wordmark's job.</p>
     </div>
     <div class="pcell">
@@ -185,14 +185,14 @@
     </div>
     <div class="pcell">
       <span class="label">GRAMMAR</span>
-      <p class="rule-big" style="margin-top:12px">short sentences. lowercase always. no exclamation marks — confidence doesn't shout. the orange period lands on the line that resolves the stress; grey periods carry the rest. never more than one orange period per screen.</p>
+      <p class="rule-big" style="margin-top:12px">short sentences. lowercase always. no exclamation marks — confidence doesn't shout. the emerald period lands on the line that resolves the stress; grey periods carry the rest. never more than one emerald period per screen.</p>
     </div>
   </div>
 </section>
 
 <!-- ============ 06 ILLUSTRATION SYSTEM ============ -->
 <section class="chapter">
-  <div class="chhead"><h2>06 — illustration</h2><span class="label">GREY = POSSIBLE · INK = YOURS · ORANGE = THE POINT</span></div>
+  <div class="chhead"><h2>06 — illustration</h2><span class="label">GREY = POSSIBLE · INK = YOURS · EMERALD = THE POINT</span></div>
 
   <div class="card" style="padding:30px 28px 20px">
     <span class="label">PRINCIPLE PIECE · THE ROUTE — EVERY CONNECTION TOUCHES</span>
@@ -222,7 +222,7 @@
         <rect x="437" y="127" width="26" height="26" fill="#0A0A0A"/>
         <rect x="617" y="142" width="26" height="26" fill="#0A0A0A"/>
       </g>
-      <circle cx="788" cy="155" r="18" fill="#FF5A1F"/>
+      <circle cx="788" cy="155" r="18" fill="#00875A"/>
       <g font-family="ui-monospace,Menlo,monospace" font-size="10" letter-spacing="1" fill="#666666">
         <text x="66" y="176">MATH 140</text><text x="246" y="216">MATH 230</text><text x="426" y="118">CMPSC 311</text><text x="606" y="132">CMPSC 465</text><text x="760" y="196">YOU, HIRED</text>
       </g>
@@ -238,7 +238,7 @@
           <rect x="26" y="60" width="120" height="14"/><rect x="42" y="42" width="120" height="14"/>
         </g>
         <rect x="34" y="24" width="120" height="14" fill="#0A0A0A"/>
-        <circle cx="166" cy="31" r="7" fill="#FF5A1F"/>
+        <circle cx="166" cy="31" r="7" fill="#00875A"/>
       </svg>
       <span class="label" style="font-size:9px">THE PILE · YOUR FORM, FOUND</span>
     </div>
@@ -250,7 +250,7 @@
         </g>
         <rect x="154" y="30" width="34" height="60" fill="#0A0A0A"/>
         <rect x="154" y="30" width="34" height="60" fill="none" stroke="#0A0A0A" stroke-width="2"/>
-        <circle cx="181" cy="62" r="5" fill="#FF5A1F"/>
+        <circle cx="181" cy="62" r="5" fill="#00875A"/>
         <line x1="22" y1="106" x2="188" y2="106" stroke="#B2B2B2" stroke-width="2"/>
       </svg>
       <span class="label" style="font-size:9px">DOORS · THE ONE THAT OPENS</span>
@@ -263,7 +263,7 @@
           <rect x="26" y="98" width="28" height="28"/><rect x="62" y="98" width="28" height="28"/><rect x="98" y="98" width="28" height="28"/><rect x="134" y="98" width="28" height="28"/>
         </g>
         <rect x="98" y="62" width="28" height="28" fill="#0A0A0A"/>
-        <circle cx="112" cy="76" r="6" fill="#FF5A1F"/>
+        <circle cx="112" cy="76" r="6" fill="#00875A"/>
       </svg>
       <span class="label" style="font-size:9px">THE WEEK · ONE DAY MATTERS</span>
     </div>
@@ -272,12 +272,12 @@
 
 <!-- ============ 07 POSTERS ============ -->
 <section class="chapter">
-  <div class="chhead"><h2>07 — posters</h2><span class="label">CAMPUS SET · A3 · ONE ORANGE EACH</span></div>
+  <div class="chhead"><h2>07 — posters</h2><span class="label">CAMPUS SET · A3 · ONE EMERALD EACH</span></div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px">
 
     <div class="poster">
       <div style="position:absolute;left:24px;top:26px;font-family:var(--mono);font-weight:700;font-size:86px;letter-spacing:-.04em;color:#B2B2B2;line-height:.92">02<br>46<br>AM</div>
-      <div style="position:absolute;left:24px;bottom:74px;font-size:20px;font-weight:600;letter-spacing:-.02em">still answering<span style="color:var(--orange)">.</span></div>
+      <div style="position:absolute;left:24px;bottom:74px;font-size:20px;font-weight:600;letter-spacing:-.02em">still answering<span style="color:var(--period)">.</span></div>
       <div style="position:absolute;left:24px;bottom:26px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--g4)">ACE · THE ADVISOR THAT NEVER SLEEPS</div>
       <svg style="position:absolute;right:20px;bottom:22px" viewBox="-46 -46 160 116" width="44"><g style="color:#0A0A0A"><use href="#MA"/></g><circle cx="82" cy="38" r="18" fill="#B2B2B2"/></svg>
     </div>
@@ -297,14 +297,14 @@
         <rect x="30" y="100" width="20" height="20" fill="#B2B2B2"/>
         <rect x="110" y="140" width="20" height="20" fill="#666666"/>
         <rect x="190" y="110" width="20" height="20" fill="#0A0A0A"/>
-        <circle cx="272" cy="131" r="13" fill="#FF5A1F"/>
+        <circle cx="272" cy="131" r="13" fill="#00875A"/>
       </svg>
       <div style="position:absolute;left:24px;bottom:74px;font-size:20px;font-weight:600;letter-spacing:-.02em">the maze, memorized<span style="color:var(--g3)">.</span></div>
       <div style="position:absolute;left:24px;bottom:26px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--g4)">749 MAJORS · 9439 COURSES · ONE ROUTE IS YOURS</div>
     </div>
 
     <div class="poster">
-      <svg style="position:absolute;left:-56px;top:34%" viewBox="-52 -56 374 136" width="150%"><g style="color:#0A0A0A"><use href="#MA"/><g transform="translate(114,0)"><use href="#MC"/></g><g transform="translate(222,0)"><use href="#ME"/></g></g><circle cx="300" cy="36" r="18" fill="#FF5A1F"/></svg>
+      <svg style="position:absolute;left:-56px;top:34%" viewBox="-52 -56 374 136" width="150%"><g style="color:#0A0A0A"><use href="#MA"/><g transform="translate(114,0)"><use href="#MC"/></g><g transform="translate(222,0)"><use href="#ME"/></g></g><circle cx="300" cy="36" r="18" fill="#00875A"/></svg>
       <div style="position:absolute;left:24px;top:26px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--g4)">TOO BIG FOR THE FRAME · LIKE YOUR PLANS</div>
       <div style="position:absolute;left:24px;bottom:26px;font-size:20px;font-weight:600;letter-spacing:-.02em">college, sorted<span style="color:var(--g3)">.</span></div>
     </div>
@@ -321,11 +321,11 @@
       <div style="border:1px solid var(--g2);background:var(--g0);padding:10px 12px;font-size:12px;margin:12px 0 8px;max-width:34ch">can i grad by sp27 if i failed math 230?</div>
       <div style="font-size:12px;max-width:36ch"><b>yes.</b> retake in fall — cleanest path below.</div>
       <div style="display:flex;justify-content:space-between;align-items:center;border:1px solid var(--g2);padding:8px 10px;margin-top:12px">
-        <span style="font-size:12px;color:var(--g3)">ask anything</span><span style="width:16px;height:16px;background:var(--orange);border-radius:50%"></span>
+        <span style="font-size:12px;color:var(--g3)">ask anything</span><span style="width:16px;height:16px;background:var(--period);border-radius:50%"></span>
       </div>
     </div>
     <div class="pcell">
-      <span class="label">STICKER · ORANGE TRAVELS</span>
+      <span class="label">STICKER · THE ACCENT TRAVELS</span>
       <svg viewBox="-70 -70 210 160" width="82%" style="margin-top:10px">
         <g transform="rotate(-7)">
           <rect x="-62" y="-60" width="186" height="128" fill="#FFFFFF" stroke="#E4E4E4" stroke-width="2"/>
@@ -348,7 +348,7 @@
 <!-- ============ BACK ============ -->
 <footer style="margin-top:80px;border-top:1px solid var(--g2);padding-top:24px;display:flex;justify-content:space-between;align-items:flex-end">
   <svg viewBox="-52 -56 374 136" width="170" style="color:var(--ink)"><use href="#MWORD"/></svg>
-  <div class="label" style="text-align:right">BRAND BOOK V1.0<br>ONE ORANGE PER VIEW. ALWAYS THE PERIOD.</div>
+  <div class="label" style="text-align:right">BRAND BOOK V1.0<br>ONE EMERALD PER VIEW. ALWAYS THE PERIOD.</div>
 </footer>
 
 </body>

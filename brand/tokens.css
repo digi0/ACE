@@ -14,10 +14,10 @@
   --ace-ink:    #0A0A0A;   /* primary text, the mark, filled buttons */
 
   /* ---- The accent: ONE hue, ONE role ----
-     THE LAW: orange appears once per view, and it is always the period.
+     THE LAW: the accent appears once per view, and it is always the period.
      The send button. The due date. The destination. The done.
-     If a second orange element appears in a view, one of them is wrong. */
-  --ace-period: #FF5A1F;
+     If a second accent element appears in a view, one of them is wrong. */
+  --ace-period: #00875A;
 
   /* ---- Type ----
      Text never exceeds 28px; the WORDMARK carries display scale.
@@ -47,7 +47,7 @@
 }
 
 /* ---- Dark twin. PROVISIONAL: only the logo treatment is signed off.
-        The orange NEVER changes between modes. ---- */
+        The accent NEVER changes between modes. ---- */
 @media (prefers-color-scheme: dark) {
   :root {
     --ace-ground: #0E0E0D;
@@ -56,6 +56,6 @@
     --ace-ghost:  #4A4844;
     --ace-mute:   #8F8B80;
     --ace-ink:    #F4EFE4;      /* never pure white */
-    /* --ace-period stays #FF5A1F */
+    /* --ace-period stays #00875A */
   }
 }

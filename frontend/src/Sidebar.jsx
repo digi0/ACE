@@ -1,10 +1,10 @@
 import {
   ChevronLeft, GraduationCap, LogOut, Pencil,
-  Plus, Compass, MessageSquare, Calculator, LayoutGrid,
-  BookOpen, Upload, AlertCircle, Info, CheckCircle, CalendarRange,
-  StickyNote, Settings,
+  Plus, Compass, MessageSquare,
+  Upload, AlertCircle, Info, CheckCircle, Settings,
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import { PRIMARY, TOOLS, SETTINGS_ID } from "./nav.js";
 
 /* ── Deadlines (Spring 2026 — calendar scraper will replace) ── */
 const SPRING_DEADLINES = [
@@ -29,16 +29,6 @@ const REQ_LABEL_MAP = [
   { match: /elective/i,                       label: "Electives" },
   { match: /science|physics|natural\s*sci/i,  label: "Science"   },
   { match: /writing|communication|english|speak/i, label: "Writing" },
-];
-
-const TOOLS = [
-  { id: "gpa",       label: "GPA Calc",  Icon: Calculator   },
-  { id: "gened",     label: "Gen Ed",    Icon: LayoutGrid   },
-  { id: "prereq",    label: "Prereqs",   Icon: Compass      },
-  { id: "plan",      label: "Plan",      Icon: CalendarRange },
-  { id: "notes",     label: "Notes",     Icon: StickyNote   },
-  { id: "resources", label: "Resources", Icon: BookOpen     },
-  { id: "settings",  label: "Settings",  Icon: Settings     },
 ];
 
 /* ── Helpers ── */
@@ -70,7 +60,7 @@ function SbLogo() {
           <circle cx="0" cy="12" r="31" fill="none" stroke="#F6F6F6" strokeWidth="22" />
           <rect x="30" y="-32" width="22" height="88" rx="11" fill="#F6F6F6" />
         </g>
-        <circle cx="82" cy="38" r="18" fill="#FF5A1F" />
+        <circle cx="82" cy="38" r="18" fill="#00875A" />
       </svg>
     </div>
   );
@@ -84,6 +74,7 @@ export default function Sidebar({
   darkMode, setDarkMode,
   onCollapse,
   onNavigate,
+  activeView,
   conversations, activeConvId,
   onSwitchConversation,
   onNewConversation,
@@ -157,6 +148,26 @@ export default function Sidebar({
 
       {/* ── Middle: scrollable content ── */}
       <div className="sb-middle">
+
+        {/* Primary nav — the four main views. Lives here (not in the top bar)
+            so every destination in the app has exactly one entry point and
+            one place that can show it as active. */}
+        <nav className="sb-nav" aria-label="Primary">
+          {PRIMARY.map(({ id, label, Icon }) => (
+            <button
+              key={id}
+              /* the onboarding tour anchors its Dashboard step here — the
+                 top-bar tab it used to point at is gone */
+              data-tour={id === "dashboard" ? "dashboard-tab" : undefined}
+              className={`sb-nav-btn${activeView === id ? " sb-nav-btn--active" : ""}`}
+              aria-current={activeView === id ? "page" : undefined}
+              onClick={() => onNavigate(id)}
+            >
+              <Icon size={14} className="sb-nav-icon" strokeWidth={activeView === id ? 2.2 : 1.75} />
+              <span className="sb-nav-label">{label}</span>
+            </button>
+          ))}
+        </nav>
 
         {/* Status Card or Upload Prompt */}
         {hasAudit ? (
@@ -250,7 +261,12 @@ export default function Sidebar({
           </div>
           <div className="sb-tools-grid">
             {TOOLS.map(({ id, label, Icon }) => (
-              <button key={id} className="sb-tool-btn" onClick={() => onNavigate(id)}>
+              <button
+                key={id}
+                className={`sb-tool-btn${activeView === id ? " sb-tool-btn--active" : ""}`}
+                aria-current={activeView === id ? "page" : undefined}
+                onClick={() => onNavigate(id)}
+              >
                 <Icon size={13} className="sb-tool-icon" />
                 <span className="sb-tool-label">{label}</span>
               </button>
@@ -285,10 +301,20 @@ export default function Sidebar({
           <Plus size={13} strokeWidth={2} />
           New conversation
         </button>
-        <button className="sb-tour-btn" onClick={onStartTour}>
-          <Compass size={12} />
-          Take the tour
-        </button>
+        <div className="sb-bottom-links">
+          <button
+            className={`sb-tour-btn${activeView === SETTINGS_ID ? " sb-tour-btn--active" : ""}`}
+            aria-current={activeView === SETTINGS_ID ? "page" : undefined}
+            onClick={() => onNavigate(SETTINGS_ID)}
+          >
+            <Settings size={12} />
+            Settings
+          </button>
+          <button className="sb-tour-btn" onClick={onStartTour}>
+            <Compass size={12} />
+            Take the tour
+          </button>
+        </div>
       </div>
     </aside>
   );

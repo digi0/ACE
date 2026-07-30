@@ -70,7 +70,7 @@ export default function LoginPage() {
                 <circle cx="0" cy="12" r="31" fill="none" stroke="#F6F6F6" strokeWidth="22" />
                 <rect x="30" y="-32" width="22" height="88" rx="11" fill="#F6F6F6" />
               </g>
-              <circle cx="82" cy="38" r="18" fill="#FF5A1F" />
+              <circle cx="82" cy="38" r="18" fill="#00875A" />
             </svg>
           </div>
           <span className="login-brand-name">ACE</span>
