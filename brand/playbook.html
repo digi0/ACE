@@ -74,6 +74,22 @@
   .tlrow .b{padding:14px 18px}
   .tlrow .b b{font-size:13.5px}.tlrow .b p{font-size:12.5px;color:var(--mute);margin-top:4px}
   footer{margin-top:90px;border-top:1px solid var(--ink);padding-top:24px;display:flex;justify-content:space-between;align-items:flex-end}
+
+  /* ---- print / PDF ---- */
+  @page{ size: letter; margin: 14mm 15mm; }
+  @media print{
+    *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    body{ background:#fff; padding:0; }
+    .wrap{ max-width:none; }
+    .cover{ padding:20mm 0 14mm; break-after:page; }
+    .part{ break-before:page; margin-top:0; padding-top:0; border-top:1px solid var(--ink); }
+    h3{ break-after:avoid; }
+    section{ margin-top:26px; }
+    .cell,.rung,.tlrow,.fl,.metric,.quote,.cond{ break-inside:avoid; }
+    table,.grid2,.grid3,.fluency,.tl,.stack{ break-inside:avoid; }
+    p,li{ orphans:2; widows:2; }
+    footer{ break-before:page; margin-top:20mm; }
+  }
 </style>
 </head>
 <body>
@@ -122,22 +138,63 @@
   </ul>
   <p style="margin-top:14px">So we never sell features. We sell the <b>moment the dread ends</b>.
   Every asset we make should be legible as: <i>you were carrying this, now you're not.</i></p>
+  <p><b>But relief is the door, not the house.</b> Course panic is what makes a student
+  open ACE the first time. It is not what makes them keep it. The next section is the
+  more important half of the strategy, and the half we are most likely to under-sell.</p>
 </section>
 
 <section>
-  <h3><span class="n">02</span>The message ladder</h3>
-  <p>One idea per rung. Never skip a rung to sound smarter.</p>
+  <h3><span class="n">02</span>Not an app you open. The layer you live on.</h3>
+  <p class="lead">A university is an enormous, badly-indexed institution where every
+  answer lives in a different office, on a different website, in a different vocabulary,
+  behind different hours. Students are handed a login and expected to figure it out.</p>
+  <p>ACE is the layer between a student and that institution — <b>one place that knows
+  their college</b>. Not a course tool. Not a semester ritual. Somewhere you go the way
+  you go to a group chat: any hour, any question, no preamble, no sense that the question
+  is too small.</p>
+  <div class="grid2">
+    <div class="cell"><h4>Episodic (what we must not become)</h4><p>Opened when something breaks. Twice a term, around registration. Scope: courses. The student's mental model is "that degree-audit thing." Churn is invisible because nobody was ever really using it.</p></div>
+    <div class="cell"><h4>Ecosystem (what we are)</h4><p>Open because it's Tuesday and the dining hall hours are unclear. Scope: being a student here. The mental model is "ask ACE." Course planning is the hardest thing it does, not the only thing.</p></div>
+  </div>
+  <p style="margin-top:16px">This is a strategy decision with teeth, and it costs us
+  something: breadth is harder to be right about than depth. We take it anyway, because
+  the alternative is a utility that gets uninstalled in June.</p>
+  <div class="quote">ask your college anything<span class="p">.</span></div>
+</section>
+
+<section>
+  <h3><span class="n">03</span>The surface area</h3>
+  <p>Courses are the wedge: highest stakes, most structured data, hardest to get
+  anywhere else. Everything around it is the ecosystem — and to a student, they are the
+  same kind of question, asked in the same box.</p>
+  <div class="grid3">
+    <div class="cell"><h4>Academic core <span style="color:var(--period)">&#9679;</span></h4><p>Majors, prereqs, requirements, gen-eds, drop/add, GPA, graduation, transfer credit, substitutions, entrance-to-major. <b>Structured and cited to the page.</b> This is the wedge and our moat.</p></div>
+    <div class="cell"><h4>Calendar &amp; logistics</h4><p>Registration windows, add/drop dates, breaks, finals, tuition deadlines, holds on your account, what to do when you miss one.</p></div>
+    <div class="cell"><h4>Places &amp; services</h4><p>Dining hours, library floors, the gym, health and counselling, IT help, printing, parking appeals, transit, mail and packages.</p></div>
+    <div class="cell"><h4>Money</h4><p>Financial aid, the bursar, scholarships, work-study, refunds, what that charge is, who to email about it.</p></div>
+    <div class="cell"><h4>People &amp; belonging</h4><p>Orgs and clubs, how to join after the fair, intramurals, events, greek life, RAs — the questions behind "I haven't found my people yet."</p></div>
+    <div class="cell"><h4>Beyond</h4><p>Internships, the career centre, research with faculty, study abroad, grad school, and the part where college becomes the thing after college.</p></div>
+  </div>
+  <p style="margin-top:16px" class="dim">Nobody currently sells this. Advisors cover
+  academics. Reddit has breadth with no accountability. University websites have documents,
+  not answers. The gap is <b>breadth plus a citation</b>, and it is ours to take.</p>
+</section>
+
+<section>
+  <h3><span class="n">04</span>The message ladder</h3>
+  <p>One idea per rung. Never skip a rung to sound smarter. Note that the six-word line was
+  always ecosystem-scoped: <b>college</b>, sorted — not <i>courses</i>, sorted.</p>
   <div class="stack">
     <div class="rung"><span class="k">Six words</span><span class="v">college, sorted<span style="color:var(--period)">.</span></span></div>
-    <div class="rung"><span class="k">One line</span><span class="v">The advisor that answers at 2am.</span></div>
-    <div class="rung"><span class="k">Two lines</span><span class="v">Every major, every prereq, every deadline — memorized. Ask it like you'd text a friend.</span></div>
+    <div class="rung"><span class="k">One line</span><span class="v">Ask your college anything.</span></div>
+    <div class="rung"><span class="k">Two lines</span><span class="v">Courses, deadlines, dining, housing, orgs, the offices nobody explains. Cited, and awake at 2am.</span></div>
     <div class="rung"><span class="k">The proof</span><span class="v">749 majors. 9,439 courses. 46 handbook rules, cited to the page.</span></div>
-    <div class="rung"><span class="k">The thesis</span><span class="v">College is a maze with the map locked in a filing cabinet. We're the navigation layer — courses first, then registration, deadlines, and career.</span></div>
+    <div class="rung"><span class="k">The thesis</span><span class="v">College is a maze with the map locked in a filing cabinet. We are the navigation layer for the whole institution — courses are the wedge, not the ceiling.</span></div>
   </div>
 </section>
 
 <section>
-  <h3><span class="n">03</span>Who we're for, and when</h3>
+  <h3><span class="n">05</span>Who we're for, and when</h3>
   <div class="grid3">
     <div class="cell"><h4>The primary</h4><p>Undergrad, any major, mid-degree. Not a freshman with a clean slate — a sophomore or junior who has already made one choice they're unsure about. They are the ones with a question that has a wrong answer.</p></div>
     <div class="cell"><h4>The second audience, free</h4><p>Parents. They never install anything; they receive a screenshot. Every answer should survive being forwarded to someone paying tuition.</p></div>
@@ -153,7 +210,7 @@
 <div class="part"><h2>Why the design works</h2><span class="pn">PART II</span></div>
 
 <section>
-  <h3><span class="n">04</span>The period is a closure cue</h3>
+  <h3><span class="n">06</span>The period is a closure cue</h3>
   <p>The mark ends in a full stop. That is not decoration — it is the entire product
   promise compressed into one glyph, and it works on a mechanism we can name.</p>
   <p>An open question occupies working memory; it keeps surfacing until it's closed.
@@ -176,7 +233,7 @@
 </section>
 
 <section>
-  <h3><span class="n">05</span>Colour: conditioning, not symbolism</h3>
+  <h3><span class="n">07</span>Colour: conditioning, not symbolism</h3>
   <p>Most colour psychology sold to marketers is unfalsifiable — "green means growth,
   blue means trust." Cross-cultural evidence for innate colour meaning is weak, and
   we're not building on it.</p>
@@ -194,7 +251,7 @@
 </section>
 
 <section>
-  <h3><span class="n">06</span>Type: we set the type to make college feel doable</h3>
+  <h3><span class="n">08</span>Type: we set the type to make college feel doable</h3>
   <p>The strongest, best-supported effect in this whole document is <b>processing
   fluency</b>: when something is easier to read, people judge the task it describes as
   easier to do. Same instructions, harder typeface, and readers estimate the task
@@ -230,19 +287,20 @@
 <div class="part"><h2>How we talk</h2><span class="pn">PART III</span></div>
 
 <section>
-  <h3><span class="n">07</span>The shame-free grammar</h3>
+  <h3><span class="n">09</span>The shame-free grammar</h3>
   <p>Every line we write is read by someone who is slightly afraid of the answer. Four rules:</p>
   <ul>
     <li><b>Lead with the verdict.</b> "yes." then the reason. Never make them read a paragraph to find out if they're okay.</li>
     <li><b>Name the mistake as a route, not a failure.</b> "failed it? rerouted." The student's error is a fact about the map, not a fact about them.</li>
     <li><b>Never take the credit.</b> "you're fine" — not "we fixed it." Agency stays with the student; we're the map, they're the one walking.</li>
     <li><b>No exclamation marks.</b> Confidence doesn't shout, and enthusiasm reads as sales. The period does the work.</li>
+    <li class="hit"><b>Never dead-end.</b> "I can't help with that" is the sentence that turns an ecosystem back into a tool. If we don't know, we give the office, the hours, the email, and the exact thing to ask. A student should never learn that there is a category of question ACE doesn't take.</li>
   </ul>
   <div class="quote">your 2am question. answered<span class="p">.</span></div>
 </section>
 
 <section>
-  <h3><span class="n">08</span>The lexicon</h3>
+  <h3><span class="n">10</span>The lexicon</h3>
   <table>
     <tr><th style="width:34%">We say</th><th style="width:33%">We never say</th><th>Because</th></tr>
     <tr><td class="say">advisor</td><td class="no">chatbot, assistant, bot</td><td>"Chatbot" sets the expectation of a toy that will waste your time.</td></tr>
@@ -260,7 +318,7 @@
 <div class="part"><h2>The plays</h2><span class="pn">PART IV</span></div>
 
 <section>
-  <h3><span class="n">09</span>The dot</h3>
+  <h3><span class="n">11</span>The dot</h3>
   <p>Our strongest owned asset is not the wordmark. It is a single emerald dot.</p>
   <p>Print die-cut emerald dots — no name, no URL, nothing. Give them away by the
   thousand at org fairs. A dot on a laptop lid means nothing to an outsider and
@@ -272,7 +330,7 @@
 </section>
 
 <section>
-  <h3><span class="n">10</span>Own the hour nobody wants</h3>
+  <h3><span class="n">12</span>Own the hour nobody wants</h3>
   <p>Every competitor markets between 9 and 5. Our user's moment of need is 1am to 3am,
   and attention is nearly free then.</p>
   <ul>
@@ -283,7 +341,7 @@
 </section>
 
 <section>
-  <h3><span class="n">11</span>The course-code engine</h3>
+  <h3><span class="n">13</span>The course-code engine</h3>
   <p>We hold 9,439 course records and 749 program structures. Every course code is
   something a student types into a search bar at midnight: <span class="mono" style="font-size:13px">"CMPSC 465 prereqs"</span>,
   <span class="mono" style="font-size:13px">"MATH 230 hard"</span>.</p>
@@ -297,7 +355,7 @@
 </section>
 
 <section>
-  <h3><span class="n">12</span>Bottom-up, never top-down</h3>
+  <h3><span class="n">14</span>Bottom-up, never top-down</h3>
   <div class="grid2">
     <div class="cell"><h4>Do</h4><p>RAs, orientation leaders, club officers, course-specific group chats, upperclassmen in majors with brutal prereq chains. People with a group chat and a reason to look helpful.</p></div>
     <div class="cell"><h4>Don't</h4><p>University procurement, "official partnership" announcements, anything that positions us as an institutional product. It's slow, it's expensive, and it converts our peer voice into an administrative one.</p></div>
@@ -305,7 +363,31 @@
 </section>
 
 <section>
-  <h3><span class="n">13</span>Proof by transcript, not by logo wall</h3>
+  <h3><span class="n">15</span>Own week one</h3>
+  <p>Orientation is the highest-question, lowest-relationship week of a student's life.
+  They have a hundred questions and nobody to ask without feeling stupid — where to print,
+  how the dining plan works, what a hold is, where the gym is.</p>
+  <p>Those questions are trivially easy for us and enormously valuable: <b>a student who
+  asks ACE about laundry in week one asks about prereqs in week six.</b> Breadth is how we
+  earn the academic question, not the reverse. Fight for orientation packets, RA scripts,
+  and first-week signage over anything aimed at registration season.</p>
+</section>
+
+<section>
+  <h3><span class="n">16</span>The empty state is a positioning statement</h3>
+  <p>The suggested prompts on an empty input teach the user what the product is for. If
+  they all say "plan my semester," we have built an episodic course tool no matter what
+  the marketing says.</p>
+  <p>So the empty state always mixes registers — one academic, one logistical, one social,
+  one small. <i>"what's due friday"</i> next to <i>"is the library open now"</i> next to
+  <i>"how do I join a club in october"</i>. This is a marketing decision that lives in the
+  product, and it is not negotiable to a growth experiment.</p>
+  <p class="dim">Same logic for the app-store screenshots, the landing hero, and every
+  demo we ever record: never show only course questions.</p>
+</section>
+
+<section>
+  <h3><span class="n">17</span>Proof by transcript, not by logo wall</h3>
   <p>"Trusted by 10,000 students" is placeholder thinking, and gen-Z discounts it
   automatically. Instead we publish <b>the hardest real questions ACE has answered</b> —
   verbatim, with the handbook page cited.</p>
@@ -319,7 +401,7 @@
 </section>
 
 <section>
-  <h3><span class="n">14</span>The receipt</h3>
+  <h3><span class="n">18</span>The receipt</h3>
   <p>Give students a clean, screenshot-able artifact of their plan — credits, semesters,
   the route, cited. Not because they need it, but because they will send it to a parent,
   a group chat, or an advisor.</p>
@@ -332,7 +414,7 @@
 <div class="part"><h2>The guardrails</h2><span class="pn">PART V</span></div>
 
 <section>
-  <h3><span class="n">15</span>Things we never say</h3>
+  <h3><span class="n">19</span>Things we never say</h3>
   <p>Advising is a domain where a confident wrong answer costs a student a semester and
   costs us the company. Marketing carries that risk as much as the product does.</p>
   <ul>
@@ -345,7 +427,20 @@
 </section>
 
 <section>
-  <h3><span class="n">16</span>The accuracy posture</h3>
+  <h3><span class="n">20</span>Breadth is an accuracy liability. Price it in.</h3>
+  <p>The ecosystem strategy has one serious failure mode: becoming confidently wrong about
+  forty domains instead of reliably right about one. A student who gets bad dining hours
+  forgives us. A student who gets bad drop-deadline advice does not, and neither does
+  their parent.</p>
+  <ul>
+    <li><b>No domain ships without a source.</b> Academics are structured and citable. Housing, dining, aid and the rest are not — they need curation, a scrape with a freshness date, or an owner. If we can't say where an answer came from, we route to the office instead of guessing.</li>
+    <li><b>Confidence must be visibly tiered.</b> A cited handbook rule and a scraped dining hour cannot look identical in the interface. Same voice, different receipt.</li>
+    <li><b>Expand one domain per term, announced.</b> Slow, visible breadth beats a silent everything-machine — it also makes the ecosystem legible to users instead of just true internally.</li>
+  </ul>
+</section>
+
+<section>
+  <h3><span class="n">21</span>The accuracy posture</h3>
   <p>Our credibility claim is not "we're smart." It's <b>"here's where that came from."</b>
   Page-level citation is a marketing asset, not just an engineering detail — it is the
   difference between a chatbot and an advisor, and it should appear in the product, in
@@ -358,32 +453,32 @@
 <div class="part"><h2>The scoreboard</h2><span class="pn">PART VI</span></div>
 
 <section>
-  <h3><span class="n">17</span>Metrics that mean something</h3>
+  <h3><span class="n">22</span>Metrics that mean something</h3>
   <p>Engagement is the wrong goal. A student who spends less time with us and leaves with
   a plan is a better outcome than one who chats for an hour. Measure resolution.</p>
   <div class="grid3">
     <div class="cell metric"><span class="num">01</span><h4>Resolution rate</h4><p>Share of sessions that end in a stated plan rather than a dead end. The north-star metric. If this falls, nothing else matters.</p></div>
     <div class="cell metric"><span class="num">02</span><h4>Return at the next spike</h4><p>Did they come back at the <i>next</i> registration window? Retention measured on the product's real rhythm, not on 30-day windows borrowed from consumer apps.</p></div>
-    <div class="cell metric"><span class="num">03</span><h4>Shares per resolved plan</h4><p>How often a plan leaves the app as a screenshot. Directly measures play 14 and predicts organic growth better than any survey.</p></div>
+    <div class="cell metric"><span class="num">03</span><h4>Shares per resolved plan</h4><p>How often a plan leaves the app as a screenshot. Directly measures play 18 and predicts organic growth better than any survey.</p></div>
   </div>
   <p style="margin-top:14px" class="dim">Vanity metrics to refuse in reporting: total messages,
   session length, DAU without resolution context. They reward the wrong product.</p>
 </section>
 
 <section>
-  <h3><span class="n">18</span>Launch sequence</h3>
+  <h3><span class="n">23</span>Launch sequence</h3>
   <div class="tl">
     <div class="tlrow"><div class="w">Before</div><div class="b"><b>Get the product boringly reliable on one campus.</b><p>Every play in Part IV amplifies whatever the product actually is. Amplifying an unreliable answer engine on an anxious audience is the fastest way to a reputation we can't fix.</p></div></div>
     <div class="tlrow"><div class="w">Seed</div><div class="b"><b>Fifty upperclassmen in prereq-heavy majors.</b><p>Not a broad beta. Pick the majors where the maze is worst — engineering, CS, nursing — because that's where the relief is most vivid and the word-of-mouth is loudest.</p></div></div>
-    <div class="tlrow"><div class="w">Prove</div><div class="b"><b>Publish twenty transcripts.</b><p>Play 13. Real questions, real citations, including one where ACE was corrected. This is the asset the rest of the launch links to.</p></div></div>
-    <div class="tlrow"><div class="w">Spread</div><div class="b"><b>Dots, and the 2am channel.</b><p>Play 9 and play 10 together, timed to the registration window. Dots at the org fair; creative in the panic hours.</p></div></div>
-    <div class="tlrow"><div class="w">Compound</div><div class="b"><b>Turn on the course-code engine.</b><p>Play 11. Slow to start, impossible to stop. This is what carries growth once the launch energy is gone.</p></div></div>
+    <div class="tlrow"><div class="w">Prove</div><div class="b"><b>Publish twenty transcripts.</b><p>Play 17. Real questions, real citations, including one where ACE was corrected. This is the asset the rest of the launch links to.</p></div></div>
+    <div class="tlrow"><div class="w">Spread</div><div class="b"><b>Dots, week one, and the 2am channel.</b><p>Orientation first — the breadth questions are the cheap way in — then dots at the org fair and creative in the panic hours.</p></div></div>
+    <div class="tlrow"><div class="w">Compound</div><div class="b"><b>Turn on the course-code engine.</b><p>Play 13. Slow to start, impossible to stop. This is what carries growth once the launch energy is gone.</p></div></div>
     <div class="tlrow"><div class="w">Then</div><div class="b"><b>Second campus, same order.</b><p>The playbook is per-campus, not national. Resist the urge to go wide before one campus is genuinely served.</p></div></div>
   </div>
 </section>
 
 <section>
-  <h3><span class="n">19</span>The one-sentence test</h3>
+  <h3><span class="n">24</span>The one-sentence test</h3>
   <p class="lead">Before anything ships — an ad, a page, a poster, a push notification —
   it has to pass one question: <b>does this make a worried student feel more capable,
   or does it make us look clever?</b></p>

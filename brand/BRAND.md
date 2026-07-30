@@ -104,12 +104,28 @@ chat, dashboard, prereq route, stats, merch).
 
 ## 3. Go-to-market — the playbook — LOCKED
 
-**`brand/playbook.html`** is the CMO document: what we sell, why the design works
+**`brand/playbook.html`** (and `playbook.pdf`) is the CMO document: what we sell, why the design works
 psychologically, how we talk, the plays, the guardrails, and the scoreboard. Read it
 before writing any marketing asset. The decisions that bind:
 
-- **We sell relief, not features.** The purchase is the moment the dread ends. Every
-  asset must read as *you were carrying this, now you're not.*
+- **ACE is an ecosystem, not an episodic app.** The layer between a student and their
+  whole institution — any hour, any question, academic or not. Courses are the *wedge*
+  (highest stakes, structured data, hardest to get elsewhere), never the ceiling. The
+  surface area runs: academic core · calendar & logistics · places & services · money ·
+  people & belonging · beyond (internships, career, study abroad). If a student's mental
+  model is "that degree-audit thing," the strategy has failed.
+- **We sell relief, not features** — but relief is the *door*, not the house. Course panic
+  gets the first open; breadth is what keeps them. Every asset must read as *you were
+  carrying this, now you're not.*
+- **Never dead-end.** "I can't help with that" turns an ecosystem back into a tool. If we
+  don't know, we give the office, the hours, and the exact thing to ask. A student must
+  never learn there is a category of question we don't take.
+- **The empty state is a positioning statement.** Suggested prompts always mix registers
+  (academic + logistical + social + small). If they all say "plan my semester," we have
+  built a course tool regardless of the marketing. Same rule for screenshots and demos.
+- **Breadth is an accuracy liability — price it in.** No domain ships without a source;
+  confidence must be visibly tiered (a cited handbook rule and a scraped dining hour
+  cannot look identical); expand one domain per term, announced.
 - **The period is a closure cue.** It marks things that are *done* — never a loading
   state, never an empty state, never an error. Misuse costs us the mechanism.
 - **Colour works by conditioning, not symbolism.** We do not lean on pop colour
@@ -125,8 +141,11 @@ before writing any marketing asset. The decisions that bind:
 - **Never claim:** a graduation outcome, university endorsement, or that we replace
   advisors. Never joke about uploaded documents. Never manufacture urgency — real
   deadlines are urgent enough, and the audience is already anxious.
-- **North-star metric is resolution rate**, not engagement. Refuse total messages,
-  session length, and DAU-without-resolution in reporting.
+- **North star is categories-per-student-per-term** (the ecosystem metric — one means we
+  built a course tool, 3+ means we built the layer), with resolution rate as the quality
+  floor, plus off-peak weekly actives, non-academic share, and dead-end rate. Refuse total
+  messages, session length, DAU-without-resolution, and **any retention number measured
+  only around registration windows** — it flatters an episodic product.
 - **Sequence matters:** product reliability → seed 50 upperclassmen in prereq-heavy
   majors → publish 20 real transcripts (including a correction) → dots + the 2am
   channel → the course-code content engine. Per-campus, not national.
