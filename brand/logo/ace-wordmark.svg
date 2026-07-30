@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-54 -44 332.93 112">
+  <!-- ace. wordmark · v4 FINAL (W4 all-round system) · locked 2026-07-30 -->
+  <!-- every terminal is a round cap, matching the mark's round-ended stem and the dot -->
+  <!-- e: bar's right cap and the ring's start cap share center (ec+31,12) -> ONE clean 11u nose -->
+  <!-- optical gaps: a-c 10u · c-e 4u · dot 8u -->
+  <circle cx="0" cy="12" r="31" fill="none" stroke="#0A0A0A" stroke-width="22"/>
+  <rect x="30" y="-32" width="22" height="88" rx="11" fill="#0A0A0A"/>
+  <path d="M 123.93 -11.75 A 31 31 0 1 0 123.93 35.75" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/>
+  <path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/>
+  <rect x="150.93" y="1" width="72" height="22" rx="11" fill="#0A0A0A"/>
+  <circle cx="248.93" cy="38" r="18" fill="#FF5A1F"/>
+</svg>

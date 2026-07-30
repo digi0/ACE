@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-49 -64 156 152">
+  <!-- ace. favicon · FINAL · a leans -11°, dot grown to 0.7R (r22) for small sizes, baseline held · locked 2026-07-30 -->
+  <g transform="rotate(-11 5 12)">
+    <circle cx="0" cy="12" r="31" fill="none" stroke="#0A0A0A" stroke-width="22"/>
+    <rect x="30" y="-32" width="22" height="88" rx="11" fill="#0A0A0A"/>
+  </g>
+  <circle cx="82" cy="34" r="22" fill="#FF5A1F"/>
+</svg>

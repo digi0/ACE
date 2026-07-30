@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ace. — Zero Chroma system preview</title>
+<style>
+  :root{
+    --g0:#F6F6F6; --card:#FFFFFF; --g2:#E4E4E4; --g3:#B2B2B2; --g4:#666666; --ink:#0A0A0A;
+    --orange:#FF5A1F;
+    --mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,monospace;
+    --sans:-apple-system,'Helvetica Neue',system-ui,sans-serif;
+    --ease:cubic-bezier(.165,.84,.44,1);
+  }
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--g0);color:var(--ink);font-family:var(--sans);padding:0 30px 60px}
+  .mono{font-family:var(--mono)}
+  .label{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--g4)}
+  .card{background:var(--card);border:1px solid var(--g2)}
+  svg{display:block}
+
+  /* NAV */
+  nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0;border-bottom:1px solid var(--g2)}
+  nav .links{display:flex;gap:26px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--g4)}
+
+  /* HERO */
+  .hero{padding:90px 0 84px}
+  .hero .sub{font-size:17px;line-height:1.4;max-width:38ch;color:var(--ink);margin:34px 0 26px}
+  .cta{display:inline-flex;align-items:center;height:38px;padding:0 20px;background:var(--ink);color:var(--g0);
+    font-size:14px;font-weight:400;font-family:var(--sans)}
+  .cta2{display:inline-flex;align-items:center;height:38px;padding:0 20px;border:1px solid var(--ink);color:var(--ink);
+    font-size:14px;margin-left:10px}
+
+  .secgap{height:84px}
+  .sechead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+  .sechead h2{font-size:22px;font-weight:600;letter-spacing:-.02em}
+
+  /* CHAT */
+  .chat{display:grid;grid-template-columns:1.15fr .85fr;gap:0}
+  .chatL{padding:26px 28px;border-right:1px solid var(--g2)}
+  .bub-u{background:var(--g0);border:1px solid var(--g2);padding:12px 16px;font-size:14px;line-height:1.45;max-width:46ch;margin-bottom:14px}
+  .bub-a{padding:2px 0 0;font-size:14px;line-height:1.5;max-width:52ch}
+  .chips{display:flex;gap:8px;margin:14px 0 12px;flex-wrap:wrap}
+  .chip{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;border:1px solid var(--ink);padding:6px 10px}
+  .inputrow{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--g2);padding:10px 14px;margin-top:22px}
+  .inputrow span{font-size:14px;color:var(--g3)}
+  .send{width:22px;height:22px;background:var(--orange);border-radius:50%}
+  .chatR{padding:26px 28px;background:var(--card)}
+  .statrow{display:flex;justify-content:space-between;border-bottom:1px solid var(--g2);padding:11px 0;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em}
+  .statrow b{font-weight:700}
+
+  /* DASHBOARD */
+  .dash{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+  .dcell{padding:24px 26px;border-right:1px solid var(--g2)}
+  .dcell:last-child{border-right:none}
+  .bignum{font-family:var(--mono);font-size:56px;font-weight:700;letter-spacing:-.02em;line-height:1;color:var(--ink)}
+  .bignum small{font-size:20px;color:var(--g3);font-weight:400}
+  .bar{height:10px;background:var(--g2);margin:18px 0 8px;position:relative}
+  .bar i{position:absolute;inset:0;right:27.5%;background:var(--ink)}
+  .req{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--g2);font-family:var(--mono);font-size:11px;letter-spacing:.08em}
+  .req .st{color:var(--g4)}
+
+  /* ROUTE */
+  .routecard{padding:30px 28px 22px}
+
+  /* STATS */
+  .stats{display:grid;grid-template-columns:1fr 1fr 1fr;text-align:left}
+  .scell{padding:34px 28px;border-right:1px solid var(--g2)}
+  .scell:last-child{border-right:none}
+  .snum{font-family:var(--mono);font-size:64px;font-weight:700;letter-spacing:-.03em;color:var(--g3);line-height:1}
+  .slabel{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--ink);margin-top:12px}
+
+  /* MERCH */
+  .merch{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .mcell{padding:30px 28px;border-right:1px solid var(--g2);display:flex;align-items:center;gap:26px}
+  .mcell:last-child{border-right:none}
+
+  footer{display:flex;justify-content:space-between;align-items:flex-end;margin-top:84px;padding-top:22px;border-top:1px solid var(--g2)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <!-- loud-period a. : R11-02 -->
+  <g id="LA"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
+    <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/></g>
+  <g id="LAdot"><use href="#LA"/><circle cx="82" cy="38" r="18" fill="var(--orange)"/></g>
+  <mask id="zc"><rect x="-50" y="-50" width="110" height="120" fill="white"/><path d="M0 12 L60 -12 L60 36 Z" fill="black"/></mask>
+  <g id="LC"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22" mask="url(#zc)"/></g>
+  <mask id="ze"><rect x="-50" y="-50" width="110" height="120" fill="white"/><path d="M0 12 L60 34 L34 66 Z" fill="black"/></mask>
+  <g id="LE"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22" mask="url(#ze)"/>
+    <rect x="-30" y="2" width="60" height="20" rx="10" fill="currentColor"/></g>
+  <g id="LWORD"><use href="#LA"/><g transform="translate(112,0)"><use href="#LC"/></g>
+    <g transform="translate(214,0)"><use href="#LE"/></g><circle cx="298" cy="36" r="18" fill="var(--orange)"/></g>
+</defs></svg>
+
+<!-- NAV : no orange here — the hero owns this view's period -->
+<nav>
+  <svg viewBox="-40 -42 104 104" width="30" style="color:var(--ink)"><use href="#LA"/></svg>
+  <div class="links"><span>MAJORS 749</span><span>COURSES 9439</span><span>TOOLS 07</span><span>SIGN IN</span></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <svg viewBox="-52 -56 372 136" width="560" style="color:var(--ink)"><use href="#LWORD"/></svg>
+  <p class="sub">the advisor that answers at 2am. every major, every prereq, every deadline — memorized, so you don't have to.</p>
+  <span class="cta">start free</span><span class="cta2">watch 60 sec</span>
+</section>
+
+<!-- CHAT PREVIEW -->
+<div class="sechead"><h2>ask it like you'd text a friend</h2><span class="label">LIVE SYSTEM · CHAT</span></div>
+<section class="card chat">
+  <div class="chatL">
+    <div class="bub-u">can i still graduate by spring '27 if i failed MATH 230?</div>
+    <div class="bub-a"><b>yes.</b> retake MATH 230 in fall — it's the prereq gate for CMPSC 465. your cleanest path:</div>
+    <div class="chips">
+      <span class="chip">FA26 · MATH 230</span>
+      <span class="chip">FA26 · CMPSC 311</span>
+      <span class="chip">SP27 · CMPSC 465</span>
+      <span class="chip">SP27 · CAPSTONE</span>
+    </div>
+    <div class="bub-a" style="color:var(--g4)">12 credits left after that. balanced load both semesters. you're fine — verified against the handbook, p.14.</div>
+    <div class="inputrow"><span>ask anything</span><span class="send"></span></div>
+  </div>
+  <div class="chatR">
+    <span class="label">WHAT IT CHECKED</span>
+    <div style="height:14px"></div>
+    <div class="statrow"><span>DEGREE AUDIT</span><b>PARSED</b></div>
+    <div class="statrow"><span>PREREQ CHAIN</span><b>4 DEEP</b></div>
+    <div class="statrow"><span>HANDBOOK RULES</span><b>46 / 46</b></div>
+    <div class="statrow"><span>SEATS · FA26</span><b>OPEN</b></div>
+    <div class="statrow" style="border-bottom:none"><span>CONFIDENCE</span><b>HIGH</b></div>
+  </div>
+</section>
+
+<div class="secgap"></div>
+
+<!-- DASHBOARD PREVIEW -->
+<div class="sechead"><h2>your degree, live<span style="color:var(--orange)">.</span></h2><span class="label">LIVE SYSTEM · DASHBOARD</span></div>
+<section class="card dash">
+  <div class="dcell">
+    <span class="label">CREDITS</span>
+    <div style="height:16px"></div>
+    <div class="bignum">087<small>/120</small></div>
+    <div class="bar"><i></i></div>
+    <span class="label">72% · ON PACE FOR SP27</span>
+  </div>
+  <div class="dcell">
+    <span class="label">REQUIREMENTS</span>
+    <div style="height:16px"></div>
+    <div class="req"><span>MAJOR CORE</span><span class="st">08 OF 12</span></div>
+    <div class="req"><span>GEN ED</span><span class="st">05 OF 09</span></div>
+    <div class="req"><span>SUPPORTING</span><span class="st">04 OF 04</span></div>
+    <div class="req" style="border-bottom:none"><span>ELECTIVES</span><span class="st">02 OF 05</span></div>
+  </div>
+  <div class="dcell">
+    <span class="label">STANDING</span>
+    <div style="height:16px"></div>
+    <div class="bignum">3.74</div>
+    <div style="height:18px"></div>
+    <div class="req"><span>DEAN'S LIST</span><span class="st">2 SEMESTERS</span></div>
+    <div class="req" style="border-bottom:none"><span>NEXT REVIEW</span><span class="st">DEC 12</span></div>
+  </div>
+</section>
+
+<div class="secgap"></div>
+
+<!-- ROUTE ILLUSTRATION -->
+<div class="sechead"><h2>the maze, memorized</h2><span class="label">ILLUSTRATION · PREREQ ROUTE</span></div>
+<section class="card routecard">
+  <svg viewBox="0 0 900 300" width="100%">
+    <!-- semester columns -->
+    <g font-family="ui-monospace,Menlo,monospace" font-size="11" letter-spacing="1.5" fill="#666666">
+      <text x="60" y="24">FA25</text><text x="240" y="24">SP26</text><text x="420" y="24">FA26</text><text x="600" y="24">SP27</text><text x="780" y="24">DONE</text>
+    </g>
+    <g stroke="#E4E4E4" stroke-width="1"><line x1="30" y1="34" x2="870" y2="34"/></g>
+    <!-- ghost nodes (the maze) -->
+    <g fill="#E4E4E4">
+      <rect x="50" y="60" width="26" height="26"/><rect x="50" y="200" width="26" height="26"/>
+      <rect x="230" y="100" width="26" height="26"/><rect x="230" y="240" width="26" height="26"/>
+      <rect x="410" y="60" width="26" height="26"/><rect x="410" y="240" width="26" height="26"/>
+      <rect x="590" y="100" width="26" height="26"/><rect x="590" y="200" width="26" height="26"/>
+    </g>
+    <g stroke="#E4E4E4" stroke-width="2" fill="none">
+      <path d="M76 73 L230 113"/><path d="M76 213 L230 253"/><path d="M256 113 L410 73"/>
+      <path d="M256 253 L410 253"/><path d="M436 73 L590 113"/><path d="M436 253 L590 213"/>
+    </g>
+    <!-- the chosen route -->
+    <g fill="#B2B2B2">
+      <rect x="50" y="130" width="26" height="26"/>
+    </g>
+    <g fill="#666666"><rect x="230" y="170" width="26" height="26"/></g>
+    <g fill="#0A0A0A">
+      <rect x="410" y="130" width="26" height="26"/>
+      <rect x="590" y="150" width="26" height="26"/>
+    </g>
+    <g stroke="#0A0A0A" stroke-width="3" fill="none">
+      <path d="M76 143 L230 183"/><path d="M256 183 L410 143"/><path d="M436 143 L590 163"/><path d="M616 163 L770 163"/>
+    </g>
+    <!-- the destination: this view's single orange -->
+    <circle cx="788" cy="163" r="18" fill="#FF5A1F"/>
+    <g font-family="ui-monospace,Menlo,monospace" font-size="10" letter-spacing="1" fill="#666666">
+      <text x="44" y="180">MATH 140</text><text x="222" y="220">MATH 230</text><text x="398" y="120">CMPSC 311</text><text x="576" y="140">CMPSC 465</text><text x="762" y="204">YOU, HIRED</text>
+    </g>
+  </svg>
+  <div style="display:flex;justify-content:space-between;margin-top:12px">
+    <span class="label">GREY = EVERY PATH THE CATALOG ALLOWS · INK = YOURS</span>
+    <span class="label">SOURCE: 9,439 COURSES · LIVE PREREQ GRAPH</span>
+  </div>
+</section>
+
+<div class="secgap"></div>
+
+<!-- STATS -->
+<div class="sechead"><h2>built on the whole catalog</h2><span class="label">STRUCTURED DATA · NOT VIBES</span></div>
+<section class="card stats">
+  <div class="scell"><div class="snum">749</div><div class="slabel">MAJORS COVERED · EVERY ONE</div></div>
+  <div class="scell"><div class="snum">9439</div><div class="slabel">COURSES IN THE GRAPH</div></div>
+  <div class="scell"><div class="snum">0246</div><div class="slabel">AM · STILL ANSWERING<span style="color:var(--orange)">.</span></div></div>
+</section>
+
+<div class="secgap"></div>
+
+<!-- MERCH / CAMPUS -->
+<div class="sechead"><h2>see you on campus</h2><span class="label">BRAND IN THE WILD</span></div>
+<section class="card merch">
+  <div class="mcell">
+    <svg viewBox="-70 -66 200 150" width="150">
+      <g transform="rotate(-7)">
+        <rect x="-64" y="-58" width="182" height="126" fill="#FFFFFF" stroke="#E4E4E4" stroke-width="2"/>
+        <g transform="translate(6,4) scale(.78)" style="color:#0A0A0A"><use href="#LAdot"/></g>
+      </g>
+    </svg>
+    <div><b style="font-size:15px">sticker season<span style="color:var(--g4)">, always</span></b>
+      <p style="font-size:12.5px;color:var(--g4);max-width:26ch;margin-top:6px">free at every org fair. the dot means a door got opened.</p>
+    </div>
+  </div>
+  <div class="mcell">
+    <svg viewBox="0 0 200 150" width="150">
+      <path d="M60 18 Q 100 2 140 18 L 168 42 L 152 68 L 140 56 L 140 138 L 60 138 L 60 56 L 48 68 L 32 42 Z" fill="none" stroke="#0A0A0A" stroke-width="2.5"/>
+      <path d="M84 18 Q 100 38 116 18" fill="none" stroke="#0A0A0A" stroke-width="2"/>
+      <g transform="translate(84,74) scale(.22)" style="color:#0A0A0A"><use href="#LA"/></g>
+      <circle cx="103" cy="82" r="4" fill="#B2B2B2"/>
+    </svg>
+    <div><b style="font-size:15px">the quiet flex</b>
+      <p style="font-size:12.5px;color:var(--g4);max-width:26ch;margin-top:6px">left chest, two threads, grey dot. if you know, you know.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <svg viewBox="-52 -56 372 136" width="150" style="color:var(--ink)"><use href="#LWORD"/></svg>
+  <div class="label" style="text-align:right">COLLEGE, SORTED.<br>EST. 2026 · EVERY CAMPUS</div>
+</footer>
+
+</body>
+</html>

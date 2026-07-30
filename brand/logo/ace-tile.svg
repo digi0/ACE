@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- ace. tile · FINAL · light mode primary · box + dot level, a leans -11° · locked 2026-07-30 -->
+  <rect width="120" height="120" rx="24" fill="#0A0A0A"/>
+  <g transform="translate(42.6,55.8) scale(0.6)">
+    <g transform="rotate(-11 5 12)">
+      <circle cx="0" cy="12" r="31" fill="none" stroke="#F6F6F6" stroke-width="22"/>
+      <rect x="30" y="-32" width="22" height="88" rx="11" fill="#F6F6F6"/>
+    </g>
+    <circle cx="82" cy="38" r="18" fill="#FF5A1F"/>
+  </g>
+</svg>

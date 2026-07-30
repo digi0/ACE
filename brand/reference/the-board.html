@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ACE — The Board</title>
+<style>
+  :root{
+    --paper:#F9F6F0; --ink:#1B1A16; --hair:rgba(27,26,22,.22); --orange:#FF5A1F;
+    --night:#121210; --cream:#F2EAD8; --term:#33FF66;
+    --mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{background:#EAE5DA;font-family:var(--mono);padding:28px 0 90px;color:var(--ink)}
+  .wrap{max-width:980px;margin:0 auto;padding:0 12px}
+  .masthead{background:var(--paper);border:1px solid var(--hair);padding:34px 30px 26px;margin-bottom:26px;display:flex;align-items:flex-end;justify-content:space-between}
+  .masthead .tag{font-size:10px;letter-spacing:.26em;opacity:.75;text-align:right;line-height:2}
+  .seclabel{font-size:10.5px;letter-spacing:.2em;margin:26px 4px 8px}
+  .row{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--hair);background:var(--paper)}
+  .row.five{grid-template-columns:repeat(5,1fr)}
+  .mod{position:relative;border:1px solid var(--hair);aspect-ratio:1/1.06;display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--ink)}
+  .mcap{position:absolute;left:9px;bottom:7px;font-size:8.5px;letter-spacing:.1em;line-height:1.5;opacity:.85;z-index:3;max-width:88%}
+  .mcap b{font-weight:700;margin-right:5px}
+  .star{position:absolute;right:9px;top:7px;font-size:9px;color:var(--orange);letter-spacing:.1em}
+  svg{display:block}
+  .grain{position:absolute;inset:0;pointer-events:none;opacity:.5;z-index:2}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="grB"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .09 0"/></filter>
+    <g id="Aal"><circle cx="-4" cy="12" r="30" fill="none" stroke="currentColor" stroke-width="22"/>
+      <path d="M 38 -28 Q 27 8 38 36 Q 47 57 68 48" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/></g>
+    <g id="Aal-dot"><use href="#Aal"/><circle cx="86" cy="42" r="13" fill="var(--orange)"/></g>
+    <g id="Ama"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
+      <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/></g>
+    <g id="Ama-dot"><use href="#Ama"/><circle cx="74" cy="43" r="13" fill="var(--orange)"/></g>
+    <g id="Aslab"><path fill-rule="evenodd" fill="currentColor" d="M -8 -26 a40 40 0 1 0 0 80 a40 40 0 1 0 0 -80 Z
+        M -8 1 a13 13 0 1 1 0 26 a13 13 0 1 1 0 -26 Z"/>
+      <path fill="currentColor" d="M 28 -34 L 52 -34 L 44 14 L 64 44 L 42 56 L 30 18 Z"/></g>
+    <mask id="cg3"><rect x="-50" y="-50" width="110" height="120" fill="white"/><path d="M0 12 L60 -12 L60 36 Z" fill="black"/></mask>
+    <g id="Wc"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22" mask="url(#cg3)"/></g>
+    <mask id="eg3"><rect x="-50" y="-50" width="110" height="120" fill="white"/><path d="M0 12 L60 34 L34 66 Z" fill="black"/></mask>
+    <g id="We"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22" mask="url(#eg3)"/>
+      <rect x="-30" y="2" width="60" height="20" rx="10" fill="currentColor"/></g>
+    <g id="Wace"><use href="#Ama"/><g transform="translate(112,0)"><use href="#Wc"/></g>
+      <g transform="translate(214,0)"><use href="#We"/></g><circle cx="292" cy="43" r="13" fill="var(--orange)"/></g>
+  </defs>
+</svg>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <svg viewBox="-52 -52 372 128" width="300" style="color:var(--ink)"><use href="#Wace"/></svg>
+  <div class="tag">THE BOARD · EVERY AXIS, ONE PREVIEW<br>COLLEGE, SORTED.</div>
+</div>
+
+<!-- SECTION A: THE BENCH -->
+<p class="seclabel">A — THE BENCH · FOUR LOCKED PROSPECTS <span style="color:var(--orange)">★</span></p>
+<div class="row">
+  <div class="mod"><svg viewBox="-52 -50 152 122" width="70%" style="color:var(--ink)"><use href="#Ama-dot"/></svg>
+    <span class="star">★</span><span class="mcap"><b>A1</b>MASTER a. · CALM</span></div>
+  <div class="mod"><svg viewBox="-52 -50 162 122" width="72%" style="color:var(--ink)"><use href="#Ama"/><circle cx="80" cy="38" r="18" fill="var(--orange)"/></svg>
+    <span class="star">★</span><span class="mcap"><b>A2</b>LOUD PERIOD · CHEEKY</span></div>
+  <div class="mod"><svg viewBox="-52 -50 168 122" width="72%" style="color:var(--ink)"><use href="#Aal-dot"/></svg>
+    <span class="star">★</span><span class="mcap"><b>A3</b>GEOMETRIC &alpha;. · THE FIRST</span></div>
+  <div class="mod"><svg viewBox="-60 -56 178 132" width="70%" style="color:var(--ink)"><use href="#Aslab"/><rect x="74" y="32" width="22" height="22" rx="4" fill="var(--orange)"/></svg>
+    <span class="star">★</span><span class="mcap"><b>A4</b>SLAB &alpha; &#9642; SQUARE PERIOD</span></div>
+</div>
+
+<!-- SECTION B: WEIGHT DIAL -->
+<p class="seclabel">B — WEIGHT · THE DIAL FROM WIRE TO MASS (TASTE: WEIGHT IS A VOICE, NOT A VOLUME)</p>
+<div class="row">
+  <div class="mod"><svg viewBox="-52 -50 168 122" width="70%" style="color:var(--ink)">
+      <circle cx="-4" cy="12" r="30" fill="none" stroke="currentColor" stroke-width="10"/>
+      <path d="M 38 -28 Q 27 8 38 36 Q 47 57 68 48" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+      <circle cx="84" cy="44" r="9" fill="var(--orange)"/></svg>
+    <span class="mcap"><b>B1</b>WIRE 10 · EDITORIAL, COLD</span></div>
+  <div class="mod"><svg viewBox="-52 -50 168 122" width="70%" style="color:var(--ink)"><use href="#Aal-dot"/></svg>
+    <span class="mcap"><b>B2</b>REGULAR 22 · THE MASTER CUT</span></div>
+  <div class="mod"><svg viewBox="-56 -54 178 130" width="70%" style="color:var(--ink)">
+      <circle cx="-4" cy="12" r="29" fill="none" stroke="currentColor" stroke-width="29"/>
+      <path d="M 40 -26 Q 29 8 40 34 Q 49 55 70 46" fill="none" stroke="currentColor" stroke-width="29" stroke-linecap="round"/>
+      <circle cx="90" cy="40" r="16" fill="var(--orange)"/></svg>
+    <span class="mcap"><b>B3</b>HEAVY 29 · HUG</span></div>
+  <div class="mod"><svg viewBox="-58 -56 182 134" width="70%" style="color:var(--ink)">
+      <circle cx="-4" cy="12" r="27" fill="none" stroke="currentColor" stroke-width="38"/>
+      <path d="M 42 -24 Q 31 8 42 32 Q 51 53 72 44" fill="none" stroke="currentColor" stroke-width="38" stroke-linecap="round"/>
+      <circle cx="94" cy="38" r="18" fill="var(--orange)"/></svg>
+    <span class="mcap"><b>B4</b>ULTRA 38 · COUNTER ALMOST GONE</span></div>
+</div>
+
+<!-- SECTION C: TERMINALS & CONTRAST -->
+<p class="seclabel">C — TERMINALS &amp; CONTRAST · WHERE THE STROKE ENDS IS THE PERSONALITY</p>
+<div class="row">
+  <div class="mod"><svg viewBox="-52 -50 168 122" width="70%" style="color:var(--ink)"><use href="#Aal-dot"/></svg>
+    <span class="mcap"><b>C1</b>ROUND CAPS · FRIENDLY</span></div>
+  <div class="mod"><svg viewBox="-52 -50 168 122" width="70%" style="color:var(--ink)">
+      <circle cx="-4" cy="12" r="30" fill="none" stroke="currentColor" stroke-width="22"/>
+      <path d="M 38 -28 Q 27 8 38 36 Q 47 57 68 48" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="butt"/>
+      <circle cx="86" cy="42" r="13" fill="var(--orange)"/></svg>
+    <span class="mcap"><b>C2</b>FLAT CUTS · ENGINEERED</span></div>
+  <div class="mod"><svg viewBox="-58 -54 168 128" width="68%">
+      <path fill-rule="evenodd" fill="var(--ink)" d="M -4 -22 a34 34 0 1 0 0 68 a34 34 0 1 0 0 -68 Z
+        M 4 -14 a20 26 0 1 1 0 52 a20 26 0 1 1 0 -52 Z"/>
+      <circle cx="28" cy="-22" r="8" fill="var(--ink)"/>
+      <path d="M 28 -20 Q 22 8 30 32 Q 36 50 54 46" fill="none" stroke="var(--ink)" stroke-width="5.5"/>
+      <circle cx="56" cy="46" r="9" fill="var(--ink)"/><circle cx="80" cy="42" r="13" fill="var(--orange)"/></svg>
+    <span class="mcap"><b>C3</b>DIDONE · FASHION CONTRAST</span></div>
+  <div class="mod"><svg viewBox="-58 -54 172 128" width="68%">
+      <path fill-rule="evenodd" fill="var(--ink)" d="M -4 -20 a32 32 0 1 0 0 64 a32 32 0 1 0 0 -64 Z
+        M -31 12 a27 16 0 1 1 54 0 a27 16 0 1 1 -54 0 Z"/>
+      <path d="M 36 -24 Q 26 8 36 34 Q 44 52 64 46" fill="none" stroke="var(--ink)" stroke-width="14" stroke-linecap="butt"/>
+      <rect x="30" y="-30" width="22" height="13" fill="var(--ink)"/>
+      <rect x="56" y="40" width="24" height="13" fill="var(--ink)"/>
+      <circle cx="94" cy="42" r="13" fill="var(--orange)"/></svg>
+    <span class="mcap"><b>C4</b>REVERSED CONTRAST · WRONG ON PURPOSE</span></div>
+</div>
+
+<!-- SECTION D: CONSTRUCTION -->
+<p class="seclabel">D — CONSTRUCTION · FIVE WAYS TO BUILD THE SAME LETTER</p>
+<div class="row five">
+  <div class="mod"><svg viewBox="-52 -50 168 122" width="76%" style="color:var(--ink)">
+      <use href="#Aal"/>
+      <rect x="24" y="-22" width="11" height="42" fill="var(--paper)" transform="rotate(24 30 0)"/>
+      <rect x="28" y="26" width="11" height="40" fill="var(--paper)" transform="rotate(-24 34 46)"/>
+      <circle cx="86" cy="42" r="13" fill="var(--orange)"/></svg>
+    <span class="mcap"><b>D1</b>STENCIL</span></div>
+  <div class="mod"><svg viewBox="-56 -50 156 122" width="76%" style="color:var(--ink)">
+      <path d="M 50 -28 Q 36 6 26 18 Q 10 40 -10 40 Q -38 40 -38 11 Q -38 -18 -10 -18 Q 10 -18 26 6 Q 36 18 50 42"
+        fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/>
+      <circle cx="70" cy="42" r="12" fill="var(--orange)"/></svg>
+    <span class="mcap"><b>D2</b>ONE-STROKE SCRIPT</span></div>
+  <div class="mod" style="background:var(--night)"><svg viewBox="-16 -54 158 122" width="76%">
+      <g fill="#EDE9DF">
+        <rect x="14" y="-42" width="14" height="14"/><rect x="28" y="-42" width="14" height="14"/><rect x="42" y="-42" width="14" height="14"/>
+        <rect x="0" y="-28" width="14" height="14"/><rect x="56" y="-28" width="14" height="14"/>
+        <rect x="0" y="-14" width="14" height="14"/><rect x="56" y="-14" width="14" height="14"/>
+        <rect x="0" y="0" width="14" height="14"/><rect x="56" y="0" width="14" height="14"/>
+        <rect x="14" y="14" width="14" height="14"/><rect x="28" y="14" width="14" height="14"/><rect x="42" y="14" width="14" height="14"/>
+        <rect x="70" y="-42" width="14" height="14"/><rect x="70" y="0" width="14" height="14"/><rect x="70" y="14" width="14" height="14"/>
+        <rect x="84" y="28" width="14" height="14"/></g>
+      <rect x="112" y="14" width="14" height="14" fill="var(--orange)"/></svg>
+    <span class="mcap" style="color:#EDE9DF"><b>D3</b>PIXEL / NIGHT</span></div>
+  <div class="mod"><svg viewBox="-52 -50 168 122" width="76%">
+      <g style="color:var(--ink)"><use href="#Aal"/></g>
+      <g style="color:var(--paper)"><circle cx="-4" cy="12" r="30" fill="none" stroke="currentColor" stroke-width="10"/>
+      <path d="M 38 -28 Q 27 8 38 36 Q 47 57 68 48" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/></g>
+      <circle cx="86" cy="42" r="13" fill="none" stroke="var(--orange)" stroke-width="6"/></svg>
+    <span class="mcap"><b>D4</b>KEYLINE / HOLLOW</span></div>
+  <div class="mod" style="background:var(--cream)">
+    <svg viewBox="-52 -50 168 122" width="76%">
+      <g style="color:var(--orange)" transform="translate(6,5)" opacity=".85"><use href="#Aal"/></g>
+      <g style="color:var(--ink); mix-blend-mode:multiply" opacity=".9"><use href="#Aal"/></g>
+      <circle cx="92" cy="47" r="13" fill="var(--orange)" opacity=".85"/>
+      <circle cx="86" cy="42" r="13" fill="none" stroke="var(--ink)" stroke-width="4" style="mix-blend-mode:multiply" opacity=".9"/></svg>
+    <svg class="grain" width="100%" height="100%"><rect width="100%" height="100%" filter="url(#grB)"/></svg>
+    <span class="mcap"><b>D5</b>RISO DOUBLE-PASS</span></div>
+</div>
+
+<!-- SECTION E: CONTAINERS -->
+<p class="seclabel">E — CONTAINERS · THE MARK NEEDS NO BOX, BUT OWNS EVERY BOX</p>
+<div class="row five">
+  <div class="mod"><svg viewBox="0 0 120 120" width="62%">
+      <rect x="10" y="10" width="100" height="100" rx="26" fill="var(--ink)"/>
+      <g transform="translate(56,64) scale(.52)" style="color:var(--paper)"><use href="#Aal-dot"/></g></svg>
+    <span class="mcap"><b>E1</b>INK TILE</span></div>
+  <div class="mod"><svg viewBox="0 0 120 120" width="62%">
+      <rect x="10" y="10" width="100" height="100" rx="26" fill="var(--orange)"/>
+      <g transform="translate(56,64) scale(.52)" style="color:var(--paper)"><use href="#Aal"/></g>
+      <circle cx="101" cy="86" r="7" fill="var(--paper)"/></svg>
+    <span class="mcap"><b>E2</b>ORANGE TILE</span></div>
+  <div class="mod"><svg viewBox="-70 -70 140 140" width="66%">
+      <circle cx="0" cy="0" r="62" fill="none" stroke="var(--ink)" stroke-width="7"/>
+      <g transform="scale(.6) translate(-16,0)" style="color:var(--ink)"><use href="#Aal-dot"/></g></svg>
+    <span class="mcap"><b>E3</b>BADGE RING</span></div>
+  <div class="mod"><svg viewBox="-52 -52 372 128" width="90%" style="color:var(--ink)"><use href="#Wace"/></svg>
+    <span class="mcap"><b>E4</b>WORDMARK ace.</span></div>
+  <div class="mod">
+    <div style="display:flex;align-items:flex-end;gap:18px">
+      <svg viewBox="-52 -50 168 122" width="64" style="color:var(--ink)"><use href="#Aal-dot"/></svg>
+      <svg viewBox="-52 -50 168 122" width="32" style="color:var(--ink)"><use href="#Aal-dot"/></svg>
+      <svg viewBox="-52 -50 168 122" width="16" style="color:var(--ink)"><use href="#Aal-dot"/></svg>
+    </div>
+    <span class="mcap"><b>E5</b>SCALE LADDER · 64 / 32 / 16</span></div>
+</div>
+
+<!-- SECTION F: WORLDS (CMO STRIP) -->
+<p class="seclabel">F — IN THE WORLD · WHERE THE BRAND EARNS ITS KEEP (CMO STRIP)</p>
+<div class="row five">
+  <div class="mod"><svg viewBox="0 0 140 140" width="86%">
+      <g transform="translate(20,26) scale(.14)" style="color:var(--ink)"><use href="#Wace"/></g>
+      <rect x="20" y="62" width="86" height="13" rx="6.5" fill="var(--ink)"/>
+      <rect x="20" y="83" width="56" height="13" rx="6.5" fill="var(--ink)"/>
+      <circle cx="84" cy="89" r="6" fill="var(--orange)"/>
+      <rect x="20" y="112" width="40" height="3.5" rx="1.75" fill="var(--ink)" opacity=".4"/></svg>
+    <span class="mcap"><b>F1</b>LANDING · PERIOD ENDS EVERY LINE</span></div>
+  <div class="mod" style="background:var(--night)"><svg viewBox="0 0 140 140" width="86%">
+      <rect x="22" y="40" width="42" height="42" rx="11" fill="none" stroke="#3A3833" stroke-width="1.5"/>
+      <rect x="76" y="40" width="42" height="42" rx="11" fill="#EDE9DF"/>
+      <g transform="translate(95,64) scale(.24)" style="color:var(--night)"><use href="#Aal-dot"/></g>
+      <rect x="30" y="100" width="80" height="4" rx="2" fill="#EDE9DF" opacity=".25"/></svg>
+    <span class="mcap" style="color:#EDE9DF"><b>F2</b>DARK MODE · NIGHT PALETTE</span></div>
+  <div class="mod"><svg viewBox="0 0 140 140" width="86%">
+      <g transform="translate(70,66) rotate(-8)">
+        <rect x="-42" y="-30" width="86" height="60" rx="15" fill="#FFFFFF" stroke="var(--hair)" stroke-width="1.5"/>
+        <g transform="scale(.34)" style="color:var(--ink)"><use href="#Aal-dot"/></g></g>
+      <rect x="22" y="112" width="96" height="3" rx="1.5" fill="var(--ink)" opacity=".2"/></svg>
+    <span class="mcap"><b>F3</b>STICKER · CROOKED ON PURPOSE</span></div>
+  <div class="mod"><svg viewBox="0 0 140 140" width="86%">
+      <rect x="18" y="18" width="104" height="104" rx="8" fill="var(--ink)" opacity=".05"/>
+      <g transform="translate(64,72) scale(.4)" style="color:var(--ink)">
+        <use href="#Aal-dot"/>
+        <circle cx="-4" cy="12" r="46" fill="none" stroke="var(--ink)" stroke-width="1.4" stroke-dasharray="4 4" opacity=".55"/></g>
+      <text x="30" y="116" font-family="var(--mono)" font-size="7" letter-spacing="1.5" fill="var(--ink)" opacity=".7">SATIN 76MM</text></svg>
+    <span class="mcap"><b>F4</b>EMBROIDERY · CHEST SPEC</span></div>
+  <div class="mod"><svg viewBox="0 0 140 140" width="100%" style="color:var(--ink)">
+      <g transform="translate(96,84) scale(1.15)"><use href="#Aal"/></g>
+      <circle cx="118" cy="126" r="10" fill="var(--orange)"/>
+      <text x="12" y="22" font-family="var(--mono)" font-size="8" letter-spacing="2" fill="var(--ink)">ACE · F25</text></svg>
+    <span class="mcap"><b>F5</b>POSTER CROP · TOO BIG FOR THE FRAME</span></div>
+</div>
+
+</div>
+</body>
+</html>

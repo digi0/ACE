@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- ace. tile · dark mode (treatment A) · ink tile + paper-alpha hairline · locked 2026-07-30 -->
+  <rect x="0.75" y="0.75" width="118.5" height="118.5" rx="23.5" fill="#0A0A0A" stroke="rgba(244,239,228,0.22)" stroke-width="1.5"/>
+  <g transform="translate(42.6,55.8) scale(0.6)">
+    <g transform="rotate(-11 5 12)">
+      <circle cx="0" cy="12" r="31" fill="none" stroke="#F6F6F6" stroke-width="22"/>
+      <rect x="30" y="-32" width="22" height="88" rx="11" fill="#F6F6F6"/>
+    </g>
+    <circle cx="82" cy="38" r="18" fill="#FF5A1F"/>
+  </g>
+</svg>

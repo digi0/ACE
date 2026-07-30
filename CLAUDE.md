@@ -6,6 +6,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ACE (Academic Counselling Engine) is a Penn State academic advisor chatbot for CMPSC (Computer Science) and DTSCE (Computational Data Sciences) students. It combines RAG (retrieval-augmented generation) over advising records with personalized analysis of uploaded student documents (Degree Audits, What-If Reports).
 
+## Brand — read `brand/BRAND.md` before any visual work
+
+The logo and design language were rebuilt in July 2026 and are **locked**: the mark is
+a lowercase `a` leaning −11° with a level orange period, and the language is **Zero
+Chroma** (six greys, no hue, plus the period). Design tokens live in
+`brand/tokens.css` — import them, don't retype hex values.
+
+The one rule that governs every screen: **orange `#FF5A1F` appears once per view, and
+it is always the period** (send button, due date, destination, done).
+
+The mark has shipped into `frontend/` and `landing/`, but **the landing and product UI
+are still on the old blue brand** — remodelling them around Zero Chroma is the next
+piece of work. `brand/BRAND.md` §4 is the pickup point, with the migration path and the
+open questions.
+
 ## Commands
 
 ### Backend

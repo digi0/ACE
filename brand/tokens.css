@@ -1,0 +1,61 @@
+/* ============================================================
+   ace. — Zero Chroma design tokens
+   The chosen brand language. Import this before any product CSS.
+   Rationale and full spec: brand/BRAND.md
+   ============================================================ */
+
+:root {
+  /* ---- Ground & ink: six greys, no hue ---- */
+  --ace-ground: #F6F6F6;   /* the page */
+  --ace-card:   #FFFFFF;   /* cards sit LIGHTER than the page — never shadowed */
+  --ace-rule:   #E4E4E4;   /* hairlines, borders, dividers */
+  --ace-ghost:  #B2B2B2;   /* "every path the catalog allows" — possibility, disabled */
+  --ace-mute:   #666666;   /* secondary text, labels */
+  --ace-ink:    #0A0A0A;   /* primary text, the mark, filled buttons */
+
+  /* ---- The accent: ONE hue, ONE role ----
+     THE LAW: orange appears once per view, and it is always the period.
+     The send button. The due date. The destination. The done.
+     If a second orange element appears in a view, one of them is wrong. */
+  --ace-period: #FF5A1F;
+
+  /* ---- Type ----
+     Text never exceeds 28px; the WORDMARK carries display scale.
+     Sans speaks, mono counts. Every number zero-padded (087/120, WEEK 04). */
+  --ace-sans: -apple-system, "Helvetica Neue", system-ui, sans-serif;
+  --ace-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  --ace-leading-body: 1.4;      /* the one number to remember */
+  --ace-measure: 52ch;          /* cap paragraphs 35-58ch, on the paragraph */
+  --ace-track-label: 0.14em;    /* mono labels: 10-12px, uppercase, --ace-mute */
+  --ace-track-display: -0.02em;
+
+  /* ---- Space: quantise everything to one unit ---- */
+  --ace-unit: 4px;
+  --ace-gap: 12px;
+  --ace-section: 84px;          /* 3-6x body line-height */
+  --ace-page-margin: 30px;      /* flat page margin, no max-width container */
+
+  /* ---- Radius: one global decision ---- */
+  --ace-radius: 0;              /* Zero Chroma is square */
+  --ace-radius-tile: 20%;       /* the logo tile is the ONE exception */
+
+  /* ---- Motion: one curve for ~80% of everything ---- */
+  --ace-ease: cubic-bezier(.165, .84, .44, 1);
+  --ace-dur: 200ms;             /* hover, colour, transform */
+  --ace-dur-exit: 120ms;        /* exits stay pinned; only ENTER scales with mass */
+  --ace-dur-page: 700ms;
+}
+
+/* ---- Dark twin. PROVISIONAL: only the logo treatment is signed off.
+        The orange NEVER changes between modes. ---- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ace-ground: #0E0E0D;
+    --ace-card:   #161615;
+    --ace-rule:   rgba(244, 239, 228, 0.16);
+    --ace-ghost:  #4A4844;
+    --ace-mute:   #8F8B80;
+    --ace-ink:    #F4EFE4;      /* never pure white */
+    /* --ace-period stays #FF5A1F */
+  }
+}

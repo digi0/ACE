@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ACE — Eight Design Languages</title>
+<style>
+  :root{ --mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,monospace; }
+  *{box-sizing:border-box;margin:0}
+  body{background:#E7E1D4;font-family:var(--mono);padding:28px 0 90px;color:#1B1A16}
+  .wrap{max-width:980px;margin:0 auto;padding:0 12px}
+  h1{font-size:13px;letter-spacing:.22em;margin:8px 4px 6px;font-weight:400}
+  .sub{font-size:9.5px;letter-spacing:.14em;opacity:.7;margin:0 4px 24px;line-height:1.7}
+  .laws{background:#F9F6F0;border:1px solid rgba(27,26,22,.22);padding:18px 22px;margin-bottom:30px;
+    font-size:9px;letter-spacing:.08em;line-height:2.1;column-count:3;column-gap:26px}
+  .laws b{letter-spacing:.18em}
+  .lang{border:1px solid rgba(27,26,22,.25);margin-bottom:26px;background:var(--lbg);color:var(--lik)}
+  .lhead{display:flex;justify-content:space-between;align-items:baseline;padding:14px 20px 10px;border-bottom:1px solid var(--lhair)}
+  .lname{font-size:12px;letter-spacing:.24em;font-weight:700}
+  .lsrc{font-size:8.5px;letter-spacing:.12em;opacity:.65;text-align:right}
+  .lbody{display:grid;grid-template-columns:1.35fr 1fr .9fr;gap:0}
+  .lcol{padding:18px 20px;border-right:1px solid var(--lhair)}
+  .lcol:last-child{border-right:none}
+  .swrow{display:flex;gap:6px;margin:8px 0 12px}
+  .sw{width:34px;height:34px;border-radius:4px;border:1px solid var(--lhair);position:relative}
+  .swx{font-size:7px;letter-spacing:.04em;opacity:.75;margin-top:3px;display:block}
+  .k{font-size:8px;letter-spacing:.16em;opacity:.6;display:block;margin-bottom:5px}
+  .spec{font-size:8.5px;letter-spacing:.06em;line-height:1.95}
+  .headline{margin:6px 0 8px;line-height:.98}
+  .bodycopy{font-size:11px;line-height:1.4;max-width:34ch;opacity:.85;margin-bottom:10px}
+  .label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;opacity:.8}
+  .chips{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+  .btn{height:36px;display:inline-flex;align-items:center;padding:0 18px;font-size:13px;font-weight:400;font-family:inherit}
+  .tile{width:52px;height:52px;display:flex;align-items:center;justify-content:center}
+  .tile svg{width:66%}
+  .verdict{padding:10px 20px 12px;border-top:1px solid var(--lhair);font-size:8.5px;letter-spacing:.1em;line-height:1.8;opacity:.85}
+  svg{display:block}
+  .grain{position:absolute;inset:0;pointer-events:none;opacity:.45}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <filter id="grD"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .08 0"/></filter>
+  <g id="AL"><circle cx="-4" cy="12" r="30" fill="none" stroke="currentColor" stroke-width="22"/>
+    <path d="M 38 -28 Q 27 8 38 36 Q 47 57 68 48" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/></g>
+</defs></svg>
+
+<h1>ACE / EIGHT DESIGN LANGUAGES — THE DEEP CUT</h1>
+<p class="sub">MINED FROM: taste/SKILL.md · references/system.md (20 sites, measured) · references/motion.md · research/{saas,studios,editorial,product}.md · ui-ux-pro-max styles.csv (84-style taxonomy) · 15 rounds of ACE history. EVERY VALUE IS A DECISION, NOT A DEFAULT.</p>
+
+<div class="laws">
+<b>THE LAWS — HOLD IN ALL EIGHT</b><br>
+never pure #000 / #FFF — offset 2–6%<br>
+body leading = 1.40<br>
+measure 35–58ch, capped on the paragraph<br>
+a hole in the type scale — no bridge step<br>
+display:body ≥6×, or go flat + non-type hero<br>
+accent = ONE role, counted in roles not uses<br>
+one easing curve carries ~80% of motion<br>
+exit pinned 300–400ms; enter scales with mass<br>
+stagger: 10ms/char · 80ms/card · span ≤400ms<br>
+spacing quantised to one unit (4px default)<br>
+section padding 3–6× body line-height<br>
+radius: 0 or pill — one decision, global<br>
+zero box-shadows on marketing layer<br>
+no hue-to-hue gradients, anywhere<br>
+CTA: 30–42px tall, 12–16px text, weight 400<br>
+mono label tier only over real readouts<br>
+density pays for air: ≥5:1 element swing<br>
+the period is the brand. it ends things.
+</div>
+
+<!-- ================= 1 PAPER SIGNAL ================= -->
+<div class="lang" style="--lbg:#F9F6F0;--lik:#1B1A16;--lhair:rgba(27,26,22,.18)">
+  <div class="lhead"><span class="lname">01 · PAPER SIGNAL</span><span class="lsrc">LINEAGE: feather/contralabs warm grounds · scale A · easeOutQuint<br>THE HOUSE STYLE, NOW SPECIFIED</span></div>
+  <div class="lbody">
+    <div class="lcol">
+      <span class="k">TYPE · SCALE A · 6.5× · HOLE 24→44</span>
+      <div class="headline" style="font-family:-apple-system,'SF Pro Rounded',system-ui;font-weight:700;font-size:34px;letter-spacing:-.03em">college, sorted<span style="color:#FF5A1F">.</span></div>
+      <p class="bodycopy" style="font-family:system-ui">Your degree has 42 boxes. ACE knows which three matter this week — 16px body, leading 1.40, 34ch.</p>
+      <span class="label">ADVISING · LIVE · SP26</span>
+    </div>
+    <div class="lcol">
+      <span class="k">PALETTE · 4 LOAD-BEARING + 1 ACCENT ROLE</span>
+      <div class="swrow">
+        <div><div class="sw" style="background:#F9F6F0"></div><span class="swx">F9F6F0</span></div>
+        <div><div class="sw" style="background:#F1EBE1"></div><span class="swx">F1EBE1</span></div>
+        <div><div class="sw" style="background:#1B1A16"></div><span class="swx">1B1A16</span></div>
+        <div><div class="sw" style="background:rgba(27,26,22,.6)"></div><span class="swx">ink .60</span></div>
+        <div><div class="sw" style="background:#FF5A1F"></div><span class="swx">FF5A1F</span></div>
+      </div>
+      <span class="spec">accent role: the period — CTA, send, done. nowhere else.<br>font pair: General Sans / Satoshi + JetBrains Mono labels<br>display −0.03em · labels +0.12em · unit 4px · radius pill (interactive only)</span>
+    </div>
+    <div class="lcol">
+      <span class="k">MOTION + PROOF</span>
+      <span class="spec">ease (.22,1,.36,1) quint<br>hover 200ms · panel 240/140ms<br>hero once 800ms · no loops</span>
+      <div class="chips">
+        <span class="btn" style="background:#FF5A1F;color:#F9F6F0;border-radius:99px">start free</span>
+        <div class="tile" style="background:#1B1A16;border-radius:14px"><svg viewBox="-52 -50 168 122" style="color:#F9F6F0"><use href="#AL"/><circle cx="86" cy="42" r="13" fill="#FF5A1F"/></svg></div>
+      </div>
+    </div>
+  </div>
+  <div class="verdict">BEST FOR: the product today — calm, warm, credible to parents AND students. RISK: the safest of the eight; personality lives in the period alone.</div>
+</div>
+
+<!-- ================= 2 EMBER INK ================= -->
+<div class="lang" style="--lbg:#FDF8F3;--lik:#4A1D05;--lhair:rgba(74,29,5,.18)">
+  <div class="lhead"><span class="lname">02 · EMBER INK</span><span class="lsrc">LINEAGE: complexlaw's move — ink = the accent's darkest step · scale B · easeOutQuart<br>ONE HUE'S WHOLE FAMILY</span></div>
+  <div class="lbody">
+    <div class="lcol">
+      <span class="k">TYPE · SCALE B · 8.6× · ONE WEIGHT EVERYWHERE</span>
+      <div class="headline" style="font-family:system-ui;font-weight:600;font-size:36px;letter-spacing:-.035em">every credit counts<span style="color:#FF5A1F">.</span></div>
+      <p class="bodycopy" style="font-family:system-ui">Body text is not black — it is burnt orange at its darkest step, #4A1D05. The whole page is one warm family.</p>
+      <span class="label" style="color:#B4633A">MAJOR MAP · 749 PROGRAMS</span>
+    </div>
+    <div class="lcol">
+      <span class="k">PALETTE · MONOCHROME WARMTH</span>
+      <div class="swrow">
+        <div><div class="sw" style="background:#FDF8F3"></div><span class="swx">FDF8F3</span></div>
+        <div><div class="sw" style="background:#F6E8DC"></div><span class="swx">F6E8DC</span></div>
+        <div><div class="sw" style="background:#4A1D05"></div><span class="swx">4A1D05</span></div>
+        <div><div class="sw" style="background:#B4633A"></div><span class="swx">B4633A</span></div>
+        <div><div class="sw" style="background:#FF5A1F"></div><span class="swx">FF5A1F</span></div>
+      </div>
+      <span class="spec">the highest-leverage substitution measured in the library: hue-darkest ink instead of neutral black<br>weight 600 from 12px to 120px — size and space carry ALL hierarchy<br>radius 0 · unit 4px</span>
+    </div>
+    <div class="lcol">
+      <span class="k">MOTION + PROOF</span>
+      <span class="spec">ease (.165,.84,.44,1) quart<br>everything 250ms · exits 250ms<br>calm; zero transforms on text</span>
+      <div class="chips">
+        <span class="btn" style="background:#4A1D05;color:#FDF8F3">see my map</span>
+        <div class="tile" style="background:#FF5A1F;border-radius:0"><svg viewBox="-52 -50 168 122" style="color:#FDF8F3"><use href="#AL"/><circle cx="86" cy="42" r="13" fill="#4A1D05"/></svg></div>
+      </div>
+    </div>
+  </div>
+  <div class="verdict">BEST FOR: standing out — no edtech or AI product is warm-monochrome. RISK: orange fatigue; needs iron discipline on the accent's one role.</div>
+</div>
+
+<!-- ================= 3 NIGHT CAMPUS ================= -->
+<div class="lang" style="--lbg:#0E0E0D;--lik:#F4EFE4;--lhair:rgba(244,239,228,.14)">
+  <div class="lhead"><span class="lname">03 · NIGHT CAMPUS</span><span class="lsrc">LINEAGE: shopify/oryzo dark grounds · OLED style · easeOutExpo<br>THE 2AM STUDY SESSION</span></div>
+  <div class="lbody">
+    <div class="lcol">
+      <span class="k">TYPE · SCALE A ON DARK · ALPHA LADDER 1/.85/.60/.40</span>
+      <div class="headline" style="font-family:system-ui;font-weight:700;font-size:34px;letter-spacing:-.03em">due friday<span style="color:#FF5A1F">.</span> handled<span style="color:#FF5A1F">.</span></div>
+      <p class="bodycopy" style="font-family:system-ui;opacity:.85">Warm white on near-black — never #FFF on #000. Secondary text is alpha, not new hexes.</p>
+      <span class="label" style="color:#B6F224">REGISTRATION OPENS 04:00:12</span>
+    </div>
+    <div class="lcol">
+      <span class="k">PALETTE · DARK + TWO ROLES</span>
+      <div class="swrow">
+        <div><div class="sw" style="background:#0E0E0D"></div><span class="swx">0E0E0D</span></div>
+        <div><div class="sw" style="background:#1A1917"></div><span class="swx">1A1917</span></div>
+        <div><div class="sw" style="background:#F4EFE4"></div><span class="swx">F4EFE4</span></div>
+        <div><div class="sw" style="background:#FF5A1F"></div><span class="swx">FF5A1F</span></div>
+        <div><div class="sw" style="background:#B6F224"></div><span class="swx">B6F224</span></div>
+      </div>
+      <span class="spec">orange = action (the period) · acid = success/deadline met, NOTHING else<br>hairlines: white @ 10% alpha, 0.5px<br>panels are flat steps — zero shadows, zero glow</span>
+    </div>
+    <div class="lcol">
+      <span class="k">MOTION + PROOF</span>
+      <span class="spec">ease (.16,1,.30,1) expo<br>hover 150ms · snappy, technical<br>one ambient loop allowed ≥40s</span>
+      <div class="chips">
+        <span class="btn" style="background:#FF5A1F;color:#0E0E0D;border-radius:99px">lock my plan</span>
+        <div class="tile" style="background:#F4EFE4;border-radius:14px"><svg viewBox="-52 -50 168 122" style="color:#0E0E0D"><use href="#AL"/><circle cx="86" cy="42" r="13" fill="#FF5A1F"/></svg></div>
+      </div>
+    </div>
+  </div>
+  <div class="verdict">BEST FOR: the app's true home — students live at night; dark-first is honest. RISK: marketing pages on dark read heavy; pair with 01 for the landing.</div>
+</div>
+
+<!-- ================= 4 ZERO CHROMA ================= -->
+<div class="lang" style="--lbg:#F6F6F6;--lik:#0A0A0A;--lhair:rgba(10,10,10,.15)">
+  <div class="lhead"><span class="lname">04 · ZERO CHROMA</span><span class="lsrc">LINEAGE: becane's six greys, no hue · go-flat strategy · one bezier sitewide<br>THE WORDMARK IS THE HERO</span></div>
+  <div class="lbody">
+    <div class="lcol">
+      <span class="k">TYPE · FLAT SCALE + SVG WORDMARK CARRIES DISPLAY</span>
+      <div style="margin:2px 0 10px"><svg viewBox="-52 -52 372 128" width="220" style="color:#0A0A0A">
+        <g><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/></g>
+        <g transform="translate(112,0)"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/></g>
+        <g transform="translate(214,0)"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/><rect x="-30" y="2" width="60" height="20" rx="10" fill="currentColor"/></g>
+        <circle cx="292" cy="43" r="13" fill="#FF5A1F"/></svg></div>
+      <p class="bodycopy" style="font-family:system-ui">Type never exceeds 28px. The mark, set enormous, does what display type does elsewhere — the four-sites-under-2× school.</p>
+      <span class="label">CART 00 · MAJORS 749 · WEEKS 15</span>
+    </div>
+    <div class="lcol">
+      <span class="k">PALETTE · SIX VALUES, NO HUE + THE PERIOD</span>
+      <div class="swrow">
+        <div><div class="sw" style="background:#F6F6F6"></div><span class="swx">F6F6F6</span></div>
+        <div><div class="sw" style="background:#FFFFFF"></div><span class="swx">FFFFFF</span></div>
+        <div><div class="sw" style="background:#B2B2B2"></div><span class="swx">B2B2B2</span></div>
+        <div><div class="sw" style="background:#666666"></div><span class="swx">666666</span></div>
+        <div><div class="sw" style="background:#0A0A0A"></div><span class="swx">0A0A0A</span></div>
+        <div><div class="sw" style="background:#FF5A1F"></div><span class="swx">FF5A1F</span></div>
+      </div>
+      <span class="spec">cards are WHITE on grey — lighter than the page, never shadowed<br>orange appears ONCE per view. only ever as the period.<br>page margin flat 30px, no container · radius 0 · zero-pad counters in chrome</span>
+    </div>
+    <div class="lcol">
+      <span class="k">MOTION + PROOF</span>
+      <span class="spec">one bezier: (.165,.84,.44,1)<br>page transitions 700ms<br>everything else 200ms</span>
+      <div class="chips">
+        <span class="btn" style="background:#0A0A0A;color:#F6F6F6">begin</span>
+        <div class="tile" style="background:#FFFFFF;border:1px solid #DDD"><svg viewBox="-52 -50 168 122" style="color:#0A0A0A"><use href="#AL"/><circle cx="86" cy="42" r="13" fill="#FF5A1F"/></svg></div>
+      </div>
+    </div>
+  </div>
+  <div class="verdict">BEST FOR: poster-tight galleries, the press kit, investor deck. RISK: coldest of the eight — needs the period doing overtime to stay warm.</div>
+</div>
+
+<!-- ================= 5 THE MONOGRAPH ================= -->
+<div class="lang" style="--lbg:#FBF8F1;--lik:#1C1B16;--lhair:rgba(28,27,22,.16)">
+  <div class="lhead"><span class="lname">05 · THE MONOGRAPH</span><span class="lsrc">LINEAGE: editorial scale C (12.9×, two ladders) · E-Ink/Paper style · shupatto's calm<br>THE ACADEMIC PAPER, RECLAIMED</span></div>
+  <div class="lbody">
+    <div class="lcol">
+      <span class="k">TYPE · SERIF BODY · TWO LADDERS THAT NEVER MEET</span>
+      <div class="headline" style="font-family:Georgia,serif;font-weight:700;font-size:36px;letter-spacing:-.015em">Theorem A<span style="color:#FF5A1F">.</span></div>
+      <p class="bodycopy" style="font-family:Georgia,serif;font-size:12px;line-height:1.5">For every student s there exists a route r(s). Serif at 14–18px, hairline rules at 0.5px, footnotes carry the voice.</p>
+      <span class="label">FIG. A — SPRING 2027 · P. 12</span>
+    </div>
+    <div class="lcol">
+      <span class="k">PALETTE · INK ON PAPER + ONE FOOTNOTE</span>
+      <div class="swrow">
+        <div><div class="sw" style="background:#FBF8F1"></div><span class="swx">FBF8F1</span></div>
+        <div><div class="sw" style="background:#F0EADD"></div><span class="swx">F0EADD</span></div>
+        <div><div class="sw" style="background:#1C1B16"></div><span class="swx">1C1B16</span></div>
+        <div><div class="sw" style="background:#E4DCD0"></div><span class="swx">rule</span></div>
+        <div><div class="sw" style="background:#FF5A1F"></div><span class="swx">FF5A1F</span></div>
+      </div>
+      <span class="spec">accent role: the footnote period — citations, "proved" states<br>read ladder 10–18px in 1.08–1.15 steps · look ladder 40/64/112/180<br>density beat: the 24-item hairline transcript grid</span>
+    </div>
+    <div class="lcol">
+      <span class="k">MOTION + PROOF</span>
+      <span class="spec">almost none. color 150ms only<br>no transforms on text, ever<br>page turn = instant</span>
+      <div class="chips">
+        <span class="btn" style="background:transparent;color:#1C1B16;border:1px solid #1C1B16;font-family:Georgia,serif;font-style:italic">read the proof</span>
+        <div class="tile" style="background:#FBF8F1;border:1px solid #E4DCD0"><svg viewBox="-52 -50 168 122" style="color:#1C1B16"><use href="#AL"/><circle cx="86" cy="42" r="13" fill="#FF5A1F"/></svg></div>
+      </div>
+    </div>
+  </div>
+  <div class="verdict">BEST FOR: trust surfaces — audit views, degree contracts, parent-facing pages. RISK: too quiet to carry gen-Z marketing alone; a supporting dialect.</div>
+</div>
+
+<!-- ================= 6 RISO PRESS ================= -->
+<div class="lang" style="--lbg:#F2EAD8;--lik:#0061C8;--lhair:rgba(0,97,200,.2)">
+  <div class="lhead"><span class="lname">06 · RISO PRESS</span><span class="lsrc">LINEAGE: two-ink riso · Anti-Polish/Raw style · overshoot ease, once<br>THE ZINE THE CS KIDS MAKE</span></div>
+  <div class="lbody" style="position:relative">
+    <svg class="grain" width="100%" height="100%"><rect width="100%" height="100%" filter="url(#grD)"/></svg>
+    <div class="lcol">
+      <span class="k">TYPE · CHUNKY SCALE B · INK IS BLUE, NOT BLACK</span>
+      <div class="headline" style="font-family:system-ui;font-weight:800;font-size:36px;letter-spacing:-.03em;color:#0061C8">drop week<span style="color:#FF6C2F">.</span></div>
+      <p class="bodycopy" style="font-family:system-ui;color:#0061C8">Two inks only: riso blue and orange. Overlap makes the third color free. Grain is honest, not a filter cosplay.</p>
+      <span class="label" style="color:#FF6C2F">EDITION 03 · 500 COPIES</span>
+    </div>
+    <div class="lcol">
+      <span class="k">PALETTE · TWO INKS + PAPER</span>
+      <div class="swrow">
+        <div><div class="sw" style="background:#F2EAD8"></div><span class="swx">F2EAD8</span></div>
+        <div><div class="sw" style="background:#0061C8"></div><span class="swx">0061C8</span></div>
+        <div><div class="sw" style="background:#FF6C2F"></div><span class="swx">FF6C2F</span></div>
+        <div><div class="sw" style="background:#7A3F86"></div><span class="swx">overlap</span></div>
+      </div>
+      <span class="spec">hover state = 2px misregistration shift of the orange pass<br>radius 0 · borders chunky 3px · halftone for all shading<br>photography: never — illustration and print artifacts only</span>
+    </div>
+    <div class="lcol">
+      <span class="k">MOTION + PROOF</span>
+      <span class="spec">ease quint + ONE overshoot<br>(.34,1.56,.64,1) — the stamp,<br>on "aced it" moments only</span>
+      <div class="chips">
+        <span class="btn" style="background:#0061C8;color:#F2EAD8">grab the drop</span>
+        <div class="tile" style="background:#F2EAD8;border:3px solid #0061C8"><svg viewBox="-52 -50 168 122"><g style="color:#FF6C2F" transform="translate(4,3)" opacity=".85"><use href="#AL"/></g><g style="color:#0061C8;mix-blend-mode:multiply" opacity=".9"><use href="#AL"/></g></svg></div>
+      </div>
+    </div>
+  </div>
+  <div class="verdict">BEST FOR: merch drops, event posters, campus stickering season. RISK: a campaign dialect, not a product language — UI in riso grain would exhaust.</div>
+</div>
+
+<!-- ================= 7 BENTO SOFT ================= -->
+<div class="lang" style="--lbg:#F4F1EA;--lik:#1B1A16;--lhair:rgba(27,26,22,.14)">
+  <div class="lhead"><span class="lname">07 · BENTO SOFT</span><span class="lsrc">LINEAGE: Bento Box Grid + Soft UI Evolution styles · stagger-by-mass choreography<br>EVERYTHING IS A TILE</span></div>
+  <div class="lbody">
+    <div class="lcol">
+      <span class="k">TYPE · SCALE A · TILES CARRY HIERARCHY</span>
+      <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:8px;margin:4px 0 10px">
+        <div style="background:#FFFFFF;border-radius:18px;padding:12px 14px">
+          <div style="font-family:system-ui;font-weight:700;font-size:19px;letter-spacing:-.02em">3 classes left<span style="color:#FF5A1F">.</span></div>
+          <div style="font-family:system-ui;font-size:10px;opacity:.6;margin-top:4px">CMPSC 465 · MATH 230</div>
+        </div>
+        <div style="background:#1B1A16;border-radius:18px;display:flex;align-items:center;justify-content:center">
+          <svg viewBox="-52 -50 168 122" width="54" style="color:#F4F1EA"><use href="#AL"/><circle cx="86" cy="42" r="13" fill="#FF5A1F"/></svg>
+        </div>
+      </div>
+      <span class="label">GPA 3.7 → 3.8 · ON TRACK</span>
+    </div>
+    <div class="lcol">
+      <span class="k">PALETTE · GROUND + WHITE TILES + TWO INK TILES</span>
+      <div class="swrow">
+        <div><div class="sw" style="background:#F4F1EA"></div><span class="swx">F4F1EA</span></div>
+        <div><div class="sw" style="background:#FFFFFF;border-radius:10px"></div><span class="swx">tile</span></div>
+        <div><div class="sw" style="background:#1B1A16;border-radius:10px"></div><span class="swx">ink tile</span></div>
+        <div><div class="sw" style="background:#FF5A1F;border-radius:10px"></div><span class="swx">1 per view</span></div>
+      </div>
+      <span class="spec">radius 18px squircle — the ONE global radius (pill school)<br>gap 12px · unit 4px · row gap = column gap (bento exception)<br>orange tile: max one per viewport — it is the period as furniture</span>
+    </div>
+    <div class="lcol">
+      <span class="k">MOTION + PROOF</span>
+      <span class="spec">ease quint · tiles enter 60–80ms<br>stagger, span capped 400ms<br>tile hover: translate -2px, 200ms</span>
+      <div class="chips">
+        <span class="btn" style="background:#FF5A1F;color:#fff;border-radius:99px">plan my week</span>
+        <span class="btn" style="background:#FFFFFF;color:#1B1A16;border-radius:99px">later</span>
+      </div>
+    </div>
+  </div>
+  <div class="verdict">BEST FOR: the dashboard and mobile app — information as friendly objects. RISK: bento is 2024–25's most copied pattern; ours survives only via the period discipline.</div>
+</div>
+
+<!-- ================= 8 TERMINAL HONORS ================= -->
+<div class="lang" style="--lbg:#0C0D0C;--lik:#E8E4D8;--lhair:rgba(232,228,216,.14)">
+  <div class="lhead"><span class="lname">08 · TERMINAL HONORS</span><span class="lsrc">LINEAGE: greptile/cofounder mono-first · label tier promoted to the voice · easeOutExpo<br>FOR THE KIDS WHO LIVE IN THE SHELL</span></div>
+  <div class="lbody">
+    <div class="lcol">
+      <span class="k">TYPE · MONO EVERYWHERE · FLAT 13/16/24/64</span>
+      <div class="headline" style="font-family:var(--mono);font-weight:700;font-size:26px;letter-spacing:-.01em">$ ace plan --spring<span style="display:inline-block;width:11px;height:22px;background:#FF5A1F;vertical-align:-3px;margin-left:6px"></span></div>
+      <p class="bodycopy" style="font-family:var(--mono);font-size:10.5px;line-height:1.6;opacity:.8">&gt; 14 credits · 3 reqs cleared<br>&gt; conflict: MATH 230 ⨯ CMPSC 311<br>&gt; resolved. 0 warnings.</p>
+      <span class="label" style="color:#33FF66">EXIT CODE 0 · ALL CHECKS PASS</span>
+    </div>
+    <div class="lcol">
+      <span class="k">PALETTE · NIGHT + CURSOR + ONE GREEN</span>
+      <div class="swrow">
+        <div><div class="sw" style="background:#0C0D0C"></div><span class="swx">0C0D0C</span></div>
+        <div><div class="sw" style="background:#161715"></div><span class="swx">panel</span></div>
+        <div><div class="sw" style="background:#E8E4D8"></div><span class="swx">E8E4D8</span></div>
+        <div><div class="sw" style="background:#FF5A1F"></div><span class="swx">cursor</span></div>
+        <div><div class="sw" style="background:#33FF66"></div><span class="swx">pass only</span></div>
+      </div>
+      <span class="spec">the orange period becomes the BLOCK CURSOR — same role, new body<br>green = exit code 0 only. never decoration.<br>zero-padded counters everywhere: WEEK 04 · CREDITS 014<br>no scanlines, no CRT cosplay — restraint is the difference</span>
+    </div>
+    <div class="lcol">
+      <span class="k">MOTION + PROOF</span>
+      <span class="spec">ease expo · 120ms everything<br>cursor blink 1.1s step — the ONLY loop<br>text appears instant, never typed-out</span>
+      <div class="chips">
+        <span class="btn" style="background:#E8E4D8;color:#0C0D0C;font-family:var(--mono)">ace --start</span>
+        <div class="tile" style="background:#161715;border:1px solid rgba(232,228,216,.2)"><svg viewBox="-52 -50 168 122" style="color:#E8E4D8"><use href="#AL"/><circle cx="86" cy="42" r="13" fill="#FF5A1F"/></svg></div>
+      </div>
+    </div>
+  </div>
+  <div class="verdict">BEST FOR: CS/DS launch wedge, power-user mode, dev-community marketing. RISK: costume if the content under it is claims, not readouts — the library's own warning.</div>
+</div>
+
+<p class="sub" style="margin-top:26px">ARCHITECTURE NOTE — these are not eight competitors. One PRIMARY carries product + landing (choose from 01/02/07). One DARK twin (03 or 08) for the app at night. Campaign dialects (06 posters, 05 trust pages, 04 press) deploy seasonally. The mark, the period, and the laws never change between them.</p>
+
+</div>
+</body>
+</html>
