@@ -61,15 +61,16 @@ function reqLabel(title) {
   return title.length > 16 ? title.slice(0, 15) + "…" : title;
 }
 
-/* ── Logo: 7px radius square, black bg, gold grad cap ── */
+/* ── Logo: ink square, the ace. mark (a leans -11°, period level) ── */
 function SbLogo() {
   return (
     <div className="sb-logo">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-        stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
-        aria-hidden>
-        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-        <path d="M6 12v5c3 3 9 3 12 0v-5" />
+      <svg width="17" height="11.5" viewBox="-44 -41 148 100" aria-hidden>
+        <g transform="rotate(-11 5 12)">
+          <circle cx="0" cy="12" r="31" fill="none" stroke="#F6F6F6" strokeWidth="22" />
+          <rect x="30" y="-32" width="22" height="88" rx="11" fill="#F6F6F6" />
+        </g>
+        <circle cx="82" cy="38" r="18" fill="#FF5A1F" />
       </svg>
     </div>
   );

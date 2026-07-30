@@ -29,23 +29,20 @@ const SettingsPanel       = lazy(() => import("./SettingsPanel.jsx"));
 const StickyBoard         = lazy(() => import("./StickyBoard.jsx"));
 
 /* ── Icons ─────────────────────────────────────── */
-function GradCapIcon({ size = 16 }) {
+/* The ace. mark: the a leans -11°, the period never does. */
+function AceMark({ size = 16, ink = "#F6F6F6" }) {
   return (
     <svg
       width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="white"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      height={size * (100 / 148)}
+      viewBox="-44 -41 148 100"
       aria-hidden
     >
-      {/* mortarboard top (diamond) + tassel line */}
-      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-      {/* cap body with curved bottom */}
-      <path d="M6 12v5c3 3 9 3 12 0v-5" />
+      <g transform="rotate(-11 5 12)">
+        <circle cx="0" cy="12" r="31" fill="none" stroke={ink} strokeWidth="22" />
+        <rect x="30" y="-32" width="22" height="88" rx="11" fill={ink} />
+      </g>
+      <circle cx="82" cy="38" r="18" fill="#FF5A1F" />
     </svg>
   );
 }
@@ -126,11 +123,11 @@ function RotatingWord() {
 }
 
 function AceLogo({ size = 36 }) {
-  const iconSize = Math.round(size * 0.52);
-  const radius = Math.round(size * 0.22);
+  const iconSize = Math.round(size * 0.62);
+  const radius = Math.round(size * 0.2);
   return (
     <div className="ace-logo-box" style={{ width: size, height: size, borderRadius: radius }}>
-      <GradCapIcon size={iconSize} />
+      <AceMark size={iconSize} />
     </div>
   );
 }

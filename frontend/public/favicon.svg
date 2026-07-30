@@ -1,9 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="116" fill="#09090b"/>
-  <g transform="translate(256,256) scale(10.6) translate(-12,-12)"
-     fill="none" stroke="#ffffff" stroke-width="1.7"
-     stroke-linecap="round" stroke-linejoin="round">
-    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+  <!-- ace. — favicon cut: the a leans -11°, box and dot stay level, dot at 0.7R for small sizes -->
+  <rect width="512" height="512" rx="102" fill="#0A0A0A"/>
+  <g transform="translate(189.24,236.93) scale(2.15)">
+    <g transform="rotate(-11 5 12)">
+      <circle cx="0" cy="12" r="31" fill="none" stroke="#F6F6F6" stroke-width="22"/>
+      <rect x="30" y="-32" width="22" height="88" rx="11" fill="#F6F6F6"/>
+    </g>
+    <circle cx="82" cy="34" r="22" fill="#FF5A1F"/>
   </g>
 </svg>

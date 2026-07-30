@@ -147,8 +147,16 @@ body {
 .sb-logo {
   width: 26px;
   height: 26px;
-  border-radius: 7px;
-  background: #2563eb;
+  border-radius: 6px;
+  background: #0A0A0A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+/* ace. logo tile — the mark always sits on ink, in both themes */
+.ace-logo-box {
+  background: #0A0A0A;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1789,8 +1797,8 @@ body {
 .login-logo {
   width: 32px;
   height: 32px;
-  border-radius: 7px;
-  background: #2563eb;
+  border-radius: 6px;
+  background: #0A0A0A;
   display: flex;
   align-items: center;
   justify-content: center;

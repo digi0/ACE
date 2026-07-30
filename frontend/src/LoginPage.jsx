@@ -65,11 +65,12 @@ export default function LoginPage() {
         {/* Brand */}
         <div className="login-brand">
           <div className="login-logo">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-              stroke="#ffffff" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round"
-              aria-hidden>
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M12 6v6l4 2"/>
+            <svg width="20" height="13.5" viewBox="-44 -41 148 100" aria-hidden>
+              <g transform="rotate(-11 5 12)">
+                <circle cx="0" cy="12" r="31" fill="none" stroke="#F6F6F6" strokeWidth="22" />
+                <rect x="30" y="-32" width="22" height="88" rx="11" fill="#F6F6F6" />
+              </g>
+              <circle cx="82" cy="38" r="18" fill="#FF5A1F" />
             </svg>
           </div>
           <span className="login-brand-name">ACE</span>
