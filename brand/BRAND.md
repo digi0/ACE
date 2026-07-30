@@ -102,7 +102,38 @@ chat, dashboard, prereq route, stats, merch).
 
 ---
 
-## 3. Shipped — LOCKED
+## 3. Go-to-market — the playbook — LOCKED
+
+**`brand/playbook.html`** is the CMO document: what we sell, why the design works
+psychologically, how we talk, the plays, the guardrails, and the scoreboard. Read it
+before writing any marketing asset. The decisions that bind:
+
+- **We sell relief, not features.** The purchase is the moment the dread ends. Every
+  asset must read as *you were carrying this, now you're not.*
+- **The period is a closure cue.** It marks things that are *done* — never a loading
+  state, never an empty state, never an error. Misuse costs us the mechanism.
+- **Colour works by conditioning, not symbolism.** We do not lean on pop colour
+  psychology. Emerald means "resolved" because it appears in exactly one role, every
+  time, and nowhere else. Two roles destroys it.
+- **Type is set for processing fluency** — easier to read makes the degree feel more
+  doable. Lowercase = peer register, mono = receipts (numbers only), text caps at 28px.
+- **Voice:** lead with the verdict, name mistakes as routes not failures, never take
+  the credit, no exclamation marks. Test: could a sophomore text this to their
+  roommate without irony?
+- **Never say:** chatbot · AI-powered · student success platform · empower ·
+  revolutionize · optimize · journey/roadmap/pathway.
+- **Never claim:** a graduation outcome, university endorsement, or that we replace
+  advisors. Never joke about uploaded documents. Never manufacture urgency — real
+  deadlines are urgent enough, and the audience is already anxious.
+- **North-star metric is resolution rate**, not engagement. Refuse total messages,
+  session length, and DAU-without-resolution in reporting.
+- **Sequence matters:** product reliability → seed 50 upperclassmen in prereq-heavy
+  majors → publish 20 real transcripts (including a correction) → dots + the 2am
+  channel → the course-code content engine. Per-campus, not national.
+
+---
+
+## 4. Shipped — LOCKED
 
 Commit `3916de6` replaced the grad-cap across the product:
 
@@ -128,7 +159,7 @@ HTTP to QA the landing.
 
 ---
 
-## 4. Next — PROVISIONAL, this is the pickup point
+## 5. Next — PROVISIONAL, this is the pickup point
 
 The goal: **remodel the landing site and the product UI around Zero Chroma.**
 Nothing below has been started.

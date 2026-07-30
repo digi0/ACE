@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ace. — the playbook</title>
+<style>
+  :root{
+    --g0:#F6F6F6; --card:#FFFFFF; --rule:#E4E4E4; --ghost:#B2B2B2; --mute:#666666; --ink:#0A0A0A;
+    --period:#00875A;
+    --mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,monospace;
+    --sans:-apple-system,'Helvetica Neue',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--g0);color:var(--ink);font-family:var(--sans);padding:0 30px 80px;line-height:1.4}
+  .wrap{max-width:1000px;margin:0 auto}
+  .mono,.lab,.k,.num,.tag{font-family:var(--mono)}
+  .lab{font-size:10px;letter-spacing:.16em;color:var(--mute);text-transform:uppercase}
+  svg{display:block}
+  .card{background:var(--card);border:1px solid var(--rule)}
+
+  /* cover */
+  .cover{padding:110px 0 80px;border-bottom:1px solid var(--ink);display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
+  .cover p{font-size:17px;max-width:44ch;margin-top:30px;color:var(--ink)}
+  .cover .meta{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--mute);text-align:right;line-height:2.2;flex:0 0 auto}
+
+  /* parts + sections */
+  .part{margin:84px 0 0;padding-top:22px;border-top:1px solid var(--ink);display:flex;justify-content:space-between;align-items:baseline}
+  .part h2{font-size:26px;font-weight:600;letter-spacing:-.02em}
+  .part .pn{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--mute)}
+  section{margin-top:34px}
+  h3{font-size:17px;font-weight:600;letter-spacing:-.01em;margin-bottom:9px}
+  h3 .n{font-family:var(--mono);font-size:11px;color:var(--ghost);margin-right:10px;letter-spacing:.1em}
+  p{font-size:14px;max-width:68ch;color:var(--ink)}
+  p+p{margin-top:11px}
+  .dim{color:var(--mute)}
+  .lead{font-size:16px;max-width:70ch}
+  ul{margin:11px 0 0 0;padding:0;list-style:none;max-width:68ch}
+  li{font-size:14px;padding-left:18px;position:relative;margin-bottom:7px}
+  li:before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;background:var(--ghost)}
+  li.hit:before{background:var(--period)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:16px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:16px}
+  .cell{background:var(--card);padding:18px 20px}
+  .cell h4{font-size:13px;font-weight:600;margin-bottom:7px}
+  .cell p{font-size:12.5px;line-height:1.45;color:var(--mute)}
+  table{width:100%;border-collapse:collapse;margin-top:16px;background:var(--card);border:1px solid var(--rule)}
+  th,td{text-align:left;padding:11px 14px;font-size:12.5px;border-bottom:1px solid var(--rule);vertical-align:top}
+  th{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--mute);text-transform:uppercase;font-weight:400}
+  tr:last-child td{border-bottom:none}
+  td.no{color:var(--mute);text-decoration:line-through}
+  .say{border-left:2px solid var(--period);padding-left:14px}
+  .quote{font-size:22px;font-weight:600;letter-spacing:-.02em;margin:18px 0 0;max-width:34ch;line-height:1.25}
+  .quote .p{color:var(--period)}
+  .stack{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+  .rung{background:var(--card);border:1px solid var(--rule);padding:14px 18px;display:flex;gap:18px;align-items:baseline}
+  .rung .k{font-size:9.5px;letter-spacing:.14em;color:var(--mute);flex:0 0 96px;text-transform:uppercase}
+  .rung .v{font-size:14.5px}
+  .metric{display:flex;flex-direction:column;gap:5px}
+  .metric .num{font-size:38px;font-weight:700;letter-spacing:-.02em;line-height:1}
+  .fluency{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:16px}
+  .fl{background:var(--card);padding:20px}
+  .bad{font-family:'Courier New',monospace;font-size:12px;line-height:1.9;letter-spacing:.02em;color:#3a3a3a;text-transform:uppercase}
+  .good{font-size:15px;line-height:1.45}
+  .cond{display:flex;align-items:flex-end;gap:9px;margin-top:16px;flex-wrap:wrap}
+  .cond .ev{width:52px;height:52px;border:1px solid var(--rule);background:var(--card);display:flex;align-items:center;justify-content:center}
+  .cond .ev i{width:11px;height:11px;border-radius:50%;background:var(--period)}
+  .cond .arw{font-family:var(--mono);font-size:11px;color:var(--ghost);padding:0 4px 16px}
+  .cond .out{font-size:13px;font-weight:600;padding-bottom:16px}
+  .tl{margin-top:16px;border:1px solid var(--rule);background:var(--card)}
+  .tlrow{display:grid;grid-template-columns:120px 1fr;border-bottom:1px solid var(--rule)}
+  .tlrow:last-child{border-bottom:none}
+  .tlrow .w{padding:14px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--mute);border-right:1px solid var(--rule);text-transform:uppercase}
+  .tlrow .b{padding:14px 18px}
+  .tlrow .b b{font-size:13.5px}.tlrow .b p{font-size:12.5px;color:var(--mute);margin-top:4px}
+  footer{margin-top:90px;border-top:1px solid var(--ink);padding-top:24px;display:flex;justify-content:space-between;align-items:flex-end}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <g id="wm">
+    <circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
+    <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/>
+    <path d="M 123.92 -11.75 A 31 31 0 1 0 123.92 35.75" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
+    <path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
+    <rect x="150.93" y="1" width="72" height="22" rx="11" fill="currentColor"/>
+    <circle cx="248.93" cy="38" r="18" fill="#00875A"/>
+  </g>
+</defs></svg>
+
+<!-- ========== COVER ========== -->
+<div class="cover">
+  <div>
+    <svg viewBox="-46 -44 328 104" width="440" style="color:var(--ink)"><use href="#wm"/></svg>
+    <p>The playbook. Not what we look like — <b>why it works</b>, who it works on,
+    and how we take it to campus.</p>
+  </div>
+  <div class="meta">
+    THE PLAYBOOK · V1<br>
+    MARK &amp; LANGUAGE LOCKED<br>
+    ACCENT #00875A<br><br>
+    DESIGN SPEC → BRAND.md<br>
+    THIS DOC → GO-TO-MARKET
+  </div>
+</div>
+
+<!-- ========== PART I ========== -->
+<div class="part"><h2>What we actually sell</h2><span class="pn">PART I</span></div>
+
+<section>
+  <h3><span class="n">01</span>The product is course planning. The purchase is relief.</h3>
+  <p class="lead">Nobody wakes up wanting a degree-audit parser. What a student actually
+  carries is a low, constant dread: <i>I think I'm behind, I'm not sure, and everyone
+  else seems to have it figured out.</i></p>
+  <p>That dread has three parts, and each one is a marketing target:</p>
+  <ul>
+    <li><b>Uncertainty</b> — the rules exist, but they're spread across a 40-page handbook, a bulletin site, and an advisor with a three-week queue.</li>
+    <li><b>Shame</b> — asking feels like admitting you should already know. This is why students Google at 2am instead of emailing at 2pm.</li>
+    <li><b>Comparison</b> — the belief that everyone else has a plan. They don't. They have the same tabs open.</li>
+  </ul>
+  <p style="margin-top:14px">So we never sell features. We sell the <b>moment the dread ends</b>.
+  Every asset we make should be legible as: <i>you were carrying this, now you're not.</i></p>
+</section>
+
+<section>
+  <h3><span class="n">02</span>The message ladder</h3>
+  <p>One idea per rung. Never skip a rung to sound smarter.</p>
+  <div class="stack">
+    <div class="rung"><span class="k">Six words</span><span class="v">college, sorted<span style="color:var(--period)">.</span></span></div>
+    <div class="rung"><span class="k">One line</span><span class="v">The advisor that answers at 2am.</span></div>
+    <div class="rung"><span class="k">Two lines</span><span class="v">Every major, every prereq, every deadline — memorized. Ask it like you'd text a friend.</span></div>
+    <div class="rung"><span class="k">The proof</span><span class="v">749 majors. 9,439 courses. 46 handbook rules, cited to the page.</span></div>
+    <div class="rung"><span class="k">The thesis</span><span class="v">College is a maze with the map locked in a filing cabinet. We're the navigation layer — courses first, then registration, deadlines, and career.</span></div>
+  </div>
+</section>
+
+<section>
+  <h3><span class="n">03</span>Who we're for, and when</h3>
+  <div class="grid3">
+    <div class="cell"><h4>The primary</h4><p>Undergrad, any major, mid-degree. Not a freshman with a clean slate — a sophomore or junior who has already made one choice they're unsure about. They are the ones with a question that has a wrong answer.</p></div>
+    <div class="cell"><h4>The second audience, free</h4><p>Parents. They never install anything; they receive a screenshot. Every answer should survive being forwarded to someone paying tuition.</p></div>
+    <div class="cell"><h4>The gatekeeper we don't fight</h4><p>Advising offices. We are not a procurement sale and we do not campaign against advisors. We are the hours they don't work.</p></div>
+  </div>
+  <p style="margin-top:16px"><b>Timing is a channel.</b> Demand for ACE is nocturnal and
+  calendar-spiked: the week registration opens, the week before drop deadlines, the night
+  before an advising appointment, and the 48 hours after grades post. Media plans built
+  on a flat weekly cadence will underperform by a wide margin. Spend where the panic is.</p>
+</section>
+
+<!-- ========== PART II ========== -->
+<div class="part"><h2>Why the design works</h2><span class="pn">PART II</span></div>
+
+<section>
+  <h3><span class="n">04</span>The period is a closure cue</h3>
+  <p>The mark ends in a full stop. That is not decoration — it is the entire product
+  promise compressed into one glyph, and it works on a mechanism we can name.</p>
+  <p>An open question occupies working memory; it keeps surfacing until it's closed.
+  A period is the most universally-learned <b>closure signal</b> in written language.
+  Putting one at the end of our name means the brand's resting state is
+  <i>resolved</i> — and putting it on the send button means the student performs
+  that closure with their own thumb.</p>
+  <p class="dim">Practical consequence: the period never marks a beginning. It is never on a
+  loading state, never on an empty state, never on an error. It appears when something
+  is <b>done</b>. Misuse costs us the mechanism.</p>
+  <div class="cond">
+    <div class="ev"><i></i></div><span class="arw">+</span>
+    <div class="ev"><i></i></div><span class="arw">+</span>
+    <div class="ev"><i></i></div><span class="arw">+</span>
+    <div class="ev"><i></i></div><span class="arw">→</span>
+    <span class="out">emerald = the thing is handled</span>
+  </div>
+  <p class="dim" style="margin-top:12px;font-size:12.5px">Four sessions of one colour in one
+  role is enough to build the association. Two roles is enough to destroy it.</p>
+</section>
+
+<section>
+  <h3><span class="n">05</span>Colour: conditioning, not symbolism</h3>
+  <p>Most colour psychology sold to marketers is unfalsifiable — "green means growth,
+  blue means trust." Cross-cultural evidence for innate colour meaning is weak, and
+  we're not building on it.</p>
+  <p>What is real, and what we're actually using:</p>
+  <ul>
+    <li><b>Learned interface convention.</b> In software, green already means pass, approved, complete. That convention is decades deep and it happens to be exactly our product's payload. We're borrowing a meaning students already hold — not inventing one.</li>
+    <li class="hit"><b>Scarcity creates conditioning.</b> One hue, one role, one appearance per view. Because emerald <i>only</i> ever means resolution, repeated exposure trains the association. This is the mechanism; the hue is almost secondary to the discipline.</li>
+    <li><b>Salience is measurable.</b> #00875A clears 4.21:1 on our paper and 4.24:1 on our ink — the best-balanced of sixteen candidates tested. The dot is a control, not an ornament, so it has to be seen at 16px on a phone in daylight.</li>
+    <li><b>Negative space matters more than the accent.</b> Six greys with no hue mean the emerald has nothing to compete with. A colourful interface cannot have a meaningful accent.</li>
+  </ul>
+  <p style="margin-top:14px"><b>Why not red:</b> red is conditioned as error and destruction in
+  every interface a student has ever used. For a product whose job is lowering anxiety,
+  spending our one accent on an alarm signal would work directly against the copy.
+  We tested it, it scored fine on contrast, and we rejected it on psychology.</p>
+</section>
+
+<section>
+  <h3><span class="n">06</span>Type: we set the type to make college feel doable</h3>
+  <p>The strongest, best-supported effect in this whole document is <b>processing
+  fluency</b>: when something is easier to read, people judge the task it describes as
+  easier to do. Same instructions, harder typeface, and readers estimate the task
+  takes longer and are less willing to start.</p>
+  <p>For a product whose content is <i>degree requirements</i> — the single most
+  intimidating body of text in a student's life — that is not a nicety. It is the
+  feature.</p>
+  <div class="fluency">
+    <div class="fl">
+      <span class="lab">How the university writes it</span>
+      <p class="bad" style="margin-top:10px">PRESCRIBED COURSES: 40-49 CREDITS.<br>
+      STUDENTS MUST COMPLETE CMPSC 465 WITH<br>
+      A MINIMUM GRADE OF C. PREREQUISITE:<br>
+      MATH 230 OR CONCURRENT ENROLLMENT.</p>
+      <p class="dim" style="font-size:11.5px;margin-top:12px">Uppercase, monospaced, no hierarchy. Reads as: this will be hard, and it may be a trap.</p>
+    </div>
+    <div class="fl">
+      <span class="lab">How we write it</span>
+      <p class="good" style="margin-top:10px">retake MATH 230 in fall — it's the gate for
+      CMPSC 465. two courses, one semester, and you're clear<span style="color:var(--period)">.</span></p>
+      <p class="dim" style="font-size:11.5px;margin-top:12px">Lowercase, one idea, the number named, the exit stated. Same facts. Different estimate of effort.</p>
+    </div>
+  </div>
+  <p style="margin-top:16px">The type system encodes three more decisions, each with a job:</p>
+  <ul>
+    <li><b>Lowercase is a register choice.</b> Capitals are institutional; lowercase is peer. We are the friend who happens to have read the handbook, not the registrar.</li>
+    <li><b>Mono over numbers only.</b> Monospaced digits read as machine output — receipts, not claims. <span class="mono" style="font-size:12.5px">087/120</span> is believable in a way "72% complete!" is not. Never set marketing copy in mono; it becomes costume.</li>
+    <li><b>Text caps at 28px; the wordmark carries scale.</b> Shouting in type reads as a hard sell. Our confidence comes from the mark being enormous and the sentences being calm.</li>
+  </ul>
+</section>
+
+<!-- ========== PART III ========== -->
+<div class="part"><h2>How we talk</h2><span class="pn">PART III</span></div>
+
+<section>
+  <h3><span class="n">07</span>The shame-free grammar</h3>
+  <p>Every line we write is read by someone who is slightly afraid of the answer. Four rules:</p>
+  <ul>
+    <li><b>Lead with the verdict.</b> "yes." then the reason. Never make them read a paragraph to find out if they're okay.</li>
+    <li><b>Name the mistake as a route, not a failure.</b> "failed it? rerouted." The student's error is a fact about the map, not a fact about them.</li>
+    <li><b>Never take the credit.</b> "you're fine" — not "we fixed it." Agency stays with the student; we're the map, they're the one walking.</li>
+    <li><b>No exclamation marks.</b> Confidence doesn't shout, and enthusiasm reads as sales. The period does the work.</li>
+  </ul>
+  <div class="quote">your 2am question. answered<span class="p">.</span></div>
+</section>
+
+<section>
+  <h3><span class="n">08</span>The lexicon</h3>
+  <table>
+    <tr><th style="width:34%">We say</th><th style="width:33%">We never say</th><th>Because</th></tr>
+    <tr><td class="say">advisor</td><td class="no">chatbot, assistant, bot</td><td>"Chatbot" sets the expectation of a toy that will waste your time.</td></tr>
+    <tr><td class="say">sorted · handled · rerouted</td><td class="no">optimize, streamline, unlock</td><td>Students don't optimize their degree. They want it handled.</td></tr>
+    <tr><td class="say">the plan · the route</td><td class="no">journey, roadmap, pathway</td><td>Corporate metaphors. A route is something you follow tonight.</td></tr>
+    <tr><td class="say">cited to page 14</td><td class="no">AI-powered, powered by AI</td><td>The model isn't the value; the citation is. Leading with AI invites doubt about accuracy.</td></tr>
+    <tr><td class="say">every major</td><td class="no">student success platform</td><td>Nobody has ever said that phrase out loud to a friend.</td></tr>
+    <tr><td class="say">you're fine</td><td class="no">empower, revolutionize, transform</td><td>Words that describe how the company feels about itself.</td></tr>
+  </table>
+  <p style="margin-top:14px" class="dim">Test for any headline: could a sophomore text this to
+  their roommate without irony? If not, rewrite it.</p>
+</section>
+
+<!-- ========== PART IV ========== -->
+<div class="part"><h2>The plays</h2><span class="pn">PART IV</span></div>
+
+<section>
+  <h3><span class="n">09</span>The dot</h3>
+  <p>Our strongest owned asset is not the wordmark. It is a single emerald dot.</p>
+  <p>Print die-cut emerald dots — no name, no URL, nothing. Give them away by the
+  thousand at org fairs. A dot on a laptop lid means nothing to an outsider and
+  everything to someone who uses the app. That is an in-group signal, and in-group
+  signals spread without media spend because wearing one is a small act of identity
+  rather than an advertisement.</p>
+  <p class="dim">Precondition: the dot only works if the app is worth being seen with.
+  This play is downstream of product quality, and it fails loudly if we run it early.</p>
+</section>
+
+<section>
+  <h3><span class="n">10</span>Own the hour nobody wants</h3>
+  <p>Every competitor markets between 9 and 5. Our user's moment of need is 1am to 3am,
+  and attention is nearly free then.</p>
+  <ul>
+    <li>Creative that only makes sense late: <i>"still answering."</i> over a 02:46 timestamp.</li>
+    <li>Paid social scheduled against the panic window, not the workday.</li>
+    <li>The product's own copy acknowledges the hour. Being awake with someone is a relationship, not a transaction.</li>
+  </ul>
+</section>
+
+<section>
+  <h3><span class="n">11</span>The course-code engine</h3>
+  <p>We hold 9,439 course records and 749 program structures. Every course code is
+  something a student types into a search bar at midnight: <span class="mono" style="font-size:13px">"CMPSC 465 prereqs"</span>,
+  <span class="mono" style="font-size:13px">"MATH 230 hard"</span>.</p>
+  <p>That is thousands of pages of genuinely useful, structurally-generated content we
+  can publish because we already have the data — prerequisite chains, what it gates,
+  which semester it's offered, what it's worth. This is the cheapest durable acquisition
+  channel available to us, and it compounds while we sleep.</p>
+  <p class="dim">Guardrail: generated pages must be genuinely useful and honestly sourced,
+  or this becomes spam that costs us the credibility the rest of the brand is built on.
+  Every page cites the bulletin.</p>
+</section>
+
+<section>
+  <h3><span class="n">12</span>Bottom-up, never top-down</h3>
+  <div class="grid2">
+    <div class="cell"><h4>Do</h4><p>RAs, orientation leaders, club officers, course-specific group chats, upperclassmen in majors with brutal prereq chains. People with a group chat and a reason to look helpful.</p></div>
+    <div class="cell"><h4>Don't</h4><p>University procurement, "official partnership" announcements, anything that positions us as an institutional product. It's slow, it's expensive, and it converts our peer voice into an administrative one.</p></div>
+  </div>
+</section>
+
+<section>
+  <h3><span class="n">13</span>Proof by transcript, not by logo wall</h3>
+  <p>"Trusted by 10,000 students" is placeholder thinking, and gen-Z discounts it
+  automatically. Instead we publish <b>the hardest real questions ACE has answered</b> —
+  verbatim, with the handbook page cited.</p>
+  <p>A screenshot of a student asking <i>"can I still graduate by spring '27 if I failed
+  MATH 230?"</i> and getting a four-semester plan with a page citation does more than any
+  testimonial, because it is falsifiable. Anyone can check it.</p>
+  <p style="margin-top:11px"><b>And the inverse:</b> when ACE gets something wrong, publish
+  that too — what it said, what was right, what changed. For an advising product, being
+  publicly correctable is a stronger trust position than being publicly perfect. It also
+  makes us very hard to attack.</p>
+</section>
+
+<section>
+  <h3><span class="n">14</span>The receipt</h3>
+  <p>Give students a clean, screenshot-able artifact of their plan — credits, semesters,
+  the route, cited. Not because they need it, but because they will send it to a parent,
+  a group chat, or an advisor.</p>
+  <p>A shareable artifact turns one user into a distribution channel and reaches the
+  tuition-payer without us buying a single impression. Design it to look right at
+  phone-screenshot size, with the wordmark and the period visible.</p>
+</section>
+
+<!-- ========== PART V ========== -->
+<div class="part"><h2>The guardrails</h2><span class="pn">PART V</span></div>
+
+<section>
+  <h3><span class="n">15</span>Things we never say</h3>
+  <p>Advising is a domain where a confident wrong answer costs a student a semester and
+  costs us the company. Marketing carries that risk as much as the product does.</p>
+  <ul>
+    <li><b>Never promise an outcome.</b> Not "graduate on time, guaranteed." We show the route; the student walks it and the university awards the degree.</li>
+    <li><b>Never imply endorsement.</b> We are not affiliated with, endorsed by, or speaking for any university. Not in copy, not in visual borrowing, not by implication.</li>
+    <li><b>Never say we replace advisors.</b> Beyond being a bad look, it's false — petitions, substitutions and exceptions are human decisions. We say: the advisor who's awake.</li>
+    <li><b>Never joke about uploaded documents.</b> Students hand us degree audits. That is sensitive academic data and it is never a punchline, never a growth-hack prompt, never in a screenshot with a real name.</li>
+    <li><b>Never manufacture urgency.</b> Real deadlines are urgent enough. Inventing pressure on an anxious audience is the one thing this brand cannot survive doing.</li>
+  </ul>
+</section>
+
+<section>
+  <h3><span class="n">16</span>The accuracy posture</h3>
+  <p>Our credibility claim is not "we're smart." It's <b>"here's where that came from."</b>
+  Page-level citation is a marketing asset, not just an engineering detail — it is the
+  difference between a chatbot and an advisor, and it should appear in the product, in
+  screenshots, and in the pitch.</p>
+  <p>When we're unsure, we say so and point at the human. Hedging correctly is cheaper
+  than being confidently wrong once.</p>
+</section>
+
+<!-- ========== PART VI ========== -->
+<div class="part"><h2>The scoreboard</h2><span class="pn">PART VI</span></div>
+
+<section>
+  <h3><span class="n">17</span>Metrics that mean something</h3>
+  <p>Engagement is the wrong goal. A student who spends less time with us and leaves with
+  a plan is a better outcome than one who chats for an hour. Measure resolution.</p>
+  <div class="grid3">
+    <div class="cell metric"><span class="num">01</span><h4>Resolution rate</h4><p>Share of sessions that end in a stated plan rather than a dead end. The north-star metric. If this falls, nothing else matters.</p></div>
+    <div class="cell metric"><span class="num">02</span><h4>Return at the next spike</h4><p>Did they come back at the <i>next</i> registration window? Retention measured on the product's real rhythm, not on 30-day windows borrowed from consumer apps.</p></div>
+    <div class="cell metric"><span class="num">03</span><h4>Shares per resolved plan</h4><p>How often a plan leaves the app as a screenshot. Directly measures play 14 and predicts organic growth better than any survey.</p></div>
+  </div>
+  <p style="margin-top:14px" class="dim">Vanity metrics to refuse in reporting: total messages,
+  session length, DAU without resolution context. They reward the wrong product.</p>
+</section>
+
+<section>
+  <h3><span class="n">18</span>Launch sequence</h3>
+  <div class="tl">
+    <div class="tlrow"><div class="w">Before</div><div class="b"><b>Get the product boringly reliable on one campus.</b><p>Every play in Part IV amplifies whatever the product actually is. Amplifying an unreliable answer engine on an anxious audience is the fastest way to a reputation we can't fix.</p></div></div>
+    <div class="tlrow"><div class="w">Seed</div><div class="b"><b>Fifty upperclassmen in prereq-heavy majors.</b><p>Not a broad beta. Pick the majors where the maze is worst — engineering, CS, nursing — because that's where the relief is most vivid and the word-of-mouth is loudest.</p></div></div>
+    <div class="tlrow"><div class="w">Prove</div><div class="b"><b>Publish twenty transcripts.</b><p>Play 13. Real questions, real citations, including one where ACE was corrected. This is the asset the rest of the launch links to.</p></div></div>
+    <div class="tlrow"><div class="w">Spread</div><div class="b"><b>Dots, and the 2am channel.</b><p>Play 9 and play 10 together, timed to the registration window. Dots at the org fair; creative in the panic hours.</p></div></div>
+    <div class="tlrow"><div class="w">Compound</div><div class="b"><b>Turn on the course-code engine.</b><p>Play 11. Slow to start, impossible to stop. This is what carries growth once the launch energy is gone.</p></div></div>
+    <div class="tlrow"><div class="w">Then</div><div class="b"><b>Second campus, same order.</b><p>The playbook is per-campus, not national. Resist the urge to go wide before one campus is genuinely served.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <h3><span class="n">19</span>The one-sentence test</h3>
+  <p class="lead">Before anything ships — an ad, a page, a poster, a push notification —
+  it has to pass one question: <b>does this make a worried student feel more capable,
+  or does it make us look clever?</b></p>
+  <p>If it's the second one, it doesn't ship. That's the whole brand.</p>
+</section>
+
+<footer>
+  <svg viewBox="-46 -44 328 104" width="170" style="color:var(--ink)"><use href="#wm"/></svg>
+  <div class="lab" style="text-align:right;line-height:2">THE PLAYBOOK V1<br>ONE EMERALD PER VIEW. ALWAYS THE PERIOD.</div>
+</footer>
+
+</div>
+</body>
+</html>

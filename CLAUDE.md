@@ -18,8 +18,9 @@ and it is always the period** (send button, due date, destination, done).
 
 The mark has shipped into `frontend/` and `landing/`, but **the landing and product UI
 are still on the old blue brand** — remodelling them around Zero Chroma is the next
-piece of work. `brand/BRAND.md` §4 is the pickup point, with the migration path and the
-open questions.
+piece of work. `brand/BRAND.md` §5 is the pickup point, with the migration path and the
+open questions. `brand/playbook.html` is the go-to-market playbook — read it before
+writing any marketing copy.
 
 ## Commands
 
