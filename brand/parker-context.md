@@ -1006,3 +1006,62 @@ Uppercase with underscores is deliberate for ad names — these are internal ops
 
 OPTIONAL BUT RECOMMENDED: append _CC once a concept has been claims-checked against the restricted-claims list. Given our strict compliance posture, being able to see at a glance which creative has been reviewed is worth the four extra characters.
 ```
+
+---
+
+## 30. Step 3 · Creative Ops → Creative Strategy Goals
+
+### SUCCESS DEFINITION
+
+```
+ROAS is not applicable — there is no purchase or revenue. Success here is measured in decisions made and assets that exist, not in return on spend.
+
+We have Parker for one month. It is worth keeping if, by the end of it:
+
+1. THE POSITIONING QUESTION IS SETTLED WITH EVIDENCE. Does breadth ("ask your college anything") or the wedge ("know what to take next semester") earn the first open? This is a strategy decision we are currently making on instinct. Resolving it is worth more than any individual winning ad.
+
+2. WE HAVE 2-3 ANGLES THAT HOLD UP ACROSS TWO DIFFERENT ACADEMIC MOMENTS. Not one lucky ad — angles that work at both orientation and registration. Durability across moments matters more than peak performance in one.
+
+3. A SHOOTABLE BACKLOG SIZED TO OUR ACTUAL CAPACITY. Roughly 6-8 concepts a month that two founders can genuinely produce, briefed clearly enough to shoot without a second conversation. A backlog of thirty we can't make is a failure, not a success.
+
+4. A BASELINE COST PER ACTIVATED STUDENT. Not per signup — per student who asks one real question. We have no benchmark; establishing an honest one is a win in itself.
+
+5. ZERO COMPLIANCE INCIDENTS. No rejected ads, no claim that had to be retracted, no creative that needed pulling. Given the FTC and Meta exposure documented in our compliance section, this is a real success criterion and not a formality.
+
+6. EVERY SHIPPED ASSET PASSES THE TEST: does this make a worried student feel more capable, or does it make us look clever? If Parker's output consistently fails that, the tool is not fit for this brand no matter what it does to CTR.
+```
+
+### HELP FROM PARKER
+
+```
+Most valuable, in order:
+
+1. ANGLE MULTIPLICATION FROM OUR OWN MATERIAL. We have a strong strategy document and roughly seven core angles. We need each turned into many shootable variants — different hooks, openings and framings for the same underlying idea. This is the single highest-value thing Parker can do for us.
+
+2. SHORT-FORM SCRIPTS WE CAN ACTUALLY SHOOT. 15-30 second TikTok and Reels scripts producible by two founders with a phone and a laptop screen. Hook, beats, and what's on screen. No crews, no actors, no studio.
+
+3. THE CHATGPT OBJECTION. "Why not just ask ChatGPT?" is the objection that decides this category. We need many different creative answers to it, all landing on the citation rather than attacking AI generally.
+
+4. TURNING REAL TRANSCRIPTS INTO CREATIVE. We have genuine product exchanges — a hard question, a real answer, a cited page. Help us find the formats that make those land as ads, since that's our only proof asset.
+
+5. RESEARCH ON THE STUDENT-FACING LANDSCAPE. What tools students actually talk about, how they describe degree-planning pain in their own words on TikTok and Reddit, what language recurs. Their words are better than ours.
+
+LESS USEFUL FOR US — deprioritise:
+- Meta media-buying strategy at spend levels we don't have.
+- ROAS, CPA and funnel optimisation, which assume a purchase we don't have.
+- Benchmarks drawn from DTC supplement, apparel or e-commerce brands. Different audience, different economics, different rules.
+```
+
+### SPECIFIC GOALS
+
+```
+1. WEEK-ONE CREATIVE READY BEFORE FALL ORIENTATION — the nearest and most time-sensitive goal. Orientation is roughly three to four weeks out. It is the highest-volume, lowest-relationship moment of the student year and the cheapest way into the ecosystem: a student who asks about printing in week one asks about prerequisites in week six. If we produce one thing this month, it is this.
+
+2. A FOUNDER-AD SET. The founder story is newly written and genuinely differentiated — two students who paid for the problem before solving it. Nobody else in this category can say it. Get it shot while it's fresh.
+
+3. A REGISTRATION-PEAK BANK BUILT EARLY. Spring registration opens around late October and is the biggest spike of the year. Build that creative in September, not the week before.
+
+4. A CLAIMS-CHECK WORKFLOW THAT ACTUALLY RUNS. Every concept checked against the restricted-claims list before production, marked _CC in the naming convention. Cheap now, expensive to retrofit.
+
+5. ORGANIC FIRST, PAID SECOND. Our go-to-market is bottom-up campus seeding — RAs, org fairs, group chats, stickers. Creative should be built to work organically on TikTok and Reels first; anything that only works as a paid placement is lower priority for us right now.
+```
