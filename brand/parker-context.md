@@ -305,3 +305,56 @@ degree for you," anything that mocks students for not knowing.
       there, but see guardrail 2 — naming a university in an ad risks implying
       endorsement. Safest phrasing: "built by students, for students," not
       "the Penn State advisor.")
+
+---
+
+## 16. Exact field values — Parker Training Path
+
+**Step 1 · Brand DNA → Brand Voice & Guidelines**
+
+First: upload `brand/playbook.pdf` to "Upload Brand Guidelines" (325KB, well under the
+50MB cap, real embedded text so Parker can read it). It IS the brand guidelines document.
+Optionally add `brand/logo-standards.pdf` for visual consistency. Then fill the fields
+below anyway — belt and braces, and the vocabulary fields are what Parker leans on hardest
+when writing copy.
+
+**MORE OF THIS**
+```
+Calm, plain-spoken, lowercase, peer-to-peer, specific numbers, cited sources, 2am, resolved, dry, unbothered, student-made, receipts
+```
+
+**LESS OF THAT**
+```
+Corporate, institutional, hype, urgency, exclamation marks, motivational, fear-based, salesy, buzzwords, tech-bro, condescending, cutesy
+```
+
+**WORDS WE USE**
+```
+sorted, handled, rerouted, the plan, the route, advisor, cited to page 14, every major, you're fine, still answering, 0 warnings, ask your college anything
+```
+
+**WORDS WE DON'T USE**
+```
+chatbot, bot, assistant, AI-powered, student success platform, empower, revolutionize, transform, optimize, streamline, unlock, journey, roadmap, pathway, game-changer, guaranteed, limited time, hurry, don't miss out, error
+```
+
+**THINGS WE ASSOCIATE WITH**
+```
+2am study sessions, group chats, degree audits, prereq chains, campus at night, laptop stickers, dining hall hours, org fairs, screenshots forwarded to parents, handbook page citations, registration week, monospace numbers, dorm desks
+```
+
+**THINGS WE DON'T ASSOCIATE WITH**
+```
+university seals, mascots, graduation caps, lecture-hall stock photos, robots, brains, lightbulbs, hustle culture, cramming aesthetics, corporate edtech, chat bubbles, confetti, motivational posters
+```
+
+**POPULAR TAGLINES** — note this field splits on commas, and our primary line contains
+one, so put it last where a split does least damage.
+```
+ask your college anything., still answering., your 2am question. answered., failed it? rerouted., 12 credits left. you're fine., college, sorted.
+```
+
+**Note on "Easy":** don't use it as a brand word. We make college *feel* doable
+(processing fluency — playbook §08), but claiming college is "easy" reads as an outcome
+promise and edges toward "easy A," which guardrail 1 forbids. Say *sorted*, *handled*,
+*you're fine*.
