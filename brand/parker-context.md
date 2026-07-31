@@ -664,3 +664,43 @@ Our proof is the transcript, so the highest-value formats are screen-first: real
 
 VISUAL RULES FOR ANY CONCEPT: six greys plus one emerald accent, and the emerald appears once per frame and always marks the resolved thing. Never gradients, drop shadows, confetti, or exclamation marks.
 ```
+
+---
+
+## 25. Step 2 · Compliance & Legal → "Is your brand under regulatory guidelines?"
+
+**Short answer if the field is small:**
+```
+Yes. FTC advertising rules (truthful, substantiated claims; no fabricated testimonials; endorsement disclosure for campus ambassadors), Meta's Personal Attributes standard, student-data sensitivity around uploaded degree audits, and university trademark limits. Details below.
+```
+
+**Full answer — paste this:**
+```
+Yes. ACE is not in a licensed industry, but four regimes bind our advertising directly.
+
+1. FTC ACT, SECTION 5 — every claim must be truthful and substantiated before it runs. We have no outcome data, so no ad may claim or imply an academic result: not "graduate on time," not "never miss a requirement," not "save a semester." The founder lost a semester before ACE existed; that is his history, not a promise about the product.
+
+2. FTC RULE ON CONSUMER REVIEWS AND TESTIMONIALS (in force since 2024, carries civil penalties) — fabricated reviews, invented testimonials, fake user counts and made-up ratings are prohibited. We currently have none of these. Nothing may be generated to fill the gap. Our proof is real product transcripts with page citations.
+
+3. FTC ENDORSEMENT GUIDES — this one is operationally live for us, because our go-to-market is campus seeding: RAs, orientation leaders, club officers, student ambassadors. Any of them who receive payment, free product, or anything of value must clearly disclose that material connection. "#ad" or "paid partner," visible, not buried in a caption. Brief every ambassador on this before they post.
+
+4. META ADVERTISING STANDARDS — PERSONAL ATTRIBUTES. Academic status is not itself an enumerated attribute, but three that ARE enumerated sit directly on our natural creative territory: mental or physical health, vulnerable financial status, and age. Meta expanded enforcement in March 2026 to indirect second-person framing — copy in the shape of "for people dealing with X" is now treated the same as asserting X about the viewer.
+
+   So these are rejection risks for us: "stressed about graduating?", "feeling behind?", "overwhelmed by requirements?" (implies mental health), "worried about wasting tuition?" (implies vulnerable financial status), and anything implying we know the viewer failed a class.
+
+   Write benefit-focused, not you-focused. "ACE answers degree questions at 2am, with the handbook page" is safe. "Struggling to figure out your degree?" is not.
+
+   Note this converges exactly with our own brand guardrail against shame- and fear-based hooks. Platform policy and brand policy agree here, so there is no tension to manage — just don't write those ads.
+
+ADJACENT CONSTRAINTS, not advertising rules but real:
+
+- STUDENT DATA. Students upload their own degree audits. FERPA binds educational institutions and contractors acting as school officials; as a student-direct product where the student voluntarily uploads their own record, we are not directly covered today — but that changes the moment there is any institutional agreement, and we treat audits as sensitive regardless. Never use real student data, real names, or real audit screenshots in creative.
+
+- STATE PRIVACY LAW. CCPA/CPRA and equivalents may apply depending on user volume and revenue thresholds. Requires a privacy policy, disclosure of what we collect, and deletion rights.
+
+- UNIVERSITY TRADEMARKS. We may state factually that the founders studied at Penn State and that ACE launches there. We may not use university logos, seals, colours, mascots or wordmarks, and we may never imply affiliation, partnership or endorsement.
+
+- UNDER-18 USERS. Some incoming freshmen are 17. Platform targeting restrictions and stricter data-handling rules apply to minors.
+
+This is a founder's summary, not legal advice. Have counsel review the first paid campaign, the ambassador disclosure language, and the privacy policy.
+```
