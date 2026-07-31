@@ -468,3 +468,57 @@ axes. Advisors, Stellic and the bulletin have authority but no availability or b
 Reddit, group chats and ChatGPT have availability and breadth but no accountability.
 **ACE is the only one that is both broad and checkable** — that is the wedge, and it is
 the sentence most creative should ladder back to.
+
+---
+
+## 19. Step 1 · Brand DNA → Customer Personas
+
+Four personas, written the way Parker's own placeholder is written — a person with an
+inner life, ending at the moment they'd actually open ACE. Persona 4 never converts and
+matters anyway.
+
+**PERSONA #1**
+- **NAME:** `Maya, 20`
+- **TAGLINE:** `"pretty sure I'm behind"`
+- **DESCRIPTION:**
+```
+Second-semester sophomore, mid-degree, already made one choice she isn't sure about — changed major once, or didn't and now wonders. Right now she has fourteen tabs open: the bulletin, a Reddit thread from 2019, the registrar, the course catalog, her degree audit she doesn't fully understand. Her advisor's next opening is in three weeks; registration opens in nine days. Here's the thing — she isn't failing anything. She's doing fine and still cannot tell whether she's on track, and asking feels like admitting she should already know by now. She opens ACE at 1am the week registration opens, and the question she actually types is some version of "am I okay."
+```
+
+**PERSONA #2**
+- **NAME:** `Dev, 21`
+- **TAGLINE:** `"I failed the gateway class"`
+- **DESCRIPTION:**
+```
+Failed or withdrew from the prerequisite that gates half his major — the one everybody warns you about. Grades posted thirty-six hours ago. He has already done the catastrophe math in his head and concluded he has lost a year, which may well not be true, but there is nobody awake to tell him otherwise. The dominant feeling is shame, not confusion, and it is exactly why he hasn't emailed his advisor. What he needs is not encouragement — it's a specific route that still ends on time, with the page it came from. This is where the brand's core line does its work: failed it? rerouted. Highest emotional intensity of any persona, and the strongest creative territory we have.
+```
+
+**PERSONA #3**
+- **NAME:** `Sam, 18`
+- **TAGLINE:** `"too small to ask a human"`
+- **DESCRIPTION:**
+```
+First month of freshman year. Doesn't yet have the upperclassman friend who knows how things work. A hundred questions and no relationships: where to print, what a hold on your account means, whether the dining hall is open at eleven, how to join a club after the fair, who to email about a section that's full. Each question is individually trivial and collectively exhausting, and asking a person feels like broadcasting that you don't belong here. This is the persona that proves the ecosystem thesis — they ask about printing in week one and about prerequisites in week six. Own orientation and you earn the academic question later.
+```
+
+**PERSONA #4**
+- **NAME:** `Anita, 48`
+- **TAGLINE:** `"just send me the plan"`
+- **DESCRIPTION:**
+```
+A parent, and the second audience we acquire for free. She will never install this. She sees ACE exactly once, as a screenshot in a text from her kid: credits done, credits left, the semester plan, on track for spring '27. What she wants isn't detail — it's the end of a recurring anxious phone call. She never converts and she matters enormously, because every answer we write has to survive being forwarded to whoever is paying tuition. This is why the plan is designed to be screenshot-shaped and why the tone never condescends.
+```
+
+**Optional PERSONA #5 — add if Parker wants a fifth**
+- **NAME:** `Priya, 19`
+- **TAGLINE:** `"nobody at home has done this"`
+- **DESCRIPTION:**
+```
+First-generation student. Bright, organised, and missing the invisible curriculum everyone else absorbed at the dinner table — that you're allowed to email a professor, that a W isn't fatal, that some requirements are negotiable and some absolutely are not. The handbook is written as though you already understand how universities work. She will not ask a question that exposes the gap. ACE gets used privately, at night, and the non-judgmental register is the entire reason she keeps it.
+```
+
+**Direction for Parker on all personas:** the through-line is not laziness or
+disorganisation — every one of these people is trying hard. The enemy is an
+institution that is badly indexed, not a student who is failing. Any creative that
+implies the viewer is behind, lazy or careless is off-brand and violates the
+guardrails in §8.
