@@ -569,8 +569,9 @@ they've been paying for it ever since. Connects directly to Persona #5.
 5. Both founders are real people. Do not invent quotes, dialogue, or details beyond what is written above.
 ```
 
-`[CONFIRM]` before anything publishes: spelling of Sinjini's name, her title, and that
-she's happy to be named in advertising.
+**Confirmed 2026-07-31:** Sinjini is a co-founder, name spelling is correct, and she is
+happy to be named in advertising. Both founders may be named; neither may be quoted
+saying anything they didn't say.
 
 ## 21. Step 2 · Strategy → Marketing Calendar
 
@@ -613,4 +614,53 @@ run. Add this line at the top:
 
 ```
 These rules override any standard direct-response or DTC advertising convention. Where a performance-marketing best practice conflicts with a rule below, the rule wins.
+```
+
+
+---
+
+## 23. Step 2 · Strategy → Testing Priorities
+
+Written blind (haven't seen the field shapes) — refine once the screen is visible.
+
+```
+We have run no paid creative, so everything here is a first read rather than a learning. Test in this order:
+
+1. THE POSITIONING TEST — the one that matters most. "Ask your college anything" (breadth / ecosystem) versus "know exactly what to take next semester" (course planning / the wedge). Breadth is the strategy and courses are the sharpest pain, so we need to know which one earns the first open. Do not resolve this by opinion.
+
+2. HOOK REGISTER. Shame-free and quiet ("am I okay?" / "12 credits left. you're fine.") versus blunt utility ("749 majors. every prereq. cited to the page."). Our audience is anxious, so the quiet register is the hypothesis — but utility may convert harder on the registration peak.
+
+3. THE CANVAS LINE. "Canvas solved submitting the work. Nothing solved navigating the degree." Test it as a standalone hook. It is our most distinctive sentence and the highest-expected-value single test in this list.
+
+4. PROOF FORMAT. A real transcript screenshot with a page citation, versus the founder story, versus the data numbers. Hypothesis: the transcript wins, because it is falsifiable and the audience discounts claims.
+
+5. PERSONA CUT. The mid-degree doubter (Maya) versus the recoverer who just failed a gateway course (Dev) versus week one (Sam). Dev has the highest emotional intensity; Maya is the largest segment.
+
+6. TIMING. The same creative at the registration peak versus the 48 hours after grades post. Our demand is calendar-spiked, so timing may move results more than creative does.
+
+DO NOT TEST: urgency or scarcity mechanics, countdowns, guarantees, fear-based or "you're behind" hooks, fake testimonials, before/after outcome claims. These are not underperformers to be validated — they are prohibited by the guardrails regardless of what they'd do to CTR.
+```
+
+---
+
+## 24. Step 2 · Strategy → Creative Background
+
+```
+No paid creative has ever run for ACE. There is no ad account history, no winning creative to iterate on, and no performance data. Treat this as a cold start.
+
+WHAT EXISTS TO BUILD FROM:
+- A complete, locked brand system: mark, wordmark, six-grey palette with one emerald accent, type rules, and a written voice. See the uploaded brand guidelines PDF.
+- A designed, working product with real screens — chat with citations, degree progress dashboard, prereq map, suggested plan, deadlines. Screen recordings of the real product are our strongest raw material.
+- Real transcripts of the product answering hard questions with page-level citations.
+- A live landing page at acecollege.app.
+
+WHAT DOES NOT EXIST — do not brief creative that depends on it:
+- Testimonials, reviews, user counts, ratings, outcome statistics.
+- Stock or lifestyle photography, brand video, actor-led UGC.
+- Any university-supplied imagery, and we will never use it.
+
+FORMAT IMPLICATIONS:
+Our proof is the transcript, so the highest-value formats are screen-first: real product recordings, question-and-answer text on plain grounds, and the screenshot a student would actually forward. Founder-to-camera is credible and available given the story. Polished lifestyle production is off-brand and we can't source it honestly.
+
+VISUAL RULES FOR ANY CONCEPT: six greys plus one emerald accent, and the emerald appears once per frame and always marks the resolved thing. Never gradients, drop shadows, confetti, or exclamation marks.
 ```
