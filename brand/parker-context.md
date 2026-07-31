@@ -45,10 +45,16 @@ If Parker pushes performance-marketing conventions (urgency, guarantees, before/
 - **Name:** ACE (written `ace.` in the logo — lowercase, with a period).
 - **Category:** AI academic advisor / student navigation app. Not a chatbot, not a
   "student success platform."
-- **What it does:** answers questions about the student's specific college — courses,
-  prerequisites, degree requirements, deadlines, registration, plus the non-academic
-  half (dining, housing, financial aid, orgs, campus services). Students can upload a
-  degree audit for personalised analysis.
+- **What it does TODAY (verified in the codebase — market only this):** courses,
+  prerequisites, degree requirements, gen-eds, deadlines and the academic calendar,
+  graduation checklist, GPA, transfer credit, substitutions, entrance-to-major — plus
+  campus resources, wellbeing/CAPS, rec/gym, and career/internship pointers. Students can
+  upload a degree audit for personalised analysis. For financial aid and anything it
+  can't verify it **routes to the named office instead of answering** (this is the
+  never-dead-end rule, actually implemented).
+- **NOT shipped yet — creative must not promise these:** dining hours, housing, parking,
+  laundry, individual financial-aid amounts. The full ecosystem breadth is the strategy
+  (playbook §02–03) and the roadmap, not today's surface. Market what ships.
 - **How answers are grounded:** structured university data — **749 degree programs,
   9,439 course records, 46 handbook policy rules** — with **page-level citations**.
 - **Surface:** web app at acecollege.app, mobile-friendly, installable (PWA).
@@ -358,3 +364,44 @@ ask your college anything., still answering., your 2am question. answered., fail
 (processing fluency — playbook §08), but claiming college is "easy" reads as an outcome
 promise and edges toward "easy A," which guardrail 1 forbids. Say *sorted*, *handled*,
 *you're fine*.
+
+
+---
+
+## 17. Step 1 · Brand DNA → Products & USP
+
+**FOCUS PRODUCTS** — ACE is one app, so the useful answer is its creative territories.
+All of these are real, shipped views.
+
+```
+Ask ACE — the cited chat. Any question about your college, answered with the handbook or bulletin page it came from.
+Degree Audit Upload — upload your audit, get answers about YOUR remaining requirements, not the generic ones.
+Prereq Map — the chain of what unlocks what, drawn.
+Suggested Plan — a semester-by-semester route to graduation.
+Gen-Ed Explorer — which gen-eds double-count and which are a waste of a slot.
+Deadlines & Academic Calendar — add/drop, withdrawal, registration windows.
+Graduation Checklist — what's left, in order.
+GPA Calculator — what this semester does to your number.
+Degree Progress Dashboard — credits earned vs required, by requirement block.
+Campus Resources — wellbeing/CAPS, rec, career, and routing to the right office.
+```
+
+**UNIQUE SELLING POINTS** — pasteable as-is.
+
+```
+ACE answers questions about your specific college and shows where the answer came from.
+
+1. It cites the page. Every academic answer traces back to the actual handbook or bulletin — built on 749 degree programs, 9,439 course records and 46 handbook policy rules. It is not a general-purpose model recalling college trivia. The alternatives each fail differently: an advisor has real authority but a three-week queue and business hours; Reddit and upperclassmen have breadth but no accountability and are often wrong; a generic AI chatbot has neither your university's rules nor a citation. We are the only option that is both broad and checkable.
+
+2. It's awake. Demand for this is nocturnal — students search at 2am, the night before an advising appointment, the week registration opens, the 48 hours after grades post. There is no queue, no appointment, no office hours.
+
+3. It removes the shame tax. Asking a person feels like admitting you should already know. Students ask ACE the question they are too embarrassed to ask a human, which is why it gets the questions that actually matter.
+
+4. It knows YOUR degree, not the generic one. Upload a degree audit and answers are about your remaining requirements, your prereq gaps, your timeline.
+
+5. It covers every major — 749 programs, not just the popular ones.
+
+6. When it can't verify something — individual financial aid, petitions, exceptions — it names the office to contact instead of guessing. Students trust the answers it does give because it admits the ones it can't.
+
+Note on framing: we are not a replacement for academic advisors and never position as one. Petitions, substitutions and exceptions are human decisions. ACE is the advisor who's awake.
+```
