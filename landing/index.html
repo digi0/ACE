@@ -4,23 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ace. — ask your college anything</title>
-  <meta name="description" content="the advisor that answers at 2am. every major, every prereq, every deadline — sorted. first 100 students get early access.">
+  <meta name="description" content="the advisor that knows your major, your catalog year and your prereqs — with a receipt on every answer. free for students, first 100 get early access.">
   <link rel="canonical" href="https://www.acecollege.app/">
   <meta property="og:title" content="ace. — ask your college anything">
-  <meta property="og:description" content="the advisor that answers at 2am. every major, every prereq, every deadline — sorted.">
+  <meta property="og:description" content="every answer, with its receipt. courses, deadlines, money, places — anything about being a student here.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.acecollege.app/">
   <meta property="og:image" content="https://www.acecollege.app/poster.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#F6F6F6">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='24' fill='%230A0A0A'/%3E%3Cg transform='translate(42.6,55.8) scale(0.6)'%3E%3Cg transform='rotate(-11 5 12)'%3E%3Ccircle cx='0' cy='12' r='31' fill='none' stroke='%23F6F6F6' stroke-width='22'/%3E%3Crect x='30' y='-32' width='22' height='88' rx='11' fill='%23F6F6F6'/%3E%3C/g%3E%3Ccircle cx='82' cy='38' r='18' fill='%2300875A'/%3E%3C/g%3E%3C/svg%3E">
-  <!-- Zero Chroma: system type stack only — no webfonts. -->
-  <link rel="stylesheet" href="/tokens.css?v=28">
-  <link rel="stylesheet" href="/styles.css?v=28">
+  <link rel="stylesheet" href="/tokens.css?v=30">
+  <link rel="stylesheet" href="/styles.css?v=30">
 </head>
 <body>
 
-<!-- ============ top bar ============ -->
 <header class="bar">
   <a class="bar-mark" href="/" aria-label="ace home">
     <svg viewBox="-52 -40 156 100" aria-hidden="true">
@@ -31,21 +29,16 @@
       <circle cx="82" cy="38" r="18" fill="#00875A"/>
     </svg>
   </a>
-  <div class="bar-right">
-    <!-- the clock is the page's scroll axis. mono because it is a real readout. -->
-    <span class="clock" id="clock" aria-hidden="true">02:12</span>
-    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">menu</button>
-  </div>
+  <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">menu</button>
 </header>
 
-<!-- ============ pixel-dissolve menu ============ -->
 <div class="menu" id="menu" hidden>
   <div class="menu-grid" id="menuGrid" aria-hidden="true"></div>
   <nav class="menu-panel" aria-label="site">
     <button class="menu-close" id="menuClose">close</button>
     <ol class="menu-list">
-      <li><a href="#night"><i>01</i>the night</a></li>
-      <li><a href="#folder"><i>02</i>how it works</a></li>
+      <li><a href="#answer"><i>01</i>what it gives you</a></li>
+      <li><a href="#breadth"><i>02</i>what it covers</a></li>
       <li><a href="#join"><i>03</i>join the waitlist</a></li>
       <li><a href="https://app.acecollege.app"><i>04</i>sign in</a></li>
     </ol>
@@ -53,11 +46,10 @@
   </nav>
 </div>
 
-<!-- ============ 02:14 · hero ============ -->
+<!-- ============ hero — the name, the promise, nothing else ============ -->
 <section class="hero">
-  <div class="wordmark" id="wordmark" role="img" aria-label="ace.">
+  <div class="wordmark" role="img" aria-label="ace.">
     <svg viewBox="-54 -44 332.93 112">
-      <!-- brand/logo/ace-wordmark.svg, locked geometry, split per glyph for the intro -->
       <g class="g-a">
         <circle cx="0" cy="12" r="31" fill="none" stroke="#0A0A0A" stroke-width="22"/>
         <rect x="30" y="-32" width="22" height="88" rx="11" fill="#0A0A0A"/>
@@ -69,183 +61,142 @@
         <path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/>
         <rect x="150.93" y="1" width="72" height="22" rx="11" fill="#0A0A0A"/>
       </g>
-      <!-- the dot lands last. the view's single emerald. -->
       <circle class="g-dot" cx="248.93" cy="38" r="18" fill="#00875A"/>
     </svg>
   </div>
-  <p class="hero-line">it's 02:14. you have a question.</p>
+  <p class="hero-line">ask your college anything.</p>
+  <p class="hero-sub">still awake at 2am.</p>
   <p class="hero-hint" aria-hidden="true">scroll</p>
 </section>
 
-<!-- ============ 02:14 → 02:20 · the pile ============ -->
-<section class="night" id="night">
-  <p class="night-line">the answer exists. it's just spread across
-    three websites and an office that opens at nine.</p>
-  <div class="pile" id="pile" aria-label="everything a student is carrying">
-    <span>midterms</span><span>FAFSA</span><span>add/drop</span><span>housing portal</span>
-    <span>prereqs</span><span>gen-eds</span><span>bursar hold</span><span>advisor queue</span>
-    <span>group project</span><span>waitlisted</span><span>registration</span><span>transcript</span>
-    <span>office hours</span><span>meal plan</span><span>parking permit</span><span>career fair</span>
-    <span>club dues</span><span>financial aid</span><span>catalog year</span><span>credit limit</span>
-    <span>internship apps</span><span>dining hours</span><span>gym hours</span><span>printing</span>
-    <span>capstone</span><span>what-if report</span><span>degree audit</span><span>drop deadline</span>
-    <span>tuition due</span><span>8am lecture</span><span>laundry</span><span>syllabus week</span>
-    <span>roommate stuff</span><span>the email you owe</span>
-  </div>
-</section>
-
-<!-- ============ 02:22 · the ask ============ -->
-<section class="ask" id="ask">
-  <div class="ask-card">
-    <p class="ask-q"><span id="askTyped"></span><span class="caret" id="askCaret"></span></p>
-    <div class="ask-a" id="askA">
-      <!-- the verdict leads. its period is the view's emerald — closure, performed. -->
-      <p class="ask-verdict">yes<span class="period">.</span></p>
-      <p class="ask-body">retake MATH 230 in fall — it's the prereq gate for
-        CMPSC 465. your cleanest path is four courses across two semesters.</p>
-      <p class="ask-receipt"><span class="chip chip-cited">HANDBOOK · P.14</span>
-        <span class="chip">04 COURSES</span><span class="chip">02 SEMESTERS</span></p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 02:23 → 02:27 · the folder ============ -->
-<section class="folder" id="folder">
-
-  <article class="step" data-time="02:23">
-    <header class="step-tab"><i>01</i><span>upload</span><em class="mono">02:23</em></header>
-    <div class="step-body">
-      <div class="step-text">
-        <p class="step-lead">drop the audit in.</p>
-        <p class="step-sub">the 12-page pdf nobody can read. ace reads it —
-          every credit, every requirement, your exact catalog year.</p>
+<!-- ============ 01 · the answer — the product, staged ============ -->
+<section class="slab" id="answer">
+  <header class="slab-head">
+    <h2>every answer, with its receipt.</h2>
+    <p>the verdict first, the reason second, and where it came from — every time.</p>
+  </header>
+  <div class="stage">
+    <article class="card answer-card">
+      <p class="ac-q">can i still graduate by spring '27 if i failed MATH 230?</p>
+      <p class="ac-verdict">yes<span class="period">.</span></p>
+      <p class="ac-body">retake MATH 230 in fall — it's the prereq gate for CMPSC 465.
+        four courses across two semesters and you're clear.</p>
+      <div class="ac-plan mono">
+        <p><span>FA26</span><b>MATH 230 · CMPSC 311</b></p>
+        <p><span>SP27</span><b>CMPSC 465 · CAPSTONE</b></p>
       </div>
-      <div class="step-demo">
-        <p class="demo-head mono">DEGREE AUDIT · PARSED</p>
-        <div class="demo-rows mono">
+      <p class="ac-receipt"><span class="chip chip-cited">HANDBOOK · P.14</span><span class="chip">12 CREDITS LEFT</span></p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ 02 · the audit ============ -->
+<section class="slab" id="audit">
+  <header class="slab-head">
+    <h2>it reads your audit.</h2>
+    <p>the twelve-page pdf nobody can read — parsed into what's done, what's left, and what's next.</p>
+  </header>
+  <div class="stage">
+    <article class="card parse-card">
+      <div class="doc" aria-hidden="true">
+        <p class="doc-head mono">DEGREE AUDIT · 12 PAGES</p>
+        <div class="doc-lines" id="docLines"></div>
+      </div>
+      <div class="parsed">
+        <p class="doc-head mono">PARSED</p>
+        <div class="rows mono" id="parseRows">
           <p><span>CREDITS</span><b>087 / 120</b></p>
-          <p><span>CATALOG</span><b>2024–25</b></p>
+          <p><span>CATALOG YEAR</span><b>2024–25</b></p>
           <p><span>REQUIREMENTS LEFT</span><b>04</b></p>
           <p><span>PREREQ CHAIN</span><b>4 DEEP</b></p>
+          <p><span>GEN-EDS</span><b>02 REMAINING</b></p>
         </div>
       </div>
-    </div>
-  </article>
-
-  <article class="step" data-time="02:25">
-    <header class="step-tab"><i>02</i><span>ask</span><em class="mono">02:25</em></header>
-    <div class="step-body">
-      <div class="step-text">
-        <p class="step-lead">ask like you'd text a friend.</p>
-        <p class="step-sub">no forms, no advising queue. the box takes any
-          question about being a student here — not just the academic ones.</p>
-      </div>
-      <div class="step-demo">
-        <div class="demo-input">ask your college anything<span class="caret"></span></div>
-        <!-- the empty state is a positioning statement: registers stay mixed -->
-        <ul class="demo-prompts">
-          <li>can i graduate by spring '27?</li>
-          <li>where can i print at 2am?</li>
-          <li>is the gym open rn?</li>
-          <li>how do i set up a payment plan?</li>
-        </ul>
-      </div>
-    </div>
-  </article>
-
-  <article class="step" data-time="02:27">
-    <header class="step-tab"><i>03</i><span>stay on track</span><em class="mono">02:27</em></header>
-    <div class="step-body">
-      <div class="step-text">
-        <p class="step-lead">nothing sneaks up on you.</p>
-        <p class="step-sub">registration windows, drop/add, seat openings —
-          watched weeks out, so the deadline never gets to be a surprise.</p>
-      </div>
-      <div class="step-demo">
-        <div class="demo-rows mono">
-          <p><span>REGISTRATION</span><b>NOV 03 · 07:00</b></p>
-          <p><span>DROP / ADD</span><b>4 DAYS LEFT</b></p>
-          <p><span>SEATS · FA26</span><b>OPEN</b></p>
-        </div>
-        <!-- this card's resolving line — the view's emerald -->
-        <p class="demo-done">0 warnings<span class="period">.</span></p>
-      </div>
-    </div>
-  </article>
-
+    </article>
+  </div>
 </section>
 
-<!-- ============ 02:31 → 03:05 · the rest of the night ============ -->
-<section class="montage" id="montage">
-  <p class="montage-line">the library, the bursar, the club fair you missed.
-    same box. no question too small.</p>
-
-  <div class="qa" data-time="02:31">
-    <p class="qa-time mono">02:31</p>
-    <div class="qa-body">
-      <p class="qa-q">is anything open to eat rn?</p>
-      <p class="qa-a">yes — findlay commons until 03:00. late-night menu.</p>
-      <p class="qa-receipt"><span class="chip chip-scraped">SCRAPED · CHECKED 02:31</span></p>
-    </div>
+<!-- ============ 03 · the dates ============ -->
+<section class="slab" id="dates">
+  <header class="slab-head">
+    <h2>it watches the dates.</h2>
+    <p>registration windows, drop/add, seat openings — weeks early, not the night before.</p>
+  </header>
+  <div class="stage">
+    <article class="card dates-card">
+      <div class="rail" aria-hidden="true">
+        <span class="rail-line"></span>
+        <span class="rail-fill" id="railFill"></span>
+        <span class="rail-today"><i class="mono">TODAY</i></span>
+        <span class="pt" style="--p:8%"></span>
+        <span class="pt" style="--p:22%"></span>
+        <span class="pt pt-next" style="--p:52%"></span>
+        <span class="pt" style="--p:74%"></span>
+        <span class="pt" style="--p:92%"></span>
+      </div>
+      <div class="rows mono">
+        <p><span>DROP / ADD CLOSES</span><b>FRI SEP 12</b></p>
+        <p><span>REGISTRATION OPENS</span><b>NOV 03 · 07:00</b></p>
+        <p><span>SEATS · MATH 230</span><b>OPEN</b></p>
+      </div>
+      <p class="card-close">0 warnings<span class="period">.</span></p>
+    </article>
   </div>
+</section>
 
-  <div class="qa" data-time="02:47">
-    <p class="qa-time mono">02:47</p>
-    <div class="qa-body">
-      <p class="qa-q">why is there a hold on my account?</p>
-      <!-- never a dead end: the office, the hours, the exact thing to ask -->
-      <p class="qa-a">housing deposit hold. the bursar can release it —
-        103 shields, opens 09:00. ask for a hold-release review.</p>
-      <p class="qa-receipt"><span class="chip chip-routed">ROUTED → BURSAR · 09:00</span></p>
-    </div>
+<!-- ============ 04 · never dead-ends ============ -->
+<section class="slab" id="route">
+  <header class="slab-head">
+    <h2>it never dead-ends.</h2>
+    <p>when the answer isn't ours to give, you still leave with the office, the hours, and the exact thing to ask.</p>
+  </header>
+  <div class="stage">
+    <article class="card route-card">
+      <p class="ac-q">why is there a hold on my account?</p>
+      <p class="ac-body">a housing deposit hold. the bursar can release it — ace can't.</p>
+      <div class="rows mono">
+        <p><span>OFFICE</span><b>BURSAR · 103 SHIELDS</b></p>
+        <p><span>OPENS</span><b>MON 09:00</b></p>
+        <p><span>ASK FOR</span><b>HOLD-RELEASE REVIEW</b></p>
+      </div>
+      <p class="ac-receipt"><span class="chip chip-routed">ROUTED · NOT REFUSED</span></p>
+    </article>
   </div>
+</section>
 
-  <div class="qa" data-time="03:05">
-    <p class="qa-time mono">03:05</p>
-    <div class="qa-body">
-      <p class="qa-q">is it too late to join clubs?</p>
-      <p class="qa-a">no — 14 orgs still take members in october. two fit your major.</p>
-      <p class="qa-receipt"><span class="chip chip-cited">ORG LIST · CITED</span></p>
+<!-- ============ 05 · breadth ============ -->
+<section class="slab" id="breadth">
+  <header class="slab-head">
+    <h2>and it's not just courses.</h2>
+    <p>anything about being a student here — the small questions included.</p>
+  </header>
+  <div class="stage">
+    <div class="grid" id="breadthGrid">
+      <article class="cell"><p class="cell-tag mono">ACADEMIC</p><p>which gen-ed clears my last requirement?</p></article>
+      <article class="cell"><p class="cell-tag mono">LOGISTICS</p><p>where can i print at 2am?</p></article>
+      <article class="cell"><p class="cell-tag mono">MONEY</p><p>how do i set up a payment plan?</p></article>
+      <article class="cell"><p class="cell-tag mono">PLACES</p><p>is anything open to eat right now?</p></article>
+      <article class="cell"><p class="cell-tag mono">PEOPLE</p><p>is it too late to join a club?</p></article>
+      <article class="cell"><p class="cell-tag mono">BEYOND</p><p>what do i need for a spring internship?</p></article>
     </div>
   </div>
 </section>
 
-<!-- ============ 03:11 · the receipt ============ -->
-<section class="receipt" id="receipt">
-  <div class="receipt-card" id="receiptCard">
-    <p class="demo-head mono">SPRING '27 · MAPPED</p>
-    <p class="receipt-credits mono">087 / 120</p>
-    <!-- the illustration law: grey = possible, ink = yours, emerald = the point.
-         lines run centre-to-centre; nodes sit on top; the route is never broken. -->
-    <svg class="route" viewBox="0 0 360 150" aria-label="your route: now, fall 26, spring 27, degree">
-      <g class="route-ghost">
-        <path d="M 30 110 L 150 132 L 270 124 L 330 96"/>
-        <path d="M 30 110 L 150 36 L 270 24"/>
-      </g>
-      <path class="route-ink" id="routeInk" d="M 30 110 L 150 88 L 270 60 L 330 40"/>
-      <g class="route-nodes mono">
-        <circle cx="30" cy="110" r="6"/><text x="30" y="132">NOW</text>
-        <circle cx="150" cy="88" r="6"/><text x="150" y="110">FA26</text>
-        <circle cx="270" cy="60" r="6"/><text x="270" y="82">SP27</text>
-      </g>
-      <circle class="route-dot" id="routeDot" cx="330" cy="40" r="7"/>
-    </svg>
-    <div class="demo-rows mono">
-      <p><span>CREDITS LEFT</span><b>12</b></p>
-      <p><span>LOAD</span><b>BALANCED</b></p>
-    </div>
+<!-- ============ specs ============ -->
+<section class="specs" id="specs">
+  <div class="spec-grid mono">
+    <div><b id="specMajors">749</b><span>MAJORS</span></div>
+    <div><b id="specCourses">9439</b><span>COURSES</span></div>
+    <div><b id="specRules">46</b><span>HANDBOOK RULES CITED</span></div>
+    <div><b>24 / 7</b><span>INCLUDING 2AM</span></div>
   </div>
-  <p class="receipt-line">12 credits left. four courses mapped. you're fine.</p>
 </section>
 
-<!-- ============ 03:11 → 07:00 · morning ============ -->
-<section class="morning" id="join">
-  <p class="morning-sleep">nothing left tonight. you're fine.</p>
-  <div class="morning-cta">
-    <!-- the page's resolving line carries its final emerald -->
-    <p class="morning-line">college, sorted<span class="period">.</span></p>
-    <p class="morning-sub">first cohort starts this fall. free for students,
-      every major, every catalog year.</p>
+<!-- ============ cta ============ -->
+<section class="cta" id="join">
+  <div class="card cta-card">
+    <p class="cta-line">college, sorted<span class="period">.</span></p>
+    <p class="cta-sub">first cohort starts this fall. free for students, every major, every catalog year.</p>
     <form class="wl-form" id="waitlistForm" novalidate>
       <input class="wl-input" id="wlEmail" type="email" required placeholder="you@psu.edu"
              aria-label="email address" autocomplete="email">
@@ -253,13 +204,12 @@
     </form>
     <p class="wl-error" id="wlError" role="alert" hidden></p>
     <p class="wl-done" id="wlDone" role="status" hidden></p>
-    <p class="wl-code">already have an access code?
-      <a href="https://app.acecollege.app">sign in</a></p>
+    <p class="wl-code">already have an access code? <a href="https://app.acecollege.app">sign in</a></p>
   </div>
 </section>
 
 <footer class="foot">
-  <span class="foot-mono">749 MAJORS · 9439 COURSES · 46 HANDBOOK RULES CITED</span>
+  <span class="foot-mono">749 MAJORS · 9439 COURSES · CITED TO THE PAGE</span>
   <nav class="foot-links">
     <a href="https://app.acecollege.app">sign in</a>
     <a href="mailto:access@acecollege.app">faculty &amp; advisors</a>
@@ -269,6 +219,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="/app.js?v=28"></script>
+<script src="/app.js?v=30"></script>
 </body>
 </html>
