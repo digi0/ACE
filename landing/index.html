@@ -14,8 +14,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#F6F6F6">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='24' fill='%230A0A0A'/%3E%3Cg transform='translate(42.6,55.8) scale(0.6)'%3E%3Cg transform='rotate(-11 5 12)'%3E%3Ccircle cx='0' cy='12' r='31' fill='none' stroke='%23F6F6F6' stroke-width='22'/%3E%3Crect x='30' y='-32' width='22' height='88' rx='11' fill='%23F6F6F6'/%3E%3C/g%3E%3Ccircle cx='82' cy='38' r='18' fill='%2300875A'/%3E%3C/g%3E%3C/svg%3E">
-  <link rel="stylesheet" href="/tokens.css?v=30">
-  <link rel="stylesheet" href="/styles.css?v=30">
+  <link rel="stylesheet" href="/tokens.css?v=35">
+  <link rel="stylesheet" href="/styles.css?v=35">
 </head>
 <body>
 
@@ -51,15 +51,15 @@
   <div class="wordmark" role="img" aria-label="ace.">
     <svg viewBox="-54 -44 332.93 112">
       <g class="g-a">
-        <circle cx="0" cy="12" r="31" fill="none" stroke="#0A0A0A" stroke-width="22"/>
-        <rect x="30" y="-32" width="22" height="88" rx="11" fill="#0A0A0A"/>
+        <circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
+        <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/>
       </g>
       <g class="g-c">
-        <path d="M 123.93 -11.75 A 31 31 0 1 0 123.93 35.75" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/>
+        <path d="M 123.93 -11.75 A 31 31 0 1 0 123.93 35.75" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
       </g>
       <g class="g-e">
-        <path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="#0A0A0A" stroke-width="22" stroke-linecap="round"/>
-        <rect x="150.93" y="1" width="72" height="22" rx="11" fill="#0A0A0A"/>
+        <path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
+        <rect x="150.93" y="1" width="72" height="22" rx="11" fill="currentColor"/>
       </g>
       <circle class="g-dot" cx="248.93" cy="38" r="18" fill="#00875A"/>
     </svg>
@@ -91,7 +91,7 @@
 </section>
 
 <!-- ============ 02 · the audit ============ -->
-<section class="slab" id="audit">
+<section class="slab on-ink" id="audit">
   <header class="slab-head">
     <h2>it reads your audit.</h2>
     <p>the twelve-page pdf nobody can read — parsed into what's done, what's left, and what's next.</p>
@@ -117,7 +117,7 @@
 </section>
 
 <!-- ============ 03 · the dates ============ -->
-<section class="slab" id="dates">
+<section class="slab on-ink" id="dates">
   <header class="slab-head">
     <h2>it watches the dates.</h2>
     <p>registration windows, drop/add, seat openings — weeks early, not the night before.</p>
@@ -171,14 +171,15 @@
     <p>anything about being a student here — the small questions included.</p>
   </header>
   <div class="stage">
-    <div class="grid" id="breadthGrid">
-      <article class="cell"><p class="cell-tag mono">ACADEMIC</p><p>which gen-ed clears my last requirement?</p></article>
-      <article class="cell"><p class="cell-tag mono">LOGISTICS</p><p>where can i print at 2am?</p></article>
-      <article class="cell"><p class="cell-tag mono">MONEY</p><p>how do i set up a payment plan?</p></article>
-      <article class="cell"><p class="cell-tag mono">PLACES</p><p>is anything open to eat right now?</p></article>
-      <article class="cell"><p class="cell-tag mono">PEOPLE</p><p>is it too late to join a club?</p></article>
-      <article class="cell"><p class="cell-tag mono">BEYOND</p><p>what do i need for a spring internship?</p></article>
-    </div>
+    <ol class="index" id="breadthIndex">
+      <li><i class="mono">01</i><span class="mono">ACADEMIC</span><p>which gen-ed clears my last requirement?</p></li>
+      <li><i class="mono">02</i><span class="mono">LOGISTICS</span><p>where can i print at 2am?</p></li>
+      <li><i class="mono">03</i><span class="mono">MONEY</span><p>how do i set up a payment plan?</p></li>
+      <li><i class="mono">04</i><span class="mono">PLACES</span><p>is anything open to eat right now?</p></li>
+      <li><i class="mono">05</i><span class="mono">PEOPLE</span><p>is it too late to join a club?</p></li>
+      <li><i class="mono">06</i><span class="mono">BEYOND</span><p>what do i need for a spring internship?</p></li>
+    </ol>
+</div>
   </div>
 </section>
 
@@ -192,11 +193,12 @@
   </div>
 </section>
 
-<!-- ============ cta ============ -->
-<section class="cta" id="join">
-  <div class="card cta-card">
-    <p class="cta-line">college, sorted<span class="period">.</span></p>
-    <p class="cta-sub">first cohort starts this fall. free for students, every major, every catalog year.</p>
+<!-- ============ the payoff — the accent, at full force, in its one role ====== -->
+<section class="payoff" id="join">
+  <div class="payoff-inner">
+    <p class="payoff-line">college, sorted.</p>
+    <p class="payoff-sub">first cohort starts this fall. free for students,
+      every major, every catalog year.</p>
     <form class="wl-form" id="waitlistForm" novalidate>
       <input class="wl-input" id="wlEmail" type="email" required placeholder="you@psu.edu"
              aria-label="email address" autocomplete="email">
@@ -219,6 +221,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="/app.js?v=30"></script>
+<script src="/app.js?v=35"></script>
 </body>
 </html>

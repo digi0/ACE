@@ -1,256 +1,287 @@
 /* ============================================================================
-   ace. landing — Apple-grammar build.
-   One capability per full-viewport slab: quiet headline, one supporting line,
-   and a LARGE composed artifact that does the proving. The artifact carries
-   the scale — "go flat and let something non-typographic carry the hero"
-   (brand/BRAND.md). Running text never exceeds 28px.
-   Zero Chroma: six greys, one emerald period per view, radius 0, no shadows,
-   no gradients. Tokens from /tokens.css (source: brand/tokens.css).
+   ace. landing — Apple grammar, colour gravitation as the decisive axis.
+
+   Register: expressive-leaning. The buyer is one founder with taste; the
+   reader is a stressed 20-year-old on a phone. Severe was habit, not a
+   derivation — this page is warmer and louder than the previous build.
+
+   THE DECISIVE AXIS — colour gravitation. Grounds alternate paper → ink →
+   paper → emerald so the scroll has drama, and the accent finally shows its
+   capability instead of surviving as a 4px period. It still occupies exactly
+   ONE role: resolved. The payoff slab is that role at full force.
+
+   TYPE LADDER (numbers, not adjectives):
+     display carrier   the wordmark (non-typographic scale, per brand)
+     h2   28px / leading 1.00 / tracking -0.03em / weight 500
+     lead 21px / leading 1.15 / tracking -0.015em
+     body 16px / leading 1.40 / tracking 0
+     mono 11px / tracking +0.16em / uppercase
+     hole in the scale: nothing between 16 and 21, nothing between 21 and 28.
+
+   MOTION — one curve. Enter 560ms, exit 140ms (4:1). Scrubbing is restricted
+   to transform/opacity on artifact layers; layout and text never scrub.
    ============================================================================ */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* Dark mode is NOT signed off in brand/BRAND.md — its tokens are marked
+   provisional. Pin the landing to the light ground so the page can never
+   half-flip. (The invisible-wordmark bug was exactly this.) */
+:root {
+  color-scheme: light;
+  --ace-ground: #F6F6F6;
+  --ace-card:   #FFFFFF;
+  --ace-rule:   #E4E4E4;
+  --ace-ghost:  #B2B2B2;
+  --ace-mute:   #666666;
+  --ace-ink:    #0A0A0A;
+  --ace-period: #00875A;
+
+  /* local additions — quantised to the 4px unit */
+  --slab-pad: 15svh;
+  --enter: 560ms;
+  --exit: 140ms;
+}
+
 html { background: var(--ace-ground); }
 body {
   font-family: var(--ace-sans);
   color: var(--ace-ink);
   background: var(--ace-ground);
-  line-height: var(--ace-leading-body);
+  font-size: 16px;
+  line-height: 1.4;
+  letter-spacing: 0;
   overflow-x: hidden;
 }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 ::selection { background: var(--ace-ink); color: var(--ace-ground); }
 
-/* mono counts — real readouts only, never marketing copy */
-.mono { font-family: var(--ace-mono); letter-spacing: var(--ace-track-label); }
-/* the emerald marks closure. nothing else. */
+/* mono counts — real readouts only. strongly positive tracking. */
+.mono { font-family: var(--ace-mono); letter-spacing: 0.16em; }
 .period { color: var(--ace-period); }
 
 /* ============ bar ============ */
 .bar {
   position: fixed; inset: 0 0 auto 0; z-index: 40;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 18px var(--ace-page-margin);
+  padding: 18px 30px;
+  color: var(--ace-ink);
+  transition: color var(--enter) var(--ace-ease),
+              transform var(--exit) var(--ace-ease);
 }
-.bar-mark { color: var(--ace-ink); display: block; }
-.bar-mark svg { height: 26px; width: auto; display: block; }
+/* the bar is transparent, so anything scrolling under it collides. it leaves on
+   the way down and comes back the moment you reverse. */
+.bar.is-hidden { transform: translateY(-140%); }
+.bar-mark { display: block; }
+.bar-mark svg { height: 26px; width: auto; display: block; overflow: visible; }
+/* on dark and emerald grounds the mark moves into an ink tile — the brand's own
+   dark treatment — so the dot always sits on ink and is never recoloured */
+.bar.is-inverted { color: #F6F6F6; }
+.bar.is-inverted .bar-mark { background: #0A0A0A; padding: 7px 9px; border-radius: 20%; }
+.bar.is-inverted .bar-mark svg { height: 22px; }
 .menu-btn {
-  font-size: 14px; padding: 6px 2px;
-  border-bottom: 1px solid var(--ace-ink);
-  transition: color var(--ace-dur) var(--ace-ease), border-color var(--ace-dur) var(--ace-ease);
+  font-size: 14px; padding: 6px 2px; border-bottom: 1px solid currentColor;
+  transition: opacity var(--exit) var(--ace-ease);
 }
-.menu-btn:hover { color: var(--ace-mute); border-color: var(--ace-mute); }
+.menu-btn:hover { opacity: .6; }
 
 /* ============ pixel-dissolve menu ============ */
 .menu { position: fixed; inset: 0; z-index: 50; }
-.menu-grid {
-  position: absolute; inset: 0;
-  display: grid; grid-template-columns: repeat(var(--cells-x, 24), 1fr); grid-auto-rows: 1fr;
-}
+.menu-grid { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(var(--cells-x, 24), 1fr); grid-auto-rows: 1fr; }
 .menu-grid i { background: var(--ace-ink); opacity: 0; }
 .menu-panel {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 0 var(--ace-page-margin);
-  opacity: 0; visibility: hidden; color: #F6F6F6;
+  position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center;
+  padding: 0 30px; opacity: 0; visibility: hidden; color: #F6F6F6;
 }
-.menu-close {
-  position: absolute; top: 18px; right: var(--ace-page-margin);
-  font-size: 14px; color: #F6F6F6; padding: 6px 2px; border-bottom: 1px solid #F6F6F6;
-}
-.menu-list { list-style: none; display: grid; gap: 6px; max-width: 720px; margin: 0 auto; width: 100%; }
+.menu-close { position: absolute; top: 18px; right: 30px; font-size: 14px; color: #F6F6F6; padding: 6px 2px; border-bottom: 1px solid #F6F6F6; }
+.menu-list { list-style: none; display: grid; gap: 4px; max-width: 720px; margin: 0 auto; width: 100%; }
 .menu-list a {
-  display: flex; align-items: baseline; gap: 20px; padding: 14px 0;
-  font-size: 26px; color: var(--ace-ghost);
-  border-bottom: 1px solid rgba(246,246,246,.14);
-  transition: color var(--ace-dur) var(--ace-ease), padding-left var(--ace-dur) var(--ace-ease);
+  display: flex; align-items: baseline; gap: 20px; padding: 16px 0;
+  font-size: 28px; line-height: 1.0; letter-spacing: -0.03em; font-weight: 500;
+  color: var(--ace-ghost); border-bottom: 1px solid rgba(246,246,246,.14);
+  transition: color var(--exit) var(--ace-ease), padding-left var(--exit) var(--ace-ease);
 }
-.menu-list i { font-style: normal; font-family: var(--ace-mono); font-size: 12px; color: var(--ace-mute); }
-.menu-list a:hover { color: #F6F6F6; padding-left: 10px; }
-.menu-foot { max-width: 720px; margin: 40px auto 0; width: 100%; font-size: 13px; color: var(--ace-mute); }
+.menu-list i { font-style: normal; font-family: var(--ace-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--ace-mute); }
+.menu-list a:hover { color: #F6F6F6; padding-left: 12px; }
+.menu-foot { max-width: 720px; margin: 44px auto 0; width: 100%; font-size: 13px; color: var(--ace-mute); }
 
 /* ============ hero ============ */
 .hero {
-  min-height: 100svh;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 26px; padding: 0 var(--ace-page-margin);
+  min-height: 100svh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 24px; padding: 0 30px;
 }
-.wordmark { width: min(660px, 82vw); }
+.wordmark { width: min(700px, 84vw); color: var(--ace-ink); }
 .wordmark svg { width: 100%; height: auto; display: block; overflow: visible; }
 .g-a, .g-c, .g-e { opacity: 0; transform: translateY(8px); }
 .g-dot { opacity: 0; transform: translateY(-46px); }
-.hero-line { font-size: clamp(18px, 2.1vw, 24px); opacity: 0; transform: translateY(6px); }
-.hero-sub { font-size: 15px; color: var(--ace-mute); margin-top: -14px; opacity: 0; }
+.hero-line {
+  font-size: 21px; line-height: 1.15; letter-spacing: -0.015em;
+  opacity: 0; transform: translateY(6px);
+}
+.hero-sub { font-size: 15px; color: var(--ace-mute); margin-top: -12px; opacity: 0; }
 .hero-hint {
   position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
-  font-family: var(--ace-mono); font-size: 11px;
-  letter-spacing: var(--ace-track-label); color: var(--ace-ghost); opacity: 0;
+  font-family: var(--ace-mono); font-size: 11px; letter-spacing: 0.16em;
+  color: var(--ace-ghost); opacity: 0;
 }
 
-/* ============ the slab — the repeating module ============ */
+/* ============ the slab ============ */
 .slab {
-  min-height: 100svh;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 46px;
-  padding: 14svh var(--ace-page-margin);
+  min-height: 100svh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 52px;
+  padding: var(--slab-pad) 30px;
 }
-.slab-head { text-align: center; max-width: 46ch; }
+.slab-head { text-align: center; max-width: 44ch; }
 .slab-head h2 {
-  font-size: clamp(21px, 2.4vw, 28px);      /* the cap. the artifact carries scale. */
-  font-weight: 600; letter-spacing: var(--ace-track-display);
+  font-size: 28px; line-height: 1.00;          /* leading INVERTS at display */
+  letter-spacing: -0.03em; font-weight: 500;
 }
-.slab-head p { font-size: 15.5px; color: var(--ace-mute); margin-top: 12px; }
+.slab-head p { font-size: 16px; color: var(--ace-mute); margin-top: 16px; max-width: 42ch; margin-inline: auto; }
 .stage { width: 100%; display: grid; place-items: center; }
 
-/* every artifact is a card: lighter than the page, hairline, never shadowed */
-.card {
-  background: var(--ace-card);
-  border: 1px solid var(--ace-rule);
-  padding: 30px 32px;
+/* ---- ink slabs: the dark half of the gravitation ---- */
+.on-ink {
+  background: #0A0A0A;                         /* literal: the local --ace-ink
+                                                  override below would resolve
+                                                  this to cream otherwise */
+  --ace-card: #161615;
+  --ace-rule: rgba(244,239,228,.16);
+  --ace-ghost: #4A4844;
+  --ace-mute: #8F8B80;
+  --ace-ink: #F4EFE4;                          /* never pure white */
+  color: #F4EFE4;
 }
+.on-ink .slab-head h2 { color: #F4EFE4; }
+
+.card { background: var(--ace-card); border: 1px solid var(--ace-rule); padding: 32px 34px; }
 
 /* ---- 01 the answer ---- */
-.answer-card { width: min(660px, 100%); display: grid; gap: 14px; }
-.ac-q { font-size: clamp(17px, 1.9vw, 21px); color: var(--ace-mute); }
-.ac-verdict { font-size: 28px; font-weight: 600; }
-.ac-body { font-size: 16px; max-width: 52ch; }
+.answer-card { width: min(660px, 100%); display: grid; gap: 16px; }
+.ac-q { font-size: 21px; line-height: 1.15; letter-spacing: -0.015em; color: var(--ace-mute); }
+.ac-verdict { font-size: 28px; line-height: 1.0; letter-spacing: -0.03em; font-weight: 500; }
+.ac-body { font-size: 16px; max-width: 50ch; }
 .ac-plan { border-top: 1px solid var(--ace-rule); }
-.ac-plan p {
-  display: flex; justify-content: space-between; gap: 20px;
-  padding: 11px 0; font-size: 12px; border-bottom: 1px solid var(--ace-rule);
-}
+.ac-plan p { display: flex; justify-content: space-between; gap: 20px; padding: 12px 0; font-size: 12px; border-bottom: 1px solid var(--ace-rule); }
 .ac-plan span { color: var(--ace-mute); }
-.ac-plan b { font-weight: 600; }
+.ac-plan b { font-weight: 500; }
 .ac-receipt { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip {
-  font-family: var(--ace-mono); letter-spacing: var(--ace-track-label);
-  font-size: 11px; padding: 5px 9px;
-  border: 1px solid var(--ace-rule); color: var(--ace-mute); background: var(--ace-card);
+  font-family: var(--ace-mono); letter-spacing: 0.16em; font-size: 11px;
+  padding: 6px 10px; border: 1px solid var(--ace-rule); color: var(--ace-mute); background: var(--ace-card);
 }
 .chip-cited { border-color: var(--ace-ink); color: var(--ace-ink); }
-.chip-routed { background: var(--ace-ink); color: var(--ace-ground); border-color: var(--ace-ink); }
+.chip-routed { background: var(--ace-ink); color: var(--ace-card); border-color: var(--ace-ink); }
 
 /* ---- 02 the audit ---- */
-.parse-card {
-  width: min(880px, 100%);
-  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
-  padding: 0; overflow: hidden;
-}
-.doc { padding: 26px 28px; border-right: 1px solid var(--ace-rule); }
-.parsed { padding: 26px 28px; }
-.doc-head { font-size: 11px; color: var(--ace-mute); margin-bottom: 16px; }
+.parse-card { width: min(900px, 100%); display: grid; grid-template-columns: 1fr 1fr; padding: 0; overflow: hidden; }
+.doc { padding: 28px 30px; border-right: 1px solid var(--ace-rule); }
+.parsed { padding: 28px 30px; }
+.doc-head { font-size: 11px; letter-spacing: 0.16em; color: var(--ace-mute); margin-bottom: 18px; }
 .doc-lines { display: grid; gap: 7px; }
 .doc-lines i { display: block; height: 6px; background: var(--ace-rule); }
-.rows p {
-  display: flex; justify-content: space-between; gap: 16px;
-  padding: 10px 0; font-size: 12px; border-bottom: 1px solid var(--ace-rule);
-}
+.rows p { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; font-size: 12px; border-bottom: 1px solid var(--ace-rule); }
 .rows p:last-child { border-bottom: 0; }
 .rows span { color: var(--ace-mute); }
-.rows b { font-weight: 600; }
+.rows b { font-weight: 500; }
 
 /* ---- 03 the dates ---- */
-.dates-card { width: min(720px, 100%); display: grid; gap: 22px; }
+.dates-card { width: min(720px, 100%); display: grid; gap: 24px; }
 .rail { position: relative; height: 54px; }
 .rail-line { position: absolute; left: 0; right: 0; top: 26px; height: 1px; background: var(--ace-rule); }
 .rail-fill { position: absolute; left: 0; top: 26px; height: 1px; width: 38%; background: var(--ace-ink); transform-origin: left center; }
 .rail-today { position: absolute; left: 38%; top: 12px; width: 1px; height: 28px; background: var(--ace-ink); }
-.rail-today i {
-  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-  font-style: normal; font-size: 9px; color: var(--ace-mute); white-space: nowrap;
-}
-.pt {
-  position: absolute; left: var(--p); top: 26px; transform: translate(-50%, -50%);
-  width: 9px; height: 9px; border: 1px solid var(--ace-ghost); background: var(--ace-card);
-}
+.rail-today i { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); font-style: normal; font-size: 10px; letter-spacing: 0.16em; color: var(--ace-mute); white-space: nowrap; }
+.pt { position: absolute; left: var(--p); top: 26px; transform: translate(-50%, -50%); width: 9px; height: 9px; border: 1px solid var(--ace-ghost); background: var(--ace-card); }
 .pt-next { border-color: var(--ace-ink); background: var(--ace-ink); }
-.card-close { font-size: 22px; font-weight: 600; }
+.card-close { font-size: 28px; line-height: 1.0; letter-spacing: -0.03em; font-weight: 500; }
 
 /* ---- 04 the route ---- */
-.route-card { width: min(620px, 100%); display: grid; gap: 14px; }
+.route-card { width: min(620px, 100%); display: grid; gap: 16px; }
 
-/* ---- 05 breadth ---- */
-.grid {
-  width: min(1000px, 100%);
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 1px; background: var(--ace-rule);
-  border: 1px solid var(--ace-rule);
+/* ---- 05 the index (replaces the 3-col feature grid) ---- */
+.index { list-style: none; width: min(940px, 100%); border-top: 1px solid var(--ace-rule); }
+.index li {
+  display: grid; grid-template-columns: 46px 120px 1fr; gap: 24px; align-items: baseline;
+  padding: 26px 4px; border-bottom: 1px solid var(--ace-rule);
+  transition: padding-left var(--exit) var(--ace-ease), background var(--exit) var(--ace-ease);
 }
-.cell { background: var(--ace-card); padding: 26px 24px; min-height: 148px; }
-.cell-tag { font-size: 10px; color: var(--ace-ghost); margin-bottom: 12px; }
-.cell p:last-child { font-size: 16px; }
+.index li:hover { padding-left: 16px; background: var(--ace-card); }
+.index i { font-style: normal; font-size: 11px; color: var(--ace-ghost); }
+.index span { font-size: 10px; color: var(--ace-mute); }
+.index p { font-size: 21px; line-height: 1.15; letter-spacing: -0.015em; }
 
 /* ============ specs ============ */
-.specs {
-  padding: 12svh var(--ace-page-margin);
-  border-top: 1px solid var(--ace-rule);
-  border-bottom: 1px solid var(--ace-rule);
-}
-.spec-grid {
-  max-width: 1000px; margin: 0 auto;
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px;
-}
-.spec-grid div { display: grid; gap: 8px; }
-.spec-grid b { font-size: 27px; font-weight: 600; font-variant-numeric: tabular-nums; }
-.spec-grid span { font-size: 10px; color: var(--ace-mute); }
+.specs { padding: 13svh 30px; border-top: 1px solid var(--ace-rule); }
+.spec-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+.spec-grid div { display: grid; gap: 10px; }
+.spec-grid b { font-size: 28px; line-height: 1.0; letter-spacing: -0.02em; font-weight: 500; font-variant-numeric: tabular-nums; }
+.spec-grid span { font-size: 10px; letter-spacing: 0.16em; color: var(--ace-mute); }
 
-/* ============ cta ============ */
-.cta { min-height: 84svh; display: grid; place-items: center; padding: var(--ace-section) var(--ace-page-margin); }
-.cta-card { width: min(560px, 100%); display: grid; gap: 14px; padding: 40px 36px; }
-.cta-line { font-size: 28px; font-weight: 600; }
-.cta-sub { font-size: 15px; color: var(--ace-mute); max-width: 44ch; }
-.wl-form { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+/* ============ the payoff — the accent at full force ============ */
+.payoff {
+  min-height: 92svh; display: grid; place-items: center;
+  padding: var(--slab-pad) 30px;
+  background: var(--ace-period);
+  color: #FFFFFF;                              /* 4.55:1 on emerald — passes AA */
+}
+.payoff-inner { width: min(560px, 100%); display: grid; gap: 16px; }
+.payoff-line { font-size: 28px; line-height: 1.0; letter-spacing: -0.03em; font-weight: 500; }
+.payoff-sub { font-size: 16px; color: rgba(255,255,255,.86); max-width: 42ch; }
+.wl-form { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
 .wl-input {
-  flex: 1 1 220px; min-width: 0; font: inherit; font-size: 15px; padding: 12px 14px;
-  color: var(--ace-ink); background: var(--ace-ground);
-  border: 1px solid var(--ace-rule); border-radius: 0;
-  transition: border-color var(--ace-dur) var(--ace-ease);
+  flex: 1 1 220px; min-width: 0; font: inherit; font-size: 16px; padding: 13px 15px;
+  color: #FFFFFF; background: transparent;
+  border: 1px solid rgba(255,255,255,.5); border-radius: 0;
+  transition: border-color var(--exit) var(--ace-ease);
 }
-.wl-input::placeholder { color: var(--ace-ghost); }
-.wl-input:focus-visible { outline: none; border-color: var(--ace-ink); }
+.wl-input::placeholder { color: rgba(255,255,255,.6); }
+.wl-input:focus-visible { outline: none; border-color: #FFFFFF; }
+/* contrast of kind, not scale — the button is small and inverted */
 .wl-btn {
-  flex: 0 0 auto; font-size: 15px; padding: 12px 20px;
-  background: var(--ace-ink); color: var(--ace-ground);
-  transition: opacity var(--ace-dur) var(--ace-ease);
+  flex: 0 0 auto; font-size: 15px; padding: 13px 22px;
+  background: #FFFFFF; color: var(--ace-period);
+  transition: opacity var(--exit) var(--ace-ease);
 }
-.wl-btn:hover { opacity: .82; }
-.wl-btn[disabled] { opacity: .55; cursor: progress; }
-.wl-error { font-size: 14px; }
-.wl-done { font-size: 15px; }
-.wl-code { font-size: 13px; color: var(--ace-mute); }
-.wl-code a { border-bottom: 1px solid var(--ace-ink); }
+.wl-btn:hover { opacity: .88; }
+.wl-btn[disabled] { opacity: .6; cursor: progress; }
+.wl-error, .wl-done { font-size: 15px; color: #FFFFFF; }
+.wl-done .period { color: #FFFFFF; }           /* the whole slab is already the accent */
+.wl-code { font-size: 13px; color: rgba(255,255,255,.8); }
+.wl-code a { border-bottom: 1px solid currentColor; }
 
 /* ============ footer ============ */
 .foot {
+  background: var(--ace-ink); color: #F4EFE4;
   display: flex; justify-content: space-between; align-items: baseline;
-  gap: 16px; flex-wrap: wrap;
-  padding: 26px var(--ace-page-margin) 34px;
+  gap: 16px; flex-wrap: wrap; padding: 40px 30px 46px;
 }
-.foot-mono { font-family: var(--ace-mono); letter-spacing: var(--ace-track-label); font-size: 11px; color: var(--ace-mute); }
-.foot-links { display: flex; gap: 20px; font-size: 13px; color: var(--ace-mute); }
-.foot-links a:hover { color: var(--ace-ink); }
-.foot-legal { font-size: 13px; color: var(--ace-mute); }
+.foot-mono { font-family: var(--ace-mono); letter-spacing: 0.16em; font-size: 11px; color: #8F8B80; }
+.foot-links { display: flex; gap: 22px; font-size: 13px; color: #8F8B80; }
+.foot-links a:hover { color: #F4EFE4; }
+.foot-legal { font-size: 13px; color: #8F8B80; }
 
 /* ============ small screens ============ */
 @media (max-width: 780px) {
+  :root { --slab-pad: 11svh; }
   .wordmark { width: 86vw; }
-  .slab { gap: 32px; padding: 10svh var(--ace-page-margin); min-height: 0; }
+  .slab { gap: 34px; min-height: 0; }
   .card { padding: 24px 20px; }
   .parse-card { grid-template-columns: 1fr; }
   .doc { border-right: 0; border-bottom: 1px solid var(--ace-rule); }
-  .grid { grid-template-columns: 1fr; }
-  .cell { min-height: 0; }
-  .spec-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-  .cta-card { padding: 30px 22px; }
-  .menu-list a { font-size: 22px; }
+  .index li { grid-template-columns: 34px 1fr; gap: 6px 16px; padding: 20px 4px; }
+  .index span { grid-column: 2; }
+  .index p { grid-column: 2; font-size: 18px; }
+  .spec-grid { grid-template-columns: repeat(2, 1fr); gap: 26px; }
+  .menu-list a { font-size: 24px; }
   .foot { flex-direction: column; gap: 12px; }
 }
 
-/* ============ reduced motion — everything at its resolved state ============ */
+/* ============ reduced motion — resolved state, no exceptions ============ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .g-a, .g-c, .g-e, .g-dot, .hero-line, .hero-sub, .hero-hint,
-  .slab-head, .card, .cell, .doc-lines i, .rows p, .ac-plan p {
+  .slab-head, .card, .index li, .doc-lines i, .rows p, .ac-plan p, .payoff-inner {
     opacity: 1 !important; transform: none !important;
   }
 }

@@ -46,30 +46,53 @@ if (!reduced) {
 }
 
 /* ---------------------------------------------------------------------------
-   the slab module — head, then the artifact, then its internal rows.
-   One shot per slab; the card is the thing being demonstrated.
+   the slab module. Enter 560ms, exit 140ms (4:1) — symmetric timing is why
+   most motion reads cheap. Stagger by mass: rows ~45ms, cards ~90ms.
    --------------------------------------------------------------------------- */
+/* The bar reads the ground beneath it. This is legibility, not motion — an ink
+   mark on an ink slab is invisible — so it runs even under reduced-motion. */
+const bar = q(".bar");
+qa(".on-ink, .payoff, .foot").forEach((dark) => {
+  ScrollTrigger.create({
+    trigger: dark, start: "top 60px", end: "bottom 60px",
+    onToggle: (self) => bar.classList.toggle("is-inverted", self.isActive),
+  });
+});
+
 if (!reduced) {
   qa(".slab").forEach((slab) => {
     const head = slab.querySelector(".slab-head");
-    const card = slab.querySelector(".card, .grid");
-    const inner = slab.querySelectorAll(".rows p, .ac-plan p, .cell, .doc-lines i");
+    const art = slab.querySelector(".card, .index");
+    const inner = slab.querySelectorAll(".rows p, .ac-plan p, .index li, .doc-lines i");
 
-    gsap.set(head, { opacity: 0, y: 18 });
-    gsap.set(card, { opacity: 0, y: 26 });
+    gsap.set(head, { opacity: 0, y: 20 });
+    gsap.set(art, { opacity: 0, y: 30 });
     if (inner.length) gsap.set(inner, { opacity: 0 });
 
     ScrollTrigger.create({
-      trigger: slab, start: "top 70%", once: true,
+      trigger: slab, start: "top 72%", once: true,
       onEnter: () => {
-        const tl = gsap.timeline({ defaults: { ease: EASE } });
-        tl.to(head, { opacity: 1, y: 0, duration: 0.5 })
-          .to(card, { opacity: 1, y: 0, duration: 0.55 }, "-=0.28");
-        if (inner.length) {
-          tl.to(inner, { opacity: 1, duration: 0.34, stagger: 0.045 }, "-=0.24");
-        }
+        gsap.timeline({ defaults: { ease: EASE, duration: 0.56 } })
+          .to(head, { opacity: 1, y: 0 })
+          .to(art, { opacity: 1, y: 0 }, "-=0.30")
+          .to(inner, { opacity: 1, duration: 0.34, stagger: 0.045 }, "-=0.26");
       },
     });
+
+    /* SCRUB — compositor-only (transform), artifact layers only. Layout and
+       text never scrub; that is what produces the motion-sick imitation. */
+    if (art) {
+      gsap.fromTo(art, { yPercent: 4 }, {
+        yPercent: -4, ease: "none",
+        scrollTrigger: { trigger: slab, start: "top bottom", end: "bottom top", scrub: 0.6 },
+      });
+    }
+  });
+
+  /* the hero recedes as you leave it — the page has depth, not just sections */
+  gsap.to(".wordmark", {
+    scale: 0.86, opacity: 0, yPercent: -8, ease: "none",
+    scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.5 },
   });
 
   /* the semester rail draws to today */
@@ -78,18 +101,41 @@ if (!reduced) {
     gsap.set(fill, { scaleX: 0 });
     ScrollTrigger.create({
       trigger: "#dates", start: "top 60%", once: true,
-      onEnter: () => gsap.to(fill, { scaleX: 1, duration: 0.8, ease: EASE }),
+      onEnter: () => gsap.to(fill, { scaleX: 1, duration: 0.9, ease: EASE }),
     });
   }
 
-  /* specs count up — real numbers, so they arrive as receipts not decoration */
+  /* the payoff ground wipes up — the accent arriving with force */
+  gsap.fromTo("#join", { clipPath: "inset(12% 0 0 0)" }, {
+    clipPath: "inset(0% 0 0 0)", ease: "none",
+    scrollTrigger: { trigger: "#join", start: "top bottom", end: "top 55%", scrub: 0.6 },
+  });
+  gsap.from(".payoff-inner", {
+    opacity: 0, y: 24, duration: 0.56, ease: EASE,
+    scrollTrigger: { trigger: "#join", start: "top 62%", once: true },
+  });
+
+  /* the bar gets out of the way on the way down */
+  let lastY = 0;
+  ScrollTrigger.create({
+    start: 0, end: "max",
+    onUpdate: (self) => {
+      const y = self.scroll();
+      if (Math.abs(y - lastY) > 8) {
+        bar.classList.toggle("is-hidden", y > 120 && y > lastY);
+        lastY = y;
+      }
+    },
+  });
+
+  /* specs count up — receipts arriving, not decoration */
   qa("#specMajors, #specCourses, #specRules").forEach((el) => {
-    const target = parseInt(el.textContent, 10);
+    const target = parseInt(el.textContent.replace(/,/g, ""), 10);
     const o = { n: 0 };
     ScrollTrigger.create({
       trigger: "#specs", start: "top 78%", once: true,
       onEnter: () => gsap.to(o, {
-        n: target, duration: 1.1, ease: EASE,
+        n: target, duration: 1.2, ease: EASE,
         onUpdate: () => { el.textContent = Math.round(o.n).toLocaleString("en-US"); },
       }),
     });
