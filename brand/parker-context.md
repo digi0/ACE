@@ -776,3 +776,99 @@ WHEN PRODUCT SCREENSHOTS APPEAR:
 
 WHEN PRICING APPEARS: [CONFIRM] accurate terms for what is free and what is paid.
 ```
+
+---
+
+## 27. Step 2 · Testing Priorities → formats, audiences, volume
+
+### 1. AD FORMATS
+
+**Static — select these three:**
+`Headline` · `Features & Benefits` · `Bullet Points`
+
+Headline is the strongest fit we have: our brand is typographic, and one line on a plain
+ground with an emerald period *is* our format. Features & Benefits works because the
+features are concrete and the benefit is the citation. Bullet Points carries the proof
+stack (749 / 9,439 / 46 / cited to the page).
+
+**Static — do not select, and why:**
+- `Reviews` and `Press Hits` — we have neither. Selecting them invites fabrication, and
+  the 2024 FTC rule makes that a penalty matter, not a taste matter.
+- `Before vs After` — the label itself pulls toward transformation claims, which is
+  guardrail 1. The good version of this idea (14 tabs → one input) is reachable through
+  Headline without the pull.
+- `AI Ads` — generated imagery breaks a visual system built on exact vector geometry, and
+  we don't lead with the AI anyway.
+
+**Video — select these seven:**
+`Founder Ads` · `Educational` · `How To/Steps` · `POVs` · `Comment Response` ·
+`Green Screen` · `Street Interviews`
+
+- **Founder Ads** — our best format. Two real founders, a true and specific story, lived
+  credibility. Nothing else we can shoot is this differentiated.
+- **Educational** — how prereq chains actually work, what a W really does. We have the
+  data and the expertise; this is the content that earns trust rather than claiming it.
+- **How To/Steps** — screen-first product demonstration. "How to check if you're on track."
+- **POVs** — "POV: it's 2am the week registration opens." Native to the platform and
+  directly on our timing territory.
+- **Comment Response** — answering a real student question with a real citation. This is
+  proof-by-transcript in video form, and it's the playbook's proof strategy made shootable.
+- **Green Screen** — talking over the actual bulletin page. Cheap, and it dramatises
+  "documents, not answers" without a word of claim.
+- **Street Interviews** — genuinely available to us, we're on campus. **Handle with care:**
+  ask what's hard about picking classes, never anything that makes a student look
+  ignorant on camera. Shaming the viewer or the participant is guardrail 7.
+
+**Video — do not select, and why:**
+- `UGC` · `Testimonial/First-Person Story` · `Skeptical Testimonial` — no users to draw
+  from yet. **Revisit the moment real students are using it** — these are probably our
+  best formats in three months, just not today.
+- `Negative Angles` — fear-based by construction. Prohibited.
+- `Before/After Contrast` · `Us vs. Them` — outcome and comparative claims we cannot
+  substantiate.
+- `Celebrity/TV Endorsement`, `Gifting Reaction`, `Unboxing`, `Warehouse`, `ASMR`,
+  `High Production`, `VSL`, `Podcast Ads` — wrong register, no product to unbox, or
+  production we can't source honestly.
+- `Faceless "Ugly Ads"` / `Ugly Ad` — they perform, but our differentiation is craft, and
+  Zero Chroma is already minimal without being ugly. Revisit only if the polished work
+  underperforms.
+
+### 2. NEW AUDIENCES TO TEST — paste
+
+```
+Geographic first, interest second — our launch is one campus, not a national interest graph.
+
+- Geo: State College, PA and a tight radius around the Penn State campus. Test campus-building geofences (libraries, dining halls, student union) against the whole-town radius.
+- Age 18-24, US undergraduates. Note some incoming freshmen are 17, where platform targeting and data rules are stricter.
+- Majors with the worst prerequisite chains — engineering, computer science, nursing, pre-med. This is where the pain is sharpest and word of mouth is loudest.
+- Interest adjacencies: Coursicle, Rate My Professors, Chegg, Quizlet, Notion, Canvas LMS, college subreddits.
+- Behavioural: recently moved away from home; college students living on campus.
+- Transfer students — credit evaluation is a genuinely painful, under-served question.
+- First-generation students, if targetable without implying we know it about the viewer. Meta's personal attributes standard means we can aim at the segment but never say "as a first-gen student..." in copy.
+- Parents of college students — a separate audience for the forwarded-plan angle, not a variant of the student creative.
+- Lookalikes from waitlist signups, once the list is large enough to seed one.
+
+Do not build audiences that require asserting academic status, financial situation or stress level back at the viewer.
+```
+
+### 3. BREAKDOWN — recommended volume
+
+**Net new concepts: the lowest honest number, around 6–8/month.**
+**Iterations on winners: around 4/month.**
+
+Parker briefs to the capacity you declare. Two founders with no dedicated editor should
+understate — a plan for thirty concepts you can't shoot is worth less than a plan for six
+you actually ship. Raise it once the pipeline proves out.
+
+### 4. CURRENTLY TESTING — paste
+
+```
+Nothing in paid. No ad account history, no spend, no creative has run. Treat this as a cold start with zero learnings.
+
+What is live and worth Parker knowing:
+- acecollege.app with waitlist capture and referral attribution.
+- The product itself, in use, generating real cited transcripts — our raw material for creative.
+- A complete brand system, locked: mark, palette, type, voice, guardrails.
+
+The first real test is a strategic one, not a creative one: whether "ask your college anything" (breadth) or "know what to take next semester" (the course-planning wedge) earns the first open. Breadth is the long-term thesis; courses are the sharpest immediate pain. Everything else should wait behind that answer.
+```
