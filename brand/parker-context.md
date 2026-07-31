@@ -522,3 +522,61 @@ disorganisation — every one of these people is trying hard. The enemy is an
 institution that is badly indexed, not a student who is failing. Any creative that
 implies the viewer is behind, lazy or careless is off-brand and violates the
 guardrails in §8.
+
+---
+
+## 20. Step 1 · Founder Story — deliberately skipped
+
+Paste this to close the field rather than leaving it blank (a blank field invites Parker
+to invent one from research, which breaks the no-fabricated-proof rule):
+
+```
+No founder story provided. Do not generate, infer, or reference a founder narrative, origin story, or personal backstory in any creative. Build all copy from the product, the citation, and the student's problem instead.
+```
+
+Revisit when there's a true origin worth telling — it converts, but only if it's real.
+
+---
+
+## 21. Step 2 · Strategy → Marketing Calendar
+
+**The single most ACE-specific thing Parker can learn.** Its DTC training assumes a
+retail year — Q4, BFCM, New Year. Ours is the academic year, and demand is sharply
+calendar-spiked. Getting this wrong wastes the whole month.
+
+```
+ACE's demand calendar is academic, not retail. Ignore Black Friday, Cyber Monday, Q4 and New Year entirely — they are dead weeks for us. Our equivalent of Black Friday is the week course registration opens.
+
+SIX RECURRING PEAKS, in order of value:
+
+1. REGISTRATION OPENS (roughly late Oct-Nov for spring terms, late Mar-Apr for fall terms). The biggest spike of the year. Students are choosing next semester's courses under time pressure with seats disappearing. Questions: what do I take, what does this unlock, am I on track. This is the peak to spend against.
+
+2. GRADES POST + THE 48 HOURS AFTER (Dec and May). Highest emotional intensity of the year. Students who failed or withdrew from a gateway course conclude they've lost a year. This is the "failed it? rerouted." moment and our most powerful creative territory — but it must be handled with the shame-free rules, never as fear.
+
+3. ORIENTATION / WEEK ONE (Aug and Jan). Highest question volume, lowest relationships. Mostly breadth questions — printing, holds, dining, clubs, who to email. Cheap to win and it earns the academic question in week six. Fight for orientation packets and RA scripts here.
+
+4. ADD/DROP WINDOW (first ~2 weeks of each term). "Can I still switch into this." Short, sharp, high intent.
+
+5. DROP / WITHDRAW DEADLINES (mid-term). Real consequences attached, so real urgency — which we report, never manufacture. Example from Penn State Spring 2026, already in the product: Feb 14 last day to drop without a W, Mar 21 last day to withdraw.
+
+6. THE NIGHT BEFORE AN ADVISING APPOINTMENT (rolling, clusters before registration). Students prepping questions so they don't waste their one meeting.
+
+DAILY RHYTHM: demand is nocturnal. Roughly 11pm-3am is our window and it is cheap. Creative that acknowledges the hour ("still answering." over a 02:46 timestamp) belongs here.
+
+TROUGHS: mid-semester lulls and spring break are quiet for acquisition. Summer is not dead — it's transfer-credit questions, fall planning, and incoming freshmen.
+
+PLANNING RULE: build campaigns against these peaks, not on a flat weekly cadence. A flat plan underperforms badly here. And never invent a deadline to create urgency — the real academic calendar supplies more than enough, and manufacturing pressure on an anxious audience is a hard guardrail violation.
+```
+
+---
+
+## 22. Step 2 · Strategy → Compliance & Legal
+
+Paste **§8 of this document verbatim** — it's already written as a hard-rules block.
+This is the most important screen in the entire Training Path, because Parker's DTC
+training actively suggests urgency, guarantees and before/after mechanics that we cannot
+run. Add this line at the top:
+
+```
+These rules override any standard direct-response or DTC advertising convention. Where a performance-marketing best practice conflicts with a rule below, the rule wins.
+```
