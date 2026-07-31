@@ -872,3 +872,72 @@ What is live and worth Parker knowing:
 
 The first real test is a strategic one, not a creative one: whether "ask your college anything" (breadth) or "know what to take next semester" (the course-planning wedge) earns the first open. Breadth is the long-term thesis; courses are the sharpest immediate pain. Everything else should wait behind that answer.
 ```
+
+---
+
+## 28. Step 2 · Creative Background → the four fields
+
+### WHAT WORKED WELL
+
+```
+No paid creative has ever run, so nothing here is validated by performance data. Do not treat anything below as a proven winner — these are qualitative signals from building the product and from months of student interviews, freshman through senior, conducted before we built anything.
+
+- The problem statement lands without explanation. Describe the gap — you can't get an advising appointment before the deadline that actually matters — and students recognise it immediately. We have never had to argue that this problem exists.
+- Specificity beats abstraction in every conversation we've had. A real course code, a real deadline, a real page citation gets a reaction that "AI academic advisor" does not.
+- The citation is what closes skepticism. The moment students hear that it tells you which handbook page the answer came from, the "but AI makes things up" objection stops.
+
+Treat these as hypotheses to test, not as results to scale.
+```
+
+### WHAT HAS NOT WORKED
+
+```
+No paid creative has run, so we have no advertising losers to report.
+
+What we did reject during brand development — decisions with reasoning, not ad tests:
+
+- Generic edtech and AI visual language: graduation caps, chat bubbles, sparkles, brains, robots, lightbulbs. All of it reads as category wallpaper and makes us look like every other student app. Killed.
+- The blue "AI startup" palette. Deliberately abandoned — the entire category is blue, so we went to six greys and one accent.
+- A mascot and character direction. Built, then cut: it had no connection to what the product actually does.
+- Leading with the technology. "AI-powered" is banned in our copy. The model is not the value; the citation is.
+
+Again: brand decisions, not performance data.
+```
+
+### WHAT HAVE YOU TRIED / NOT TRIED
+
+```
+TRIED — organic only:
+- The landing page, across several generations: a React whiteboard version, a cinematic scroll experience, an illustrated student-desk hero, and now a rebuild in the current brand system.
+- Waitlist capture with referral attribution ("you're #N") at acecollege.app.
+- Direct student interviews, freshman through senior, over several months.
+- The product itself, in real use, generating cited transcripts.
+
+NOT TRIED — no experience and no data, treat as greenfield:
+- Any paid advertising, on any platform. No ad account history.
+- Any video creative at all.
+- Influencer, ambassador or creator partnerships.
+- UGC of any kind.
+- SEO or programmatic content (the course-code engine is designed but not built).
+- Physical campus activation — stickers, org fairs, orientation packets.
+```
+
+### CONTEXT FOR NEW EMPLOYEE
+
+```
+Read the uploaded brand guidelines PDF first. This is the summary.
+
+WHAT WE SELL. Not course planning — relief. The student's actual state is a low, constant dread: I think I'm behind, I'm not sure, and everyone else seems to have it figured out. Every asset should be legible as: you were carrying this, now you're not.
+
+THE ONE LINE TO KNOW. Penn State solved submitting the work with Canvas. Nothing equivalent exists for navigating the degree itself — which is the decision that actually costs students money and time. Every student understands it instantly, and it names the category gap without a word of hype. Build from it.
+
+THE MECHANIC. The brand ends in a period, and the period is emerald. It marks things that are finished — the send button, the answer, the destination, the done. It never appears on a loading state, an empty state or an error, and never twice in one frame. That scarcity is the entire mechanism; spend it twice and it stops meaning anything.
+
+VOICE. Lowercase, calm, verdict first — "yes." then the reason, because the reader is anxious and shouldn't have to hunt for whether they're okay. Mistakes are routes, not failures: "failed it? rerouted." Never take the credit: "you're fine," not "we fixed it." No exclamation marks. Test any line by asking whether a sophomore could text it to their roommate without irony.
+
+PROOF. We have no testimonials, no user counts and no outcome data, and we do not invent them. Our proof is real transcripts — a hard question, a real answer, a handbook page cited. With this audience, falsifiable beats flattering. We also publish cases where the product was wrong and corrected; being publicly correctable is a stronger trust position than being publicly perfect.
+
+TIMING. Demand is academic, not retail. Ignore Q4, Black Friday and New Year — dead weeks. Our peaks are the week registration opens, the 48 hours after grades post, and orientation. The daily peak is 11pm to 3am.
+
+THE SHIP TEST, and the only one that matters: does this make a worried student feel more capable, or does it make us look clever? If it's the second, it doesn't ship.
+```
