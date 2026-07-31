@@ -704,3 +704,75 @@ ADJACENT CONSTRAINTS, not advertising rules but real:
 
 This is a founder's summary, not legal advice. Have counsel review the first paid campaign, the ambassador disclosure language, and the privacy policy.
 ```
+
+---
+
+## 26. Step 2 · Compliance & Legal → risk slider, restricted claims, disclaimers
+
+### The slider: set it to STRICT COMPLIANCE, not Balanced
+
+Four reasons, and none of them cost us creative quality:
+
+1. **The domain punishes wrong claims asymmetrically.** A confident wrong answer in
+   advising costs a student a semester. There is no upside that compensates.
+2. **We have zero substantiation.** No outcome data, no reviews, no user counts. Under
+   FTC §5 every claim must be provable *before* it runs, so "Balanced" gives Parker
+   latitude it has no evidence to fill.
+3. **Our natural territory sits on Meta's tripwires** — mental health, financial
+   vulnerability, age. Loose settings generate exactly the hooks that get accounts
+   restricted.
+4. **Strict costs us nothing.** Our differentiation is specificity and voice — the
+   citation, the 2am timestamp, the Canvas line — not aggressive claims. The playbook's
+   ship test is already stricter than this slider.
+
+Anything right of Moderate will produce work we throw away.
+
+### RESTRICTED CLAIMS — paste
+
+```
+PROHIBITED — never generate these in any form:
+
+OUTCOME CLAIMS. "Graduate on time," "save a semester," "save tuition," "never miss a requirement," "finish faster," "guaranteed." We have no outcome data. Note specifically: the founder lost a semester before ACE existed. That is his history and must never be converted into a promise about the product.
+
+ACCURACY ABSOLUTES. "Always right," "100% accurate," "never wrong," "perfect answers." ACE cites its sources precisely because it is correctable. Claiming infallibility contradicts the product and is unsubstantiated.
+
+REPLACEMENT CLAIMS. "Replaces your advisor," "you don't need an advisor," "skip advising." False — petitions, substitutions and exceptions are human decisions. Approved framing: "the advisor who's awake."
+
+AFFILIATION CLAIMS. "Official," "partnered with," "endorsed by," "approved by," or any university logo, seal, colour, mascot or wordmark. Factual biography is allowed: the founders studied at Penn State and ACE launches there.
+
+PERSONAL-ATTRIBUTE IMPLICATIONS. Anything implying we know the viewer's state: "stressed about graduating?", "feeling behind?", "overwhelmed?", "worried about wasting tuition?", "failed a class?" Prohibited both by Meta's personal attributes standard and by our own anti-shame guardrail. Write benefit-focused, never you-focused.
+
+SOCIAL PROOF NUMBERS. "Trusted by X students," "#1," "most popular," "top-rated," star ratings, testimonials. We have none. Nothing may be invented to fill the gap — the 2024 FTC rule on fake reviews carries civil penalties.
+
+FINANCIAL AID ADVICE. ACE routes aid questions to the Office of Student Aid and does not advise on eligibility or amounts. Never imply it does.
+
+COMPARATIVE CLAIMS. "Better than [competitor]," "more accurate than ChatGPT." Comparative claims require substantiation we don't have. Describe what we do instead: we cite the page.
+
+URGENCY AND SCARCITY. Countdowns, "limited spots," "offer ends," invented deadlines. Real academic deadlines may be reported factually; pressure may never be manufactured.
+
+REQUIRES SPECIAL HANDLING — allowed with care:
+
+REAL DATA. 749 degree programs, 9,439 course records, 46 handbook policy rules. True and usable exactly as stated. Do not round, inflate, or invent adjacent statistics.
+
+REAL TRANSCRIPTS. Product screenshots showing a real question, a real answer and a page citation are our strongest asset — provided no real student's name or data appears.
+
+PRICING. [CONFIRM before use] Any price or "free" claim must state accurately what is free and what is not.
+```
+
+### REQUIRED DISCLAIMERS — paste
+
+```
+ALWAYS, on any creative that shows ACE giving academic guidance:
+"ACE is not a substitute for official academic advising. Verify requirements with your academic advisor or registrar before making enrollment decisions."
+
+ALWAYS, on any creative that names or depicts a university:
+"Not affiliated with or endorsed by any university."
+
+WHEN AN ENDORSER IS INVOLVED — campus ambassadors, RAs, student creators, anyone receiving payment or free product:
+Clear and conspicuous disclosure of the material connection, in the post itself, not buried in a caption or comment. "#ad" or "paid partner."
+
+WHEN PRODUCT SCREENSHOTS APPEAR:
+"Screenshots are illustrative. Requirements vary by institution, catalog year and program."
+
+WHEN PRICING APPEARS: [CONFIRM] accurate terms for what is free and what is paid.
+```
