@@ -3,24 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ace. — ask your college anything</title>
-  <meta name="description" content="the advisor that knows your major, your catalog year and your prereqs — with a receipt on every answer. free for students, first 100 get early access.">
+  <title>ace. — the navigation layer for college</title>
+  <meta name="description" content="every question about being a student here — courses, money, places, people — answered with a receipt. free for students. first 100 get early access.">
   <link rel="canonical" href="https://www.acecollege.app/">
-  <meta property="og:title" content="ace. — ask your college anything">
-  <meta property="og:description" content="every answer, with its receipt. courses, deadlines, money, places — anything about being a student here.">
+  <meta property="og:title" content="ace. — the navigation layer for college">
+  <meta property="og:description" content="college is a tangle. ace is the route through it. ask anything — courses, deadlines, money, places — and get an answer with its receipt.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.acecollege.app/">
   <meta property="og:image" content="https://www.acecollege.app/poster.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#F6F6F6">
+  <meta name="theme-color" content="#0B0D10">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='24' fill='%230A0A0A'/%3E%3Cg transform='translate(42.6,55.8) scale(0.6)'%3E%3Cg transform='rotate(-11 5 12)'%3E%3Ccircle cx='0' cy='12' r='31' fill='none' stroke='%23F6F6F6' stroke-width='22'/%3E%3Crect x='30' y='-32' width='22' height='88' rx='11' fill='%23F6F6F6'/%3E%3C/g%3E%3Ccircle cx='82' cy='38' r='18' fill='%2300875A'/%3E%3C/g%3E%3C/svg%3E">
-  <link rel="stylesheet" href="/tokens.css?v=35">
-  <link rel="stylesheet" href="/styles.css?v=35">
+  <link rel="stylesheet" href="/system.css?v=43">
+  <link rel="stylesheet" href="/styles.css?v=43">
 </head>
 <body>
 
-<header class="bar">
-  <a class="bar-mark" href="/" aria-label="ace home">
+<header class="bar" id="bar">
+  <a class="bar-mark" href="#top" aria-label="ace home">
     <svg viewBox="-52 -40 156 100" aria-hidden="true">
       <g transform="rotate(-11 5 12)">
         <circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
@@ -37,168 +37,208 @@
   <nav class="menu-panel" aria-label="site">
     <button class="menu-close" id="menuClose">close</button>
     <ol class="menu-list">
-      <li><a href="#answer"><i>01</i>what it gives you</a></li>
-      <li><a href="#breadth"><i>02</i>what it covers</a></li>
-      <li><a href="#join"><i>03</i>join the waitlist</a></li>
-      <li><a href="https://app.acecollege.app"><i>04</i>sign in</a></li>
+      <li><a href="#route"><i>01</i>how it answers</a></li>
+      <li><a href="#lines"><i>02</i>the six lines</a></li>
+      <li><a href="#transfer"><i>03</i>never dead-ends</a></li>
+      <li><a href="#join"><i>04</i>join the waitlist</a></li>
+      <li><a href="https://app.acecollege.app"><i>05</i>sign in</a></li>
     </ol>
     <p class="menu-foot">the navigation layer for college. © 2026 ace.</p>
   </nav>
 </div>
 
-<!-- ============ hero — the name, the promise, nothing else ============ -->
-<section class="hero">
-  <div class="wordmark" role="img" aria-label="ace.">
-    <svg viewBox="-54 -44 332.93 112">
-      <g class="g-a">
-        <circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
-        <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/>
-      </g>
-      <g class="g-c">
-        <path d="M 123.93 -11.75 A 31 31 0 1 0 123.93 35.75" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
-      </g>
-      <g class="g-e">
-        <path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
-        <rect x="150.93" y="1" width="72" height="22" rx="11" fill="currentColor"/>
-      </g>
-      <circle class="g-dot" cx="248.93" cy="38" r="18" fill="#00875A"/>
-    </svg>
+<!-- ==========================================================================
+     HERO — the network. every path the catalog allows, tangled.
+     As you scroll it resolves into an ordered transit fan: one question in,
+     six domains out. The morph pairs share an identical command sequence
+     (M + four L) — that is what makes `attr: d` legal. See SITE-SYSTEM.md §5.
+     ========================================================================== -->
+<section class="hero" id="top">
+ <div class="hero-stick">
+  <svg class="net" viewBox="0 0 1200 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g class="net-lines">
+      <path class="ln" style="--c: var(--l-academic)"
+            d="M -40 120 L 280 620 L 620 90 L 840 560 L 1240 300"
+            data-to="M -40 360 L 300 360 L 430 200 L 900 200 L 1240 200"/>
+      <path class="ln" style="--c: var(--l-logistics)"
+            d="M -40 580 L 350 110 L 520 660 L 960 180 L 1240 520"
+            data-to="M -40 360 L 330 360 L 460 260 L 900 260 L 1240 260"/>
+      <path class="ln" style="--c: var(--l-money)"
+            d="M -40 300 L 420 680 L 300 140 L 880 600 L 1240 90"
+            data-to="M -40 360 L 360 360 L 490 320 L 900 320 L 1240 320"/>
+      <path class="ln" style="--c: var(--l-places)"
+            d="M -40 660 L 200 180 L 700 640 L 780 120 L 1240 640"
+            data-to="M -40 360 L 390 360 L 520 400 L 900 400 L 1240 400"/>
+      <path class="ln" style="--c: var(--l-people)"
+            d="M -40 40 L 520 700 L 240 380 L 1020 60 L 1240 700"
+            data-to="M -40 360 L 420 360 L 550 460 L 900 460 L 1240 460"/>
+      <path class="ln" style="--c: var(--l-beyond)"
+            d="M -40 700 L 160 60 L 820 700 L 700 140 L 1240 40"
+            data-to="M -40 360 L 450 360 L 580 520 L 900 520 L 1240 520"/>
+    </g>
+  </svg>
+
+  <div class="hero-inner">
+    <h1 class="wordmark" aria-label="ace.">
+      <svg viewBox="-54 -44 332.93 112" aria-hidden="true">
+        <g class="g-a">
+          <circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
+          <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/>
+        </g>
+        <g class="g-c">
+          <path d="M 123.93 -11.75 A 31 31 0 1 0 123.93 35.75" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
+        </g>
+        <g class="g-e">
+          <path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
+          <rect x="150.93" y="1" width="72" height="22" rx="11" fill="currentColor"/>
+        </g>
+        <circle class="g-dot" cx="248.93" cy="38" r="18" fill="#00875A"/>
+      </svg>
+    </h1>
+    <p class="hero-lead">college is a tangle.<br>this is the route through it.</p>
+    <a class="hero-cta" href="#join">get early access</a>
   </div>
-  <p class="hero-line">ask your college anything.</p>
-  <p class="hero-sub">still awake at 2am.</p>
-  <p class="hero-hint" aria-hidden="true">scroll</p>
+
+  <!-- the second beat: the network has resolved and now names itself -->
+  <p class="hero-legend" aria-hidden="true">
+    <b>six lines.</b> every question you have about being here, on one of them.
+  </p>
+  <p class="hero-hint mono" aria-hidden="true">scroll</p>
+ </div>
 </section>
 
-<!-- ============ 01 · the answer — the product, staged ============ -->
-<section class="slab" id="answer">
-  <header class="slab-head">
-    <h2>every answer, with its receipt.</h2>
-    <p>the verdict first, the reason second, and where it came from — every time.</p>
-  </header>
-  <div class="stage">
-    <article class="card answer-card">
-      <p class="ac-q">can i still graduate by spring '27 if i failed MATH 230?</p>
-      <p class="ac-verdict">yes<span class="period">.</span></p>
-      <p class="ac-body">retake MATH 230 in fall — it's the prereq gate for CMPSC 465.
-        four courses across two semesters and you're clear.</p>
-      <div class="ac-plan mono">
-        <p><span>FA26</span><b>MATH 230 · CMPSC 311</b></p>
-        <p><span>SP27</span><b>CMPSC 465 · CAPSTONE</b></p>
-      </div>
-      <p class="ac-receipt"><span class="chip chip-cited">HANDBOOK · P.14</span><span class="chip">12 CREDITS LEFT</span></p>
-    </article>
-  </div>
-</section>
-
-<!-- ============ 02 · the audit ============ -->
-<section class="slab on-ink" id="audit">
-  <header class="slab-head">
-    <h2>it reads your audit.</h2>
-    <p>the twelve-page pdf nobody can read — parsed into what's done, what's left, and what's next.</p>
-  </header>
-  <div class="stage">
-    <article class="card parse-card">
-      <div class="doc" aria-hidden="true">
-        <p class="doc-head mono">DEGREE AUDIT · 12 PAGES</p>
-        <div class="doc-lines" id="docLines"></div>
-      </div>
-      <div class="parsed">
-        <p class="doc-head mono">PARSED</p>
-        <div class="rows mono" id="parseRows">
-          <p><span>CREDITS</span><b>087 / 120</b></p>
-          <p><span>CATALOG YEAR</span><b>2024–25</b></p>
-          <p><span>REQUIREMENTS LEFT</span><b>04</b></p>
-          <p><span>PREREQ CHAIN</span><b>4 DEEP</b></p>
-          <p><span>GEN-EDS</span><b>02 REMAINING</b></p>
-        </div>
-      </div>
-    </article>
-  </div>
-</section>
-
-<!-- ============ 03 · the dates ============ -->
-<section class="slab on-ink" id="dates">
-  <header class="slab-head">
-    <h2>it watches the dates.</h2>
-    <p>registration windows, drop/add, seat openings — weeks early, not the night before.</p>
-  </header>
-  <div class="stage">
-    <article class="card dates-card">
-      <div class="rail" aria-hidden="true">
-        <span class="rail-line"></span>
-        <span class="rail-fill" id="railFill"></span>
-        <span class="rail-today"><i class="mono">TODAY</i></span>
-        <span class="pt" style="--p:8%"></span>
-        <span class="pt" style="--p:22%"></span>
-        <span class="pt pt-next" style="--p:52%"></span>
-        <span class="pt" style="--p:74%"></span>
-        <span class="pt" style="--p:92%"></span>
-      </div>
-      <div class="rows mono">
-        <p><span>DROP / ADD CLOSES</span><b>FRI SEP 12</b></p>
-        <p><span>REGISTRATION OPENS</span><b>NOV 03 · 07:00</b></p>
-        <p><span>SEATS · MATH 230</span><b>OPEN</b></p>
-      </div>
-      <p class="card-close">0 warnings<span class="period">.</span></p>
-    </article>
-  </div>
-</section>
-
-<!-- ============ 04 · never dead-ends ============ -->
+<!-- ==========================================================================
+     01 · THE ROUTE — you ask, it routes. the station names ARE the answer.
+     ========================================================================== -->
 <section class="slab" id="route">
-  <header class="slab-head">
-    <h2>it never dead-ends.</h2>
-    <p>when the answer isn't ours to give, you still leave with the office, the hours, and the exact thing to ask.</p>
+  <header class="head">
+    <p class="eyebrow mono">01 — you ask</p>
+    <h2>it answers with the whole route<span class="dot">.</span></h2>
+    <p class="sub">not a paragraph you have to decode. the verdict, the stops, and
+      where the rule came from.</p>
   </header>
-  <div class="stage">
-    <article class="card route-card">
-      <p class="ac-q">why is there a hold on my account?</p>
-      <p class="ac-body">a housing deposit hold. the bursar can release it — ace can't.</p>
-      <div class="rows mono">
-        <p><span>OFFICE</span><b>BURSAR · 103 SHIELDS</b></p>
-        <p><span>OPENS</span><b>MON 09:00</b></p>
-        <p><span>ASK FOR</span><b>HOLD-RELEASE REVIEW</b></p>
-      </div>
-      <p class="ac-receipt"><span class="chip chip-routed">ROUTED · NOT REFUSED</span></p>
-    </article>
+
+  <div class="card route-card">
+    <p class="route-q">can i still graduate by spring '27 if i failed MATH 230?</p>
+
+    <svg class="route-map" viewBox="0 0 900 270" role="img"
+         aria-label="Route: retake MATH 230 in fall, then CMPSC 311, then CMPSC 465 and the capstone, arriving spring 2027.">
+      <path class="rt-ghost" d="M 70 200 L 230 200 L 330 100 L 560 100 L 830 100"/>
+      <path class="rt-live"  id="rtLive" d="M 70 200 L 230 200 L 330 100 L 560 100 L 830 100"/>
+
+      <circle class="stn" cx="70"  cy="200" r="9"/>
+      <circle class="stn" cx="230" cy="200" r="9"/>
+      <circle class="stn" cx="330" cy="100" r="9"/>
+      <circle class="stn" cx="560" cy="100" r="9"/>
+      <circle class="stn stn-end" cx="830" cy="100" r="15"/>
+
+      <text class="stn-label mono" x="70"  y="240" text-anchor="middle">MATH 230</text>
+      <text class="stn-label mono" x="230" y="240" text-anchor="middle">CMPSC 311</text>
+      <text class="stn-label mono" x="330" y="70"  text-anchor="middle">CMPSC 465</text>
+      <text class="stn-label mono" x="560" y="70"  text-anchor="middle">CAPSTONE</text>
+      <text class="stn-label mono stn-label-end" x="830" y="70" text-anchor="middle">SPRING '27</text>
+    </svg>
+
+    <div class="route-foot">
+      <p class="route-verdict">yes<span class="dot dot-lit">.</span></p>
+      <p class="route-body">retake MATH 230 in fall — it's the prereq gate for CMPSC 465.
+        four courses across two semesters and you're clear.</p>
+      <p class="receipt"><span class="chip chip-cited">CITED · HANDBOOK P.14</span><span class="chip">12 CREDITS LEFT</span></p>
+    </div>
   </div>
 </section>
 
-<!-- ============ 05 · breadth ============ -->
-<section class="slab" id="breadth">
-  <header class="slab-head">
-    <h2>and it's not just courses.</h2>
-    <p>anything about being a student here — the small questions included.</p>
+<!-- ==========================================================================
+     02 · THE SIX LINES — the ecosystem claim, drawn instead of asserted.
+     Colour is never the only carrier: every line is named in text (§6).
+     ========================================================================== -->
+<section class="slab slab-paper" id="lines">
+  <header class="head">
+    <p class="eyebrow mono">02 — the network</p>
+    <h2>six lines, not one<span class="dot">.</span></h2>
+    <p class="sub">courses are where most people start. they're nowhere near where
+      it ends.</p>
   </header>
-  <div class="stage">
-    <ol class="index" id="breadthIndex">
-      <li><i class="mono">01</i><span class="mono">ACADEMIC</span><p>which gen-ed clears my last requirement?</p></li>
-      <li><i class="mono">02</i><span class="mono">LOGISTICS</span><p>where can i print at 2am?</p></li>
-      <li><i class="mono">03</i><span class="mono">MONEY</span><p>how do i set up a payment plan?</p></li>
-      <li><i class="mono">04</i><span class="mono">PLACES</span><p>is anything open to eat right now?</p></li>
-      <li><i class="mono">05</i><span class="mono">PEOPLE</span><p>is it too late to join a club?</p></li>
-      <li><i class="mono">06</i><span class="mono">BEYOND</span><p>what do i need for a spring internship?</p></li>
-    </ol>
-</div>
+
+  <ol class="lines">
+    <li style="--c: var(--l-academic)">
+      <span class="ln-rail" aria-hidden="true"></span>
+      <span class="ln-name mono">ACADEMIC</span>
+      <p class="ln-q">which gen-ed clears my last requirement?</p>
+    </li>
+    <li style="--c: var(--l-logistics)">
+      <span class="ln-rail" aria-hidden="true"></span>
+      <span class="ln-name mono">LOGISTICS</span>
+      <p class="ln-q">where can i print at 2am?</p>
+    </li>
+    <li style="--c: var(--l-money)">
+      <span class="ln-rail" aria-hidden="true"></span>
+      <span class="ln-name mono">MONEY</span>
+      <p class="ln-q">how do i set up a payment plan?</p>
+    </li>
+    <li style="--c: var(--l-places)">
+      <span class="ln-rail" aria-hidden="true"></span>
+      <span class="ln-name mono">PLACES</span>
+      <p class="ln-q">is anything open to eat right now?</p>
+    </li>
+    <li style="--c: var(--l-people)">
+      <span class="ln-rail" aria-hidden="true"></span>
+      <span class="ln-name mono">PEOPLE</span>
+      <p class="ln-q">is it too late to join a club?</p>
+    </li>
+    <li style="--c: var(--l-beyond)">
+      <span class="ln-rail" aria-hidden="true"></span>
+      <span class="ln-name mono">BEYOND</span>
+      <p class="ln-q">what do i need for a spring internship?</p>
+    </li>
+  </ol>
+</section>
+
+<!-- ==========================================================================
+     03 · THE INTERCHANGE — a line ending is a transfer, never a dead end.
+     ========================================================================== -->
+<section class="slab" id="transfer">
+  <header class="head">
+    <p class="eyebrow mono">03 — the interchange</p>
+    <h2>when it isn't ours to answer, it transfers you<span class="dot">.</span></h2>
+    <p class="sub">you never hear "i can't help with that." you get the office, the
+      hours, and the exact thing to ask for.</p>
+  </header>
+
+  <div class="card xfer-card">
+    <p class="route-q">why is there a hold on my account?</p>
+    <p class="route-body">a housing deposit hold. the bursar can release it — ace can't.</p>
+    <dl class="rows mono">
+      <div><dt>OFFICE</dt><dd>BURSAR · 103 SHIELDS</dd></div>
+      <div><dt>OPENS</dt><dd>MON 09:00</dd></div>
+      <div><dt>ASK FOR</dt><dd>HOLD-RELEASE REVIEW</dd></div>
+    </dl>
+    <p class="receipt"><span class="chip chip-xfer">TRANSFERRED · NOT REFUSED</span></p>
   </div>
 </section>
 
-<!-- ============ specs ============ -->
-<section class="specs" id="specs">
-  <div class="spec-grid mono">
-    <div><b id="specMajors">749</b><span>MAJORS</span></div>
-    <div><b id="specCourses">9439</b><span>COURSES</span></div>
-    <div><b id="specRules">46</b><span>HANDBOOK RULES CITED</span></div>
-    <div><b>24 / 7</b><span>INCLUDING 2AM</span></div>
-  </div>
+<!-- ==========================================================================
+     SPECS — the departure board. mono over real numbers only.
+     ========================================================================== -->
+<section class="specs">
+  <dl class="spec-grid mono">
+    <div><dt id="specMajors">749</dt><dd>MAJORS</dd></div>
+    <div><dt id="specCourses">9439</dt><dd>COURSES</dd></div>
+    <div><dt id="specRules">46</dt><dd>HANDBOOK RULES CITED</dd></div>
+    <div><dt>24/7</dt><dd>INCLUDING 2AM</dd></div>
+  </dl>
 </section>
 
-<!-- ============ the payoff — the accent, at full force, in its one role ====== -->
-<section class="payoff" id="join">
-  <div class="payoff-inner">
-    <p class="payoff-line">college, sorted.</p>
-    <p class="payoff-sub">first cohort starts this fall. free for students,
-      every major, every catalog year.</p>
+<!-- ==========================================================================
+     JOIN — arrival. the one screen emerald is allowed to own.
+     ========================================================================== -->
+<section class="join" id="join">
+  <div class="join-inner">
+    <p class="eyebrow mono">04 — arrival</p>
+    <h2 class="join-line">college, sorted<span class="dot dot-onlit">.</span></h2>
+    <p class="sub">first cohort starts this fall. free for students — every major,
+      every catalog year.</p>
+
     <form class="wl-form" id="waitlistForm" novalidate>
       <input class="wl-input" id="wlEmail" type="email" required placeholder="you@psu.edu"
              aria-label="email address" autocomplete="email">
@@ -211,7 +251,7 @@
 </section>
 
 <footer class="foot">
-  <span class="foot-mono">749 MAJORS · 9439 COURSES · CITED TO THE PAGE</span>
+  <span class="mono">749 MAJORS · 9439 COURSES · CITED TO THE PAGE</span>
   <nav class="foot-links">
     <a href="https://app.acecollege.app">sign in</a>
     <a href="mailto:access@acecollege.app">faculty &amp; advisors</a>
@@ -221,6 +261,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="/app.js?v=35"></script>
+<script src="/app.js?v=43"></script>
 </body>
 </html>

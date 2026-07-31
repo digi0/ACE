@@ -1,0 +1,66 @@
+/* ============================================================================
+   ace. — site system tokens ("Transit")
+
+   The MARKETING layer only. The product keeps brand/tokens.css (Zero Chroma).
+   The divergence is deliberate and written down in brand/SITE-SYSTEM.md §2 —
+   read that before changing anything here.
+
+   Decisive axis: colour as wayfinding. Every hue is a line; every line is a
+   domain of student life. Emerald is never a line — it is arrival.
+   ============================================================================ */
+
+:root {
+  /* Dark mode is not signed off in BRAND.md and the site ships its own ground
+     anyway, so pin the scheme and never inherit the provisional dark tokens. */
+  color-scheme: dark;
+
+  /* ---- ground ---- */
+  --ground:    #0B0D10;   /* the map at night */
+  --ground-2:  #111519;   /* raised surface, station cards */
+  --paper:     #F4F5F7;   /* the light half of the alternation */
+  --paper-2:   #FFFFFF;
+
+  --rule:      rgba(237, 239, 242, 0.13);
+  --ghost:     #39404A;   /* every path the catalog allows */
+  --mute:      #8A929C;
+  --ink:       #EDEFF2;   /* never pure white */
+  --ink-solid: #0B0D10;   /* type on the paper half */
+
+  /* ---- the six lines. colour is never decoration here. ---- */
+  --l-academic:  #4D7CFE;
+  --l-logistics: #FF9F1C;
+  --l-money:     #FF5A5F;
+  --l-places:    #2EC4E6;
+  --l-people:    #B08CFF;
+  --l-beyond:    #FFD23F;
+
+  /* ---- arrival. NOT a seventh line. one role, forever. ---- */
+  --arrive:      #00875A;
+  --arrive-lit:  #00B876;   /* glow only — the flat fill stays --arrive */
+
+  /* ---- type ---- */
+  --sans: -apple-system, "Helvetica Neue", Helvetica, system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+
+  --t-display: clamp(56px, 11vw, 148px);
+  --t-lead:    24px;
+  --t-body:    16px;
+  --t-mono:    11px;
+  /* deliberate hole between 24 and 56. do not fill it. */
+
+  /* ---- space ---- */
+  --unit: 4px;
+  --section: 120px;
+  --margin: 28px;
+
+  /* ---- motion: enter 560, exit 140. 4:1. ---- */
+  --ease: cubic-bezier(.165, .84, .44, 1);
+  --enter: 560ms;
+  --exit: 140ms;
+
+  --radius: 0;
+}
+
+@media (max-width: 780px) {
+  :root { --section: 72px; --margin: 20px; --t-lead: 20px; }
+}

@@ -1,9 +1,14 @@
 /* ============================================================================
-   ace. landing — Apple-grammar choreography.
+   ace. landing — "Transit" choreography
 
-   Motion serves the artifact, never the mood. Each slab's card assembles once
-   on entry; nothing scrubs text, nothing loops idle. One ease curve
-   (cubic-bezier(.165,.84,.44,1)); exits pinned ~120ms.
+   The signature move is a scroll-scrubbed morph of an SVG path's `d` attribute
+   between a tangled and a resolved shape (technique: ~/animmaster/SVG
+   Animations/5, "OnScrollPathAnimations"). It is not decoration — it is the
+   thesis animated: college is a tangle, ace resolves it into a route.
+
+   Scrub is restricted to transform / opacity / SVG `d` + stroke-dashoffset.
+   Layout and text never scrub — that is what produces the motion-sick imitation.
+   One curve. Enter 560ms, exit 140ms.
    ============================================================================ */
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
@@ -13,131 +18,156 @@ const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const q = (s) => document.querySelector(s);
 const qa = (s) => gsap.utils.toArray(s);
 
+const net = q(".net");
+const lines = qa(".ln");
+
 /* ---------------------------------------------------------------------------
-   hero — the letters land, the dot lands last. plays once.
+   THE RESOLVE. Tangle -> route, scrubbed against the hero's own scroll.
+   Both states are `M` + four `L` (five points) so the command sequences match;
+   GSAP can only interpolate `d` when they do. SITE-SYSTEM.md §5.
+   --------------------------------------------------------------------------- */
+if (reduced) {
+  /* never park a reduced-motion reader on the chaos frame */
+  lines.forEach((el) => el.setAttribute("d", el.dataset.to));
+  net.classList.add("is-resolved");
+} else {
+  /* The resolve is scrubbed across the hero's full 230svh, so it happens
+     ON SCREEN inside the sticky viewport instead of above the fold. */
+  const HERO = { trigger: ".hero", start: "top top", end: "bottom bottom" };
+
+  lines.forEach((el, i) => {
+    gsap.to(el, {
+      attr: { d: el.dataset.to },
+      ease: "none",
+      scrollTrigger: {
+        ...HERO,
+        /* staggered scrub: the lines don't resolve in lockstep, so the network
+           untangles the way a real one would — some strands before others.
+           Keep the spread tight: heavy lag means the resolve never lands. */
+        scrub: 0.3 + i * 0.06,
+      },
+    });
+  });
+
+  /* a line only takes its colour once it is YOURS — earned, not given */
+  ScrollTrigger.create({
+    ...HERO,
+    onUpdate: (self) => net.classList.toggle("is-resolved", self.progress > 0.42),
+  });
+
+  /* beat 1 hands over to beat 2: the wordmark recedes, the legend arrives */
+  gsap.timeline({ scrollTrigger: { ...HERO, scrub: 0.4 } })
+    .to(".hero-inner", { yPercent: -10, opacity: 0, ease: "none", duration: 0.42 }, 0)
+    .to(".hero-hint",  { opacity: 0, ease: "none", duration: 0.25 }, 0)
+    .to(".hero-legend", { opacity: 1, ease: "none", duration: 0.3 }, 0.58);
+}
+
+/* ---------------------------------------------------------------------------
+   hero intro — the letters land, the dot lands last. plays once.
    --------------------------------------------------------------------------- */
 if (!reduced) {
-  gsap.timeline({ delay: 0.25, defaults: { ease: EASE } })
-    .to(".g-a", { opacity: 1, y: 0, duration: 0.34 }, 0.10)
-    .to(".g-c", { opacity: 1, y: 0, duration: 0.34 }, 0.34)
-    .to(".g-e", { opacity: 1, y: 0, duration: 0.34 }, 0.58)
-    .to(".g-dot", { opacity: 1, duration: 0.06 }, 0.98)
-    .to(".g-dot", { y: 0, duration: 0.42 }, 0.98)
-    .to(".hero-line", { opacity: 1, y: 0, duration: 0.4 }, 1.42)
-    .to(".hero-sub", { opacity: 1, duration: 0.4 }, 1.62)
-    .to(".hero-hint", { opacity: 1, duration: 0.3 }, 1.85);
+  gsap.set([".g-a", ".g-c", ".g-e"], { opacity: 0, y: 10 });
+  gsap.set(".g-dot", { opacity: 0, y: -40 });
+  gsap.timeline({ delay: 0.2, defaults: { ease: EASE } })
+    .to(".g-a", { opacity: 1, y: 0, duration: 0.34 }, 0.05)
+    .to(".g-c", { opacity: 1, y: 0, duration: 0.34 }, 0.27)
+    .to(".g-e", { opacity: 1, y: 0, duration: 0.34 }, 0.49)
+    .to(".g-dot", { opacity: 1, duration: 0.06 }, 0.86)
+    .to(".g-dot", { y: 0, duration: 0.44 }, 0.86)
+    .to(".hero-lead", { opacity: 1, duration: 0.42 }, 1.26)
+    .to(".hero-cta", { opacity: 1, duration: 0.42 }, 1.44)
+    .to(".hero-hint", { opacity: 1, duration: 0.3 }, 1.7);
 }
 
 /* ---------------------------------------------------------------------------
-   the twelve-page pdf — grey lines, generated so the density reads as a real
-   document rather than a placeholder. Deterministic widths.
+   slabs — heads and cards assemble once on entry. Stagger by mass.
    --------------------------------------------------------------------------- */
-{
-  const host = q("#docLines");
-  let seed = 749;
-  const rand = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
-  const frag = document.createDocumentFragment();
-  for (let i = 0; i < 16; i++) {
-    const line = document.createElement("i");
-    line.style.width = (36 + rand() * 62).toFixed(0) + "%";
-    frag.appendChild(line);
-  }
-  host.appendChild(frag);
-}
-
-/* ---------------------------------------------------------------------------
-   the slab module. Enter 560ms, exit 140ms (4:1) — symmetric timing is why
-   most motion reads cheap. Stagger by mass: rows ~45ms, cards ~90ms.
-   --------------------------------------------------------------------------- */
-/* The bar reads the ground beneath it. This is legibility, not motion — an ink
-   mark on an ink slab is invisible — so it runs even under reduced-motion. */
-const bar = q(".bar");
-qa(".on-ink, .payoff, .foot").forEach((dark) => {
-  ScrollTrigger.create({
-    trigger: dark, start: "top 60px", end: "bottom 60px",
-    onToggle: (self) => bar.classList.toggle("is-inverted", self.isActive),
-  });
-});
-
 if (!reduced) {
   qa(".slab").forEach((slab) => {
-    const head = slab.querySelector(".slab-head");
-    const art = slab.querySelector(".card, .index");
-    const inner = slab.querySelectorAll(".rows p, .ac-plan p, .index li, .doc-lines i");
+    const head = slab.querySelector(".head");
+    const card = slab.querySelector(".card, .lines");
 
-    gsap.set(head, { opacity: 0, y: 20 });
-    gsap.set(art, { opacity: 0, y: 30 });
-    if (inner.length) gsap.set(inner, { opacity: 0 });
+    gsap.set(head, { opacity: 0, y: 22 });
+    if (card) gsap.set(card, { opacity: 0, y: 30 });
 
     ScrollTrigger.create({
-      trigger: slab, start: "top 72%", once: true,
+      trigger: slab, start: "top 74%", once: true,
       onEnter: () => {
         gsap.timeline({ defaults: { ease: EASE, duration: 0.56 } })
           .to(head, { opacity: 1, y: 0 })
-          .to(art, { opacity: 1, y: 0 }, "-=0.30")
-          .to(inner, { opacity: 1, duration: 0.34, stagger: 0.045 }, "-=0.26");
+          .to(card, { opacity: 1, y: 0 }, "-=0.32");
       },
     });
-
-    /* SCRUB — compositor-only (transform), artifact layers only. Layout and
-       text never scrub; that is what produces the motion-sick imitation. */
-    if (art) {
-      gsap.fromTo(art, { yPercent: 4 }, {
-        yPercent: -4, ease: "none",
-        scrollTrigger: { trigger: slab, start: "top bottom", end: "bottom top", scrub: 0.6 },
-      });
-    }
   });
 
-  /* the hero recedes as you leave it — the page has depth, not just sections */
-  gsap.to(".wordmark", {
-    scale: 0.86, opacity: 0, yPercent: -8, ease: "none",
-    scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.5 },
-  });
+  /* ---- the route draws itself, then the destination lands ---- */
+  const live = q("#rtLive");
+  if (live) {
+    const len = live.getTotalLength();
+    gsap.set(live, { strokeDasharray: len, strokeDashoffset: len });
+    /* SVG children need svgOrigin (user units), NOT transformOrigin (CSS px) —
+       with the wrong one every station scales from the viewBox corner. */
+    qa(".stn").forEach((s) => gsap.set(s, {
+      scale: 0, svgOrigin: `${s.getAttribute("cx")} ${s.getAttribute("cy")}`,
+    }));
+    gsap.set(".stn-label", { opacity: 0 });
 
-  /* the semester rail draws to today */
-  const fill = q("#railFill");
-  if (fill) {
-    gsap.set(fill, { scaleX: 0 });
     ScrollTrigger.create({
-      trigger: "#dates", start: "top 60%", once: true,
-      onEnter: () => gsap.to(fill, { scaleX: 1, duration: 0.9, ease: EASE }),
+      trigger: "#route", start: "top 58%", once: true,
+      onEnter: () => {
+        gsap.timeline({ defaults: { ease: EASE } })
+          .to(live, { strokeDashoffset: 0, duration: 1.15 })
+          .to(".stn", { scale: 1, duration: 0.34, stagger: 0.11 }, 0.25)
+          .to(".stn-label", { opacity: 1, duration: 0.3, stagger: 0.11 }, 0.38);
+      },
     });
   }
 
-  /* the payoff ground wipes up — the accent arriving with force */
-  gsap.fromTo("#join", { clipPath: "inset(12% 0 0 0)" }, {
-    clipPath: "inset(0% 0 0 0)", ease: "none",
-    scrollTrigger: { trigger: "#join", start: "top bottom", end: "top 55%", scrub: 0.6 },
-  });
-  gsap.from(".payoff-inner", {
-    opacity: 0, y: 24, duration: 0.56, ease: EASE,
-    scrollTrigger: { trigger: "#join", start: "top 62%", once: true },
+  /* ---- the six rails draw out, one per domain ---- */
+  gsap.set(".ln-rail", { scaleX: 0 });
+  ScrollTrigger.create({
+    trigger: "#lines", start: "top 66%", once: true,
+    onEnter: () => gsap.to(".ln-rail", {
+      scaleX: 1, duration: 0.62, ease: EASE, stagger: 0.07,
+    }),
   });
 
-  /* the bar gets out of the way on the way down */
+  /* ---- the departure board counts up ---- */
+  qa("#specMajors, #specCourses, #specRules").forEach((el) => {
+    const target = parseInt(el.textContent.replace(/,/g, ""), 10);
+    const o = { n: 0 };
+    ScrollTrigger.create({
+      trigger: ".specs", start: "top 82%", once: true,
+      onEnter: () => gsap.to(o, {
+        n: target, duration: 1.2, ease: EASE,
+        onUpdate: () => { el.textContent = Math.round(o.n).toLocaleString("en-US"); },
+      }),
+    });
+  });
+
+  /* ---- the bar gets out of the way on the way down ---- */
+  const bar = q("#bar");
   let lastY = 0;
   ScrollTrigger.create({
     start: 0, end: "max",
     onUpdate: (self) => {
       const y = self.scroll();
       if (Math.abs(y - lastY) > 8) {
-        bar.classList.toggle("is-hidden", y > 120 && y > lastY);
+        bar.classList.toggle("is-hidden", y > 140 && y > lastY);
         lastY = y;
       }
     },
   });
+}
 
-  /* specs count up — receipts arriving, not decoration */
-  qa("#specMajors, #specCourses, #specRules").forEach((el) => {
-    const target = parseInt(el.textContent.replace(/,/g, ""), 10);
-    const o = { n: 0 };
+/* The bar reads the ground beneath it. Legibility, not motion — an ink mark on
+   a paper slab is invisible — so this runs even under reduced-motion. */
+{
+  const bar = q("#bar");
+  qa(".slab-paper").forEach((light) => {
     ScrollTrigger.create({
-      trigger: "#specs", start: "top 78%", once: true,
-      onEnter: () => gsap.to(o, {
-        n: target, duration: 1.2, ease: EASE,
-        onUpdate: () => { el.textContent = Math.round(o.n).toLocaleString("en-US"); },
-      }),
+      trigger: light, start: "top 56px", end: "bottom 56px",
+      onToggle: (self) => bar.classList.toggle("on-paper", self.isActive),
     });
   });
 }
@@ -194,7 +224,7 @@ if (!reduced) {
 }
 
 /* ---------------------------------------------------------------------------
-   waitlist — unchanged contract: POST {email, referral} -> {position, already}
+   waitlist — contract unchanged: POST {email, referral} -> {position, already}
    --------------------------------------------------------------------------- */
 {
   const API = window.ACE_API_URL || "https://web-production-7ffe.up.railway.app";
@@ -225,11 +255,11 @@ if (!reduced) {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data?.detail || "something went wrong.");
       const n = String(data.position).padStart(3, "0");
-      okEl.innerHTML = data.already
-        ? `already on the list — you're #${n}<span class="period">.</span>`
+      okEl.textContent = data.already
+        ? `already on the list — you're #${n}.`
         : data.position <= 100
-          ? `you're in — #${n} of the first 100<span class="period">.</span>`
-          : `you're in — #${n} on the list<span class="period">.</span>`;
+          ? `you're in — #${n} of the first 100.`
+          : `you're in — #${n} on the list.`;
       form.hidden = true; okEl.hidden = false;
     } catch (err) {
       fail((err.message || "something went wrong — try again.").toLowerCase());
