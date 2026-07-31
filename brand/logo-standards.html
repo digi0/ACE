@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ace. — logo standards</title>
+<style>
+  :root{
+    --g0:#F6F6F6; --card:#FFFFFF; --rule:#E4E4E4; --ghost:#B2B2B2; --mute:#666666; --ink:#0A0A0A;
+    --period:#00875A; --dark:#0E0E0D;
+    --mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,monospace;
+    --sans:-apple-system,'Helvetica Neue',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--g0);color:var(--ink);font-family:var(--sans);padding:0 30px 70px;line-height:1.4}
+  .wrap{max-width:1000px;margin:0 auto}
+  .mono,.lab,.dim-n{font-family:var(--mono)}
+  .lab{font-size:9.5px;letter-spacing:.16em;color:var(--mute);text-transform:uppercase}
+  svg{display:block}
+  p{font-size:13.5px;max-width:66ch}
+  p+p{margin-top:9px}
+  .dim{color:var(--mute)}
+
+  .cover{padding:96px 0 66px;border-bottom:1px solid var(--ink);display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
+  .cover p{font-size:16px;max-width:42ch;margin-top:26px}
+  .cover .meta{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--mute);text-align:right;line-height:2.2;flex:0 0 auto}
+
+  section{margin-top:52px}
+  h2{font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:10px;padding-top:16px;border-top:1px solid var(--ink);display:flex;justify-content:space-between;align-items:baseline}
+  h2 .n{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--mute);font-weight:400}
+  h3{font-size:13px;font-weight:600;margin:18px 0 8px}
+
+  .row{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:14px}
+  .r2{grid-template-columns:1fr 1fr}
+  .r3{grid-template-columns:1fr 1fr 1fr}
+  .r4{grid-template-columns:repeat(4,1fr)}
+  .cell{background:var(--card);padding:18px 20px;display:flex;flex-direction:column;gap:11px}
+  .cell.mid{align-items:center;justify-content:center}
+  .cell.dk{background:var(--dark);color:#F4EFE4}
+  .cell.dk .lab{color:#8F8B80}
+  .cell.pap{background:var(--g0)}
+  .cell.em{background:var(--period)}
+  .cell.wht{background:#FFFFFF}
+
+  table{width:100%;border-collapse:collapse;margin-top:14px;background:var(--card);border:1px solid var(--rule)}
+  th,td{text-align:left;padding:9px 13px;font-size:12px;border-bottom:1px solid var(--rule);vertical-align:top}
+  th{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--mute);text-transform:uppercase;font-weight:400}
+  tr:last-child td{border-bottom:none}
+  td.m{font-family:var(--mono);font-size:11.5px}
+  .ok{color:var(--period);font-weight:600}
+
+  .no{position:relative;overflow:hidden}
+  .no:after{content:"";position:absolute;left:14px;right:14px;top:14px;bottom:14px;
+    background:linear-gradient(to top right,transparent 49.3%,var(--ghost) 49.3%,var(--ghost) 50.7%,transparent 50.7%)}
+  .noc{position:absolute;left:14px;top:10px;font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:var(--mute);z-index:2}
+  .no--lt:after{background:linear-gradient(to top right,transparent 49.3%,rgba(255,255,255,.6) 49.3%,rgba(255,255,255,.6) 50.7%,transparent 50.7%)}
+  .no--lt .noc{color:rgba(255,255,255,.85)}
+
+  .ladder{display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap}
+  .lt{display:flex;flex-direction:column;align-items:center;gap:7px}
+  .lt span{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:var(--mute)}
+  ul{margin:9px 0 0;padding:0;list-style:none;max-width:66ch}
+  li{font-size:13.5px;padding-left:17px;position:relative;margin-bottom:6px}
+  li:before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;background:var(--ghost)}
+  li.hit:before{background:var(--period)}
+  .dimline{stroke:var(--ghost);stroke-width:1}
+  .dimtxt{font-family:var(--mono);font-size:8px;letter-spacing:.06em;fill:var(--mute)}
+  footer{margin-top:70px;border-top:1px solid var(--ink);padding-top:22px;display:flex;justify-content:space-between;align-items:flex-end}
+
+  @page{ size: letter; margin: 13mm 14mm; }
+  @media print{
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body{background:#fff;padding:0}.wrap{max-width:none}
+    .cover{padding:16mm 0 12mm;break-after:page}
+    section{break-inside:avoid;margin-top:34px}
+    h2{break-after:avoid}
+    .row,table,.ladder{break-inside:avoid}
+    footer{break-before:page}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <!-- LEANING MARK — a rotates -11°, dot never does -->
+  <g id="mk"><g transform="rotate(-11 5 12)">
+    <circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
+    <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/></g>
+    <circle cx="82" cy="38" r="18" fill="#00875A"/></g>
+  <!-- mono variant: dot inherits -->
+  <g id="mkm"><g transform="rotate(-11 5 12)">
+    <circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
+    <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/></g>
+    <circle cx="82" cy="38" r="18" fill="currentColor"/></g>
+  <!-- favicon cut: dot 0.7R -->
+  <g id="fav"><g transform="rotate(-11 5 12)">
+    <circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
+    <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/></g>
+    <circle cx="82" cy="34" r="22" fill="#00875A"/></g>
+  <!-- UPRIGHT WORDMARK — no lean anywhere -->
+  <g id="wm">
+    <circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
+    <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/>
+    <path d="M 123.93 -11.75 A 31 31 0 1 0 123.93 35.75" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
+    <path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
+    <rect x="150.93" y="1" width="72" height="22" rx="11" fill="currentColor"/>
+    <circle cx="248.93" cy="38" r="18" fill="#00875A"/></g>
+  <g id="wmm">
+    <circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
+    <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/>
+    <path d="M 123.93 -11.75 A 31 31 0 1 0 123.93 35.75" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
+    <path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
+    <rect x="150.93" y="1" width="72" height="22" rx="11" fill="currentColor"/>
+    <circle cx="248.93" cy="38" r="18" fill="currentColor"/></g>
+  <!-- tiles -->
+  <g id="tile"><rect width="120" height="120" rx="24" fill="#0A0A0A"/>
+    <g transform="translate(42.6,55.8) scale(0.6)" style="color:#F6F6F6"><use href="#mk"/></g></g>
+  <g id="tiled"><rect x=".75" y=".75" width="118.5" height="118.5" rx="23.5" fill="#0A0A0A" stroke="rgba(244,239,228,.22)" stroke-width="1.5"/>
+    <g transform="translate(42.6,55.8) scale(0.6)" style="color:#F6F6F6"><use href="#mk"/></g></g>
+  <g id="tilei"><rect width="120" height="120" rx="24" fill="#F6F6F6"/>
+    <g transform="translate(42.6,55.8) scale(0.6)" style="color:#0A0A0A"><use href="#mk"/></g></g>
+</defs></svg>
+
+<!-- ================= COVER ================= -->
+<div class="cover">
+  <div>
+    <svg viewBox="-46 -44 328 104" width="380" style="color:var(--ink)"><use href="#wm"/></svg>
+    <p>Logo standards. Every asset, every condition, every prohibition —
+    so the mark survives contact with the real world.</p>
+  </div>
+  <div class="meta">
+    LOGO STANDARDS · V1<br>
+    2026<br><br>
+    INK #0A0A0A<br>
+    PERIOD #00875A<br>
+    PAPER #F6F6F6<br><br>
+    MASTERS → brand/logo/
+  </div>
+</div>
+
+<!-- ================= 01 THE SYSTEM ================= -->
+<section>
+  <h2>The system<span class="n">01</span></h2>
+  <p>Seven files, four jobs. Nothing else is the logo. If a situation isn't covered here,
+  the answer is the tile — it works on anything.</p>
+  <div class="row r4">
+    <div class="cell mid pap"><svg viewBox="-52 -42 156 102" width="106" style="color:var(--ink)"><use href="#mk"/></svg><span class="lab">The mark</span></div>
+    <div class="cell mid pap"><svg viewBox="0 0 120 120" width="74"><use href="#tile"/></svg><span class="lab">The tile</span></div>
+    <div class="cell mid pap"><svg viewBox="-52 -44 336 108" width="150" style="color:var(--ink)"><use href="#wm"/></svg><span class="lab">The wordmark</span></div>
+    <div class="cell mid pap"><svg viewBox="-52 -66 158 154" width="60" style="color:var(--ink)"><use href="#fav"/></svg><span class="lab">Favicon cut</span></div>
+  </div>
+  <table>
+    <tr><th style="width:26%">File</th><th style="width:16%">Job</th><th style="width:14%">Min size</th><th>Notes</th></tr>
+    <tr><td class="m">ace-mark.svg</td><td>Naked mark</td><td class="m">24px wide</td><td>Headers, merch, anywhere with its own clearspace. The default when there's no box.</td></tr>
+    <tr><td class="m">ace-tile.svg</td><td>App icon, light UI</td><td class="m">16px</td><td>The universal fallback. Use on photography, colour, or any surface you don't control.</td></tr>
+    <tr><td class="m">ace-tile-dark.svg</td><td>Dark UI</td><td class="m">16px</td><td>Ink tile with a paper hairline so the edge reads on a dark ground.</td></tr>
+    <tr><td class="m">ace-tile-dark-inverted.svg</td><td>OS dark icons</td><td class="m">16px</td><td>Paper tile. Reserved for platform dark-mode icon slots — not a general-purpose variant.</td></tr>
+    <tr><td class="m">ace-favicon.svg</td><td>16–24px</td><td class="m">16px</td><td>Dot enlarged to 0.7R so it survives. Never use above 24px.</td></tr>
+    <tr><td class="m">ace-wordmark.svg</td><td>The name, set</td><td class="m">96px wide</td><td>Upright. Below 96px the e's aperture closes — switch to the mark.</td></tr>
+    <tr><td class="m">ace-wordmark-dark.svg</td><td>Wordmark on dark</td><td class="m">96px wide</td><td>Paper strokes. The period does not change.</td></tr>
+  </table>
+</section>
+
+<!-- ================= 02 CONSTRUCTION ================= -->
+<section>
+  <h2>Construction<span class="n">02</span></h2>
+  <p>Everything is derived from <b>R</b>, the bowl radius (31 units). Never redraw by eye —
+  use the masters.</p>
+  <div class="row r2">
+    <div class="cell">
+      <span class="lab">The mark · a leans −11° about (5,12)</span>
+      <svg viewBox="-96 -80 250 176" width="100%">
+        <g stroke="var(--rule)" stroke-width="1"><line x1="-88" y1="-32" x2="150" y2="-32"/><line x1="-88" y1="56" x2="150" y2="56"/><line x1="-88" y1="12" x2="150" y2="12"/></g>
+        <g style="color:var(--ink)"><use href="#mk"/></g>
+        <circle cx="0" cy="12" r="31" fill="none" stroke="var(--ghost)" stroke-width="1" stroke-dasharray="3 3"/>
+        <line class="dimline" x1="0" y1="12" x2="31" y2="12" stroke-dasharray="2 2"/>
+        <text class="dimtxt" x="7" y="8">R = 31</text>
+        <text class="dimtxt" x="-92" y="-38">CAP</text><text class="dimtxt" x="-92" y="66">BASELINE</text>
+        <text class="dimtxt" x="96" y="72">DOT 0.58R</text>
+        <text class="dimtxt" x="-92" y="18">CENTRE</text>
+      </svg>
+      <p class="dim" style="font-size:11.5px">Bowl stroke 0.71R (22). Stem 22×88, rx 11.
+      Dot r18 at (82,38) — its underside sits on the baseline, y=56.</p>
+    </div>
+    <div class="cell">
+      <span class="lab">The wordmark · upright, never leaned</span>
+      <svg viewBox="-56 -70 400 160" width="100%">
+        <g stroke="var(--rule)" stroke-width="1"><line x1="-50" y1="-32" x2="330" y2="-32"/><line x1="-50" y1="56" x2="330" y2="56"/></g>
+        <g style="color:var(--ink)"><use href="#wm"/></g>
+        <g class="dimline"><line x1="52" y1="66" x2="62" y2="66"/><line x1="135" y1="66" x2="139" y2="66"/><line x1="223" y1="66" x2="231" y2="66"/></g>
+        <text class="dimtxt" x="42" y="80">GAP 10u</text>
+        <text class="dimtxt" x="120" y="80">GAP 4u</text>
+        <text class="dimtxt" x="212" y="80">GAP 8u</text>
+      </svg>
+      <p class="dim" style="font-size:11.5px">a at 0 · c centre 104 · e centre 180.93 ·
+      period centre 248.93. Optical gaps 10 / 4 / 8 — they are not equal on purpose.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 03 CLEARSPACE + SIZE ================= -->
+<section>
+  <h2>Clearspace &amp; minimum size<span class="n">03</span></h2>
+  <div class="row r2">
+    <div class="cell">
+      <span class="lab">Clearspace = R on all four sides</span>
+      <svg viewBox="-96 -86 254 186" width="94%">
+        <rect x="-88" y="-78" width="238" height="170" fill="none" stroke="var(--ghost)" stroke-width="1" stroke-dasharray="4 4"/>
+        <g style="color:var(--ink)"><use href="#mk"/></g>
+        <text class="dimtxt" x="-84" y="-84">R</text>
+      </svg>
+      <p class="dim" style="font-size:11.5px">Nothing enters this box — not type, not rules,
+      not another logo, not the edge of the page. When in doubt, give it more.</p>
+    </div>
+    <div class="cell">
+      <span class="lab">Minimum sizes — measured, not guessed</span>
+      <div class="ladder" style="margin-top:6px">
+        <div class="lt"><svg viewBox="-52 -42 156 102" width="96" style="color:var(--ink)"><use href="#mk"/></svg><span>96 · fine</span></div>
+        <div class="lt"><svg viewBox="-52 -42 156 102" width="40" style="color:var(--ink)"><use href="#mk"/></svg><span>40 · fine</span></div>
+        <div class="lt"><svg viewBox="-52 -42 156 102" width="24" style="color:var(--ink)"><use href="#mk"/></svg><span>24 · floor</span></div>
+        <div class="lt"><svg viewBox="-52 -66 158 154" width="20" style="color:var(--ink)"><use href="#fav"/></svg><span>&lt;24 · favicon cut</span></div>
+      </div>
+      <ul style="margin-top:14px">
+        <li>Mark: <b>24px</b> wide. Below that the dot closes up — switch to the favicon cut, where it grows to 0.7R.</li>
+        <li>Wordmark: <b>96px</b> wide. Below that the e's 17.9u aperture fills in and it reads as a blob.</li>
+        <li class="hit">Print: mark <b>8mm</b>, wordmark <b>32mm</b>. Embroidery: <b>25mm</b> minimum, tile only.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 04 THE LEAN ================= -->
+<section>
+  <h2>The lean<span class="n">04</span></h2>
+  <p>The <b>a</b> leans −11°. The box and the period never do. And the wordmark never leans
+  at all — the letter leans when it's alone; the word stands together.</p>
+  <div class="row r3">
+    <div class="cell mid pap"><svg viewBox="-52 -42 156 102" width="92" style="color:var(--ink)"><use href="#mk"/></svg><span class="lab"><span class="ok">✓</span> mark leans</span></div>
+    <div class="cell mid pap"><svg viewBox="0 0 120 120" width="66"><use href="#tile"/></svg><span class="lab"><span class="ok">✓</span> inside the tile, box stays level</span></div>
+    <div class="cell mid pap"><svg viewBox="-52 -44 336 108" width="146" style="color:var(--ink)"><use href="#wm"/></svg><span class="lab"><span class="ok">✓</span> wordmark upright</span></div>
+  </div>
+</section>
+
+<!-- ================= 05 COLOURWAYS ================= -->
+<section>
+  <h2>Colourways<span class="n">05</span></h2>
+  <p>Six approved. The period stays <span class="mono" style="font-size:12px">#00875A</span>
+  in every one of them except the two monochrome cases, where it takes the single ink.</p>
+  <div class="row r3">
+    <div class="cell mid pap"><svg viewBox="-52 -42 156 102" width="88" style="color:var(--ink)"><use href="#mk"/></svg><span class="lab">01 · Ink on paper — primary</span></div>
+    <div class="cell mid dk"><svg viewBox="-52 -42 156 102" width="88" style="color:#F6F6F6"><use href="#mk"/></svg><span class="lab">02 · Paper on dark</span></div>
+    <div class="cell mid pap"><svg viewBox="0 0 120 120" width="66"><use href="#tile"/></svg><span class="lab">03 · Ink tile — universal</span></div>
+    <div class="cell mid dk"><svg viewBox="0 0 120 120" width="66"><use href="#tiled"/></svg><span class="lab">04 · Ink tile + hairline (dark UI)</span></div>
+    <div class="cell mid pap"><svg viewBox="-52 -42 156 102" width="88" style="color:var(--ink)"><use href="#mkm"/></svg><span class="lab">05 · Mono ink — 1-colour print</span></div>
+    <div class="cell mid em"><svg viewBox="-52 -42 156 102" width="88" style="color:#F6F6F6"><use href="#mkm"/></svg><span class="lab" style="color:rgba(255,255,255,.75)">06 · Mono paper on emerald</span></div>
+  </div>
+  <table>
+    <tr><th>Pair</th><th>Contrast</th><th>Verdict</th></tr>
+    <tr><td>Ink on paper / paper on ink</td><td class="m">18.32</td><td>Body-text safe everywhere.</td></tr>
+    <tr><td>Period on paper</td><td class="m">4.21</td><td>Clears the 3:1 graphic-control floor.</td></tr>
+    <tr><td>Period on dark ground</td><td class="m">4.24</td><td>Same value, both modes. Never re-tint it.</td></tr>
+    <tr><td>Period on the ink tile</td><td class="m">4.35</td><td>The most common condition — it lives inside the tile.</td></tr>
+  </table>
+</section>
+
+<!-- ================= 06 BACKGROUNDS ================= -->
+<section>
+  <h2>Backgrounds<span class="n">06</span></h2>
+  <p>The naked mark needs a plain ground with 4.5:1 against the ink. Everything else —
+  photography, colour, pattern, video, anything you don't control — takes <b>the tile</b>.
+  That is what the tile is for, and it is never the wrong answer.</p>
+  <div class="row r4">
+    <div class="cell mid pap"><svg viewBox="-52 -42 156 102" width="78" style="color:var(--ink)"><use href="#mk"/></svg><span class="lab"><span class="ok">✓</span> paper</span></div>
+    <div class="cell mid wht"><svg viewBox="-52 -42 156 102" width="78" style="color:var(--ink)"><use href="#mk"/></svg><span class="lab"><span class="ok">✓</span> white</span></div>
+    <div class="cell mid dk"><svg viewBox="-52 -42 156 102" width="78" style="color:#F6F6F6"><use href="#mk"/></svg><span class="lab"><span class="ok">✓</span> ink / dark</span></div>
+    <div class="cell mid" style="background:linear-gradient(120deg,#9aa3ab 0%,#6f7a84 40%,#39424a 100%);position:relative">
+      <svg viewBox="0 0 120 120" width="58"><use href="#tile"/></svg>
+      <span class="lab" style="color:rgba(255,255,255,.8)"><span style="color:#fff">✓</span> photo → tile</span>
+    </div>
+  </div>
+  <div class="row r3">
+    <div class="cell mid no" style="background:#8CA6B8"><span class="noc">✕ MID-TONE GROUND</span><svg viewBox="-52 -42 156 102" width="78" style="color:var(--ink)"><use href="#mk"/></svg></div>
+    <div class="cell mid no no--lt" style="background:linear-gradient(120deg,#9aa3ab,#39424a)"><span class="noc">✕ NAKED ON PHOTO</span><svg viewBox="-52 -42 156 102" width="78" style="color:#F6F6F6"><use href="#mk"/></svg></div>
+    <div class="cell mid no no--lt" style="background:var(--period)"><span class="noc">✕ PERIOD LOST IN ACCENT</span><svg viewBox="-52 -42 156 102" width="78" style="color:#F6F6F6"><use href="#mk"/></svg></div>
+  </div>
+  <p class="dim" style="margin-top:10px;font-size:12px">On an emerald ground the period
+  disappears into the field. Use colourway 06 (mono paper) instead — the dot takes the ink.</p>
+</section>
+
+<!-- ================= 07 DON'TS ================= -->
+<section>
+  <h2>Never<span class="n">07</span></h2>
+  <div class="row r4">
+    <div class="cell mid pap no"><span class="noc">✕ RECOLOUR THE DOT</span><svg viewBox="-52 -42 156 102" width="74" style="color:var(--ink)"><g transform="rotate(-11 5 12)"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/></g><circle cx="82" cy="38" r="18" fill="#2244FF"/></svg></div>
+    <div class="cell mid pap no"><span class="noc">✕ ROTATE THE WHOLE MARK</span><svg viewBox="-52 -42 156 102" width="74" style="color:var(--ink);transform:rotate(-14deg)"><use href="#mk"/></svg></div>
+    <div class="cell mid pap no"><span class="noc">✕ OUTLINE</span><svg viewBox="-52 -42 156 102" width="74"><g transform="rotate(-11 5 12)" fill="none" stroke="var(--ink)" stroke-width="4"><circle cx="0" cy="12" r="31"/><rect x="30" y="-32" width="22" height="88" rx="11"/></g><circle cx="82" cy="38" r="18" fill="none" stroke="var(--period)" stroke-width="4"/></svg></div>
+    <div class="cell mid pap no"><span class="noc">✕ DETACH THE DOT</span><svg viewBox="-52 -42 176 102" width="80" style="color:var(--ink)"><g transform="rotate(-11 5 12)"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/></g><circle cx="108" cy="-14" r="18" fill="var(--period)"/></svg></div>
+    <div class="cell mid pap no"><span class="noc">✕ STRETCH</span><svg viewBox="-52 -42 156 102" width="74" style="color:var(--ink);transform:scaleX(1.35)"><use href="#mk"/></svg></div>
+    <div class="cell mid pap no"><span class="noc">✕ SHADOW / EFFECT</span><svg viewBox="-52 -42 156 102" width="74" style="color:var(--ink);filter:drop-shadow(4px 5px 3px rgba(0,0,0,.4))"><use href="#mk"/></svg></div>
+    <div class="cell mid pap no"><span class="noc">✕ LEAN THE WORDMARK</span><svg viewBox="-52 -44 336 108" width="118" style="color:var(--ink);transform:rotate(-8deg)"><use href="#wm"/></svg></div>
+    <div class="cell mid pap no"><span class="noc">✕ LETTERSPACE</span><svg viewBox="-52 -44 420 108" width="128" style="color:var(--ink)">
+      <circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/><rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/>
+      <g transform="translate(58,0)"><path d="M 123.93 -11.75 A 31 31 0 1 0 123.93 35.75" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/></g>
+      <g transform="translate(116,0)"><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/><rect x="150.93" y="1" width="72" height="22" rx="11" fill="currentColor"/></g>
+      <circle cx="380" cy="38" r="18" fill="var(--period)"/></svg></div>
+  </div>
+  <ul style="margin-top:14px">
+    <li>Never rebuild it in a font. There is no typeface this is set in — every curve is drawn.</li>
+    <li>Never put the mark inside another shape (circle, badge, ring). The tile is the only container.</li>
+    <li>Never pair the wordmark with the word "ACE" in type. It already says it.</li>
+    <li>Never animate the period as a loading spinner. It marks things that are finished.</li>
+  </ul>
+</section>
+
+<!-- ================= 08 PRODUCTION ================= -->
+<section>
+  <h2>Production<span class="n">08</span></h2>
+  <div class="row r2">
+    <div class="cell">
+      <h3>Embroidery</h3>
+      <ul>
+        <li>Tile only, 25mm minimum. The naked mark's counter fills with thread below that.</li>
+        <li>Two threads: ink + emerald. Satin stitch, 0.4mm pull compensation on the bowl.</li>
+        <li>The dot is a separate colour stop — never blend or gradient it.</li>
+        <li>One-thread alternative: colourway 05, all ink.</li>
+      </ul>
+      <h3>Die-cut vinyl / stickers</h3>
+      <ul>
+        <li>Cut the tile silhouette, 20mm minimum. Bleed 1mm.</li>
+        <li>The bare emerald dot is also an approved standalone die-cut — the only case where the dot appears without the mark.</li>
+      </ul>
+    </div>
+    <div class="cell">
+      <h3>Screenprint &amp; single-colour</h3>
+      <ul>
+        <li>Two-colour: ink + <span class="mono" style="font-size:11.5px">#00875A</span>. Pantone match: nearest is <b>Pantone 340 C</b> — confirm on press, never eyeball from a screen.</li>
+        <li>One-colour, engraving, laser, foil, fax: colourway 05. The dot becomes the same ink and the mark still reads.</li>
+      </ul>
+      <h3>Platform icons</h3>
+      <table style="margin-top:8px">
+        <tr><th>Slot</th><th>Size</th><th>File</th></tr>
+        <tr><td>Favicon</td><td class="m">16 / 32</td><td class="m">ace-favicon.svg</td></tr>
+        <tr><td>Apple touch</td><td class="m">180</td><td class="m">tile, squared</td></tr>
+        <tr><td>PWA</td><td class="m">192 / 512</td><td class="m">tile</td></tr>
+        <tr><td>Maskable</td><td class="m">512</td><td class="m">full-bleed, mark at 0.5× safe zone</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 09 MOTION ================= -->
+<section>
+  <h2>Motion<span class="n">09</span></h2>
+  <p>One rule: <b>the period lands last.</b> The letter arrives, settles, and then the dot
+  appears — because the dot means the thing is finished, and finishing happens at the end.</p>
+  <div class="row r3">
+    <div class="cell"><span class="lab">Sequence</span><p style="font-size:12.5px">Mark fades and settles 0–320ms · dot appears 320–420ms · nothing after. Total under half a second.</p></div>
+    <div class="cell"><span class="lab">Curve</span><p style="font-size:12.5px">One easing for everything: <span class="mono" style="font-size:11px">cubic-bezier(.165,.84,.44,1)</span>. No bounce, no overshoot, no spring.</p></div>
+    <div class="cell"><span class="lab">Never</span><p style="font-size:12.5px">Spinning, pulsing, looping, or using the dot as a progress indicator. A resolved mark does not fidget.</p></div>
+  </div>
+</section>
+
+<!-- ================= 10 CO-BRANDING ================= -->
+<section>
+  <h2>With other logos<span class="n">10</span></h2>
+  <p>When ACE appears beside a partner mark, separate them with a <b>1px ink rule</b> and
+  <b>2R of space</b> on each side. Match optical height, not bounding-box height — our mark
+  is wider than it is tall, so matching boxes makes us look smaller than we are.</p>
+  <div class="row r2">
+    <div class="cell mid pap">
+      <div style="display:flex;align-items:center;gap:26px">
+        <svg viewBox="-52 -42 156 102" width="86" style="color:var(--ink)"><use href="#mk"/></svg>
+        <div style="width:1px;height:44px;background:var(--ink)"></div>
+        <div style="width:78px;height:26px;background:var(--ghost)"></div>
+      </div>
+      <span class="lab"><span class="ok">✓</span> rule between, optical heights matched</span>
+    </div>
+    <div class="cell mid pap no"><span class="noc">✕ LOCKED INTO ONE MARK</span>
+      <div style="display:flex;align-items:center;gap:4px">
+        <svg viewBox="-52 -42 156 102" width="70" style="color:var(--ink)"><use href="#mk"/></svg>
+        <div style="width:64px;height:22px;background:var(--ghost)"></div>
+      </div>
+    </div>
+  </div>
+  <p class="dim" style="margin-top:10px;font-size:12px">We never build a combined lockup with
+  another organisation, and we never imply university endorsement — see the playbook, §19.</p>
+</section>
+
+<footer>
+  <svg viewBox="-46 -44 328 104" width="160" style="color:var(--ink)"><use href="#wm"/></svg>
+  <div class="lab" style="text-align:right;line-height:2">LOGO STANDARDS V1<br>MASTERS IN brand/logo/ · SPEC IN BRAND.md</div>
+</footer>
+
+</div>
+</body>
+</html>

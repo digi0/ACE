@@ -49,7 +49,11 @@ from the baseline.
 | `ace-favicon.svg` | 16–24px cut |
 | `ace-wordmark.svg` / `-dark.svg` | upright `ace.` |
 
-Open `brand/logo/index.html` for a visual index at real sizes.
+Open `brand/logo/index.html` for a visual index at real sizes, and
+**`brand/logo-standards.html` / `.pdf`** for the full usage manual: construction, clearspace,
+minimum sizes, the six approved colourways with contrast values, background rules, the
+prohibitions, production specs (embroidery, die-cut, screenprint, Pantone, platform icon
+sizes), motion, and co-branding. That document is the answer to "can I use it like this?".
 
 ---
 
