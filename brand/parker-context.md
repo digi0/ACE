@@ -405,3 +405,66 @@ ACE answers questions about your specific college and shows where the answer cam
 
 Note on framing: we are not a replacement for academic advisors and never position as one. Petitions, substitutions and exceptions are human decisions. ACE is the advisor who's awake.
 ```
+
+---
+
+## 18. Step 1 · Brand DNA → Competitive Landscape
+
+Parker wants crawlable URLs. Ours is an unusual field: our real competition is a
+*behaviour* (asking the group chat, waiting three weeks for an advisor) more than a
+company. So the list mixes true product rivals with the two things we actually displace.
+All verified live before listing.
+
+**#1 — https://www.coursicle.com**
+```
+Closest student-facing rival and the closest analogue to our own go-to-market. Student-adopted bottom-up, campus by campus, no university procurement — exactly how we grow. Tagline: "All your academics, all in one place." Supports Penn State among hundreds of schools. Strength: mass student adoption, class-opening notifications, a tone students don't find embarrassing.
+
+Where it stops: it is a scheduling and registration utility. It tells you WHEN a seat opens, not WHETHER that course is right for your degree, and it never cites a policy. It answers "can I get in," we answer "should I, and what does it unlock."
+
+For Parker: study their tone and campus growth mechanics, not their category. We are not a scheduler.
+```
+
+**#2 — https://www.stellic.com**
+```
+Degree planning and audit software sold TO universities. The official, sanctioned version of what we do — if a student's school bought it, it's in their portal.
+
+Where it stops: it is a planner, not something you can ask a question. Business-tool UX built for registrars and advisors, adopted through procurement, and only available if your institution paid. Students use it because they were told to.
+
+For Parker: this is the "official tool you were assigned" we position against — never against advisors themselves. The contrast is procurement vs. the student choosing it, and a form to fill vs. a question to ask.
+```
+
+**#3 — https://joinadvisorai.com**
+```
+AI advising and multi-year plan generation, institution-oriented. Nearest in stated category.
+
+For Parker: study how they talk about AI advising, then do the opposite on one axis — we do NOT lead with the AI. The model is not the value; the citation is. If our copy sounds like an AI company, it's wrong.
+```
+
+**#4 — https://chatgpt.com**
+```
+The real behavioural competitor and the most important objection to answer. Every student has already asked it "what should I take next semester." Free, instant, familiar.
+
+Where it fails: it does not know YOUR university's rules, and it cannot cite. It will confidently invent a prerequisite or a deadline — and in advising, a confident wrong answer costs a semester. We are built on 749 real degree programs, 9,439 course records and 46 handbook rules, and every academic answer points at the page it came from.
+
+For Parker: "why not just ask ChatGPT?" is the objection that must be handled in creative. Handle it with the citation, never by attacking AI in general.
+```
+
+**#5 — https://bulletins.psu.edu**
+```
+Not a company — the university's own bulletin, and genuinely what we displace. This is the source of truth students are told to use, and we read it so they don't have to.
+
+Where it fails: documents, not answers. Hundreds of pages, no personalisation, written for compliance rather than reading, and it cannot tell you what it means for YOUR remaining requirements.
+
+For Parker: study it as the "before" state. The visual contrast between this and one input box is a real creative angle (playbook: the tab graveyard). Do not use university logos, seals or colours in any creative — see compliance.
+```
+
+**#6 (optional, tone study only) — https://www.ratemyprofessors.com**
+```
+Not a competitor. Included because it is the reference case for a campus utility with mass student adoption and a peer, non-institutional voice. Study the tone and the habit, not the features.
+```
+
+**What Parker should take from the whole set:** every alternative fails on one of two
+axes. Advisors, Stellic and the bulletin have authority but no availability or breadth.
+Reddit, group chats and ChatGPT have availability and breadth but no accountability.
+**ACE is the only one that is both broad and checkable** — that is the wedge, and it is
+the sentence most creative should ladder back to.
