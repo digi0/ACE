@@ -525,18 +525,52 @@ guardrails in §8.
 
 ---
 
-## 20. Step 1 · Founder Story — deliberately skipped
+## 20. Step 1 · Brand DNA → Founder Story
 
-Paste this to close the field rather than leaving it blank (a blank field invites Parker
-to invent one from research, which breaks the no-fabricated-proof rule):
+Real, and unusually good — it is lived, recent, on the exact campus we're launching on,
+and it contains a positioning line worth building on.
+
+**FOUNDER STORY — paste as-is**
 
 ```
-No founder story provided. Do not generate, infer, or reference a founder narrative, origin story, or personal backstory in any creative. Build all copy from the product, the citation, and the student's problem instead.
+ACE was built by two Penn State students who paid for the problem before they solved it.
+
+Raghav arrived post-Covid, when the format had changed and the informal knowledge transfer that normally happens between students had quietly broken. The system assumes a body of background knowledge nobody ever hands you — how requirements interact, which deadlines are real, what a prerequisite chain actually gates. He didn't have it, and by the time he could get an advising appointment, the deadline that mattered had already passed. It cost him an extra semester and the tuition attached to it.
+
+So he started reverse-engineering the rules himself: reading the catalog against his own transcript, mapping prerequisite chains by hand. He got good at it. Then he noticed his friends doing the same manual work, alone, and paying for the same mistakes. Sinjini had hit the same wall in computer science. The two ideas converged independently, which is how ACE started.
+
+Before building anything, they spent months talking to students in every year — freshman through senior — about how they navigate their degrees and where it breaks. What those students described was the gap the founders had already lived.
+
+The thesis came out of that: Penn State solved submitting the work with Canvas. Nothing equivalent exists for navigating the degree itself — which is the decision that actually costs students money and time.
+
+This is lived expertise, not market research. Same campus, recently enough that the catalog hasn't changed.
 ```
 
-Revisit when there's a true origin worth telling — it converts, but only if it's real.
+**The line to build on:** *"Canvas solved submitting the work. Nothing solved navigating
+the degree."* It is concrete, every student knows Canvas, and it names the category gap
+in one sentence without any hype. Strongest single asset in this document.
 
----
+**The post-Covid insight is real and worth using:** this cohort missed the informal
+knowledge transfer — the upperclassman who tells you a W isn't fatal, the roommate who
+explains prerequisites. The invisible curriculum broke for a whole generation, and
+they've been paying for it ever since. Connects directly to Persona #5.
+
+**USAGE RULES — give Parker these with the story:**
+
+```
+1. The extra semester and the tuition are a TRUE FACT ABOUT THE FOUNDER'S PAST. They are not a claim about what ACE delivers. Never write "ACE saves you a semester," "save a semester of tuition," "don't lose a year" or any equivalent. That converts a founder's story into an outcome promise, which is guardrail 1 and it is prohibited.
+
+2. Penn State may be named as biography — where the founders studied and where ACE is launching. It may NOT be used to imply endorsement, affiliation or partnership. No university logos, seals, colours, mascots or trademarks in any creative.
+
+3. "Months of student interviews, freshman through senior" is true and usable. Do not attach a number to it — we have not published a count, and inventing one is fabricated proof.
+
+4. Use the story for credibility and empathy, not as a sob story. The register is matter-of-fact: this happened, it was expensive, we fixed it for ourselves, then for everyone else. No violins, no hero framing.
+
+5. Both founders are real people. Do not invent quotes, dialogue, or details beyond what is written above.
+```
+
+`[CONFIRM]` before anything publishes: spelling of Sinjini's name, her title, and that
+she's happy to be named in advertising.
 
 ## 21. Step 2 · Strategy → Marketing Calendar
 
