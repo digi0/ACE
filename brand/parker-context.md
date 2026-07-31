@@ -941,3 +941,68 @@ TIMING. Demand is academic, not retail. Ignore Q4, Black Friday and New Year —
 
 THE SHIP TEST, and the only one that matters: does this make a worried student feel more capable, or does it make us look clever? If it's the second, it doesn't ship.
 ```
+
+---
+
+## 29. Step 3 · Creative Ops → Ad Account Details
+
+### ACCOUNT SETUP CONTEXT
+
+```
+There is no ad account. Nothing has been structured, no pixel history, no conversion data, no audiences built, no spend of any kind. Do not infer structure from a typical DTC account.
+
+When one is built, this is the intended shape — it differs from an e-commerce account in ways that matter:
+
+- There is no purchase event and no revenue. The conversion we can currently measure is a waitlist signup at acecollege.app, which already carries referral attribution (?ref=). The event that actually matters is downstream and in-product: a student asking a question and getting a resolved, cited answer. Any account should be built around a custom conversion for that, not around a purchase.
+- Campaign level = the moment, not the product line. Our demand is calendar-spiked, so campaigns should map to registration-opens, grades-posted, orientation, and an always-on baseline — not to product SKUs, of which we have none.
+- Ad set level = persona and geography. We launch on one campus, so geo is a primary axis, including campus-building geofences. Personas are Maya (mid-degree), Dev (post-grades), Sam (week one), Anita (parent).
+- Ad level = format and angle.
+- The first spend should settle a strategy question, not chase efficiency: does breadth ("ask your college anything") or the wedge ("know what to take next semester") earn the first open.
+
+Note that a meaningful share of our go-to-market is offline and unattributable in-platform — stickers, org fairs, RAs, group chats. Do not treat in-platform attribution as the whole picture, and expect blended numbers to look worse than reality.
+```
+
+### METRICS PRIORITY
+
+```
+ROAS AND CPA DO NOT APPLY AND MUST NOT BE REQUESTED OR REPORTED. There is no purchase, no cart, no order value and no revenue per user. Any framework that assumes them will produce meaningless recommendations here.
+
+The hierarchy we actually judge by:
+
+TRUTH METRICS (product-level, what success means):
+1. Categories per student per term — the north star. How many distinct question domains one student uses. One means we built a course tool; three or more means we built the layer we intend to be.
+2. Resolution rate — share of sessions ending in an answer or a routed next step rather than a dead end. The quality floor; if it falls, nothing else matters.
+3. Off-peak weekly actives — usage in the boring weeks with no registration and no deadlines. The only honest test of whether we are a habit or a fire extinguisher.
+4. Non-academic share of questions — proves breadth without abandoning the moat.
+
+ACQUISITION METRICS (platform-level, diagnostics only):
+5. Cost per activated student — someone who asks one real question, not someone who signs up. Signup is not activation.
+6. Cost per waitlist signup — the currently measurable proxy.
+7. CTR and hook rate — useful for comparing creative against creative, never as a success claim on their own.
+
+REFUSE IN REPORTING: ROAS, CPA framed as purchase, impressions, reach, video views, engagement rate, and any retention number measured only around registration windows — the last one flatters an episodic product and hides the thing we care about.
+```
+
+### NAMING CONVENTIONS
+
+```
+None exists yet. Use this one.
+
+FORMAT: [MOMENT]_[PERSONA]_[ANGLE]_[FORMAT]_[VERSION]
+
+MOMENT:  REGOPEN | GRADES | ORIENT | DROP | ALWAYS
+PERSONA: MAYA (mid-degree) | DEV (post-grades) | SAM (week one) | ANITA (parent) | PRIYA (first-gen) | ALL
+ANGLE:   CANVAS (the Canvas line) | 2AM | REROUTED | RECEIPT (forwarded plan) | TABS (tab graveyard) | CITED | ASKANY
+FORMAT:  HEAD | BULLET | FEAT | FOUNDER | EDU | HOWTO | POV | COMMENT | GREEN | STREET
+VERSION: v1, v2, v3...
+
+EXAMPLES:
+REGOPEN_MAYA_CANVAS_HEAD_v1
+GRADES_DEV_REROUTED_FOUNDER_v2
+ORIENT_SAM_ASKANY_POV_v1
+ALWAYS_ANITA_RECEIPT_HEAD_v1
+
+Uppercase with underscores is deliberate for ad names — these are internal ops, not brand surfaces, and scannability beats style here. It does not conflict with the lowercase brand voice, which governs anything a student sees.
+
+OPTIONAL BUT RECOMMENDED: append _CC once a concept has been claims-checked against the restricted-claims list. Given our strict compliance posture, being able to see at a glance which creative has been reviewed is worth the four extra characters.
+```
