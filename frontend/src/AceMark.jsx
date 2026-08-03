@@ -52,7 +52,7 @@ export function AceTile({ size = 36, period = true, className = "" }) {
 export const WORDMARK_MIN_WIDTH = 96;
 const WORDMARK_ASPECT = 112 / 332.93;
 
-export function AceWordmark({ width = 104, className = "" }) {
+export function AceWordmark({ width = 104, className = "", period = true }) {
   const w = Math.max(width, WORDMARK_MIN_WIDTH);
   return (
     <svg
@@ -71,8 +71,9 @@ export function AceWordmark({ width = 104, className = "" }) {
       {/* e — ring, then the crossbar whose right cap shares the ring's start centre */}
       <path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="currentColor" strokeWidth="22" strokeLinecap="round" />
       <rect x="150.93" y="1" width="72" height="22" rx="11" fill="currentColor" />
-      {/* the period — the whole identity, never recoloured */}
-      <circle cx="248.93" cy="38" r="18" fill="var(--ace-period)" />
+      {/* The period — the whole identity, never recoloured. `period={false}`
+          drops it for views where something else owns the accent. */}
+      {period && <circle cx="248.93" cy="38" r="18" fill="var(--ace-period)" />}
     </svg>
   );
 }

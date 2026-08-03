@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { SignIn, SignUp } from "@clerk/clerk-react";
-import { AceTile } from "./AceMark.jsx";
+import { AceWordmark } from "./AceMark.jsx";
 
 /**
  * Sign in / sign up.
@@ -66,12 +66,22 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ground p-5 font-sans">
+    <div className="login-page flex min-h-screen items-center justify-center p-5 font-sans">
       <div className="w-full max-w-[420px]">
 
-        <div className="mb-7 flex items-center gap-2.5">
-          <AceTile size={36} period={false} />
-          <span className="text-[15px] font-semibold tracking-[-0.01em] text-ink">ACE</span>
+        {/* The real wordmark, not a tile plus the letters "ACE" set in the UI
+            font — same fix as the app header, dot and all. The period is the
+            identity, so it stays part of the lockup wherever the wordmark
+            appears; the sidebar carries it too. The "one emerald per view" rule
+            governs UI accents beyond the logo — here that budget is spent on
+            the Clerk primary button. */}
+        <div className="mb-6 text-ink">
+          <AceWordmark width={132} />
+          <p className="mt-3.5 max-w-[46ch] text-[14.5px] leading-[1.45] text-mute">
+            ACE is your Academic Counseling Engine. It reads the degree audit
+            Penn State already gave you, then tells you what you still need,
+            what you can take next, and what's due.
+          </p>
         </div>
 
         <div className="border border-rule bg-card p-9">

@@ -2110,242 +2110,46 @@ body {
   font-size: 14px;
 }
 
+
 /* ════════════════════════════════════════════════
-   LOGIN PAGE
+   SIGN IN / SIGN UP
+   ────────────────────────────────────────────────
+   Replaces ~235 lines of dead CSS from the old dark-sparkles design. All 21
+   .login-* selectors it defined were orphaned when the page was converted to
+   Tailwind — none appeared in any JSX.
+
+   LIGHT-LOCKED on purpose. The Soft Pastel Blend backdrop is an inherently
+   light artwork, and the card and text below use brand tokens that invert with
+   the theme, so a dark-mode visitor would otherwise get a dark card floating on
+   pastel. Clerk's appearance object already hardcodes light values, so the two
+   agree.
    ════════════════════════════════════════════════ */
-/* ═══════════════════════════════════════════════
-   LOGIN PAGE
-   ═══════════════════════════════════════════════ */
 .login-page {
-  position: relative;
-  height: 100vh;
-  overflow: hidden;
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  /* Override the --color-* names, NOT --ace-*. Tailwind's @theme declares
+     `--color-card: var(--ace-card)` on :root, so it RESOLVES there and children
+     inherit an already-computed colour — redefining --ace-card further down the
+     tree is too late to change it. These are the names bg-card / text-ink /
+     text-mute / border-rule actually read. */
+  --color-card:  #FFFFFF;
+  --color-rule:  #E4E4E4;
+  --color-ghost: #B2B2B2;
+  --color-mute:  #666666;
+  --color-ink:   #0A0A0A;
+
+  /* Soft Pastel Blend — Bloom Field mesh (21st.dev). One radial blob per
+     colour anchored at its own point, over a solid backdrop. */
+  background-color: #D6F0E4;
+  background-image:
+    radial-gradient(circle at 65.44% 45.18%, rgba(251, 233, 240, 1) 0%, rgba(251, 233, 240, 0.844) 11.32%, rgba(251, 233, 240, 0.5) 22.65%, rgba(251, 233, 240, 0.156) 33.97%, rgba(251, 233, 240, 0) 45.3%),
+    radial-gradient(circle at 28.2% 73.9%,  rgba(205, 231, 240, 1) 0%, rgba(205, 231, 240, 0.844) 14.21%, rgba(205, 231, 240, 0.5) 28.42%, rgba(205, 231, 240, 0.156) 42.64%, rgba(205, 231, 240, 0) 56.85%),
+    radial-gradient(circle at 52.5% 19.29%, rgba(230, 214, 245, 1) 0%, rgba(230, 214, 245, 0.844) 17.19%, rgba(230, 214, 245, 0.5) 34.38%, rgba(230, 214, 245, 0.156) 51.56%, rgba(230, 214, 245, 0) 68.75%),
+    radial-gradient(circle at 79.87% 84.43%, rgba(214, 240, 228, 1) 0%, rgba(214, 240, 228, 0.844) 20.07%, rgba(214, 240, 228, 0.5) 40.15%, rgba(214, 240, 228, 0.156) 60.22%, rgba(214, 240, 228, 0) 80.3%);
+  background-attachment: fixed;
 }
 
-/* ── Centered column ─────────────────────────── */
-.login-center {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 520px;
-  padding: 0 20px;
-}
-
-/* ── Brand mark ──────────────────────────────── */
-.login-brand {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin-bottom: 6px;
-}
-
-.login-logo {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  background: #0A0A0A;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.login-brand-name {
-  font-size: 24px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.5px;
-}
-
-.login-brand-sub {
-  font-size: 13px;
-  color: var(--accent);
-  margin: 0 0 24px;
-  letter-spacing: 0.1px;
-}
-
-/* ── Glass card ──────────────────────────────── */
-.login-card {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(40px) saturate(1.2);
-  -webkit-backdrop-filter: blur(40px) saturate(1.2);
-  border-radius: 16px;
-  padding: 32px 28px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.05),
-    0 8px 40px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.login-card-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #fff;
-  margin: 0 0 5px;
-  letter-spacing: -0.2px;
-}
-
-.login-card-subtitle {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.45);
-  margin: 0 0 22px;
-}
-
-/* ── Google button ───────────────────────────── */
-.login-google-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  padding: 10px 16px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
-  cursor: pointer;
-  font-family: var(--font);
-  transition: all 0.2s;
-}
-.login-google-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-}
-.login-google-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-/* ── Divider ─────────────────────────────────── */
-.login-divider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 18px 0;
-  color: rgba(255, 255, 255, 0.25);
-  font-size: 11px;
-}
-.login-divider::before,
-.login-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-/* ── Form ────────────────────────────────────── */
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.login-field {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.login-label {
-  font-size: 12px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.55);
-  letter-spacing: 0.2px;
-}
-
-.login-input {
-  padding: 10px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  font-size: 13px;
-  color: #fff;
-  font-family: var(--font);
-  outline: none;
-  background: rgba(255, 255, 255, 0.06);
-  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
-}
-.login-input:focus {
-  border-color: rgba(255, 255, 255, 0.35);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.08);
-}
-.login-input::placeholder { color: rgba(255, 255, 255, 0.2); }
-
-/* ── Error ───────────────────────────────────── */
-.login-error {
-  font-size: 12px;
-  color: #fca5a5;
-  background: rgba(220, 38, 38, 0.15);
-  border: 1px solid rgba(220, 38, 38, 0.3);
-  border-radius: 7px;
-  padding: 8px 12px;
-  margin: 0;
-}
-
-/* ── Submit button ───────────────────────────── */
-.login-submit-btn {
-  width: 100%;
-  padding: 11px;
-  background: rgba(255, 255, 255, 0.92);
-  color: #000;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: var(--font);
-  transition: all 0.15s;
-  margin-top: 4px;
-}
-.login-submit-btn:hover:not(:disabled) {
-  background: #fff;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
-}
-.login-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-/* ── Mode switch ─────────────────────────────── */
-.login-switch {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.35);
-}
-
-.login-switch-btn {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 600;
-  font-size: 12px;
-  cursor: pointer;
-  padding: 0;
-  font-family: var(--font);
-  transition: color 0.15s;
-}
-.login-switch-btn:hover { color: #fff; }
-
-/* ── Footer ──────────────────────────────────── */
-.login-footer {
-  margin-top: 20px;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.2);
-  text-align: center;
-}
-
-/* ── Responsive ──────────────────────────────── */
-@media (max-width: 700px) {
-  .login-center { padding: 0 16px; }
-  .login-card { padding: 24px 20px; }
-}
+/* Clerk pins a "Last used" badge to the top-right of the social button and the
+   button clips it. Let it sit proud of the edge. */
+.login-page .cl-socialButtonsBlockButton { overflow: visible; }
 
 /* ════════════════════════════════════════════════
    NITTANY LION MASCOT
