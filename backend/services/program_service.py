@@ -439,6 +439,123 @@ def build_program_context_snippet(program_name: str) -> str:
     return "\n".join(lines)
 
 
+def _codes_in_text(text: str) -> list[str]:
+    """Real catalog course codes mentioned in a plan description.
+
+    Plan entries are prose ("ENGL 15 or 30H", "General Education Course Level 2"),
+    so the regex alone yields junk subjects — gate on the catalog.
+    """
+    out = []
+    for raw in _CODE_RE.findall(str(text).replace("\xa0", " ").upper()):
+        code = _normalize_code(raw)
+        if code in _courses_by_code and code not in out:
+            out.append(code)
+    return out
+
+
+def _unmet_prereqs(code: str, done: set) -> list[str]:
+    """Prerequisites still standing between the student and this course.
+
+    Alternatives matter: CMPSC 121 lists MATH 110 *or* MATH 140, so a student who
+    took MATH 140 is eligible. Treating the list as a conjunction would tell them
+    they are blocked by a course they never needed. _prereq_mode already knows
+    how to read the condition — reuse it rather than re-deriving.
+    """
+    prereqs = [p for p in get_prerequisites(code) if p.get("code")]
+    codes = [_canonical_code(p["code"]) for p in prereqs]
+    if not codes:
+        return []
+    outstanding = [c for c in dict.fromkeys(codes) if c not in done]
+    if not outstanding:
+        return []
+    # 'any' => one satisfied prerequisite unlocks the course.
+    if _prereq_mode(get_course(code), set(codes)) == "any" and len(outstanding) < len(set(codes)):
+        return []
+    return outstanding
+
+
+def build_recommendation_context(program_name: str, completed_codes=None) -> dict | None:
+    """Work out where a student is in their plan and what comes next.
+
+    This is what turns "what should I take next semester?" from a recital of the
+    whole requirement table into an actual proposal. Returns None when the
+    program has no suggested plan to reason from — the caller must then say so
+    rather than inventing a schedule.
+
+    `completed_codes` comes from the uploaded audit. With none, the position is
+    the start of the plan, which is still the right answer for a new student.
+    """
+    prog = get_program(program_name)
+    plans = (prog or {}).get("suggested_plan") or {}
+    if not plans:
+        return None
+
+    label, semesters = next(iter(plans.items()))
+    if not isinstance(semesters, dict):
+        return None
+
+    done = {_canonical_code(c) for c in (completed_codes or [])}
+    ordered = sorted(semesters.items(), key=lambda kv: _semester_sort_key(kv[0]))
+
+    laid_out = []
+    for key, entries in ordered:
+        courses = []
+        for entry in entries or []:
+            # One plan entry is one SLOT in the schedule. When its description
+            # names several courses ("ENGL 15 or ESL 15") they are alternatives
+            # for that single slot, not four separate courses to take — flatten
+            # them and the proposal tells a student to take all four.
+            codes = _codes_in_text(entry.get("description", ""))
+            if not codes:
+                continue
+            primary = codes[0]
+            courses.append({
+                "code": primary,
+                "alternatives": codes[1:],
+                "title": (_courses_by_code.get(primary) or {}).get("title", ""),
+                "credits": entry.get("credits"),
+                "done": any(_canonical_code(c) in done for c in codes),
+            })
+        laid_out.append({"semester": key, "courses": courses})
+
+    # Where the student is: the earliest semester still carrying unfinished work.
+    # ponytail: positional heuristic, not a degree solver. A student on an
+    # alternative track (CMPSC 131/132 instead of 121/122) reads as "still in
+    # first-year fall" because the plan's courses are genuinely untaken. The
+    # proposal is still sound — those courses really are outstanding — but if
+    # equivalences start mattering, resolve them against the audit's satisfied
+    # requirement blocks instead of raw course codes.
+    position, remaining = None, []
+    for sem in laid_out:
+        outstanding = [c for c in sem["courses"] if not c["done"]]
+        if outstanding:
+            position, remaining = sem["semester"], outstanding
+            break
+    if position is None:  # every plan course is done
+        return {"plan_label": label, "position": None, "propose": [], "complete": True}
+
+    # A semester that's nearly finished leaves too little to propose, so top up
+    # from the next one rather than handing back a one-course "schedule".
+    propose = list(remaining)
+    if len(propose) < 3:
+        idx = [s["semester"] for s in laid_out].index(position)
+        for sem in laid_out[idx + 1:]:
+            propose += [c for c in sem["courses"] if not c["done"]]
+            if len(propose) >= 4:
+                break
+
+    for course in propose[:6]:
+        course["unmet_prereqs"] = _unmet_prereqs(course["code"], done)
+
+    return {
+        "plan_label": label,
+        "position": position,
+        "propose": propose[:6],
+        "complete": False,
+        "personalised": bool(done),
+    }
+
+
 _PLAN_ONLY_LIMIT = 30
 
 

@@ -14,6 +14,7 @@ from backend.services.student_doc_service import (
 from backend.services.program_service import (
     get_program,
     build_program_context_snippet,
+    build_recommendation_context,
     get_double_dips,
 )
 from backend.services.policy_service import build_policy_snippet, policy_sources
@@ -79,6 +80,9 @@ def detect_question_intent(question):
     "how many classes do i still need",
     "what courses do i need to graduate",
     "what do i still need to graduate",
+    # Catches the phrasings the two above miss ("what things do I need to
+    # graduate?"), which otherwise fell through to a generic requirement dump.
+    "need to graduate",
     # additional phrasings
     "what courses do i still have",
     "still have to complete",
@@ -104,10 +108,15 @@ def detect_question_intent(question):
     ]
 
 
+    # Gen-ed category codes are two-letter tokens that also live inside ordinary
+    # words: "sign up" contains "gn ", "things" contains "gs ", "through"
+    # contains "gh ". As bare substrings they routed "how do things work here?"
+    # to gen_ed. Match them as standalone tokens, same as the ap/ib fix above.
+    gen_ed_code = re.search(r"\b(ga|gh|gq|gn|gs|gha|ghw|gws|il)\b", q)
+
     gen_ed_keywords = [
-        "gen ed", "general education", "gened", "ga ", " ga ", "gh ", " gh ",
-        "gq ", " gq ", "gn ", " gn ", "gs ", " gs ", "gha", "us culture",
-        "international culture", " il ", "il course", "arts requirement",
+        "gen ed", "general education", "gened", "us culture",
+        "international culture", "il course", "arts requirement",
         "humanities requirement", "social science requirement",
         "natural science requirement", "quantification", "health requirement",
         "diversity requirement", "writing requirement", "speaking requirement",
@@ -116,6 +125,44 @@ def detect_question_intent(question):
         "kines 082", "phil 010", "musc 007", "musc 008", "thea 100",
         "psych 100", "econ 102", "anth 001", "intl 100",
     ]
+
+    # How the machine works, as opposed to when it happens. "How do I register"
+    # and "when does registration open" are different questions with different
+    # answers; both used to land on `deadline` and get a wall of dates. Keep
+    # these phrases specific — bare "registration" belongs to deadline.
+    logistics_keywords = [
+        "how do i register", "how to register", "how does registration work",
+        "how do i enroll", "how to enroll", "how does enrollment work",
+        "how do i sign up for class", "how do i add a class", "how do i drop a class",
+        "how do i swap", "how do i pick classes", "how do i choose classes",
+        "how do i build my schedule", "how do i get into a class",
+        "registration hold", "advising hold", "hold on my account", "clear my hold",
+        "lionpath", "lion path", "student center", "course cart", "schedule builder",
+        "enrollment appointment", "registration appointment", "registration window",
+        "orientation", "new student", "just enrolled", "just got accepted",
+        "just committed", "just started", "what do i do first", "where do i start",
+        "first steps", "waitlist", "wait list", "closed section", "class is full",
+        "how do i see my schedule", "how do i find my classes",
+    ]
+
+    # Asking ACE to propose, not to recite. These get a plan, not a requirement
+    # dump — see the recommendation grounding in ask_advisor_stream.
+    recommendation_keywords = [
+        "what should i take", "what should i sign up", "what should i register",
+        "what classes should i", "what courses should i", "which classes should i",
+        "which courses should i", "what do you recommend", "what would you suggest",
+        "recommend a course", "recommend classes", "recommend courses",
+        "course recommendation", "suggest a schedule", "suggest classes",
+        "suggest courses", "suggest a course", "build me a schedule",
+        "plan my semester", "plan my next semester", "help me plan",
+        "how many credits should i take", "good course load", "what's a good schedule",
+    ]
+    # "recommend"/"suggest" on their own are too broad ("suggest an advisor"), so
+    # require them to be about coursework.
+    proposes_courses = bool(
+        re.search(r"\b(recommend|suggest|advise)\b", q)
+        and re.search(r"\b(class|classes|course|courses|schedule|semester|term|credits?)\b", q)
+    )
 
     deadline_keywords = [
         "deadline", "deadlines", "due date", "last day to", "last day of",
@@ -172,10 +219,20 @@ def detect_question_intent(question):
     if any(keyword in q for keyword in financial_aid_keywords):
         return "financial_aid"
 
+    # Logistics before deadline: "how do I register" is a steps question, and
+    # deadline owns bare "registration"/"register", so it would swallow it.
+    if any(keyword in q for keyword in logistics_keywords):
+        return "logistics"
+
     if any(keyword in q for keyword in deadline_keywords):
         return "deadline"
 
-    if any(keyword in q for keyword in gen_ed_keywords):
+    # Before courses/gen_ed, both of which match "take"/"class" and would turn a
+    # request for a proposal into a requirement recital.
+    if proposes_courses or any(keyword in q for keyword in recommendation_keywords):
+        return "recommendation"
+
+    if gen_ed_code or any(keyword in q for keyword in gen_ed_keywords):
         return "gen_ed"
 
     if any(keyword in q for keyword in wellbeing_keywords):
@@ -776,6 +833,130 @@ def _get_deadlines_snippet() -> str:
 def _deadlines_snippet_property() -> str:
     return _get_deadlines_snippet()
 
+
+def _build_recommendation_snippet(program_name, student_doc):
+    """Grounding for "what should I take next semester?".
+
+    ACE's other answers recite what is required. This one proposes: it locates
+    the student in their own plan, lists what is actually outstanding, and flags
+    prerequisites they have not met yet. Everything proposed comes from the
+    program's own suggested plan — the model is never asked to invent a schedule.
+    """
+    audit = (student_doc or {}).get("audit_parse") or {}
+    completed = [c.get("code") for c in audit.get("completed_courses", []) if c.get("code")]
+
+    ctx = build_recommendation_context(program_name, completed)
+    if not ctx:
+        return (
+            "\n\n=== COURSE RECOMMENDATION ===\n"
+            f"ACE has no suggested academic plan on file for {program_name}. Do NOT "
+            "invent a schedule. Say plainly that you don't have a plan for this "
+            "program yet, answer with the requirements you do have above, and send "
+            "the student to their adviser to build the actual schedule."
+        )
+
+    lines = ["\n\n=== COURSE RECOMMENDATION ===",
+             f"Suggested plan on file: {ctx['plan_label']}"]
+
+    if ctx.get("complete"):
+        lines.append(
+            "Every course in the suggested plan is already complete in the student's "
+            "audit. Congratulate them, and point them to their adviser to confirm "
+            "graduation clearance rather than proposing more coursework."
+        )
+        return "\n".join(lines)
+
+    if ctx.get("personalised"):
+        lines.append(
+            f"Based on the audit, the student is at: {ctx['position']}. "
+            "Courses already completed have been excluded."
+        )
+    else:
+        lines.append(
+            f"No audit uploaded, so this is the start of the plan ({ctx['position']}) "
+            "— correct for a new student. Offer to personalise it if they upload "
+            "their degree audit, but answer the question first."
+        )
+
+    lines.append("\nOUTSTANDING SLOTS TO PROPOSE FROM (one course per slot):")
+    for c in ctx["propose"]:
+        cr = f" ({c['credits']} cr)" if c.get("credits") else ""
+        title = f" — {c['title']}" if c.get("title") else ""
+        alts = c.get("alternatives") or []
+        alt = f"  [or instead: {', '.join(alts)}]" if alts else ""
+        blocked = c.get("unmet_prereqs")
+        flag = f"  [NOT YET ELIGIBLE — needs {', '.join(blocked)} first]" if blocked else ""
+        lines.append(f"  - {c['code']}{title}{cr}{alt}{flag}")
+
+    lines.append(
+        "\nANSWERING RULES FOR THIS TOPIC:\n"
+        "- Propose an actual slate of courses from the list above, and total the credits.\n"
+        "- Each line above is ONE slot. Where alternatives are shown, pick one and "
+        "mention the alternative — never propose a slot's alternatives as extra courses.\n"
+        "- A course marked NOT YET ELIGIBLE must not be proposed for next semester. "
+        "Name the prerequisite the student needs first instead.\n"
+        "- Say why the slate makes sense (it is the next block of their plan).\n"
+        "- Propose ONLY courses from the list above. Never invent a course, a "
+        "section, a time, or a credit count.\n"
+        "- Close by telling them to confirm with their adviser and check the "
+        "Schedule of Courses for what is actually offered."
+    )
+    return "\n".join(lines)
+
+
+# The "how the machine works" bracket. The academic calendar covers WHEN things
+# happen (54 registration events) but has zero entries for orientation, holds, or
+# the enrollment steps themselves, so this is the only grounding for HOW.
+#
+# Deliberately describes the SHAPE of each process and routes to the office that
+# owns it, rather than asserting click-by-click steps that change every year.
+# The closing rule matters more than the content: a confidently invented step
+# sends a student to the wrong place, which is worse than "I don't have that".
+LOGISTICS_SNIPPET = """
+=== PENN STATE LOGISTICS — HOW ENROLLMENT AND REGISTRATION WORK ===
+
+LIONPATH is the student information system. Registration, schedules, holds,
+grades, and bills all live there: https://lionpath.psu.edu/
+The Schedule of Courses (what is actually offered and when): https://soc.psu.edu/
+
+REGISTERING FOR CLASSES — the shape of it:
+1. Registration opens per student on an assigned enrollment/registration
+   appointment (a start time, not a single day). Students with more credits
+   register earlier. The student's own appointment time is shown in LionPATH.
+2. Holds must be cleared BEFORE the appointment, or registration is blocked.
+   Common ones are advising holds (see your adviser), bursar/financial holds
+   (pay or arrange the balance), and health/immunization holds. LionPATH shows
+   which hold is active and which office to contact.
+3. Courses are chosen from the Schedule of Courses and added in LionPATH.
+4. Registration stays open through the add/drop period at the start of term —
+   the exact dates are in the academic calendar section if present above.
+
+WHEN A CLASS IS FULL: LionPATH offers a waitlist for many sections. Being on a
+waitlist is not a guarantee, and it does not itself resolve a time conflict or a
+missing prerequisite. If the section stays closed, the routes are a different
+section, a different course that meets the same requirement, or asking the
+department that owns the course about a capacity override.
+
+NEW STUDENTS: orientation and the first-semester schedule are run by New Student
+Orientation together with the student's academic college/campus advising office.
+New students are commonly advised or scheduled into their first courses through
+that process rather than registering unaided.
+
+WHO OWNS WHAT:
+- Registration mechanics, records, calendar → Registrar: https://registrar.psu.edu/
+- Course requirements and what to take → the student's academic adviser
+- Bills, payment holds → Bursar: https://bursar.psu.edu/
+- What is offered and when → Schedule of Courses: https://soc.psu.edu/
+
+ANSWERING RULES FOR THIS TOPIC:
+- Give the student the sequence and name the office that owns the step.
+- Specific dates come only from the academic calendar section above. If it is not
+  there, say you don't have the date and link the registrar's calendar.
+- Do NOT invent menu names, button labels, exact click paths, or campus-specific
+  procedures. If the exact step isn't above, say what the student should look for
+  and who to ask. Being honest about the gap beats sending them somewhere wrong.
+"""
+
 DS_GEN_ED_SNIPPET = """
 === PENN STATE GEN ED REQUIREMENTS FOR DTSCE (DATA SCIENCES, 2024-2025) ===
 
@@ -1048,7 +1229,16 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
                 sources.append(src)
 
     resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
-    deadline_snippet = _get_deadlines_snippet() if intent == "deadline" else ""
+    # Logistics gets the calendar too: "when is my registration window" is a
+    # steps question whose answer needs real dates.
+    deadline_snippet = (
+        _get_deadlines_snippet() if intent in ("deadline", "logistics") else ""
+    )
+    logistics_snippet = LOGISTICS_SNIPPET if intent == "logistics" else ""
+    recommendation_snippet = (
+        _build_recommendation_snippet(user_major, student_doc)
+        if intent == "recommendation" and user_major else ""
+    )
     aid_snippet = FINANCIAL_AID_RESOURCES_SNIPPET if intent == "financial_aid" else ""
     intl_snippet = INTERNATIONAL_RESOURCES_SNIPPET if intent == "international" else ""
 
@@ -1144,7 +1334,7 @@ The detected intent for the current question is: {intent}
 {rule_summary}
 
 === STUDENT DOCUMENT ===
-{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{program_snippet if program_snippet else ""}{policy_snippet}{resources_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
+{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{program_snippet if program_snippet else ""}{policy_snippet}{resources_snippet}{recommendation_snippet}{logistics_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
 
 === ANSWER RULES ===
 - You may use the conversation history above to understand follow-up context, but ground every answer in the advising records, extracted rules, and student document provided.

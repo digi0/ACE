@@ -43,7 +43,10 @@
         "lists requirements specific to the Psychology program (e.g. PSYCH courses)",
         "does not describe a computing curriculum"
       ],
-      "must_not": ["CMPSC", "DTSCE"]
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
     },
     {
       "id": "psych-contact-advisor",
@@ -52,9 +55,13 @@
       "question": "Who do I talk to about my degree requirements?",
       "expected_points": [
         "directs the student to their college's advising office or a general advising resource",
-        "does not name a Computer Science department advisor"
+        "does not name a Computer Science department advisor",
+        "offering the advisor named in the student's own uploaded document is correct, not a defect"
       ],
-      "must_not": ["CMPSC", "DTSCE"]
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
     },
     {
       "id": "nursing-courses",
@@ -65,7 +72,10 @@
         "lists requirements specific to the Nursing program (e.g. NURS courses)",
         "answer is grounded in the Nursing program requirements"
       ],
-      "must_not": ["CMPSC", "DTSCE"]
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
     },
     {
       "id": "mecheng-credits",
@@ -75,7 +85,10 @@
       "expected_points": [
         "states a specific total credit number for the Mechanical Engineering program"
       ],
-      "must_not": ["CMPSC", "DTSCE"]
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
     },
     {
       "id": "biology-gened",
@@ -86,7 +99,10 @@
         "describes Penn State Gen Ed categories (e.g. GA, GH, GS, GN, GHW, GQ)",
         "relates the answer to the Biology program where possible"
       ],
-      "must_not": ["CMPSC", "DTSCE"]
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
     },
     {
       "id": "finance-courses",
@@ -97,7 +113,10 @@
         "lists requirements specific to the Finance program (e.g. FIN courses)",
         "answer is grounded in the Finance program requirements"
       ],
-      "must_not": ["CMPSC", "DTSCE"]
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
     },
     {
       "id": "cs-deadline-drop",
@@ -130,7 +149,76 @@
         "describes requirements specific to the Kinesiology program",
         "answer is grounded in the program requirements, not a generic answer"
       ],
-      "must_not": ["CMPSC", "DTSCE"]
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "logistics-register",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "logistics",
+      "question": "How do I register for classes?",
+      "expected_points": [
+        "names LionPATH as the system where registration happens",
+        "mentions that registration opens on an assigned enrollment/registration appointment",
+        "mentions clearing holds before registering"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "logistics-hold",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "logistics",
+      "question": "What is a registration hold and how do I clear it?",
+      "expected_points": [
+        "explains a hold blocks registration until resolved",
+        "names at least one type of hold (advising, bursar/financial, health)",
+        "tells the student to check LionPATH and contact the office that owns the hold"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "logistics-newstudent",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "logistics",
+      "question": "I just enrolled at Penn State, what do I do first?",
+      "expected_points": [
+        "points the new student to orientation and/or their advising office",
+        "mentions LionPATH for registration",
+        "does not invent campus-specific click-by-click steps"
+      ],
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "rec-next-semester-cs",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "recommendation",
+      "question": "What should I take next semester?",
+      "expected_points": [
+        "proposes specific named courses by code, not just requirement categories",
+        "totals or states the credits",
+        "tells the student to confirm with an adviser"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "rec-schedule-psych",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "recommendation",
+      "question": "Can you suggest a schedule for me?",
+      "expected_points": [
+        "proposes specific named courses from the program's own suggested plan (a first-year plan legitimately includes writing and seminar courses, not only PSYCH courses)",
+        "does not propose a computing curriculum",
+        "does not list alternatives for the same slot as if they were separate courses to take"
+      ],
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
     }
   ]
 }
