@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- ace. — the locked mark: lowercase a leaning -11deg, level emerald period.
+       Ink tile rather than cream, so it holds on a light OR dark tab bar.
+       Transform centres the mark's MEASURED ink bbox (x -42..100, y -39..56),
+       not its transformed bounding box, which over-reads the height by ~10%. -->
+  <rect width="120" height="120" rx="26" fill="#14120E"/>
+  <g transform="translate(40.39,54.26) scale(0.676)">
+    <g transform="rotate(-11 5 12)">
+      <circle cx="0" cy="12" r="31" fill="none" stroke="#FBF6EC" stroke-width="22"/>
+      <rect x="30" y="-32" width="22" height="88" rx="11" fill="#FBF6EC"/>
+    </g>
+    <circle cx="82" cy="38" r="18" fill="#00875A"/>
+  </g>
+</svg>
