@@ -327,6 +327,48 @@
         "states what the student has to do to request it"
       ],
       "must_not": []
+    },
+    {
+      "id": "places-eat",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "general",
+      "question": "Where can I eat on campus?",
+      "expected_points": [
+        "names specific Penn State dining locations",
+        "gives a directions or info link",
+        "does not state specific opening or closing times, and points to the live hours page instead"
+      ],
+      "must_contain": [
+        "google.com/maps"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "places-study",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "general",
+      "question": "Where's a good place to study on campus?",
+      "expected_points": [
+        "names specific study spaces or libraries",
+        "gives links",
+        "does not describe a computing curriculum"
+      ],
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "places-parking",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "general",
+      "question": "Where do I park my car on campus and do I need a permit?",
+      "expected_points": [
+        "explains a permit is required",
+        "points to Transportation Services",
+        "does not invent lot names, prices, or fines"
+      ],
+      "must_not": []
     }
   ]
 }

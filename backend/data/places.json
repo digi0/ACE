@@ -1,0 +1,2815 @@
+{
+ "_about": "Penn State campus places and services. Built by `python -m backend.data.places_scraper`. HOURS ARE DELIBERATELY NOT STORED — they change by term and by day; each record carries the live hours page instead. map_url is a Google Maps search, not a verified pin. LLM extraction is not bit-for-bit reproducible: diff before committing.",
+ "scraped_at": "2026-08-03T21:21:54.605496+00:00",
+ "count": 178,
+ "hours_urls": {
+  "dining": "https://liveon.psu.edu/university-park/dining/location-hours",
+  "library": "https://libraries.psu.edu/hours-and-locations",
+  "recreation": "https://studentaffairs.psu.edu/health-wellbeing/recreation"
+ },
+ "places": [
+  {
+   "id": "aloha-fresh-poke-bowls",
+   "name": "Aloha Fresh Poke Bowls",
+   "category": "dining",
+   "what_it_is": "A dining option offering poke bowls.",
+   "where": "East Food District",
+   "good_for": [],
+   "phone": "",
+   "notes": "Closed for the Summer: May 10 - August 16",
+   "url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Aloha+Fresh+Poke+Bowls+East+Food+District+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/location-hours"
+  },
+  {
+   "id": "amici-italian-market",
+   "name": "Amici Italian Market",
+   "category": "dining",
+   "what_it_is": "A dining option featuring Italian cuisine.",
+   "where": "South Food District",
+   "good_for": [],
+   "phone": "",
+   "notes": "Closed for the Summer: May 10 - August 16",
+   "url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Amici+Italian+Market+South+Food+District+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/location-hours"
+  },
+  {
+   "id": "blue-burrito",
+   "name": "Blue Burrito",
+   "category": "dining",
+   "what_it_is": "A dining option serving burritos and other Mexican dishes.",
+   "where": "HUB Dining",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Blue+Burrito+HUB+Dining+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/location-hours"
+  },
+  {
+   "id": "bowls-east",
+   "name": "Bowls @ East",
+   "category": "dining",
+   "what_it_is": "A dining option offering various bowl meals.",
+   "where": "East Food District",
+   "good_for": [],
+   "phone": "",
+   "notes": "Summer Hours: June 28 - August 16",
+   "url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Bowls+%40+East+East+Food+District+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/location-hours"
+  },
+  {
+   "id": "bowls-south",
+   "name": "Bowls @ South",
+   "category": "dining",
+   "what_it_is": "A dining option offering various bowl meals.",
+   "where": "South Food District",
+   "good_for": [],
+   "phone": "",
+   "notes": "Closed for the Summer: May 10 - August 16",
+   "url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Bowls+%40+South+South+Food+District+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/location-hours"
+  },
+  {
+   "id": "burger-king",
+   "name": "Burger King",
+   "category": "dining",
+   "what_it_is": "A fast-food chain offering burgers, fries, and more.",
+   "where": "HUB Dining",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Burger+King+HUB+Dining+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/location-hours"
+  },
+  {
+   "id": "cafe-laura",
+   "name": "Cafe Laura",
+   "category": "dining",
+   "what_it_is": "A dining option providing a variety of meals.",
+   "where": "",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Cafe+Laura++Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/location-hours"
+  },
+  {
+   "id": "choolaah-indian-bbq",
+   "name": "Choolaah Indian BBQ",
+   "category": "dining",
+   "what_it_is": "A dining option specializing in Indian BBQ.",
+   "where": "South Food District",
+   "good_for": [],
+   "phone": "",
+   "notes": "Closed for the Summer: May 10 - August 16",
+   "url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Choolaah+Indian+BBQ+South+Food+District+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/location-hours"
+  },
+  {
+   "id": "cow-cookie",
+   "name": "Cow & Cookie",
+   "category": "dining",
+   "what_it_is": "A dining option offering cookies and other desserts.",
+   "where": "HUB Dining",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Cow+%26+Cookie+HUB+Dining+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/location-hours"
+  },
+  {
+   "id": "east-food-district-buffet",
+   "name": "East Food District Buffet",
+   "category": "dining",
+   "what_it_is": "A buffet dining option with various meal choices.",
+   "where": "East Food District",
+   "good_for": [],
+   "phone": "",
+   "notes": "Summer Hours: June 28 - August 16",
+   "url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=East+Food+District+Buffet+East+Food+District+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/location-hours"
+  },
+  {
+   "id": "east-philly-cheesesteaks",
+   "name": "East Philly Cheesesteaks",
+   "category": "dining",
+   "what_it_is": "A dining option serving Philly cheesesteaks.",
+   "where": "East Food District",
+   "good_for": [],
+   "phone": "",
+   "notes": "Summer Hours: June 28 - August 16",
+   "url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=East+Philly+Cheesesteaks+East+Food+District+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/location-hours"
+  },
+  {
+   "id": "edge-east",
+   "name": "Edge @ East",
+   "category": "dining",
+   "what_it_is": "A dining option offering a variety of meals.",
+   "where": "East Food District",
+   "good_for": [],
+   "phone": "",
+   "notes": "Summer Hours: June 28 - August 16",
+   "url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Edge+%40+East+East+Food+District+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/location-hours"
+  },
+  {
+   "id": "edge-pollock",
+   "name": "Edge @ Pollock",
+   "category": "dining",
+   "what_it_is": "A dining option offering a variety of meals.",
+   "where": "Pollock Dining Commons",
+   "good_for": [],
+   "phone": "",
+   "notes": "Closed for the Summer: May 10 - August 16",
+   "url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Edge+%40+Pollock+Pollock+Dining+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/location-hours"
+  },
+  {
+   "id": "edge-south",
+   "name": "Edge @ South",
+   "category": "dining",
+   "what_it_is": "A dining option offering a variety of meals.",
+   "where": "South Food District",
+   "good_for": [],
+   "phone": "",
+   "notes": "Summer Hours: June 28 - August 1",
+   "url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Edge+%40+South+South+Food+District+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/location-hours"
+  },
+  {
+   "id": "east-food-district",
+   "name": "East Food District",
+   "category": "dining",
+   "what_it_is": "East Food District at Findlay Commons offers a variety of dining options conveniently located in the East Halls Residence area.",
+   "where": "Findlay Commons, East Halls Residence area",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=East+Food+District+Findlay+Commons%2C+East+Halls+Residence+area+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining"
+  },
+  {
+   "id": "north-food-district",
+   "name": "North Food District",
+   "category": "dining",
+   "what_it_is": "Northside is conveniently located in the North Halls residence area in Warnock Commons, providing diverse dining options.",
+   "where": "Warnock Commons, North Halls residence area",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=North+Food+District+Warnock+Commons%2C+North+Halls+residence+area+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining"
+  },
+  {
+   "id": "pollock-dining-commons",
+   "name": "Pollock Dining Commons",
+   "category": "dining",
+   "what_it_is": "Pollock Dining Commons is located on the second floor of Pollock Commons, offering a variety of meal choices.",
+   "where": "Pollock Commons",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Pollock+Dining+Commons+Pollock+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining"
+  },
+  {
+   "id": "south-food-district",
+   "name": "South Food District",
+   "category": "dining",
+   "what_it_is": "South Food District is conveniently located in the South Halls residence area right on College Avenue, providing various dining options.",
+   "where": "South Halls residence area, College Avenue",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=South+Food+District+South+Halls+residence+area%2C+College+Avenue+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining"
+  },
+  {
+   "id": "west-food-district",
+   "name": "West Food District",
+   "category": "dining",
+   "what_it_is": "West Food District is conveniently located in the West Halls residence area, offering a range of dining choices.",
+   "where": "West Halls residence area",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=West+Food+District+West+Halls+residence+area+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining"
+  },
+  {
+   "id": "hub-dining",
+   "name": "HUB Dining",
+   "category": "dining",
+   "what_it_is": "HUB Dining offers a flavorful mix of national and one-of-a-kind restaurants located on the ground floor of the HUB-Robeson Center.",
+   "where": "HUB-Robeson Center",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=HUB+Dining+HUB-Robeson+Center+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining"
+  },
+  {
+   "id": "panera",
+   "name": "Panera",
+   "category": "dining",
+   "what_it_is": "Visit one of our three Panera locations across campus for a variety of baked goods and meals.",
+   "where": "",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Panera++Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining"
+  },
+  {
+   "id": "fresco-east",
+   "name": "Fresco @ East",
+   "category": "dining",
+   "what_it_is": "A food court option offering a variety of fresh food items.",
+   "where": "Findlay Commons",
+   "good_for": [
+    "quick meal"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/east-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Fresco+%40+East+Findlay+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/east-food-district"
+  },
+  {
+   "id": "grillers",
+   "name": "Grillers",
+   "category": "dining",
+   "what_it_is": "A fast casual dining option within East Food District.",
+   "where": "Findlay Commons",
+   "good_for": [
+    "quick meal"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/east-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Grillers+Findlay+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/east-food-district"
+  },
+  {
+   "id": "market-east",
+   "name": "Market East",
+   "category": "dining",
+   "what_it_is": "A convenience store located within East Food District.",
+   "where": "Findlay Commons",
+   "good_for": [
+    "snacks",
+    "convenience"
+   ],
+   "phone": "",
+   "notes": "No discounts available.",
+   "url": "https://liveon.psu.edu/university-park/dining/east-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Market+East+Findlay+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/east-food-district"
+  },
+  {
+   "id": "on-a-roll",
+   "name": "On A Roll",
+   "category": "dining",
+   "what_it_is": "A food court option offering a variety of roll sandwiches.",
+   "where": "Findlay Commons",
+   "good_for": [
+    "quick meal"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/east-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=On+A+Roll+Findlay+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/east-food-district"
+  },
+  {
+   "id": "pizza-east",
+   "name": "Pizza @ East",
+   "category": "dining",
+   "what_it_is": "A food court option specializing in pizza.",
+   "where": "Findlay Commons",
+   "good_for": [
+    "quick meal",
+    "comfort food"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/east-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Pizza+%40+East+Findlay+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/east-food-district"
+  },
+  {
+   "id": "pure",
+   "name": "PURE",
+   "category": "dining",
+   "what_it_is": "A food court option offering a variety of healthy food choices.",
+   "where": "Findlay Commons",
+   "good_for": [
+    "healthy",
+    "quick meal"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/east-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=PURE+Findlay+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/east-food-district"
+  },
+  {
+   "id": "greens-grains-market-north",
+   "name": "Greens + Grains @ Market North",
+   "category": "dining",
+   "what_it_is": "A fast casual dining option offering a variety of healthy choices.",
+   "where": "Warnock Commons",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/north-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Greens+%2B+Grains+%40+Market+North+Warnock+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/north-food-district"
+  },
+  {
+   "id": "halal-cart-market-north",
+   "name": "Halal Cart @ Market North",
+   "category": "dining",
+   "what_it_is": "A fast casual dining option providing halal food.",
+   "where": "Warnock Commons",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/north-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Halal+Cart+%40+Market+North+Warnock+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/north-food-district"
+  },
+  {
+   "id": "market-north",
+   "name": "Market North",
+   "category": "dining",
+   "what_it_is": "A convenience store offering various snacks and essentials.",
+   "where": "Warnock Commons",
+   "good_for": [],
+   "phone": "",
+   "notes": "No discounts available.",
+   "url": "https://liveon.psu.edu/university-park/dining/north-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Market+North+Warnock+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/north-food-district"
+  },
+  {
+   "id": "northside-warnock-commons",
+   "name": "Northside @ Warnock Commons",
+   "category": "dining",
+   "what_it_is": "An all-you-care-to-eat buffet providing a wide range of food options.",
+   "where": "Warnock Commons",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/north-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Northside+%40+Warnock+Commons+Warnock+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/north-food-district"
+  },
+  {
+   "id": "nosh",
+   "name": "Nosh",
+   "category": "dining",
+   "what_it_is": "A dining option available in Warnock Commons.",
+   "where": "Warnock Commons",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/north-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Nosh+Warnock+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/north-food-district"
+  },
+  {
+   "id": "fresco-pollock",
+   "name": "Fresco @ Pollock",
+   "category": "dining",
+   "what_it_is": "A food court offering a variety of dining choices.",
+   "where": "Pollock Commons",
+   "good_for": [
+    "quick meals",
+    "variety"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/fresco-pollock",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Fresco+%40+Pollock+Pollock+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/fresco-pollock"
+  },
+  {
+   "id": "market-pollock",
+   "name": "Market Pollock",
+   "category": "dining",
+   "what_it_is": "A convenience store providing snacks and essentials.",
+   "where": "Pollock Commons",
+   "good_for": [
+    "snacks",
+    "convenience"
+   ],
+   "phone": "",
+   "notes": "No discounts available.",
+   "url": "https://liveon.psu.edu/university-park/dining/fresco-pollock",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Market+Pollock+Pollock+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/fresco-pollock"
+  },
+  {
+   "id": "market-pollock-asia-kitchen",
+   "name": "Market Pollock Asia Kitchen",
+   "category": "dining",
+   "what_it_is": "A fast casual dining option specializing in Asian cuisine.",
+   "where": "Pollock Commons",
+   "good_for": [
+    "fast casual",
+    "Asian food"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/fresco-pollock",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Market+Pollock+Asia+Kitchen+Pollock+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/fresco-pollock"
+  },
+  {
+   "id": "pollock-commons-buffet",
+   "name": "Pollock Commons Buffet",
+   "category": "dining",
+   "what_it_is": "An all-you-care-to-eat buffet offering a wide range of food options.",
+   "where": "Pollock Commons",
+   "good_for": [
+    "all you can eat",
+    "variety"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/fresco-pollock",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Pollock+Commons+Buffet+Pollock+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/fresco-pollock"
+  },
+  {
+   "id": "louie-s-market",
+   "name": "Louie's Market",
+   "category": "dining",
+   "what_it_is": "A convenience store providing snacks and essentials.",
+   "where": "Redifer Commons",
+   "good_for": [
+    "snacks",
+    "convenience"
+   ],
+   "phone": "",
+   "notes": "No discounts available.",
+   "url": "https://liveon.psu.edu/university-park/dining/south-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Louie%27s+Market+Redifer+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/south-food-district"
+  },
+  {
+   "id": "on-a-roll-south",
+   "name": "On a Roll @ South",
+   "category": "dining",
+   "what_it_is": "A fast casual dining option offering a variety of rolls.",
+   "where": "Redifer Commons",
+   "good_for": [
+    "quick meal"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/south-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=On+a+Roll+%40+South+Redifer+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/south-food-district"
+  },
+  {
+   "id": "redifer-city-grill",
+   "name": "Redifer City Grill",
+   "category": "dining",
+   "what_it_is": "A fast casual dining option with a grill menu.",
+   "where": "Redifer Commons",
+   "good_for": [
+    "quick meal"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/south-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Redifer+City+Grill+Redifer+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/south-food-district"
+  },
+  {
+   "id": "southside-buffet-south-food-district",
+   "name": "Southside Buffet @ South Food District",
+   "category": "dining",
+   "what_it_is": "An all-you-care-to-eat buffet offering a variety of dishes.",
+   "where": "Redifer Commons",
+   "good_for": [
+    "buffet",
+    "all you can eat"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/south-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Southside+Buffet+%40+South+Food+District+Redifer+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/south-food-district"
+  },
+  {
+   "id": "edge-west",
+   "name": "Edge @ West",
+   "category": "dining",
+   "what_it_is": "A dining option located in Waring Commons offering a variety of food choices.",
+   "where": "Waring Commons",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/west-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Edge+%40+West+Waring+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/west-food-district"
+  },
+  {
+   "id": "market-west",
+   "name": "Market West",
+   "category": "dining",
+   "what_it_is": "A convenience store located in Waring Commons providing snacks and essentials.",
+   "where": "Waring Commons",
+   "good_for": [],
+   "phone": "",
+   "notes": "No discounts available.",
+   "url": "https://liveon.psu.edu/university-park/dining/west-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Market+West+Waring+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/west-food-district"
+  },
+  {
+   "id": "state-chik-n",
+   "name": "State Chik'n",
+   "category": "dining",
+   "what_it_is": "A fast casual dining option located in Waring Commons specializing in chicken dishes.",
+   "where": "Waring Commons",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/west-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=State+Chik%27n+Waring+Commons+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/west-food-district"
+  },
+  {
+   "id": "waring-square-buffet-west",
+   "name": "Waring Square Buffet @ West",
+   "category": "dining",
+   "what_it_is": "An all-you-care-to-eat buffet located in Waring Square.",
+   "where": "Waring Square",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/west-food-district",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Waring+Square+Buffet+%40+West+Waring+Square+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/west-food-district"
+  },
+  {
+   "id": "grate-chee",
+   "name": "Grate Chee",
+   "category": "dining",
+   "what_it_is": "A food court option focusing on gourmet grilled cheese sandwiches.",
+   "where": "HUB-Robeson Center",
+   "good_for": [],
+   "phone": "",
+   "notes": "No discounts available.",
+   "url": "https://liveon.psu.edu/university-park/dining/hub-dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Grate+Chee+HUB-Robeson+Center+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/hub-dining"
+  },
+  {
+   "id": "hibachi-san",
+   "name": "Hibachi-San",
+   "category": "dining",
+   "what_it_is": "A fast casual restaurant offering Japanese hibachi-style meals.",
+   "where": "HUB-Robeson Center",
+   "good_for": [],
+   "phone": "",
+   "notes": "No discounts available.",
+   "url": "https://liveon.psu.edu/university-park/dining/hub-dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Hibachi-San+HUB-Robeson+Center+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/hub-dining"
+  },
+  {
+   "id": "jamba",
+   "name": "Jamba",
+   "category": "dining",
+   "what_it_is": "A cafe specializing in smoothies and healthy snacks.",
+   "where": "HUB-Robeson Center",
+   "good_for": [],
+   "phone": "",
+   "notes": "No discounts available.",
+   "url": "https://liveon.psu.edu/university-park/dining/hub-dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Jamba+HUB-Robeson+Center+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/hub-dining"
+  },
+  {
+   "id": "mcalister-s-deli",
+   "name": "McAlister's Deli",
+   "category": "dining",
+   "what_it_is": "A fast casual deli offering sandwiches, salads, and soups.",
+   "where": "HUB-Robeson Center",
+   "good_for": [],
+   "phone": "",
+   "notes": "No discounts available.",
+   "url": "https://liveon.psu.edu/university-park/dining/hub-dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=McAlister%27s+Deli+HUB-Robeson+Center+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/hub-dining"
+  },
+  {
+   "id": "panda-express",
+   "name": "Panda Express",
+   "category": "dining",
+   "what_it_is": "A fast casual restaurant serving American Chinese cuisine.",
+   "where": "HUB-Robeson Center",
+   "good_for": [],
+   "phone": "",
+   "notes": "No discounts available.",
+   "url": "https://liveon.psu.edu/university-park/dining/hub-dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Panda+Express+HUB-Robeson+Center+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/hub-dining"
+  },
+  {
+   "id": "sbarro",
+   "name": "Sbarro",
+   "category": "dining",
+   "what_it_is": "A fast casual restaurant known for its pizza and Italian dishes.",
+   "where": "HUB-Robeson Center",
+   "good_for": [],
+   "phone": "",
+   "notes": "No discounts available.",
+   "url": "https://liveon.psu.edu/university-park/dining/hub-dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Sbarro+HUB-Robeson+Center+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/hub-dining"
+  },
+  {
+   "id": "slim-chickens",
+   "name": "Slim Chickens",
+   "category": "dining",
+   "what_it_is": "A food court option specializing in chicken tenders and wings.",
+   "where": "HUB-Robeson Center",
+   "good_for": [],
+   "phone": "",
+   "notes": "No discounts available.",
+   "url": "https://liveon.psu.edu/university-park/dining/hub-dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Slim+Chickens+HUB-Robeson+Center+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/hub-dining"
+  },
+  {
+   "id": "soup-garden",
+   "name": "Soup & Garden",
+   "category": "dining",
+   "what_it_is": "A food court option offering a variety of soups and fresh salads.",
+   "where": "HUB-Robeson Center",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/dining/hub-dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Soup+%26+Garden+HUB-Robeson+Center+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/hub-dining"
+  },
+  {
+   "id": "starbucks-the-hub",
+   "name": "Starbucks @ The HUB",
+   "category": "dining",
+   "what_it_is": "A coffee shop offering a range of coffee beverages and snacks.",
+   "where": "HUB-Robeson Center",
+   "good_for": [],
+   "phone": "",
+   "notes": "No discounts available.",
+   "url": "https://liveon.psu.edu/university-park/dining/hub-dining",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Starbucks+%40+The+HUB+HUB-Robeson+Center+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/hub-dining"
+  },
+  {
+   "id": "fresh-ns",
+   "name": "Freshëns",
+   "category": "dining",
+   "what_it_is": "A fast casual dining option with a focus on fresh ingredients.",
+   "where": "Engineering Collaborative Research and Education Building (ECoRE)",
+   "good_for": [],
+   "phone": "",
+   "notes": "No discounts available",
+   "url": "https://liveon.psu.edu/university-park/dining/more-dining-locations",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Fresh%C3%ABns+Engineering+Collaborative+Research+and+Education+Building+%28ECoRE%29+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/more-dining-locations"
+  },
+  {
+   "id": "shake-smart-im-building",
+   "name": "Shake Smart @ IM Building",
+   "category": "dining",
+   "what_it_is": "A coffee, cafe, and juice bar offering a variety of beverages.",
+   "where": "IM Building",
+   "good_for": [],
+   "phone": "",
+   "notes": "No discounts available",
+   "url": "https://liveon.psu.edu/university-park/dining/more-dining-locations",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Shake+Smart+%40+IM+Building+IM+Building+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/more-dining-locations"
+  },
+  {
+   "id": "shake-smart-white-building",
+   "name": "Shake Smart @ White Building",
+   "category": "dining",
+   "what_it_is": "A coffee, cafe, and juice bar offering a variety of beverages.",
+   "where": "White Building",
+   "good_for": [],
+   "phone": "",
+   "notes": "No discounts available",
+   "url": "https://liveon.psu.edu/university-park/dining/more-dining-locations",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Shake+Smart+%40+White+Building+White+Building+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/more-dining-locations"
+  },
+  {
+   "id": "starbucks-paterno-library",
+   "name": "Starbucks @ Paterno Library",
+   "category": "dining",
+   "what_it_is": "A coffee, cafe, and juice bar offering Starbucks beverages.",
+   "where": "Paterno Library",
+   "good_for": [],
+   "phone": "",
+   "notes": "No discounts available",
+   "url": "https://liveon.psu.edu/university-park/dining/more-dining-locations",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Starbucks+%40+Paterno+Library+Paterno+Library+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/dining/more-dining-locations"
+  },
+  {
+   "id": "campus-meal-plan",
+   "name": "Campus Meal Plan",
+   "category": "dining",
+   "what_it_is": "The Campus Meal Plan offers the best discount structure for a student who eats more than 10 meals per week on campus and is accepted at every Campus Dining location on campus.",
+   "where": "campus",
+   "good_for": [
+    "cost savings",
+    "convenience"
+   ],
+   "phone": "",
+   "notes": "Included in the Housing and Food Service Contract for on-campus residents. Can be purchased through eLiving for off-campus students.",
+   "url": "https://liveon.psu.edu/university-park/meal-plans",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Campus+Meal+Plan+campus+Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/meal-plans"
+  },
+  {
+   "id": "lioncash",
+   "name": "LionCash",
+   "category": "dining",
+   "what_it_is": "LionCash is an online, prepaid spending account accessed through the Penn State id+ Card and mobile account, allowing for cash-free purchases.",
+   "where": "",
+   "good_for": [
+    "flexibility",
+    "discounts"
+   ],
+   "phone": "",
+   "notes": "Funds carry over year-to-year during enrollment. Required for laundry for on-campus residents.",
+   "url": "https://liveon.psu.edu/university-park/meal-plans",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=LionCash++Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/meal-plans"
+  },
+  {
+   "id": "commuter-meal-plan",
+   "name": "Commuter Meal Plan",
+   "category": "dining",
+   "what_it_is": "The Commuter Meal Plan offers students living off campus a convenient way to purchase meals for less than paying out of pocket, with a 10 percent discount on qualifying purchases.",
+   "where": "",
+   "good_for": [
+    "off-campus students",
+    "meal convenience"
+   ],
+   "phone": "",
+   "notes": "Can be purchased through eLiving. Offers three levels to choose from.",
+   "url": "https://liveon.psu.edu/university-park/meal-plans",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Commuter+Meal+Plan++Penn+State+University+Park",
+   "hours_url": "https://liveon.psu.edu/university-park/dining/location-hours",
+   "source_url": "https://liveon.psu.edu/university-park/meal-plans"
+  },
+  {
+   "id": "east-halls",
+   "name": "East Halls",
+   "category": "housing",
+   "what_it_is": "A residence area primarily for first-year students, offering traditional and renovated halls.",
+   "where": "East Halls",
+   "good_for": [
+    "first-year students"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/housing-options",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=East+Halls+East+Halls+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/housing-options"
+  },
+  {
+   "id": "west-halls",
+   "name": "West Halls",
+   "category": "housing",
+   "what_it_is": "A residence area providing traditional housing options for students.",
+   "where": "West Halls",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/housing-options",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=West+Halls+West+Halls+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/housing-options"
+  },
+  {
+   "id": "north-halls",
+   "name": "North Halls",
+   "category": "housing",
+   "what_it_is": "A residence area that includes suites for students.",
+   "where": "North Halls",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/housing-options",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=North+Halls+North+Halls+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/housing-options"
+  },
+  {
+   "id": "south-halls",
+   "name": "South Halls",
+   "category": "housing",
+   "what_it_is": "A residence area featuring renovated halls for students.",
+   "where": "South Halls",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/housing-options",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=South+Halls+South+Halls+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/housing-options"
+  },
+  {
+   "id": "pollock-halls",
+   "name": "Pollock Halls",
+   "category": "housing",
+   "what_it_is": "A residence area that offers traditional and renovated housing options.",
+   "where": "Pollock Halls",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/housing-options",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Pollock+Halls+Pollock+Halls+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/housing-options"
+  },
+  {
+   "id": "eastview-terrace",
+   "name": "Eastview Terrace",
+   "category": "housing",
+   "what_it_is": "A residence area with renovated halls for students.",
+   "where": "Eastview Terrace",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/housing-options",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Eastview+Terrace+Eastview+Terrace+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/housing-options"
+  },
+  {
+   "id": "white-course-undergraduate-apartments",
+   "name": "White Course Undergraduate Apartments",
+   "category": "housing",
+   "what_it_is": "Apartments available for undergraduate students.",
+   "where": "White Course Undergraduate Apartments",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/housing-options",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=White+Course+Undergraduate+Apartments+White+Course+Undergraduate+Apartments+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/housing-options"
+  },
+  {
+   "id": "nittany-apartments-suites",
+   "name": "Nittany Apartments & Suites",
+   "category": "housing",
+   "what_it_is": "A housing option that includes apartments and suites for students.",
+   "where": "Nittany Apartments & Suites",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/housing-options",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Nittany+Apartments+%26+Suites+Nittany+Apartments+%26+Suites+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/housing-options"
+  },
+  {
+   "id": "white-course-graduate-family-apartments",
+   "name": "White Course Graduate & Family Apartments",
+   "category": "housing",
+   "what_it_is": "Apartments designed for graduate students and families.",
+   "where": "White Course Graduate & Family Apartments",
+   "good_for": [
+    "graduate students",
+    "families"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/housing-options",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=White+Course+Graduate+%26+Family+Apartments+White+Course+Graduate+%26+Family+Apartments+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/housing-options"
+  },
+  {
+   "id": "housing-assignment-office",
+   "name": "Housing Assignment Office",
+   "category": "housing",
+   "what_it_is": "The office that manages housing assignments and provides assistance regarding housing options.",
+   "where": "",
+   "good_for": [],
+   "phone": "",
+   "notes": "Contact for assistance with housing options.",
+   "url": "https://liveon.psu.edu/university-park/rates",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Housing+Assignment+Office++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/rates"
+  },
+  {
+   "id": "break-access-holiday-housing",
+   "name": "Break Access/Holiday Housing",
+   "category": "housing",
+   "what_it_is": "A service providing housing during break periods when the University is closed, available for students who accept the contract.",
+   "where": "",
+   "good_for": [],
+   "phone": "",
+   "notes": "Requires purchase for both semesters; cannot be cancelled or added for one semester only.",
+   "url": "https://liveon.psu.edu/university-park/rates",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Break+Access%2FHoliday+Housing++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/rates"
+  },
+  {
+   "id": "university-park-housing-assignment-office",
+   "name": "University Park Housing Assignment Office",
+   "category": "housing",
+   "what_it_is": "The office responsible for managing the LiveOn Housing Process and providing information about on-campus housing options.",
+   "where": "201 Johnston Commons, East Halls",
+   "good_for": [
+    "housing process",
+    "information sessions"
+   ],
+   "phone": "",
+   "notes": "Staff is available to answer questions and provide guidance about the LiveOn Housing Process.",
+   "url": "https://liveon.psu.edu/university-park/current-students",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=University+Park+Housing+Assignment+Office+201+Johnston+Commons%2C+East+Halls+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/current-students"
+  },
+  {
+   "id": "double-room-traditional-residence-halls",
+   "name": "Double Room, Traditional Residence Halls",
+   "category": "housing",
+   "what_it_is": "A housing option for students with one roommate in traditional residence halls.",
+   "where": "South (Atherton, McElwain, Simmons), and West (Hamilton, Irvin, Jordan, Thompson, Watts)",
+   "good_for": [
+    "shared living"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/current-students",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Double+Room%2C+Traditional+Residence+Halls+South+%28Atherton%2C+McElwain%2C+Simmons%29%2C+and+West+%28Hamilton%2C+Irvin%2C+Jordan%2C+Thompson%2C+Watts%29+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/current-students"
+  },
+  {
+   "id": "triple-room-traditional-residence-halls",
+   "name": "Triple Room, Traditional Residence Halls",
+   "category": "housing",
+   "what_it_is": "A housing option for students with two roommates in traditional residence halls.",
+   "where": "South (Atherton, McElwain, Simmons), and West (Jordan, Thompson, Watts)",
+   "good_for": [
+    "shared living"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/current-students",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Triple+Room%2C+Traditional+Residence+Halls+South+%28Atherton%2C+McElwain%2C+Simmons%29%2C+and+West+%28Jordan%2C+Thompson%2C+Watts%29+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/current-students"
+  },
+  {
+   "id": "single-room-traditional-residence-halls",
+   "name": "Single Room, Traditional Residence Halls",
+   "category": "housing",
+   "what_it_is": "A housing option for students with no roommates in traditional residence halls.",
+   "where": "South (Atherton, McElwain, Simmons), and West (Hamilton, Jordan, Thompson, Watts)",
+   "good_for": [
+    "private living"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/current-students",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Single+Room%2C+Traditional+Residence+Halls+South+%28Atherton%2C+McElwain%2C+Simmons%29%2C+and+West+%28Hamilton%2C+Jordan%2C+Thompson%2C+Watts%29+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/current-students"
+  },
+  {
+   "id": "double-room-renovated-residence-halls",
+   "name": "Double Room, Renovated Residence Halls",
+   "category": "housing",
+   "what_it_is": "A housing option for students with one roommate in renovated residence halls.",
+   "where": "South (Chace, Cooper, Cross, Ewing, Haller, Hibbs, Hoyt, Lyons, and Stephens Halls)",
+   "good_for": [
+    "shared living"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/current-students",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Double+Room%2C+Renovated+Residence+Halls+South+%28Chace%2C+Cooper%2C+Cross%2C+Ewing%2C+Haller%2C+Hibbs%2C+Hoyt%2C+Lyons%2C+and+Stephens+Halls%29+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/current-students"
+  },
+  {
+   "id": "north-hall-suites",
+   "name": "North Hall Suites",
+   "category": "housing",
+   "what_it_is": "A housing option consisting of 2-bedroom/4-person suites with shared bathrooms.",
+   "where": "North (Holmes, Leete, Runkle)",
+   "good_for": [
+    "shared living"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/current-students",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=North+Hall+Suites+North+%28Holmes%2C+Leete%2C+Runkle%29+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/current-students"
+  },
+  {
+   "id": "nittany-hall-suites",
+   "name": "Nittany Hall Suites",
+   "category": "housing",
+   "what_it_is": "A housing option consisting of 2-bedroom/4-person suites with shared bathrooms.",
+   "where": "",
+   "good_for": [
+    "shared living"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/current-students",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Nittany+Hall+Suites++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/current-students"
+  },
+  {
+   "id": "single-room-eastview-terrace",
+   "name": "Single Room, Eastview Terrace",
+   "category": "housing",
+   "what_it_is": "A single-occupancy room with a private bathroom and air conditioning.",
+   "where": "Eastview Terrace (Brill, Curry, Harris, Miller, Nelson, Panofsky, Young)",
+   "good_for": [
+    "private living"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/current-students",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Single+Room%2C+Eastview+Terrace+Eastview+Terrace+%28Brill%2C+Curry%2C+Harris%2C+Miller%2C+Nelson%2C+Panofsky%2C+Young%29+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/current-students"
+  },
+  {
+   "id": "double-room-eastview-terrace",
+   "name": "Double Room, Eastview Terrace",
+   "category": "housing",
+   "what_it_is": "A double-occupancy room with a private bathroom and air conditioning.",
+   "where": "Eastview Terrace (Brill, Curry, Harris, Miller, Nelson, Panofsky, Young)",
+   "good_for": [
+    "shared living"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/current-students",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Double+Room%2C+Eastview+Terrace+Eastview+Terrace+%28Brill%2C+Curry%2C+Harris%2C+Miller%2C+Nelson%2C+Panofsky%2C+Young%29+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/current-students"
+  },
+  {
+   "id": "nittany-apartments",
+   "name": "Nittany Apartments",
+   "category": "housing",
+   "what_it_is": "Housing option consisting of 2-bedroom/4-person and 4-bedroom/4-person apartments.",
+   "where": "",
+   "good_for": [
+    "shared living"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/current-students",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Nittany+Apartments++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/current-students"
+  },
+  {
+   "id": "white-course-apartments",
+   "name": "White Course Apartments",
+   "category": "housing",
+   "what_it_is": "Housing option consisting of 4-bedroom/4-person apartments.",
+   "where": "",
+   "good_for": [
+    "shared living"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/current-students",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=White+Course+Apartments++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/current-students"
+  },
+  {
+   "id": "supplemental-housing-traditional-residence-halls",
+   "name": "Supplemental Housing, Traditional Residence Halls",
+   "category": "housing",
+   "what_it_is": "Housing option for students with 3-5 roommates in traditional residence halls.",
+   "where": "South (McElwain, Simmons), and West for male students only (Hamilton, Jordan, Thompson, Watts)",
+   "good_for": [
+    "shared living"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/current-students",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Supplemental+Housing%2C+Traditional+Residence+Halls+South+%28McElwain%2C+Simmons%29%2C+and+West+for+male+students+only+%28Hamilton%2C+Jordan%2C+Thompson%2C+Watts%29+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/current-students"
+  },
+  {
+   "id": "supplemental-housing-renovated-residence-halls",
+   "name": "Supplemental Housing, Renovated Residence Halls",
+   "category": "housing",
+   "what_it_is": "Housing option for students with 3-5 roommates in renovated residence halls.",
+   "where": "South (Cooper, Cross, Ewing, Haller, Hibbs, Hoyt, Lyons, Stephens)",
+   "good_for": [
+    "shared living"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/current-students",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Supplemental+Housing%2C+Renovated+Residence+Halls+South+%28Cooper%2C+Cross%2C+Ewing%2C+Haller%2C+Hibbs%2C+Hoyt%2C+Lyons%2C+Stephens%29+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/current-students"
+  },
+  {
+   "id": "supplemental-housing-suite-residence-halls",
+   "name": "Supplemental Housing, Suite Residence Halls",
+   "category": "housing",
+   "what_it_is": "Housing option for students with 5 roommates in suite residence halls.",
+   "where": "North (Holmes, Leete, Runkle)",
+   "good_for": [
+    "shared living"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://liveon.psu.edu/university-park/current-students",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Supplemental+Housing%2C+Suite+Residence+Halls+North+%28Holmes%2C+Leete%2C+Runkle%29+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://liveon.psu.edu/university-park/current-students"
+  },
+  {
+   "id": "group-study-rooms",
+   "name": "Group Study Rooms",
+   "category": "study_space",
+   "what_it_is": "Rooms that can be reserved for group study, available at University Park and several campus locations.",
+   "where": "Pattee and Paterno Libraries",
+   "good_for": [
+    "group study"
+   ],
+   "phone": "",
+   "notes": "Rooms may be reserved for up to 3 hours within a given time frame.",
+   "url": "https://libraries.psu.edu/services/rooms-spaces",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Group+Study+Rooms+Pattee+and+Paterno+Libraries+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://libraries.psu.edu/services/rooms-spaces"
+  },
+  {
+   "id": "media-commons",
+   "name": "Media Commons",
+   "category": "study_space",
+   "what_it_is": "A space featuring multimedia production suites and access to library collections.",
+   "where": "Pattee and Paterno Libraries",
+   "good_for": [
+    "media production"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/services/rooms-spaces",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Media+Commons+Pattee+and+Paterno+Libraries+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://libraries.psu.edu/services/rooms-spaces"
+  },
+  {
+   "id": "maker-commons-innovation-center",
+   "name": "Maker Commons Innovation Center",
+   "category": "study_space",
+   "what_it_is": "Provides access to 3D printing and an academic makerspace for rapid prototyping.",
+   "where": "Media Commons, Pattee and Paterno Libraries",
+   "good_for": [
+    "3D printing",
+    "makerspace"
+   ],
+   "phone": "",
+   "notes": "Open to all students, faculty, and staff.",
+   "url": "https://libraries.psu.edu/services/rooms-spaces",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Maker+Commons+Innovation+Center+Media+Commons%2C+Pattee+and+Paterno+Libraries+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://libraries.psu.edu/services/rooms-spaces"
+  },
+  {
+   "id": "one-button-studios",
+   "name": "One Button Studios",
+   "category": "study_space",
+   "what_it_is": "A studio space for easy multimedia production.",
+   "where": "Knowledge Commons, Pattee Library",
+   "good_for": [
+    "media production"
+   ],
+   "phone": "",
+   "notes": "Updated to Studio One.",
+   "url": "https://libraries.psu.edu/services/rooms-spaces",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=One+Button+Studios+Knowledge+Commons%2C+Pattee+Library+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://libraries.psu.edu/services/rooms-spaces"
+  },
+  {
+   "id": "central-atrium",
+   "name": "Central Atrium",
+   "category": "study_space",
+   "what_it_is": "A space with seating areas for individual study and informal activities.",
+   "where": "Ground floor, Pattee Library",
+   "good_for": [
+    "individual study"
+   ],
+   "phone": "",
+   "notes": "Connects West and Central Pattee.",
+   "url": "https://libraries.psu.edu/services/rooms-spaces",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Central+Atrium+Ground+floor%2C+Pattee+Library+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://libraries.psu.edu/services/rooms-spaces"
+  },
+  {
+   "id": "collaboration-commons",
+   "name": "Collaboration Commons",
+   "category": "study_space",
+   "what_it_is": "A flexible space with electrical outlets and various seating options for study.",
+   "where": "Ground floor, West Pattee",
+   "good_for": [
+    "group study",
+    "collaboration"
+   ],
+   "phone": "",
+   "notes": "Furniture is mobile and modular.",
+   "url": "https://libraries.psu.edu/services/rooms-spaces",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Collaboration+Commons+Ground+floor%2C+West+Pattee+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://libraries.psu.edu/services/rooms-spaces"
+  },
+  {
+   "id": "sensory-rooms",
+   "name": "Sensory Rooms",
+   "category": "study_space",
+   "what_it_is": "Dedicated spaces for quiet comfort to assist students with sensory impairments.",
+   "where": "W023 and W027, Collaboration Commons",
+   "good_for": [
+    "quiet study",
+    "sensory needs"
+   ],
+   "phone": "",
+   "notes": "Part of a project pilot managed by the Libraries' LibWell initiative.",
+   "url": "https://libraries.psu.edu/services/rooms-spaces",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Sensory+Rooms+W023+and+W027%2C+Collaboration+Commons+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://libraries.psu.edu/services/rooms-spaces"
+  },
+  {
+   "id": "dr-keiko-miwa-ross-garden-terrace",
+   "name": "Dr. Keiko Miwa Ross Garden Terrace",
+   "category": "study_space",
+   "what_it_is": "An outdoor terrace providing seating and gathering space.",
+   "where": "Outside Collaboration Commons, West Pattee",
+   "good_for": [
+    "outdoor study",
+    "gathering"
+   ],
+   "phone": "",
+   "notes": "Features exterior wireless connectivity.",
+   "url": "https://libraries.psu.edu/services/rooms-spaces",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Dr.+Keiko+Miwa+Ross+Garden+Terrace+Outside+Collaboration+Commons%2C+West+Pattee+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://libraries.psu.edu/services/rooms-spaces"
+  },
+  {
+   "id": "tombros-mcwhirter-knowledge-commons",
+   "name": "Tombros McWhirter Knowledge Commons",
+   "category": "study_space",
+   "what_it_is": "Houses a suite of group study rooms equipped with whiteboards and large screen displays.",
+   "where": "West Pattee Library",
+   "good_for": [
+    "group study"
+   ],
+   "phone": "",
+   "notes": "Reservations are required for these spaces.",
+   "url": "https://libraries.psu.edu/services/rooms-spaces",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Tombros+McWhirter+Knowledge+Commons+West+Pattee+Library+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://libraries.psu.edu/services/rooms-spaces"
+  },
+  {
+   "id": "quiet-study-areas",
+   "name": "Quiet Study Areas",
+   "category": "study_space",
+   "what_it_is": "Designated areas for quiet study across multiple floors.",
+   "where": "Floors 2-5 in Paterno and basement level and floors 2-3 in Pattee",
+   "good_for": [
+    "quiet study"
+   ],
+   "phone": "",
+   "notes": "Talking and mobile device use is not permitted.",
+   "url": "https://libraries.psu.edu/services/rooms-spaces",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Quiet+Study+Areas+Floors+2-5+in+Paterno+and+basement+level+and+floors+2-3+in+Pattee+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://libraries.psu.edu/services/rooms-spaces"
+  },
+  {
+   "id": "lactation-rooms",
+   "name": "Lactation Rooms",
+   "category": "health",
+   "what_it_is": "Rooms available for breastfeeding and lactation needs.",
+   "where": "West Pattee, 040 Collaboration Commons and Room W-336",
+   "good_for": [
+    "breastfeeding",
+    "lactation"
+   ],
+   "phone": "",
+   "notes": "More information is available on the Office of Human Resources Breastfeeding Support program page.",
+   "url": "https://libraries.psu.edu/services/rooms-spaces",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Lactation+Rooms+West+Pattee%2C+040+Collaboration+Commons+and+Room+W-336+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://libraries.psu.edu/services/rooms-spaces"
+  },
+  {
+   "id": "pattee-library",
+   "name": "Pattee Library",
+   "category": "library",
+   "what_it_is": "Pattee Library is one of the main libraries at University Park, providing access to a wide range of resources and study spaces.",
+   "where": "140 Curtin Road, University Park PA 16802-1812",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Pattee+Library+140+Curtin+Road%2C+University+Park+PA+16802-1812+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "paterno-library",
+   "name": "Paterno Library",
+   "category": "library",
+   "what_it_is": "Paterno Library is another key library at University Park, offering various collections and study areas.",
+   "where": "140 Curtin Road, University Park PA 16802-1812",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Paterno+Library+140+Curtin+Road%2C+University+Park+PA+16802-1812+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "architecture-and-landscape-architecture-library",
+   "name": "Architecture and Landscape Architecture Library",
+   "category": "library",
+   "what_it_is": "This library focuses on architecture and landscape architecture resources, providing specialized collections and study spaces.",
+   "where": "111 Stuckeman, 148 Ag Hill Drive, University Park, PA 16802",
+   "good_for": [
+    "design",
+    "architecture study"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Architecture+and+Landscape+Architecture+Library+111+Stuckeman%2C+148+Ag+Hill+Drive%2C+University+Park%2C+PA+16802+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "earth-and-mineral-sciences-library",
+   "name": "Earth and Mineral Sciences Library",
+   "category": "library",
+   "what_it_is": "This library supports the Earth and Mineral Sciences disciplines with relevant resources and study areas.",
+   "where": "105 Deike Building, 223 N. Burrowes Road, University Park, PA 16802-2710",
+   "good_for": [
+    "earth sciences",
+    "mineral studies"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Earth+and+Mineral+Sciences+Library+105+Deike+Building%2C+223+N.+Burrowes+Road%2C+University+Park%2C+PA+16802-2710+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "engineering-library",
+   "name": "Engineering Library",
+   "category": "library",
+   "what_it_is": "The Engineering Library provides resources and study spaces for engineering students and faculty.",
+   "where": "203 ECoRE, 556 White Course Drive, University Park, PA 16802-1403",
+   "good_for": [
+    "engineering study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Engineering+Library+203+ECoRE%2C+556+White+Course+Drive%2C+University+Park%2C+PA+16802-1403+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "physical-and-mathematical-sciences-library",
+   "name": "Physical and Mathematical Sciences Library",
+   "category": "library",
+   "what_it_is": "This library offers resources for physical and mathematical sciences, including study spaces.",
+   "where": "201 Davey Laboratory, 251 Pollock Road, University Park, PA 16802",
+   "good_for": [
+    "math study",
+    "science research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Physical+and+Mathematical+Sciences+Library+201+Davey+Laboratory%2C+251+Pollock+Road%2C+University+Park%2C+PA+16802+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "abington-campus-library",
+   "name": "Abington Campus Library",
+   "category": "library",
+   "what_it_is": "Located at Penn State Abington, this library provides resources and study spaces for students.",
+   "where": "Woodland Building, 1630 Woodland Road, Abington, PA 19001-3990",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Abington+Campus+Library+Woodland+Building%2C+1630+Woodland+Road%2C+Abington%2C+PA+19001-3990+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "robert-e-eiche-library",
+   "name": "Robert E. Eiche Library",
+   "category": "library",
+   "what_it_is": "This library serves Penn State Altoona, offering various resources and study areas.",
+   "where": "Eiche Library, 3032 Ivyside Park, Altoona, PA 16601-3760",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Robert+E.+Eiche+Library+Eiche+Library%2C+3032+Ivyside+Park%2C+Altoona%2C+PA+16601-3760+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "beaver-campus-library",
+   "name": "Beaver Campus Library",
+   "category": "library",
+   "what_it_is": "Located at Penn State Beaver, this library provides access to resources and study spaces.",
+   "where": "Library, 99 University Drive, Monaca, PA 15061",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Beaver+Campus+Library+Library%2C+99+University+Drive%2C+Monaca%2C+PA+15061+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "john-m-lilley-library",
+   "name": "John M. Lilley Library",
+   "category": "library",
+   "what_it_is": "This library at Penn State Behrend offers resources and study spaces for students.",
+   "where": "4821 College Drive, Erie, PA 16563-1502",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=John+M.+Lilley+Library+4821+College+Drive%2C+Erie%2C+PA+16563-1502+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "berks-thun-library",
+   "name": "Berks Thun Library",
+   "category": "library",
+   "what_it_is": "Located at Penn State Berks, this library provides resources and study areas for students.",
+   "where": "Thun Library, 1300 Harper Road, Reading, PA 19610-6009",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Berks+Thun+Library+Thun+Library%2C+1300+Harper+Road%2C+Reading%2C+PA+19610-6009+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "brandywine-campus-library",
+   "name": "Brandywine Campus Library",
+   "category": "library",
+   "what_it_is": "This library serves Penn State Brandywine, offering various resources and study spaces.",
+   "where": "John D. Vairo Building, 60 Nittany Drive, Media, PA 19063",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Brandywine+Campus+Library+John+D.+Vairo+Building%2C+60+Nittany+Drive%2C+Media%2C+PA+19063+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "dubois-campus-library",
+   "name": "DuBois Campus Library",
+   "category": "library",
+   "what_it_is": "Located at Penn State DuBois, this library provides access to resources and study spaces.",
+   "where": "113 Hiller Building, 32 N. Sixth Street, Dubois, PA 15801",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=DuBois+Campus+Library+113+Hiller+Building%2C+32+N.+Sixth+Street%2C+Dubois%2C+PA+15801+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "fayette-campus-library",
+   "name": "Fayette Campus Library",
+   "category": "library",
+   "what_it_is": "This library serves Penn State Fayette, offering various resources and study areas.",
+   "where": "Library, 3000 University Circle, Lemont Furnace, PA 15456",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Fayette+Campus+Library+Library%2C+3000+University+Circle%2C+Lemont+Furnace%2C+PA+15456+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "great-valley-library",
+   "name": "Great Valley Library",
+   "category": "library",
+   "what_it_is": "Located at Penn State Great Valley, this library provides resources and study spaces for students.",
+   "where": "30 East Swedesford Road, Malvern, PA 19355",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Great+Valley+Library+30+East+Swedesford+Road%2C+Malvern%2C+PA+19355+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "j-clarence-kelly-library",
+   "name": "J. Clarence Kelly Library",
+   "category": "library",
+   "what_it_is": "This library serves Penn State Greater Allegheny, offering various resources and study areas.",
+   "where": "Kelly Library, 4000 University Drive, McKeesport, PA 15132",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=J.+Clarence+Kelly+Library+Kelly+Library%2C+4000+University+Drive%2C+McKeesport%2C+PA+15132+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "madlyn-l-hanes-library",
+   "name": "Madlyn L. Hanes Library",
+   "category": "library",
+   "what_it_is": "Located at Penn State Harrisburg, this library provides access to resources and study spaces.",
+   "where": "351 Olmsted Drive, Middletown, PA 17057-4850",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Madlyn+L.+Hanes+Library+351+Olmsted+Drive%2C+Middletown%2C+PA+17057-4850+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "mary-m-and-bertil-e-lofstrom-library",
+   "name": "Mary M. and Bertil E. Lofstrom Library",
+   "category": "library",
+   "what_it_is": "This library serves Penn State Hazleton, offering various resources and study areas.",
+   "where": "79 University Dr., Hazleton, PA 18202",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Mary+M.+and+Bertil+E.+Lofstrom+Library+79+University+Dr.%2C+Hazleton%2C+PA+18202+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "lehigh-valley-campus-library",
+   "name": "Lehigh Valley Campus Library",
+   "category": "library",
+   "what_it_is": "Located at Penn State Lehigh Valley, this library provides resources and study spaces for students.",
+   "where": "Lehigh Valley Building, 2809 E. Saucon Valley Road, Center Valley, PA 18034-8447",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Lehigh+Valley+Campus+Library+Lehigh+Valley+Building%2C+2809+E.+Saucon+Valley+Road%2C+Center+Valley%2C+PA+18034-8447+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "mont-alto-campus-library",
+   "name": "Mont Alto Campus Library",
+   "category": "library",
+   "what_it_is": "This library serves Penn State Mont Alto, offering various resources and study areas.",
+   "where": "Library, 320 Campus Drive, Mont Alto, PA 17237-9703",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Mont+Alto+Campus+Library+Library%2C+320+Campus+Drive%2C+Mont+Alto%2C+PA+17237-9703+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "elisabeth-s-blissell-library",
+   "name": "Elisabeth S. Blissell Library",
+   "category": "library",
+   "what_it_is": "Located at Penn State New Kensington, this library provides access to resources and study spaces.",
+   "where": "Blissell Library, 3550-H 7th Street Road, New Kensington, PA 15068-1798",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Elisabeth+S.+Blissell+Library+Blissell+Library%2C+3550-H+7th+Street+Road%2C+New+Kensington%2C+PA+15068-1798+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "ciletti-memorial-library",
+   "name": "Ciletti Memorial Library",
+   "category": "library",
+   "what_it_is": "This library serves Penn State Schuylkill, offering various resources and study areas.",
+   "where": "206 University Drive, Schuylkill Haven, PA 17972-2210",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Ciletti+Memorial+Library+206+University+Drive%2C+Schuylkill+Haven%2C+PA+17972-2210+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "scranton-campus-library",
+   "name": "Scranton Campus Library",
+   "category": "library",
+   "what_it_is": "Located at Penn State Scranton, this library provides access to resources and study spaces.",
+   "where": "Library, 132 Lion Drive, Dunmore, PA 18512-1699",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Scranton+Campus+Library+Library%2C+132+Lion+Drive%2C+Dunmore%2C+PA+18512-1699+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "lartz-memorial-library",
+   "name": "Lartz Memorial Library",
+   "category": "library",
+   "what_it_is": "This library serves Penn State Shenango, offering various resources and study areas.",
+   "where": "147 Vine Avenue, Sharon, PA 16146",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Lartz+Memorial+Library+147+Vine+Avenue%2C+Sharon%2C+PA+16146+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "nesbitt-library",
+   "name": "Nesbitt Library",
+   "category": "library",
+   "what_it_is": "Located at Penn State Wilkes-Barre, this library provides access to resources and study spaces.",
+   "where": "19 Conyngham Lane, Dallas, PA 18612",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Nesbitt+Library+19+Conyngham+Lane%2C+Dallas%2C+PA+18612+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "harrell-health-sciences-library",
+   "name": "Harrell Health Sciences Library",
+   "category": "library",
+   "what_it_is": "This library serves the Penn State College of Medicine, providing resources for health sciences.",
+   "where": "500 University Dr., Hershey, PA 17033",
+   "good_for": [
+    "health sciences",
+    "medical research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Harrell+Health+Sciences+Library+500+University+Dr.%2C+Hershey%2C+PA+17033+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "world-campus-and-penn-state-online",
+   "name": "World Campus and Penn State Online",
+   "category": "library",
+   "what_it_is": "This service provides online resources for students enrolled in World Campus and Penn State Online programs.",
+   "where": "W216 Pattee Library, 96 Curtin Road, University Park, PA 16802-1812",
+   "good_for": [
+    "online study",
+    "distance learning"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=World+Campus+and+Penn+State+Online+W216+Pattee+Library%2C+96+Curtin+Road%2C+University+Park%2C+PA+16802-1812+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "lee-r-glatfelter-library",
+   "name": "Lee R. Glatfelter Library",
+   "category": "library",
+   "what_it_is": "Located at Penn State York, this library provides access to resources and study spaces for students.",
+   "where": "1017 Edgecomb Avenue, York, PA 17403",
+   "good_for": [
+    "study",
+    "research"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://libraries.psu.edu/about/libraries",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Lee+R.+Glatfelter+Library+1017+Edgecomb+Avenue%2C+York%2C+PA+17403+Penn+State+University+Park",
+   "hours_url": "https://libraries.psu.edu/hours-and-locations",
+   "source_url": "https://libraries.psu.edu/about/libraries"
+  },
+  {
+   "id": "campus-recreation",
+   "name": "Campus Recreation",
+   "category": "recreation",
+   "what_it_is": "Campus Recreation offers opportunities for every student to stay active, build connections, and create a balanced college experience through various programs and services.",
+   "where": "101 Intramural (IM) Building, 679 Curtin Rd, University Park, PA 16802",
+   "good_for": [
+    "fitness",
+    "outdoor adventure",
+    "group activities"
+   ],
+   "phone": "814-867-1600",
+   "notes": "Use the Penn State CRec app for mobile entry at facilities and to register for programs.",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/recreation",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Campus+Recreation+101+Intramural+%28IM%29+Building%2C+679+Curtin+Rd%2C+University+Park%2C+PA+16802+Penn+State+University+Park",
+   "hours_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation"
+  },
+  {
+   "id": "mccoy-natatorium",
+   "name": "McCoy Natatorium",
+   "category": "recreation",
+   "what_it_is": "McCoy Natatorium supports recreational, fitness, and competitive swimming with an indoor 25-yard competition pool, instructional pool, and diving well.",
+   "where": "387 Bigler Rd, University Park, PA 16802",
+   "good_for": [
+    "fitness",
+    "swimming lessons",
+    "group activities"
+   ],
+   "phone": "814-865-1433",
+   "notes": "Facilities include an indoor competition pool and an outdoor pool that is open seasonally. Various swim programs and certifications are available.",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/recreation/programs-classes/aquatics",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=McCoy+Natatorium+387+Bigler+Rd%2C+University+Park%2C+PA+16802+Penn+State+University+Park",
+   "hours_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation/programs-classes/aquatics"
+  },
+  {
+   "id": "mccoy-natatorium-outdoor-pool",
+   "name": "McCoy Natatorium Outdoor Pool",
+   "category": "recreation",
+   "what_it_is": "The outdoor 50-meter pool provides space for lap swimming, recreation, and relaxation during the warmer months.",
+   "where": "387 Bigler Rd, University Park, PA 16802",
+   "good_for": [
+    "lap swimming",
+    "recreation",
+    "relaxation"
+   ],
+   "phone": "814-865-1433",
+   "notes": "Open seasonally; check for availability during warmer months.",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/recreation/programs-classes/aquatics",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=McCoy+Natatorium+Outdoor+Pool+387+Bigler+Rd%2C+University+Park%2C+PA+16802+Penn+State+University+Park",
+   "hours_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation/programs-classes/aquatics"
+  },
+  {
+   "id": "mary-beaver-white-building-pool",
+   "name": "Mary Beaver White Building Pool",
+   "category": "recreation",
+   "what_it_is": "This indoor pool features five lap lanes and an ADA-accessible lift, creating an inclusive environment for leisure and fitness swimming.",
+   "where": "",
+   "good_for": [
+    "leisure swimming",
+    "fitness swimming"
+   ],
+   "phone": "814-865-1433",
+   "notes": "Includes an ADA-accessible lift for inclusivity.",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/recreation/programs-classes/aquatics",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Mary+Beaver+White+Building+Pool++Penn+State+University+Park",
+   "hours_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation/programs-classes/aquatics"
+  },
+  {
+   "id": "competitive-sports",
+   "name": "Competitive Sports",
+   "category": "recreation",
+   "what_it_is": "Competitive Sports provides opportunities to compete, stay active, build leadership skills, and connect with fellow Penn Staters through various leagues and clubs.",
+   "where": "130 Intramural Building, University Park, PA 16802",
+   "good_for": [
+    "team sports",
+    "leadership skills",
+    "community building"
+   ],
+   "phone": "814-865-4136",
+   "notes": "Access the portal at imleagues.com/psu to join clubs and participate in activities.",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/recreation/programs-classes/competitive-sports",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Competitive+Sports+130+Intramural+Building%2C+University+Park%2C+PA+16802+Penn+State+University+Park",
+   "hours_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation/programs-classes/competitive-sports"
+  },
+  {
+   "id": "club-sports",
+   "name": "Club Sports",
+   "category": "recreation",
+   "what_it_is": "Club Sports are student-led organizations that compete against colleges and universities, offering a variety of athletic opportunities.",
+   "where": "130 Intramural Building, University Park, PA 16802",
+   "good_for": [
+    "athletic skills",
+    "leadership experience",
+    "community"
+   ],
+   "phone": "814-865-4136",
+   "notes": "Join clubs through IMLeagues and complete a Participation Agreement and Waiver before participating.",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/recreation/programs-classes/competitive-sports",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Club+Sports+130+Intramural+Building%2C+University+Park%2C+PA+16802+Penn+State+University+Park",
+   "hours_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation/programs-classes/competitive-sports"
+  },
+  {
+   "id": "intramural-sports",
+   "name": "Intramural Sports",
+   "category": "recreation",
+   "what_it_is": "Intramural Sports offers leagues, tournaments, and events for friendly competition in various sports.",
+   "where": "130 Intramural Building, University Park, PA 16802",
+   "good_for": [
+    "fun",
+    "friendly competition",
+    "meeting new people"
+   ],
+   "phone": "814-865-4136",
+   "notes": "Create or join a team through IMLeagues.",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/recreation/programs-classes/competitive-sports",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Intramural+Sports+130+Intramural+Building%2C+University+Park%2C+PA+16802+Penn+State+University+Park",
+   "hours_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation/programs-classes/competitive-sports"
+  },
+  {
+   "id": "unified-sports",
+   "name": "Unified Sports",
+   "category": "recreation",
+   "what_it_is": "Unified Sports brings together Penn State students and Special Olympics athletes to promote inclusivity through shared competition.",
+   "where": "130 Intramural Building, University Park, PA 16802",
+   "good_for": [
+    "inclusivity",
+    "friendship",
+    "teamwork"
+   ],
+   "phone": "814-865-4136",
+   "notes": "Participate in various activities throughout the year.",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/recreation/programs-classes/competitive-sports",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Unified+Sports+130+Intramural+Building%2C+University+Park%2C+PA+16802+Penn+State+University+Park",
+   "hours_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation/programs-classes/competitive-sports"
+  },
+  {
+   "id": "university-health-services-uhs",
+   "name": "University Health Services (UHS)",
+   "category": "health",
+   "what_it_is": "University Health Services provides comprehensive, student-focused medical care at the Student Health Center on the University Park campus, including treatment for illnesses, injuries, and ongoing health concerns.",
+   "where": "Student Health Center, University Park campus",
+   "good_for": [
+    "routine checkups",
+    "same-day appointments",
+    "accessible care"
+   ],
+   "phone": "814-865-4UHS(4847)",
+   "notes": "Bring your insurance information and arrive a few minutes early for your appointment.",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=University+Health+Services+%28UHS%29+Student+Health+Center%2C+University+Park+campus+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services"
+  },
+  {
+   "id": "pharmacy",
+   "name": "Pharmacy",
+   "category": "health",
+   "what_it_is": "Fill prescriptions and access convenient medication services right on campus.",
+   "where": "Student Health Center, University Park campus",
+   "good_for": [
+    "prescription services"
+   ],
+   "phone": "814-865-4UHS(4847)",
+   "notes": "",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Pharmacy+Student+Health+Center%2C+University+Park+campus+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services"
+  },
+  {
+   "id": "laboratory",
+   "name": "Laboratory",
+   "category": "health",
+   "what_it_is": "Complete necessary lab work quickly and easily through on-site testing services.",
+   "where": "Student Health Center, University Park campus",
+   "good_for": [
+    "lab work"
+   ],
+   "phone": "814-865-4UHS(4847)",
+   "notes": "",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Laboratory+Student+Health+Center%2C+University+Park+campus+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services"
+  },
+  {
+   "id": "physical-therapy",
+   "name": "Physical Therapy",
+   "category": "health",
+   "what_it_is": "Receive personalized treatment plans to support recovery, mobility, and long-term physical health.",
+   "where": "Student Health Center, University Park campus",
+   "good_for": [
+    "rehabilitation",
+    "mobility support"
+   ],
+   "phone": "814-865-4UHS(4847)",
+   "notes": "Cancel at least 12 hours in advance for evaluations and 2 hours for treatment sessions.",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Physical+Therapy+Student+Health+Center%2C+University+Park+campus+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services"
+  },
+  {
+   "id": "radiology",
+   "name": "Radiology",
+   "category": "health",
+   "what_it_is": "Access X-ray and imaging services without leaving campus.",
+   "where": "Student Health Center, University Park campus",
+   "good_for": [
+    "imaging services"
+   ],
+   "phone": "814-865-4UHS(4847)",
+   "notes": "",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Radiology+Student+Health+Center%2C+University+Park+campus+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services"
+  },
+  {
+   "id": "emergency-medical-services-ems",
+   "name": "Emergency Medical Services (EMS)",
+   "category": "health",
+   "what_it_is": "Responsible for all emergency medical services on the University Park Campus, including the University Ambulance Service.",
+   "where": "University Park campus",
+   "good_for": [
+    "emergency response"
+   ],
+   "phone": "814-865-4UHS(4847)",
+   "notes": "Students certified as EMTs and Paramedics can apply for paid positions.",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Emergency+Medical+Services+%28EMS%29+University+Park+campus+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services"
+  },
+  {
+   "id": "counseling-and-psychological-services-caps",
+   "name": "Counseling and Psychological Services (CAPS)",
+   "category": "health",
+   "what_it_is": "CAPS is dedicated to supporting your emotional well-being and personal development throughout your Penn State journey, offering a variety of clinical services and crisis intervention.",
+   "where": "501 Student Health Center, 542 Eisenhower Rd, University Park, PA 16802",
+   "good_for": [
+    "emotional support",
+    "crisis intervention"
+   ],
+   "phone": "814-863-0395",
+   "notes": "Most services begin with a phone screening. For urgent support, call the 24/7 Penn State Crisis Line at 1-877-229-6400.",
+   "url": "https://studentaffairs.psu.edu/health-wellbeing/mental-health-services",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Counseling+and+Psychological+Services+%28CAPS%29+501+Student+Health+Center%2C+542+Eisenhower+Rd%2C+University+Park%2C+PA+16802+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/mental-health-services"
+  },
+  {
+   "id": "transportation-services",
+   "name": "Transportation Services",
+   "category": "transit",
+   "what_it_is": "Transportation Services assists students, faculty, staff, and visitors in getting to, from, and around the University Park campus.",
+   "where": "",
+   "good_for": [
+    "navigation",
+    "campus transport"
+   ],
+   "phone": "",
+   "notes": "Offers various services including parking permit registration, campus transit schedules, and fleet vehicle reservations.",
+   "url": "https://transportation.psu.edu",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Transportation+Services++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu"
+  },
+  {
+   "id": "student-parking",
+   "name": "Student Parking",
+   "category": "parking",
+   "what_it_is": "Parking options available for students with valid permits.",
+   "where": "",
+   "good_for": [],
+   "phone": "",
+   "notes": "View permit eligibility and registration for living areas.",
+   "url": "https://transportation.psu.edu/parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Student+Parking++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/parking"
+  },
+  {
+   "id": "faculty-staff-parking",
+   "name": "Faculty/Staff Parking",
+   "category": "parking",
+   "what_it_is": "Parking permit options and rates for full and part-time employees.",
+   "where": "",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://transportation.psu.edu/parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Faculty%2FStaff+Parking++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/parking"
+  },
+  {
+   "id": "visitor-parking",
+   "name": "Visitor Parking",
+   "category": "parking",
+   "what_it_is": "Parking decks or lots available for campus visitors.",
+   "where": "",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://transportation.psu.edu/parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Visitor+Parking++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/parking"
+  },
+  {
+   "id": "accessible-parking",
+   "name": "Accessible Parking",
+   "category": "parking",
+   "what_it_is": "Parking options available for individuals with disabilities.",
+   "where": "",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://transportation.psu.edu/parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Accessible+Parking++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/parking"
+  },
+  {
+   "id": "electric-vehicles-parking",
+   "name": "Electric Vehicles Parking",
+   "category": "parking",
+   "what_it_is": "Designated parking for electric vehicles.",
+   "where": "",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://transportation.psu.edu/parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Electric+Vehicles+Parking++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/parking"
+  },
+  {
+   "id": "motorcycles-parking",
+   "name": "Motorcycles Parking",
+   "category": "parking",
+   "what_it_is": "Parking options available specifically for motorcycles.",
+   "where": "",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://transportation.psu.edu/parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Motorcycles+Parking++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/parking"
+  },
+  {
+   "id": "rvs-parking",
+   "name": "RVs Parking",
+   "category": "parking",
+   "what_it_is": "Parking options available for recreational vehicles.",
+   "where": "",
+   "good_for": [],
+   "phone": "",
+   "notes": "",
+   "url": "https://transportation.psu.edu/parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=RVs+Parking++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/parking"
+  },
+  {
+   "id": "service-delivery-contractor-parking",
+   "name": "Service/Delivery/Contractor Parking",
+   "category": "parking",
+   "what_it_is": "Permits available for businesses to park on campus.",
+   "where": "",
+   "good_for": [],
+   "phone": "",
+   "notes": "Find a permit for your business to park on campus.",
+   "url": "https://transportation.psu.edu/parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Service%2FDelivery%2FContractor+Parking++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/parking"
+  },
+  {
+   "id": "commonwealth-campus-parking",
+   "name": "Commonwealth Campus Parking",
+   "category": "parking",
+   "what_it_is": "Parking options available at University Park or other campuses.",
+   "where": "",
+   "good_for": [],
+   "phone": "",
+   "notes": "Find a parking space at University Park or another campus.",
+   "url": "https://transportation.psu.edu/parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Commonwealth+Campus+Parking++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/parking"
+  },
+  {
+   "id": "transportation-services-office",
+   "name": "Transportation Services Office",
+   "category": "parking",
+   "what_it_is": "The office where students can purchase parking permits and get information about parking options on campus.",
+   "where": "",
+   "good_for": [
+    "permit purchase",
+    "parking information"
+   ],
+   "phone": "",
+   "notes": "Students with weekly parking needs must purchase a permit in person.",
+   "url": "https://transportation.psu.edu/student-parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Transportation+Services+Office++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/student-parking"
+  },
+  {
+   "id": "commuter-lots",
+   "name": "Commuter Lots",
+   "category": "parking",
+   "what_it_is": "Parking areas designated for students who commute to campus, valid for parking during specified hours.",
+   "where": "",
+   "good_for": [
+    "commuter parking"
+   ],
+   "phone": "",
+   "notes": "All student permits are valid for parking at the Commuter lots during all hours, except between 2 a.m. and 4 a.m. and home football Saturdays.",
+   "url": "https://transportation.psu.edu/student-parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Commuter+Lots++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/student-parking"
+  },
+  {
+   "id": "lot-11",
+   "name": "Lot 11",
+   "category": "parking",
+   "what_it_is": "A parking lot designated for White Course Apartments residents.",
+   "where": "",
+   "good_for": [
+    "resident parking"
+   ],
+   "phone": "",
+   "notes": "Permits for Lot 11 fall/spring will be available for purchase starting at 2 p.m. Tuesday, Aug. 11.",
+   "url": "https://transportation.psu.edu/student-parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Lot+11++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/student-parking"
+  },
+  {
+   "id": "lot-22",
+   "name": "Lot 22",
+   "category": "parking",
+   "what_it_is": "A parking lot designated for Eastview Terrace residents.",
+   "where": "",
+   "good_for": [
+    "resident parking"
+   ],
+   "phone": "",
+   "notes": "Permits for Lot 22 fall/spring will be available for purchase starting at 10 a.m. Monday, Aug. 10.",
+   "url": "https://transportation.psu.edu/student-parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Lot+22++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/student-parking"
+  },
+  {
+   "id": "lot-42",
+   "name": "Lot 42",
+   "category": "parking",
+   "what_it_is": "A parking lot designated for Nittany Apartments residents.",
+   "where": "",
+   "good_for": [
+    "resident parking"
+   ],
+   "phone": "",
+   "notes": "Permits for Lot 42 fall/spring will be available for purchase starting at noon Monday, Aug. 10.",
+   "url": "https://transportation.psu.edu/student-parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Lot+42++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/student-parking"
+  },
+  {
+   "id": "lot-81",
+   "name": "Lot 81",
+   "category": "parking",
+   "what_it_is": "A parking lot designated for Pollock Halls and South Halls residents.",
+   "where": "",
+   "good_for": [
+    "resident parking"
+   ],
+   "phone": "",
+   "notes": "Permits for Lot 81 fall/spring will be available for purchase starting at 2 p.m. Monday, Aug. 10.",
+   "url": "https://transportation.psu.edu/student-parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Lot+81++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/student-parking"
+  },
+  {
+   "id": "lot-82",
+   "name": "Lot 82",
+   "category": "parking",
+   "what_it_is": "A parking lot designated for East Halls and North Halls residents.",
+   "where": "",
+   "good_for": [
+    "resident parking"
+   ],
+   "phone": "",
+   "notes": "Lot 82 is sold out for Summer 2026.",
+   "url": "https://transportation.psu.edu/student-parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Lot+82++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/student-parking"
+  },
+  {
+   "id": "lot-83",
+   "name": "Lot 83",
+   "category": "parking",
+   "what_it_is": "A parking lot designated for East Halls, Eastview Terrace, Nittany Apartments, North Halls, Pollock Halls, South Halls residents and off-campus students needing overnight storage parking.",
+   "where": "",
+   "good_for": [
+    "resident parking",
+    "overnight parking"
+   ],
+   "phone": "",
+   "notes": "Permits for Lot 83 fall/spring will be available for purchase starting at 10 a.m. Wednesday, Aug. 12 for on-campus residents.",
+   "url": "https://transportation.psu.edu/student-parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Lot+83++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/student-parking"
+  },
+  {
+   "id": "wds-west-deck",
+   "name": "WDS - West Deck",
+   "category": "parking",
+   "what_it_is": "A parking deck designated for North and West Halls residents.",
+   "where": "",
+   "good_for": [
+    "resident parking"
+   ],
+   "phone": "",
+   "notes": "Permits for WDS-West Deck fall/spring will be available for purchase starting at noon Tuesday, Aug. 11.",
+   "url": "https://transportation.psu.edu/student-parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=WDS+-+West+Deck++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/student-parking"
+  },
+  {
+   "id": "yas-west-deck",
+   "name": "YAS-West Deck",
+   "category": "parking",
+   "what_it_is": "A parking deck designated for off-campus students needing overnight parking.",
+   "where": "",
+   "good_for": [
+    "overnight parking"
+   ],
+   "phone": "",
+   "notes": "Permits for YAS-West Deck fall/spring will be available for purchase starting at 2 p.m. Wednesday, Aug. 12.",
+   "url": "https://transportation.psu.edu/student-parking",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=YAS-West+Deck++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://transportation.psu.edu/student-parking"
+  },
+  {
+   "id": "pattee-paterno-library",
+   "name": "Pattee/Paterno Library",
+   "category": "it_printing",
+   "what_it_is": "A library with two computer labs, hallway stations, and printers available for student use.",
+   "where": "Pattee/Paterno Library",
+   "good_for": [
+    "study space"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://www.it.psu.edu/labs/locations",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Pattee%2FPaterno+Library+Pattee%2FPaterno+Library+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs/locations"
+  },
+  {
+   "id": "hub",
+   "name": "HUB",
+   "category": "it_printing",
+   "what_it_is": "A central hub with two computer labs, two hallway stations, and printers for student access.",
+   "where": "HUB",
+   "good_for": [
+    "study space",
+    "group study"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://www.it.psu.edu/labs/locations",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=HUB+HUB+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs/locations"
+  },
+  {
+   "id": "hammond",
+   "name": "Hammond",
+   "category": "it_printing",
+   "what_it_is": "A classroom building featuring a computer lab and printers for student use.",
+   "where": "Hammond",
+   "good_for": [
+    "study space"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://www.it.psu.edu/labs/locations",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Hammond+Hammond+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs/locations"
+  },
+  {
+   "id": "atherton-hall",
+   "name": "Atherton Hall",
+   "category": "it_printing",
+   "what_it_is": "A residence hall with a computer lab and printers available for faculty, staff, and students.",
+   "where": "Atherton Hall",
+   "good_for": [
+    "study space"
+   ],
+   "phone": "",
+   "notes": "Open access for faculty, staff, and students.",
+   "url": "https://www.it.psu.edu/labs/locations",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Atherton+Hall+Atherton+Hall+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs/locations"
+  },
+  {
+   "id": "beaver-hall",
+   "name": "Beaver Hall",
+   "category": "it_printing",
+   "what_it_is": "A residence hall that includes a computer lab and printers for student use.",
+   "where": "Beaver Hall",
+   "good_for": [
+    "study space"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://www.it.psu.edu/labs/locations",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Beaver+Hall+Beaver+Hall+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs/locations"
+  },
+  {
+   "id": "findlay-commons",
+   "name": "Findlay Commons",
+   "category": "it_printing",
+   "what_it_is": "A commons area with a computer lab and printers available for student use.",
+   "where": "Findlay Commons",
+   "good_for": [
+    "study space"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://www.it.psu.edu/labs/locations",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Findlay+Commons+Findlay+Commons+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs/locations"
+  },
+  {
+   "id": "redifer-commons",
+   "name": "Redifer Commons",
+   "category": "it_printing",
+   "what_it_is": "A commons area featuring a computer lab and printers for student access.",
+   "where": "Redifer Commons",
+   "good_for": [
+    "study space"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://www.it.psu.edu/labs/locations",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Redifer+Commons+Redifer+Commons+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs/locations"
+  },
+  {
+   "id": "waring-commons",
+   "name": "Waring Commons",
+   "category": "it_printing",
+   "what_it_is": "A commons area that includes a computer lab and printers for student use.",
+   "where": "Waring Commons",
+   "good_for": [
+    "study space"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://www.it.psu.edu/labs/locations",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Waring+Commons+Waring+Commons+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs/locations"
+  },
+  {
+   "id": "warnock-hall",
+   "name": "Warnock Hall",
+   "category": "it_printing",
+   "what_it_is": "A residence hall with a computer lab and printers available for student use.",
+   "where": "Warnock Hall",
+   "good_for": [
+    "study space"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://www.it.psu.edu/labs/locations",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Warnock+Hall+Warnock+Hall+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs/locations"
+  },
+  {
+   "id": "student-computing-labs",
+   "name": "Student Computing Labs",
+   "category": "it_printing",
+   "what_it_is": "Penn State IT computer labs are where students can study, use the latest software, and collaborate.",
+   "where": "",
+   "good_for": [
+    "study",
+    "collaboration"
+   ],
+   "phone": "",
+   "notes": "Labs are conveniently located on all campuses, including remote access services.",
+   "url": "https://www.it.psu.edu/labs",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Student+Computing+Labs++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs"
+  },
+  {
+   "id": "paw-prints",
+   "name": "Paw Prints",
+   "category": "it_printing",
+   "what_it_is": "Paw Prints is a cloud-based, pay-as-you-go printing service available at kiosks.",
+   "where": "Abington, Altoona, Beaver, Birks, Dickinson Law, Fayette, Harrisburg, Hazleton, Lehigh Valley, New Kensington, Schuylkill, Scranton, and University Park campuses.",
+   "good_for": [
+    "printing"
+   ],
+   "phone": "",
+   "notes": "Kiosks are conveniently located across multiple campuses.",
+   "url": "https://www.it.psu.edu/labs",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Paw+Prints+Abington%2C+Altoona%2C+Beaver%2C+Birks%2C+Dickinson+Law%2C+Fayette%2C+Harrisburg%2C+Hazleton%2C+Lehigh+Valley%2C+New+Kensington%2C+Schuylkill%2C+Scranton%2C+and+University+Park+campuses.+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs"
+  },
+  {
+   "id": "one-button-studio",
+   "name": "One Button Studio",
+   "category": "it_printing",
+   "what_it_is": "Create a high-quality video in a simplified production area or do a trial run for an upcoming presentation.",
+   "where": "",
+   "good_for": [
+    "video production"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://www.it.psu.edu/labs",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=One+Button+Studio++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs"
+  },
+  {
+   "id": "media-commons",
+   "name": "Media Commons",
+   "category": "it_printing",
+   "what_it_is": "Create video and audio projects with the help of expert guidance and support.",
+   "where": "",
+   "good_for": [
+    "video projects",
+    "audio projects"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://www.it.psu.edu/labs",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Media+Commons++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs"
+  },
+  {
+   "id": "maker-commons",
+   "name": "Maker Commons",
+   "category": "it_printing",
+   "what_it_is": "Enriching teaching and learning through 3D printing, rapid prototyping, design thinking, and more.",
+   "where": "",
+   "good_for": [
+    "3D printing",
+    "prototyping"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://www.it.psu.edu/labs",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Maker+Commons++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs"
+  },
+  {
+   "id": "immersive-experiences-lab",
+   "name": "Immersive Experiences Lab",
+   "category": "it_printing",
+   "what_it_is": "Engage with course content using immersive technologies like 360-degree video, virtual reality, and augmented reality.",
+   "where": "",
+   "good_for": [
+    "immersive technology",
+    "course engagement"
+   ],
+   "phone": "",
+   "notes": "",
+   "url": "https://www.it.psu.edu/labs",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=Immersive+Experiences+Lab++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/labs"
+  },
+  {
+   "id": "it-service-desk",
+   "name": "IT Service Desk",
+   "category": "it_printing",
+   "what_it_is": "A central hub where you can view a catalog of Penn State IT services, request services, report issues, and get help.",
+   "where": "Knowledge Commons Service Desk in the Pattee Library",
+   "good_for": [
+    "24/7 support",
+    "technical assistance"
+   ],
+   "phone": "814-865-HELP (4357)",
+   "notes": "You can connect with IT consultants in person, by phone, or online. Use the 'Get Help' form to submit a ticket about your problem.",
+   "url": "https://www.it.psu.edu/support",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=IT+Service+Desk+Knowledge+Commons+Service+Desk+in+the+Pattee+Library+Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/support"
+  },
+  {
+   "id": "eduroam",
+   "name": "eduroam",
+   "category": "it_printing",
+   "what_it_is": "eduroam is the primary wireless network for Penn State, requiring reconfiguration for authentication.",
+   "where": "",
+   "good_for": [
+    "general use",
+    "personal devices"
+   ],
+   "phone": "",
+   "notes": "All personal devices must complete the new Wireless setup by visiting wireless.psu.edu before November 21.",
+   "url": "https://www.it.psu.edu/wireless",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=eduroam++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/wireless"
+  },
+  {
+   "id": "psu-personal",
+   "name": "psu-personal",
+   "category": "it_printing",
+   "what_it_is": "psu-personal is a supplemental network for devices that do not support eduroam.",
+   "where": "",
+   "good_for": [
+    "devices not supporting eduroam"
+   ],
+   "phone": "",
+   "notes": "Devices registered on the roomgear network will work on psu-personal.",
+   "url": "https://www.it.psu.edu/wireless",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=psu-personal++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/wireless"
+  },
+  {
+   "id": "psu-guest",
+   "name": "psu-guest",
+   "category": "it_printing",
+   "what_it_is": "psu-guest is a wireless network available for guests and visitors on all Penn State campus locations.",
+   "where": "",
+   "good_for": [
+    "guests",
+    "visitors"
+   ],
+   "phone": "Penn State IT Service Desk",
+   "notes": "Guests should select psu-guest from available Wi-Fi networks or visit psu-guest.psu.edu for help.",
+   "url": "https://www.it.psu.edu/wireless",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=psu-guest++Penn+State+University+Park",
+   "hours_url": "",
+   "source_url": "https://www.it.psu.edu/wireless"
+  }
+ ]
+}
