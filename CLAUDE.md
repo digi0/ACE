@@ -48,6 +48,11 @@ python -c "from backend.services.index_service import build_index; build_index()
 python -m backend.test_policies   # policies.json schema + snippet relay
 python -m backend.test_routing    # major classification, scope filter, record selection
 python -m backend.test_rules      # dumps extracted requirement rules
+python -m backend.test_transcript # persistence, rating scope, weekly review, eval harvest
+
+# Answer quality (costs a few cents — calls the chat model + judge)
+python -m backend.eval.run             # full run
+python -m backend.eval.run --no-judge  # hard assertions only, free of judge cost
 ```
 
 ### Frontend
@@ -98,10 +103,19 @@ CMPSC-handbook-*.pdf  +  PSU bulletins (scraped)     RAG path — CMPSC/DTSCE on
                         │
                embedding_service.py (semantic_search with cosine sim + keyword + course-code boosts)
                         │
-               chat_service.py ──► OpenAI gpt-4o-mini (streaming SSE)
+               chat_service.py ──► llm.py ──► gpt-4o-mini (streaming SSE)
                         │
                main.py (FastAPI) ──► React frontend
 ```
+
+### Provider seam (`backend/services/llm.py`)
+
+Every request-path model call goes through `llm.py` — `chat()`, `chat_stream()`,
+`embed()`. Nothing else imports an OpenAI SDK (the one exception is
+`backend/data/policy_extractor.py`, an offline build script that needs the raw
+usage object back). Token metering lives inside the seam, so no caller can forget
+to meter a call. Moving off OpenAI means rewriting this one file. Don't
+reintroduce a direct `from openai import OpenAI` in a service or endpoint.
 
 ### Knowledge base (two grounding paths)
 
@@ -129,6 +143,30 @@ CMPSC-handbook-*.pdf  +  PSU bulletins (scraped)     RAG path — CMPSC/DTSCE on
 - Controls which source types are prioritised by `select_top_records()`
 - Determines whether hardcoded snippets are injected (deadline dates, gen-ed tables, campus resources, degree-audit advisory)
 - Triggers the deterministic path for `student_progress` when a student doc is uploaded (bypasses LLM)
+
+### Feedback loop ("model training")
+
+There is no fine-tuning. The improvement loop is: persist real exchanges → find
+the bad ones → turn them into eval items → fix → re-run.
+
+- `transcript_service.py` writes every exchange to `conversations` / `messages`
+  (best-effort — a DB failure must never break a student's answer) and returns the
+  assistant `message_id` so the client can rate it. `POST /messages/{id}/rating`
+  takes the thumbs (scoped to the caller's own conversations).
+- `GET /admin/review?days=7` is the weekly read: counts by intent, down-rated
+  questions, and ungrounded answers (no sources — the closest proxy for a dead end).
+- `python -m backend.eval.run` scores the pipeline two ways: hard substring
+  assertions (a failure exits non-zero, CI-usable) and a gpt-4o-mini judge against
+  each item's `expected_points`. **Baseline 2026-08-02: 12/12 hard, judge mean 0.97.**
+  Re-run it after touching prompts, snippets, retrieval, or `program_service`.
+- `python -m backend.eval.from_transcripts --days 7 --write` harvests down-rated and
+  ungrounded real questions into new eval items. Expected points are drafted from
+  the *question only* — never from the answer ACE gave, which would bake the failure
+  in as the expectation. Drafted items carry `"_drafted": true`; read them before
+  trusting a score.
+
+Rebuilding `ace_index.pkl` re-scrapes the PSU bulletins; diff the record content
+against the old pickle before committing (2026-08-02 rebuild: byte-identical).
 
 ### Student document pipeline
 
