@@ -21,6 +21,7 @@ from backend.services.policy_service import build_policy_snippet, policy_sources
 from backend.services.transcript_service import save_exchange
 from backend.services.profile_service import build_profile_snippet, remember, get_profile
 from backend.services.clubs_service import build_clubs_snippet
+from backend.services.procedures_service import build_procedures_snippet
 
 load_dotenv()
 
@@ -1315,6 +1316,11 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
         _get_deadlines_snippet() if intent in ("deadline", "logistics") else ""
     )
     logistics_snippet = LOGISTICS_SNIPPET if intent == "logistics" else ""
+    # Procedures are matched on the QUESTION, not the intent. "I need to
+    # retroactively withdraw" routes to `deadline` on the word "withdraw" and
+    # would come back with a wall of dates — exactly the wrong answer for
+    # someone who has already missed the deadline.
+    procedures_snippet = build_procedures_snippet(question)
     recommendation_snippet = (
         _build_recommendation_snippet(user_major, student_doc)
         if intent == "recommendation" and user_major else ""
@@ -1414,7 +1420,7 @@ The detected intent for the current question is: {intent}
 {rule_summary}
 
 === STUDENT DOCUMENT ===
-{student_doc_context if student_doc_context else "No student document uploaded."}{profile_snippet}{degree_audit_advisory}{program_snippet if program_snippet else ""}{policy_snippet}{resources_snippet}{career_snippet}{recommendation_snippet}{logistics_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
+{student_doc_context if student_doc_context else "No student document uploaded."}{profile_snippet}{degree_audit_advisory}{program_snippet if program_snippet else ""}{policy_snippet}{resources_snippet}{career_snippet}{recommendation_snippet}{procedures_snippet}{logistics_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
 
 === ANSWER RULES ===
 - You may use the conversation history above to understand follow-up context, but ground every answer in the advising records, extracted rules, and student document provided.

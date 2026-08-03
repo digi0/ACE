@@ -258,8 +258,9 @@
       "intent": "career",
       "question": "How do I get involved in undergraduate research?",
       "expected_points": [
-        "points the student to their department and academic adviser",
-        "does not name specific faculty or labs",
+        "points the student to faculty in their own department and/or their adviser",
+        "may name real organisations from ACE's directory, with links",
+        "does not name specific faculty members or individual research labs",
         "does not describe a computing curriculum"
       ],
       "must_not": [
@@ -285,6 +286,47 @@
         "CMPSC",
         "DTSCE"
       ]
+    },
+    {
+      "id": "proc-retroactive-withdrawal",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "deadline",
+      "question": "I had a medical emergency last semester and want to retroactively withdraw. What do I do?",
+      "expected_points": [
+        "explains this is a Faculty Senate student petition, not a normal withdrawal",
+        "gives concrete steps including talking to an adviser and providing documentation",
+        "links or names the petition process source"
+      ],
+      "must_contain": [
+        "petition"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "proc-missed-late-drop",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "deadline",
+      "question": "I missed the late drop deadline. Is there anything I can do?",
+      "expected_points": [
+        "does not simply restate the deadline that has already passed",
+        "explains the retroactive late drop petition route",
+        "names what the student needs to prepare"
+      ],
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "proc-grade-forgiveness",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "courses",
+      "question": "I failed a course and retook it. Can the old grade be removed?",
+      "expected_points": [
+        "explains grade forgiveness",
+        "states what the student has to do to request it"
+      ],
+      "must_not": []
     }
   ]
 }
