@@ -22,6 +22,10 @@ from backend.clerk_auth import (
 )
 from backend.services.chat_service import ask_advisor_stream
 from backend.services.transcript_service import set_rating, review_summary
+from backend.services.profile_service import (
+    get_profile as read_student_profile,
+    set_profile as write_student_profile,
+)
 from backend.services.student_doc_service import (
     load_student_document,
     clear_student_document,
@@ -67,7 +71,7 @@ def _ensure_columns():
     """
     from sqlalchemy import inspect, text
 
-    wanted = {("messages", "rating"): "INTEGER"}
+    wanted = {("messages", "rating"): "INTEGER", ("users", "profile_json"): "TEXT"}
     try:
         inspector = inspect(engine)
         tables = set(inspector.get_table_names())
@@ -305,7 +309,11 @@ def suggested_plan(
 # ── User profile (settings page; user-initiated, NOT called on login) ────────
 
 class ProfileUpdate(BaseModel):
-    display_name: str = Field(..., min_length=1, max_length=120)
+    display_name: str | None = Field(default=None, min_length=1, max_length=120)
+    # A student correcting what ACE inferred about them. Sending a list replaces
+    # that list wholesale; omitting it leaves it untouched.
+    interests: List[str] | None = Field(default=None, max_length=12)
+    career_goals: List[str] | None = Field(default=None, max_length=6)
 
 
 @app.get("/user/profile")
@@ -316,10 +324,14 @@ def get_profile(
     user = db.query(models.User).filter(models.User.id == current_user["uid"]).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+    profile = read_student_profile(current_user["uid"], db=db)
     return {
         "email": user.email,
         "display_name": user.display_name,
         "major": user.selected_major,
+        # What ACE has inferred about them, so they can see and correct it.
+        "interests": profile.get("interests", []),
+        "career_goals": profile.get("career_goals", []),
     }
 
 
@@ -332,9 +344,20 @@ def update_profile(
     user = db.query(models.User).filter(models.User.id == current_user["uid"]).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    user.display_name = req.display_name.strip()
+    if req.display_name is not None:
+        user.display_name = req.display_name.strip()
     db.commit()
-    return {"ok": True, "display_name": user.display_name}
+    profile = {}
+    if req.interests is not None or req.career_goals is not None:
+        profile = write_student_profile(
+            current_user["uid"], req.interests, req.career_goals, db=db
+        )
+    return {
+        "ok": True,
+        "display_name": user.display_name,
+        "interests": profile.get("interests", []),
+        "career_goals": profile.get("career_goals", []),
+    }
 
 
 # ── Access gate (pilot: app is closed; code is checked server-side) ──────────

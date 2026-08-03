@@ -19,6 +19,7 @@ from backend.services.program_service import (
 )
 from backend.services.policy_service import build_policy_snippet, policy_sources
 from backend.services.transcript_service import save_exchange
+from backend.services.profile_service import build_profile_snippet, remember
 
 load_dotenv()
 
@@ -1292,6 +1293,7 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
 
     resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
     career_snippet = CAREER_RESOURCES_SNIPPET if intent == "career" else ""
+    profile_snippet = build_profile_snippet(user_id) if user_id else ""
     # Logistics gets the calendar too: "when is my registration window" is a
     # steps question whose answer needs real dates.
     deadline_snippet = (
@@ -1397,7 +1399,7 @@ The detected intent for the current question is: {intent}
 {rule_summary}
 
 === STUDENT DOCUMENT ===
-{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{program_snippet if program_snippet else ""}{policy_snippet}{resources_snippet}{career_snippet}{recommendation_snippet}{logistics_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
+{student_doc_context if student_doc_context else "No student document uploaded."}{profile_snippet}{degree_audit_advisory}{program_snippet if program_snippet else ""}{policy_snippet}{resources_snippet}{career_snippet}{recommendation_snippet}{logistics_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
 
 === ANSWER RULES ===
 - You may use the conversation history above to understand follow-up context, but ground every answer in the advising records, extracted rules, and student document provided.
@@ -1438,6 +1440,9 @@ The detected intent for the current question is: {intent}
         message_id = save_exchange(
             user_id, conversation_id, question, "".join(answer_parts), intent, sources
         )
+        # Learn from what the student said, after their answer is already on
+        # screen — the extraction call must never sit in front of the response.
+        remember(user_id, question)
         yield f"data: {json.dumps({'done': True, 'sources': sources, 'intent': intent, 'used_student_doc': bool(student_doc_context), 'message_id': message_id})}\n\n"
 
     except Exception as e:
