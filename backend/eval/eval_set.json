@@ -369,6 +369,21 @@
         "does not invent lot names, prices, or fines"
       ],
       "must_not": []
+    },
+    {
+      "id": "events-this-week",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "general",
+      "question": "What's happening on campus this week?",
+      "expected_points": [
+        "names specific upcoming events with dates",
+        "gives event links",
+        "does not claim to be the complete list"
+      ],
+      "must_contain": [
+        "discover.psu.edu/event/"
+      ],
+      "must_not": []
     }
   ]
 }
