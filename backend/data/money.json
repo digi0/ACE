@@ -1,0 +1,337 @@
+{
+ "_about": "Penn State student-account navigation from bursar.psu.edu: how billing, payment, refunds and late fees work, and which office to contact. NAVIGATION ONLY — nothing here is advice about an individual student's financial aid, and money_service re-states that boundary in the prompt. Rebuild with `python -m backend.data.money_scraper`; LLM extraction is not bit-for-bit reproducible, so diff before committing.",
+ "scraped_at": "2026-08-03T21:32:15.057389+00:00",
+ "count": 19,
+ "money": [
+  {
+   "id": "contact-us",
+   "title": "Contact Us",
+   "topic": "contacts",
+   "what_it_is": "The Office of the Bursar oversees the student account for all Penn State students across all campuses.",
+   "steps": [
+    "Submit a request or question by clicking the button provided on the page."
+   ],
+   "who_to_contact": "Office of the Bursar, 1-814-865-6528",
+   "amounts": [],
+   "timing": "Monday – Friday, 8:30 a.m. to 4:15 p.m. ET.",
+   "notes": "Please have your nine-digit Penn State ID number available.",
+   "source_url": "https://www.bursar.psu.edu/contact-us",
+   "source_title": "Contact Us"
+  },
+  {
+   "id": "who-to-reach-out-with-questions-about-your-student-account-a",
+   "title": "Who to reach out with questions about your student account and financial aid",
+   "topic": "contacts",
+   "what_it_is": "This page provides information on which offices to contact for questions regarding student accounts and financial aid.",
+   "steps": [],
+   "who_to_contact": "Office of the Bursar: 814-865-6528; Office of Student Aid: 814-865-6301",
+   "amounts": [],
+   "timing": "",
+   "notes": "Virtual appointments are available.",
+   "source_url": "https://www.bursar.psu.edu/news/who-reach-out-questions-about-your-student-account-and-financial-aid",
+   "source_title": "WHO TO REACH OUT WITH QUESTIONS ABOUT YOUR STUDENT ACCOUNT AND FINANCIAL AID"
+  },
+  {
+   "id": "overview-of-student-accounts-and-billing",
+   "title": "Overview of Student Accounts and Billing",
+   "topic": "billing",
+   "what_it_is": "The Office of the Bursar oversees all aspects of student accounts, including tuition billing, mandatory fees, payments, financial aid posting, and refunds.",
+   "steps": [],
+   "who_to_contact": "Office of the Bursar, Phone: '', Email: ''",
+   "amounts": [],
+   "timing": "Billing begins in August for fall semester, January for spring semester, and May for summer semester.",
+   "notes": "Students and authorized users receive an email notification when the student account balance is ready to view and pay.",
+   "source_url": "https://www.bursar.psu.edu",
+   "source_title": "Home Page"
+  },
+  {
+   "id": "tuition-due-dates",
+   "title": "Tuition Due Dates",
+   "topic": "billing",
+   "what_it_is": "This page provides information on tuition due dates and payment options for students at Penn State.",
+   "steps": [],
+   "who_to_contact": "Bursar's Office, 814-865-6528",
+   "amounts": [
+    "Installment due on August 31, 2026",
+    "Installment due on September 22, 2026",
+    "Installment due on October 22, 2026",
+    "Last installment due on November 22, 2026"
+   ],
+   "timing": "Fall semester: Early August; Spring semester: Early January; Summer Session: Early May",
+   "notes": "Students will receive an email when their tuition balance is ready to view and pay in LionPATH. Families may choose to pay the full balance by the due date or enroll in a payment plan.",
+   "source_url": "https://www.bursar.psu.edu/tuition-due-dates",
+   "source_title": "Tuition Due Dates"
+  },
+  {
+   "id": "fees-and-charges",
+   "title": "Fees and Charges",
+   "topic": "billing",
+   "what_it_is": "This page outlines various fees and charges applicable to students, including the Student Fee and International Undergraduate Student Fee.",
+   "steps": [
+    "Log in to Student Home Base in LionPATH.",
+    "Click on 'My Finances' on top of the page.",
+    "Click on 'Permission to Use Federal Aid'.",
+    "Click on 'Grant Permission'.",
+    "Follow instructions to submit request."
+   ],
+   "who_to_contact": "Bursar's Office, ''",
+   "amounts": [
+    "$750 per semester for International Undergraduate Student Fee",
+    "75% of the full fee for part-time students registered for 5 but less than 9 credits",
+    "31% of the full fee for students registered for less than 5 credits"
+   ],
+   "timing": "Fees are charged immediately prior to the first day of the semester.",
+   "notes": "Some fees cannot be paid with Federal Title IV financial aid funds.",
+   "source_url": "https://www.bursar.psu.edu/fees",
+   "source_title": "Fees & Charges"
+  },
+  {
+   "id": "make-a-payment",
+   "title": "Make a Payment",
+   "topic": "payments",
+   "what_it_is": "Instructions for making a payment on your student account.",
+   "steps": [
+    "Log in to your Student Home Base in LionPATH",
+    "Click on 'My Finances' on top of the page",
+    "Select 'Manage My Account/Make A Payment' to get to your Student Account Dashboard",
+    "Click on 'Make a Payment' on the left side menu, and follow the instructions"
+   ],
+   "who_to_contact": "Bursar's Office, 814-865-6528",
+   "amounts": [],
+   "timing": "",
+   "notes": "You can also use the 'Contact' option at the top of this page and use the 'Delinquent Tuition' category.",
+   "source_url": "https://www.bursar.psu.edu/make-payment",
+   "source_title": "Make a Payment"
+  },
+  {
+   "id": "payment-options",
+   "title": "Payment Options",
+   "topic": "payments",
+   "what_it_is": "Penn State accepts various payment methods for tuition, including eCheck, credit card, international payments, and check or money order.",
+   "steps": [],
+   "who_to_contact": "Office of the Bursar, 814-865-6528",
+   "amounts": [
+    "2.25% service fee for credit card payments",
+    "$25 returned item fee for returned checks",
+    "$45 non-refundable administrative fee for Payment Plan"
+   ],
+   "timing": "Allow 5 business days for payment processing after receipt.",
+   "notes": "Payments by credit card cannot be made via mail, phone, or in person. All international payments must be made through Flywire.",
+   "source_url": "https://www.bursar.psu.edu/payment-options",
+   "source_title": "Payment Options"
+  },
+  {
+   "id": "new-billing-portal-updates",
+   "title": "New Billing Portal Updates",
+   "topic": "billing",
+   "what_it_is": "Penn State launched a redesigned billing & payment portal in April 2026 to make managing student accounts easier and more intuitive.",
+   "steps": [
+    "Log in to LionPATH to add Authorized Users and invite them to the new billing & payment portal.",
+    "Enroll in eRefund direct deposit.",
+    "Update and save any preferred payment methods after making your first payment.",
+    "Watch instructional videos to assist with completing these required steps."
+   ],
+   "who_to_contact": "Bursar representative via the Contact Us option on the website; Flywire customer service: Domestic (US) +1(857) 287-3823, International (Canada): +1(857) 287-3818, Email: [email protected]",
+   "amounts": [],
+   "timing": "The new student account billing and payment portal launched on April 28, 2026.",
+   "notes": "Flywire supports both domestic and international payments.",
+   "source_url": "https://www.bursar.psu.edu/new-billing-portal-updates",
+   "source_title": "New Billing Portal Updates"
+  },
+  {
+   "id": "refund-policy",
+   "title": "Refund Policy",
+   "topic": "refunds",
+   "what_it_is": "The refund policy outlines the conditions under which tuition payments and financial aid refunds are issued to students.",
+   "steps": [
+    "Login to your Student Home Base in LionPATH",
+    "Click on 'My Finances' on top of the page",
+    "Select 'Manage My Account/Make A Payment' to get to the billing and payment portal",
+    "Navigate to the eRefunds tab",
+    "Enter and confirm your U.S. bank account information (routing and account number)",
+    "Agree to the Terms and Conditions and Privacy Policy and click 'Submit'"
+   ],
+   "who_to_contact": "For questions about a refund on your student account, please submit a contact us form.",
+   "amounts": [
+    "Refunds by wire payment via Flywire is a refunding option available for international students residing outside of the United States",
+    "A refund will be issued to the parent if the amount of the Federal Direct Parent PLUS Loan exceeds the balance due of eligible charges on the student's account"
+   ],
+   "timing": "Penn State will refund the credit balance within TWO weeks of either the date the aid was credited to the student's account or the first day of the semester, whichever is later.",
+   "notes": "Student account refunds are issued once per week.",
+   "source_url": "https://www.bursar.psu.edu/refund-policy",
+   "source_title": "Refund Policy"
+  },
+  {
+   "id": "why-have-i-not-received-my-refund",
+   "title": "Why have I not received my refund?",
+   "topic": "refunds",
+   "what_it_is": "This page outlines possible reasons for not receiving a refund.",
+   "steps": [],
+   "who_to_contact": "Office of Student Aid, ''",
+   "amounts": [
+    "14 days from receipt of that payment"
+   ],
+   "timing": "once weekly for paper refund checks",
+   "notes": "eRefund is recommended for faster receipt of future refunds.",
+   "source_url": "https://www.bursar.psu.edu/faq/why-have-i-not-received-my-refund",
+   "source_title": "Why have I not received my refund?"
+  },
+  {
+   "id": "what-is-erefund-and-how-do-i-enroll-in-erefund",
+   "title": "What is eRefund and how do I enroll in eRefund?",
+   "topic": "refunds",
+   "what_it_is": "eRefund allows you to receive a refund due to you as a direct deposit into your U.S. checking or savings bank account. It is the fastest and most convenient way to receive your student refund.",
+   "steps": [
+    "Login to your Student Home Base in LionPATH",
+    "Click on 'My Finances' on top of the page",
+    "Select 'Manage My Account/Make A Payment' to get to the billing and payment portal",
+    "Navigate to the eRefunds tab.",
+    "Enter and confirm your U.S. bank account information (routing and account number).",
+    "Agree to the Terms and Conditions and Privacy Policy and click 'Submit'."
+   ],
+   "who_to_contact": "Bursar's Office, 814-865-6528",
+   "amounts": [],
+   "timing": "the process may take up to 3-5 business days before it will appear as a credit in your account",
+   "notes": "Beginning summer 2026, Authorized Users will be able to enroll in eRefund to receive refunds from excess Direct Parent PLUS Loans funds only.",
+   "source_url": "https://www.bursar.psu.edu/faq/what-erefund-and-how-do-i-enroll-erefund",
+   "source_title": "What is eRefund and how do I enroll in eRefund?"
+  },
+  {
+   "id": "how-do-i-get-a-refund-of-the-credit-balance-on-my-account",
+   "title": "How do I get a refund of the credit balance on my account?",
+   "topic": "refunds",
+   "what_it_is": "Student Account Refunds are issued once per week as determined by the Office of the Bursar.",
+   "steps": [
+    "Enroll in eRefund for the quickest delivery of refunds."
+   ],
+   "who_to_contact": "Office of the Bursar, ",
+   "amounts": [],
+   "timing": "Refunds are issued once per week.",
+   "notes": "If not enrolled in eRefund, the refund is issued as a paper check and sent by mail.",
+   "source_url": "https://www.bursar.psu.edu/faq/how-do-i-get-refund-credit-balance-my-account",
+   "source_title": "How do I get a refund of the credit balance on my account?"
+  },
+  {
+   "id": "delinquent-tuition",
+   "title": "Delinquent Tuition",
+   "topic": "late_fees",
+   "what_it_is": "Delinquent tuition is an obligation that must be paid in a timely manner, and failure to do so may result in additional actions to collect the outstanding balance.",
+   "steps": [
+    "Contact the office to discuss payment options.",
+    "Consider setting up a payment plan.",
+    "Make arrangements with Student Financial Services or a collection agency if necessary."
+   ],
+   "who_to_contact": "Bursar's Office, 814-865-6528",
+   "amounts": [
+    "collection fees up to 40% of your balance"
+   ],
+   "timing": "Holds have been placed on your registration.",
+   "notes": "Failure to make satisfactory arrangements may result in your account being placed with a licensed collection agency.",
+   "source_url": "https://www.bursar.psu.edu/delinquent-tuition",
+   "source_title": "Delinquent Tuition"
+  },
+  {
+   "id": "what-happens-if-i-do-not-pay-my-student-account-balance-by-t",
+   "title": "What happens if I do not pay my student account balance by the due date?",
+   "topic": "late_fees",
+   "what_it_is": "This page explains the consequences of not paying the student account balance by the due date, including late fees and holds.",
+   "steps": [],
+   "who_to_contact": "",
+   "amounts": [
+    "1.5% late fee"
+   ],
+   "timing": "up to 7-10 business days for mailed payments to be received and posted",
+   "notes": "A financial hold will be placed on your Student Account if payment is not received by the due date.",
+   "source_url": "https://www.bursar.psu.edu/faq/what-happens-if-i-do-not-pay-my-student-account-balance-due-date",
+   "source_title": "What happens if I do not pay my student account balance by the due date?"
+  },
+  {
+   "id": "student-account-forms",
+   "title": "Student Account Forms",
+   "topic": "forms",
+   "what_it_is": "This page provides various forms related to student accounts, including consent to release information and loan fund return requests.",
+   "steps": [],
+   "who_to_contact": "",
+   "amounts": [],
+   "timing": "",
+   "notes": "World Campus students should refer to the World Campus Employer Reimbursement and Tuition Deferment Program webpage.",
+   "source_url": "https://www.bursar.psu.edu/student-account-forms",
+   "source_title": "Student Account Forms"
+  },
+  {
+   "id": "sponsored-third-party-billing",
+   "title": "Sponsored & Third-Party Billing",
+   "topic": "third_party",
+   "what_it_is": "Sponsored billing & third-party billing is a financial sponsorship agreement by an organization, agency, or company foundation outside Penn State who makes a promise or commitment to pay for educational expenses on a student’s behalf.",
+   "steps": [
+    "Submit a financial guarantee/voucher/letter of credit/billing authorization to the third-party billing team."
+   ],
+   "who_to_contact": "Penn State Office of the Bursar, 103 Shields Building, 664 Curtin Road, University Park, PA 16802",
+   "amounts": [
+    "Tuition",
+    "Mandatory Fees",
+    "Course fees (labs, music, art fees, etc.)",
+    "Health Insurance",
+    "Other fees"
+   ],
+   "timing": "Invoices are issued after the end of each semester’s add/drop deadline.",
+   "notes": "Students are responsible for monitoring their official University email account for notifications regarding sponsored billing activity.",
+   "source_url": "https://www.bursar.psu.edu/sponsored-third-party-billing",
+   "source_title": "Sponsored & Third-Party Billing"
+  },
+  {
+   "id": "international-students",
+   "title": "International Students",
+   "topic": "new_students",
+   "what_it_is": "This page provides information for international students at Penn State regarding managing their student accounts and important processes to follow.",
+   "steps": [
+    "Log in to LionPATH with your Penn State credentials.",
+    "Click on the 'My Finances' tab.",
+    "Select 'Manage My Account/Make A Payment' to open the billing and payment portal."
+   ],
+   "who_to_contact": "Contact Us form on the website",
+   "amounts": [
+    "a $45 non-refundable fee for enrolling in a Payment Plan"
+   ],
+   "timing": "Billing begins in early August for fall semester, January for spring semester, and May for summer semester.",
+   "notes": "Important information will be communicated via Penn State email, and students should check their email regularly.",
+   "source_url": "https://www.bursar.psu.edu/international-students",
+   "source_title": "International Students"
+  },
+  {
+   "id": "new-student-information",
+   "title": "New Student Information",
+   "topic": "new_students",
+   "what_it_is": "This page provides essential information for new students at Penn State regarding their student accounts and the steps to manage them.",
+   "steps": [
+    "Log in to your MyPennState account to accept your offer of admission and pay your acceptance fees.",
+    "Log in to LionPATH with your Penn State credentials to access your Student Account.",
+    "Enroll in eRefund by navigating to the eRefunds tab in LionPATH and entering your U.S. bank account information.",
+    "Grant Authorized User access through LionPATH by adding their information in the Authorized Users section."
+   ],
+   "who_to_contact": "Office of the Bursar, via the Contact Us form on the website.",
+   "amounts": [
+    "1.5% late fee"
+   ],
+   "timing": "Billing begins in early August for fall semester, January for spring semester, and May for summer semester.",
+   "notes": "Important information will be communicated via Penn State email, and students should check their email regularly.",
+   "source_url": "https://www.bursar.psu.edu/new-student-information",
+   "source_title": "New Student Information"
+  },
+  {
+   "id": "can-i-pay-by-credit-card",
+   "title": "Can I pay by credit card?",
+   "topic": "payments",
+   "what_it_is": "Penn State accepts credit card payments online through LionPATH with a service fee.",
+   "steps": [],
+   "who_to_contact": "",
+   "amounts": [
+    "2.25% service fee"
+   ],
+   "timing": "",
+   "notes": "Credit cards cannot be accepted by mail, phone, or in person.",
+   "source_url": "https://www.bursar.psu.edu/faq/can-i-pay-credit-card",
+   "source_title": "Can I pay by credit card?"
+  }
+ ]
+}

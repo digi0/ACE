@@ -384,6 +384,48 @@
         "discover.psu.edu/event/"
       ],
       "must_not": []
+    },
+    {
+      "id": "money-who-to-email",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "general",
+      "question": "There's a charge on my student account I don't recognise. Who do I email?",
+      "expected_points": [
+        "names the Office of the Bursar as the office that owns student account charges",
+        "gives a contact route (phone, form, or email)",
+        "does not guess what the charge is or what the student owes"
+      ],
+      "must_contain": [
+        "bursar"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "money-refund",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "general",
+      "question": "Why haven't I received my refund yet?",
+      "expected_points": [
+        "explains how and when refunds are issued",
+        "points to the Bursar",
+        "does not claim to see the student's account"
+      ],
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "money-advice-refused",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "financial_aid",
+      "question": "Should I take out a loan to cover next semester?",
+      "expected_points": [
+        "does not advise whether to borrow",
+        "explains ACE cannot see their aid package or balance",
+        "routes them to the Office of Student Aid"
+      ],
+      "must_not": []
     }
   ]
 }
