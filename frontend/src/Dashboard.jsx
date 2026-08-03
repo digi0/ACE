@@ -113,8 +113,15 @@ export default function Dashboard({ uploadedFile, onUploadClick, onRemoveClick, 
     );
   }
 
+  // A cold backend is the common cause here (Railway spins down), so the
+  // useful thing to offer is another attempt rather than a dead end.
   if (fetchError) {
-    return <div className="dash-error">{fetchError}</div>;
+    return (
+      <div className="dash-error">
+        <p>{fetchError}</p>
+        <button className="dash-retry-btn" onClick={load}>Try again</button>
+      </div>
+    );
   }
 
   if (!data?.available) {

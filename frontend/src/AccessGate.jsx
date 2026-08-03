@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AceTile } from "./AceMark.jsx";
 
 const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 const LANDING_URL = "https://acecollege.app";
@@ -9,8 +10,12 @@ const ACCESS_EMAIL = "access@acecollege.app";
  * the access code is verified server-side (ACCESS_CODE env var on the
  * backend), and a successful unlock is remembered per-browser.
  *
- * Inline styles only — this screen renders before the app shell, and keeping
- * it self-contained avoids touching the desktop baseline stylesheet.
+ * FIRST SCREEN CONVERTED TO TAILWIND + ZERO CHROMA. It was the right pilot
+ * because it carried no index.css rules at all (it was inline-styled), so
+ * there is no unlayered CSS competing with the utilities here.
+ *
+ * The period: the unlock button. That is the one thing this view exists to do,
+ * so the mark above it drops its dot rather than competing for the accent.
  */
 export default function AccessGate({ onUnlock }) {
   const [code, setCode] = useState("");
@@ -38,74 +43,80 @@ export default function AccessGate({ onUnlock }) {
     }
   };
 
-  const s = {
-    page: {
-      minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-      background: "#fbfaf7", padding: 20,
-      backgroundImage: "radial-gradient(circle, #d8d5cc 1px, transparent 1px)",
-      backgroundSize: "26px 26px",
-      fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-    },
-    card: {
-      width: "100%", maxWidth: 430, background: "#fff", borderRadius: 18,
-      border: "1.5px solid #e4e4e7", boxShadow: "0 30px 70px rgba(20,20,25,0.10)",
-      padding: "36px 34px", textAlign: "center",
-    },
-    mark: {
-      width: 52, height: 52, borderRadius: 14, background: "#2563eb",
-      display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px",
-    },
-    h1: { fontSize: 24, fontWeight: 800, color: "#101113", letterSpacing: "-0.5px", margin: "0 0 8px" },
-    p: { fontSize: 14.5, color: "#686d76", lineHeight: 1.6, margin: "0 0 22px" },
-    input: {
-      width: "100%", boxSizing: "border-box", fontSize: 16, padding: "13px 16px",
-      border: "1.5px solid #e4e4e7", borderRadius: 12, outline: "none",
-      textAlign: "center", letterSpacing: "2px", fontWeight: 600, marginBottom: 10,
-    },
-    btn: {
-      width: "100%", fontSize: 15.5, fontWeight: 700, color: "#fff", background: "#2563eb",
-      border: "none", borderRadius: 12, padding: "13px 0",
-      cursor: state === "checking" ? "wait" : "pointer", opacity: state === "checking" ? 0.7 : 1,
-    },
-    err: { color: "#dc2626", fontSize: 13.5, margin: "10px 0 0" },
-    foot: { marginTop: 22, paddingTop: 18, borderTop: "1px solid #f0efe9", fontSize: 13.5, color: "#686d76", lineHeight: 1.7 },
-    a: { color: "#2563eb", fontWeight: 600, textDecoration: "none" },
-  };
-
   return (
-    <div style={s.page}>
-      <div style={s.card}>
-        <div style={s.mark}>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-            <path d="M6 12v5c3 3 9 3 12 0v-5" />
-          </svg>
-        </div>
-        <h1 style={s.h1}>ACE is in early access</h1>
-        <p style={s.p}>
-          We're onboarding the first group of students. Enter your access code
+    <div className="flex min-h-screen items-center justify-center bg-ground p-5 font-sans">
+      {/* Cards sit LIGHTER than the page and are never raised by shadow. */}
+      <div className="w-full max-w-[430px] border border-rule bg-card p-9">
+
+        {/* Logo tile — the one place radius is allowed (20%). */}
+        <AceTile size={52} period={false} className="mb-6" />
+
+        <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-ink">
+          ace is in early access
+        </h1>
+        <p className="mt-2 max-w-[52ch] text-[14px] leading-[1.4] text-mute">
+          we're onboarding the first group of students. enter your access code
           to continue.
         </p>
-        <form onSubmit={submit}>
+
+        <form onSubmit={submit} className="mt-7">
+          <label
+            htmlFor="access-code"
+            className="mb-2 block font-mono text-[11px] uppercase tracking-[0.14em] text-mute"
+          >
+            Access code
+          </label>
           <input
-            style={s.input}
+            id="access-code"
             type="password"
-            placeholder="ACCESS CODE"
             value={code}
             onChange={(e) => setCode(e.target.value)}
             autoFocus
-            aria-label="Access code"
+            aria-invalid={state === "error" || undefined}
+            aria-describedby={error ? "access-error" : undefined}
+            className="w-full border border-rule bg-card px-4 py-3 font-mono text-[16px]
+                       tracking-[0.12em] text-ink outline-none
+                       transition-colors duration-200 ease-ace
+                       placeholder:text-ghost focus:border-ink
+                       aria-invalid:border-ink"
           />
-          <button style={s.btn} type="submit" disabled={state === "checking"}>
-            {state === "checking" ? "Checking…" : "Unlock ACE"}
+
+          {/* The period. Measured against #00875A: pure white is 4.55:1 (AA, by
+              0.05), ink is 4.35 and paper #F6F6F6 is 4.21 — both fail. The
+              emerald has almost no contrast headroom, so this stays #FFFFFF and
+              is the one place the app uses pure white. */}
+          <button
+            type="submit"
+            disabled={state === "checking"}
+            className="mt-3 w-full bg-period py-3 text-center text-[15px] font-semibold text-white
+                       transition-opacity duration-200 ease-ace
+                       hover:opacity-90 disabled:cursor-wait disabled:opacity-60"
+          >
+            {state === "checking" ? "checking…" : "unlock ace"}
           </button>
-          {error && <p style={s.err}>{error}</p>}
+
+          {/* Zero Chroma has no alert red — the error carries by weight and a
+              mono label, the same way the field label does. */}
+          {error && (
+            <p id="access-error" role="alert" className="mt-3 flex gap-2 text-[13px] text-ink">
+              <span className="font-mono uppercase tracking-[0.14em] text-mute">Error</span>
+              <span>{error}</span>
+            </p>
+          )}
         </form>
-        <div style={s.foot}>
-          Don't have a code?{" "}
-          <a style={s.a} href={LANDING_URL}>Join the waitlist</a>
+
+        <div className="mt-6 border-t border-rule pt-5 text-[13px] leading-[1.4] text-mute">
+          no code yet?{" "}
+          <a className="text-ink underline underline-offset-2" href={LANDING_URL}>
+            join the waitlist
+          </a>
           {" "}or email{" "}
-          <a style={s.a} href={`mailto:${ACCESS_EMAIL}?subject=ACE%20access%20request`}>{ACCESS_EMAIL}</a>
+          <a
+            className="text-ink underline underline-offset-2"
+            href={`mailto:${ACCESS_EMAIL}?subject=ACE%20access%20request`}
+          >
+            {ACCESS_EMAIL}
+          </a>
         </div>
       </div>
     </div>

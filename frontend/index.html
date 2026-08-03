@@ -13,6 +13,12 @@
     <title>ACE — Academic Counseling Engine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Plus Jakarta Sans is REQUIRED again: --font in index.css asks for it by
+         name. It was dropped on the assumption that Zero Chroma had repointed
+         --font at the system stack, but that palette change was reverted, so
+         without this link every machine that doesn't happen to have the face
+         installed locally falls back to system-ui and the UI silently changes
+         typeface. Drop it again only in the same commit that repoints --font. -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   </head>
   <body>

@@ -155,7 +155,7 @@ export default function CoursePrereqMap({ userId, progress, selectedMajor }) {
           <h2 className="prereq-title">Course Prerequisite Map</h2>
           <p className="prereq-subtitle">Penn State</p>
         </div>
-        <div className="audit-banner">
+        <div className="audit-banner audit-banner--note">
           Select your major to see its course prerequisite map. You can set it from the
           major prompt, or just ask ACE in chat.
         </div>
@@ -170,7 +170,7 @@ export default function CoursePrereqMap({ userId, progress, selectedMajor }) {
           <h2 className="prereq-title">Course Prerequisite Map</h2>
           <p className="prereq-subtitle">{programName || selectedMajor}</p>
         </div>
-        <div className="audit-banner">Building your prerequisite map…</div>
+        <div className="audit-banner audit-banner--note">Building your prerequisite map…</div>
       </div>
     );
   }
@@ -182,7 +182,7 @@ export default function CoursePrereqMap({ userId, progress, selectedMajor }) {
           <h2 className="prereq-title">Course Prerequisite Map</h2>
           <p className="prereq-subtitle">{programName || selectedMajor}</p>
         </div>
-        <div className="audit-banner">
+        <div className="audit-banner audit-banner--note">
           We don't have a course-level prerequisite map for <strong>{programName || selectedMajor}</strong> yet.
           See your required courses on the <strong>Dashboard</strong> or ask ACE in chat.
         </div>

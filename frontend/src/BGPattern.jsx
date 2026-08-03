@@ -1,5 +1,10 @@
 const maskStyles = {
-  'fade-edges':  { maskImage: 'radial-gradient(ellipse at center, black, transparent)' },
+  // Holds full strength through the middle, then falls off — a vignette, not a
+  // ramp. The old `black, transparent` interpolated across the WHOLE ellipse, so
+  // dots were already ~50% alpha at mid-radius; on top of a low-contrast fill
+  // that read as no pattern at all. The stops keep the centre solid and clear
+  // the corners, which is where the chrome (top bar, sidebar, input) sits.
+  'fade-edges':  { maskImage: 'radial-gradient(ellipse at center, black 35%, transparent 78%)' },
   'fade-center': { maskImage: 'radial-gradient(ellipse at center, transparent, black)' },
   'fade-top':    { maskImage: 'linear-gradient(to bottom, transparent, black)' },
   'fade-bottom': { maskImage: 'linear-gradient(to bottom, black, transparent)' },
