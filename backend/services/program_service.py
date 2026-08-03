@@ -411,7 +411,63 @@ def build_program_context_snippet(program_name: str) -> str:
                 + (f" — choose from: {opt_str}" if opt_str else "")
             )
 
+    # For many programs the Bulletin's requirement table is partial — professional
+    # sequences (Nursing is the clearest case) list only the supporting courses
+    # there and put the major's own coursework in the suggested plan. Without
+    # this, ACE answers "what do I take for my degree?" with no NURS course in
+    # sight, which reads as authoritative and is wrong.
+    known = {_normalize_code(i.get("code", "")) for i in prescribed}
+    known |= {
+        _normalize_code(o.get("code", ""))
+        for i in additional for o in i.get("options", [])
+    }
+    plan_only = _plan_only_codes(prog, known)
+    if plan_only:
+        lines.append("")
+        lines.append(
+            "Also in the Bulletin's suggested academic plan for this program, but "
+            "NOT itemised in the requirement table above (the table is partial for "
+            "this program — these are still part of the degree):"
+        )
+        lines.append("  " + ", ".join(plan_only))
+        lines.append(
+            "When listing degree requirements, include these too and tell the "
+            "student to confirm the full sequence on the Bulletin: "
+            + (prog.get("url") or "https://bulletins.psu.edu/")
+        )
+
     return "\n".join(lines)
+
+
+_PLAN_ONLY_LIMIT = 30
+
+
+def _plan_only_codes(prog: dict, known: set[str]) -> list[str]:
+    """Course codes in the suggested plan that the requirement table never names.
+
+    Returns them in plan order (roughly semester order), capped so a long plan
+    can't crowd the prompt.
+    """
+    found: list[str] = []
+    seen = set(known)
+    for option in (prog.get("suggested_plan") or {}).values():
+        if not isinstance(option, dict):
+            continue
+        for semester in option.values():
+            for entry in semester or []:
+                text = str(entry.get("description", "")).replace("\xa0", " ").upper()
+                for raw in _CODE_RE.findall(text):
+                    code = _normalize_code(raw)
+                    # Plan descriptions are prose ("ENGL 15 or 30H", "Elective 1",
+                    # "General Education Course Level 2"), so the code regex alone
+                    # yields junk subjects. Only real catalog courses survive.
+                    if code in seen or code not in _courses_by_code:
+                        continue
+                    seen.add(code)
+                    found.append(code)
+                    if len(found) >= _PLAN_ONLY_LIMIT:
+                        return found
+    return found
 
 
 # ── Major-aware Prerequisite Map ───────────────────────────────────────────────
