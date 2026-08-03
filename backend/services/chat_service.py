@@ -178,16 +178,34 @@ def detect_question_intent(question):
         "grade appeal", "grade deadline",
     ]
 
+    # Distress and support. The short tokens here were the worst offenders in the
+    # whole router: "org" lives inside "organic", "rec" inside "record", "broke"
+    # inside "broken", so "do I need organic chemistry?" was answered out of the
+    # CAPS / 988 crisis block. Bare "health" is gone too — "health requirement"
+    # is the GHW gen-ed category, not a wellbeing question.
     wellbeing_keywords = [
         "stress", "stressed", "anxiety", "anxious", "overwhelmed", "burnout",
         "mental health", "depressed", "depression", "struggling", "counseling",
-        "caps", "uhs", "health", "sick", "therapy", "therapist", "crisis",
-        "emergency fund", "financial hardship", "broke", "can't afford",
+        "student health", "health center", "therapy", "therapist", "crisis",
+        "emergency fund", "financial hardship", "can't afford", "cannot afford",
         "safe walk", "unsafe", "harassed", "emergency", "campus police",
-        "extracurricular", "club", "clubs", "org", "student org", "orgcentral",
-        "rec", "recreation", "gym", "intramural", "career", "internship",
-        "resume", "job", "handshake", "writing center", "tutoring", "lrc",
-        "calc", "calculus help",
+        "recreation", "recsports", "intramural", "writing center", "tutoring",
+        "calculus help",
+    ]
+    wellbeing_token = re.search(r"\b(caps|uhs|lrc|gym|sick|broke)\b", q)
+
+    # Ring 3 — career, activities, research. These used to live in the wellbeing
+    # list, so "how do I find an internship?" was answered from a block that
+    # opens with counselling and the 988 crisis line. Checked AFTER wellbeing, so
+    # "I'm stressed about finding a job" still routes to support.
+    career_keywords = [
+        "career", "internship", "internships", "co-op", "cooperative education",
+        "resume", "résumé", "cover letter", "handshake", "job", "jobs",
+        "employer", "hiring", "linkedin", "networking", "career fair",
+        "club", "clubs", "student org", "orgcentral", "extracurricular",
+        "get involved", "research opportunity", "undergraduate research",
+        "research lab", "work in a lab", "study abroad", "volunteer",
+        "grad school", "graduate school", "portfolio",
     ]
 
     # Visa/immigration — unambiguous, checked first; ACE refers, never advises.
@@ -235,8 +253,11 @@ def detect_question_intent(question):
     if gen_ed_code or any(keyword in q for keyword in gen_ed_keywords):
         return "gen_ed"
 
-    if any(keyword in q for keyword in wellbeing_keywords):
+    if wellbeing_token or any(keyword in q for keyword in wellbeing_keywords):
         return "wellbeing"
+
+    if any(keyword in q for keyword in career_keywords):
+        return "career"
 
     if any(keyword in q for keyword in personal_progress_keywords):
         return "student_progress"
@@ -685,6 +706,47 @@ CAMPUS_RESOURCES_SNIPPET = """
 - Nighttime escort: Safe Walk — https://police.psu.edu/services/safewalk
 - Student crisis support: Student Care & Advocacy — https://studentaffairs.psu.edu/student-care
 Mention the most relevant 1–2 resources naturally at the end of your response. Do not list all of them.
+"""
+
+
+# Ring 3 (career + activities) is the roadmap ring: ACE has no dataset of clubs,
+# labs, employers, or postings. Asked "what clubs should I join as a CS major?"
+# it used to answer from the model's own memory — four named organisations with
+# confident descriptions, none of them grounded in anything ACE holds. Inventing
+# an institution's student organisations is the same failure as inventing a
+# course, and harder for a student to catch.
+#
+# So this block does two jobs: route to the systems that DO hold the data, and
+# forbid naming specifics ACE cannot see.
+CAREER_RESOURCES_SNIPPET = """
+=== CAREER, CLUBS & RESEARCH — REFER, DO NOT INVENT ===
+
+ACE has NO data on student organisations, labs, employers, job postings, or
+application deadlines. It cannot see which clubs exist, which are active, who
+is hiring, or what any of them require.
+
+WHERE THE REAL DATA LIVES:
+- Jobs, internships, career fairs, resume help: Career Services —
+  https://careerservices.psu.edu/ and Handshake — https://psu.joinhandshake.com/
+- Student organisations, clubs, getting involved: OrgCentral —
+  https://orgcentral.psu.edu/ (searchable by interest — this is where the
+  student finds the current list)
+- Research with faculty: the student's own department, and their academic
+  adviser, who knows which faculty take undergraduates.
+
+RULES FOR THIS TOPIC — these override the general answer rules:
+- Do NOT name specific clubs, student organisations, labs, faculty, companies,
+  or job postings. Not even ones you believe exist. Send the student to
+  OrgCentral or Career Services to see the current, real list.
+- You MAY be specific about the student's own academic record — their major,
+  the courses they have completed, and what their program's plan contains —
+  because that is grounded above. Use it to make the answer about them: what
+  their coursework already prepares them for, and what to search for.
+- You MAY describe the general shape of the process (when recruiting happens,
+  what a career fair is, that research usually starts by contacting faculty).
+- Be encouraging and concrete about the NEXT ACTION, not about names you cannot
+  verify. "Search OrgCentral for computing and data groups" is a good answer.
+  "Join ACM and HackPSU" is not — ACE cannot confirm either exists.
 """
 
 
@@ -1229,6 +1291,7 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
                 sources.append(src)
 
     resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
+    career_snippet = CAREER_RESOURCES_SNIPPET if intent == "career" else ""
     # Logistics gets the calendar too: "when is my registration window" is a
     # steps question whose answer needs real dates.
     deadline_snippet = (
@@ -1334,7 +1397,7 @@ The detected intent for the current question is: {intent}
 {rule_summary}
 
 === STUDENT DOCUMENT ===
-{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{program_snippet if program_snippet else ""}{policy_snippet}{resources_snippet}{recommendation_snippet}{logistics_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
+{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{program_snippet if program_snippet else ""}{policy_snippet}{resources_snippet}{career_snippet}{recommendation_snippet}{logistics_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
 
 === ANSWER RULES ===
 - You may use the conversation history above to understand follow-up context, but ground every answer in the advising records, extracted rules, and student document provided.

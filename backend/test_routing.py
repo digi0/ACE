@@ -47,6 +47,23 @@ INTENT_CASES = [
     # A plain requirement question is not a proposal.
     ("what math courses are required for my major?", "courses"),
 
+    # Career / clubs / research — ring 3. These sat in the wellbeing list, so a
+    # student asking about internships was answered from the CAPS + 988 block.
+    ("how do I find an internship?", "career"),
+    ("what clubs should I join as a CS major?", "career"),
+    ("how do I get involved in undergraduate research?", "career"),
+    ("is my resume any good for a software job?", "career"),
+    # Distress still wins over the career topic when both are present.
+    ("I'm stressed and burnt out about job hunting", "wellbeing"),
+    ("I'm overwhelmed", "wellbeing"),
+
+    # Short wellbeing tokens matched inside ordinary words: "org" in "organic",
+    # "rec" in "record", "broke" in "broken". A chemistry question was being
+    # answered out of the crisis-resources block.
+    ("do I need organic chemistry?", "courses"),
+    ("can I see my academic record?", "general"),
+    ("what are the health requirements?", "gen_ed"),
+
     # Regressions on intents that already worked.
     ("who do I talk to about my degree requirements?", "contact"),
     ("can STAT 440 substitute for MATH 232?", "substitution"),

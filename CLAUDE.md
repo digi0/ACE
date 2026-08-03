@@ -157,8 +157,14 @@ the bad ones → turn them into eval items → fix → re-run.
   questions, and ungrounded answers (no sources — the closest proxy for a dead end).
 - `python -m backend.eval.run` scores the pipeline two ways: hard substring
   assertions (a failure exits non-zero, CI-usable) and a gpt-4o-mini judge against
-  each item's `expected_points`. **Baseline 2026-08-02: 12/12 hard, judge mean 0.97.**
+  each item's `expected_points`. **Baseline 2026-08-03: 20/20 hard, judge mean ~0.94.**
   Re-run it after touching prompts, snippets, retrieval, or `program_service`.
+- **Trust the hard assertions over the judge.** The judge drifts 0.1–0.3 between
+  runs on identical answers, and has been observed *confidently wrong* — it scored
+  `cs-gened-doubledip` 0.50 three runs running for "does not specify any course
+  codes" against an answer listing four, with categories. Before changing code to
+  chase a low score, read the answer. Where a fact is deterministic, add a
+  `must_contain` instead of paying an LLM to re-check it.
 - `python -m backend.eval.from_transcripts --days 7 --write` harvests down-rated and
   ungrounded real questions into new eval items. Expected points are drafted from
   the *question only* — never from the answer ACE gave, which would bake the failure
@@ -167,6 +173,36 @@ the bad ones → turn them into eval items → fix → re-run.
 
 Rebuilding `ace_index.pkl` re-scrapes the PSU bulletins; diff the record content
 against the old pickle before committing (2026-08-02 rebuild: byte-identical).
+
+### Question brackets (intent → grounding)
+
+`detect_question_intent()` decides which grounding a student gets, so a misroute
+is a wrong answer delivered confidently. It is keyword-based, and the recurring
+failure is **short tokens matching inside ordinary words** — `"gn "` in "sign up",
+`"org"` in "organic", `"rec"` in "record", `"ap"` in "apply". Every short token
+now goes through a `\b...\b` regex; keep it that way when adding keywords.
+`backend/test_routing.py` holds the case table — every entry in it was an
+observed misroute before it was a test. Add to it when you add a keyword.
+
+Beyond the original brackets, three carry their own grounding block:
+
+- **`logistics`** (`LOGISTICS_SNIPPET`) — how enrollment/registration actually
+  work: appointments, holds, waitlists, orientation. The calendar covers *when*
+  things happen and has zero entries for *how*, so this is its own source. It
+  describes the shape of each process and names the office that owns it, and
+  forbids inventing click paths.
+- **`recommendation`** (`build_recommendation_context` + `_build_recommendation_snippet`)
+  — ACE proposing rather than reciting. Locates the student in their program's
+  suggested plan, drops what the audit says is done, flags what they are not
+  eligible for. Two invariants: prerequisite **alternatives** (MATH 110 *or* 140)
+  must not read as conjunctions, and one plan entry naming several courses is one
+  **slot with alternatives**, not several courses to take.
+- **`career`** (`CAREER_RESOURCES_SNIPPET`) — ring 3, and deliberately a *referral*
+  bracket. ACE has no data on clubs, labs, or employers; asked for clubs it used
+  to invent four named organisations. The block routes to OrgCentral / Career
+  Services and forbids naming specifics, while still personalising on the
+  student's own major and coursework. Ring 3 is not shipped capability — do not
+  describe it as one.
 
 ### Student document pipeline
 

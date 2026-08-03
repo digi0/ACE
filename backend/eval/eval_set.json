@@ -21,7 +21,10 @@
         "identifies at least one double-dip course that satisfies both Gen Ed and a CMPSC requirement",
         "names specific course codes"
       ],
-      "must_not": []
+      "must_not": [],
+      "must_contain": [
+        "ENGL 202C"
+      ]
     },
     {
       "id": "ds-courses-stats",
@@ -214,6 +217,49 @@
         "proposes specific named courses from the program's own suggested plan (a first-year plan legitimately includes writing and seminar courses, not only PSYCH courses)",
         "does not propose a computing curriculum",
         "does not list alternatives for the same slot as if they were separate courses to take"
+      ],
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "career-clubs-no-invention",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "career",
+      "question": "What clubs should I join as a CS major?",
+      "expected_points": [
+        "sends the student to OrgCentral to find current student organizations",
+        "does NOT name specific clubs or organizations, because ACE has no club data",
+        "stays useful by suggesting what to search for, given the student's major"
+      ],
+      "must_not": [
+        "HackPSU",
+        "WiCS",
+        "Association for Computing Machinery"
+      ]
+    },
+    {
+      "id": "career-internship",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "career",
+      "question": "How do I find an internship?",
+      "expected_points": [
+        "names Career Services and/or Handshake as where postings live",
+        "gives concrete next actions",
+        "does not invent specific employers or job postings"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "career-research-psych",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "career",
+      "question": "How do I get involved in undergraduate research?",
+      "expected_points": [
+        "points the student to their department and academic adviser",
+        "does not name specific faculty or labs",
+        "does not describe a computing curriculum"
       ],
       "must_not": [
         "CMPSC",
