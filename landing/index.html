@@ -475,11 +475,10 @@ button{font:inherit}
   .aceui .inp .ph{font-size:13px}
   .aceui .send{width:26px;height:26px}
 
-  /* captions sit under the content, full width, never over it */
-  .caps{top:auto;bottom:0;height:auto;padding:0 16px 4svh}
-  .cap{position:relative!important;left:auto!important;right:auto!important;
-    top:auto!important;bottom:auto!important;max-width:100%;width:100%;
-    margin:0 0 10px;font-size:19px;line-height:1.2;padding:14px 16px;
+  /* captions narrate the screen they sit on, so they ride ON it. The script
+     moves each card onto its own pane; sizing only here. */
+  .cap{max-width:none;width:auto;margin:0;
+    font-size:19px;line-height:1.2;padding:14px 16px;
     box-shadow:5px 5px 0 var(--ink)}
   .cap .cite{font-size:12px;margin-top:9px;padding-top:8px}
 
@@ -502,35 +501,44 @@ button{font:inherit}
   .foot{flex-direction:column;align-items:flex-start;gap:14px}
 }
 
-/* ══ MOBILE · the hero stops being a scroll-scrubbed film ═══════════════
-   On a phone the stage was 340svh of SCRUBBED timeline read through Lenis
-   with syncTouch, which re-drives every swipe through a lerp and kills iOS
-   momentum: you get a nudge per flick instead of a fling. Together that is
-   a hundred swipes to clear the hero.
+/* ══ MOBILE · triggered, not scrubbed ═══════════════════════════════════
+   The hero was 340svh of SCRUBBED timeline read through Lenis with
+   syncTouch, which re-drives every swipe through a lerp and kills iOS
+   momentum: a flick nudged instead of flinging. That combination, not the
+   animation, is what cost a hundred swipes.
 
-   Here the three panes are just stacked screens and the OS scrolls them.
-   Same content, same order, no choreography. Desktop keeps the film, and
-   this pairs with the MOB branch in the script, which skips Lenis and the
-   scrubbed timeline entirely. */
+   So the scrub goes and the narration stays. Each pane becomes a full
+   screen that PERFORMS when you arrive at it, on a one-shot trigger, while
+   the OS does the scrolling. Same beats, same order, same story as the
+   desktop film. Pairs with the MOB branch in the script. */
 @media(max-width:760px){
   .stage{height:auto}
   .frame{position:static;height:auto;display:block;overflow:visible}
-  .ground,.wash,.intro-hint,.hint{display:none}
+  .ground,.wash,.hint{display:none}
   .devwrap{position:static;height:auto!important;transform:none!important;will-change:auto}
   /* width:100% matters: the base rule sets 94.03% for the iPad bezel inset,
      which was masked while this was absolutely positioned and would now
      leave a 6% strip down the right edge. */
   .scr{position:static;width:100%;height:auto;overflow:visible}
   .rail{position:static;display:block;width:100%;transform:none!important;will-change:auto}
-  .pane{width:100%;height:88svh}
-  .pane.intro{height:100svh}
+  .pane{width:100%;height:100svh}
 
-  /* the narration cards become an ordinary block under the screens */
-  .caps{position:static;padding:11svh 16px;background:var(--cream)}
-  .cap{opacity:1!important;transform:none!important;will-change:auto}
+  /* each card rides on the screen it narrates, exactly as it overlays the
+     device on desktop. The script re-parents them; placement is here. */
+  .caps{display:none}                    /* the shell, once emptied */
+  .pane .cap{position:absolute;left:5%;right:5%;z-index:6;pointer-events:none}
+  /* the cards run full-bleed here, so they sit LOW: the handwriting reads
+     above them (header, the two questions, the top of the diagram) and the
+     argument piles over the rest of it. c3 clears the chat input. */
+  .pane #c1{top:42%}
+  .pane #c2{top:63%}
+  .pane #c3{bottom:15%}
 
-  /* the emerald payoff becomes a screen of its own instead of an overlay */
-  .art{position:static;translate:none;opacity:1!important;width:auto;
+  /* the payoff is its own screen, and the emerald still arrives as a wipe:
+     the script clips it to zero and opens it. Left un-clipped here so a
+     script failure shows the panel rather than hiding it forever. */
+  .art{position:static;translate:none;width:auto;min-height:100svh;
+    display:flex;flex-direction:column;justify-content:center;
     background:var(--emerald);padding:12svh 16px}
 }
 
@@ -988,9 +996,9 @@ function drawNotes(){
   const set = MOB.matches ? P_MOBILE : P;
   const r = wrap.getBoundingClientRect();
   /* the fallback only fires if the container measures zero. The mobile value
-     tracks the stacked-pane geometry (88svh pane, pcwrap from 7.4% down), so
-     it moves whenever that height does. */
-  const boxAR = r.height ? r.width/r.height : (MOB.matches?0.57:1/0.7283);
+     tracks a full-height pane (pcwrap runs from 7.4% down), so it moves if
+     that pane height ever does. */
+  const boxAR = r.height ? r.width/r.height : (MOB.matches?0.49:1/0.7283);
   pcs = set.map(p=>{
     const d=document.createElement('div'); d.className='pc';
     /* height as a % of the container's HEIGHT, derived from its measured
@@ -1104,17 +1112,55 @@ const ASK="can i still graduate by spring '27 if i failed MATH 230?";
 
 if(reduced){ document.getElementById('art').style.opacity=1; }
 else if(MOB.matches){
-  /* ── MOBILE · stacked screens, scrolled by the OS ─────────────────────
-     No Lenis. syncTouch re-drives every swipe through a lerp of .085, so a
+  /* ── MOBILE · the same film, played by ARRIVAL instead of by scrub ────
+     No Lenis: syncTouch re-drives every swipe through a lerp of .085, so a
      flick nudges instead of flinging and iOS momentum never happens. No
-     scrubbed timeline either: the mobile CSS lays the three panes out as
-     ordinary screens, so everything rests visible and the phone just
-     scrolls. The reveals below the hero still run, because those are cheap
-     one-shot triggers rather than a scrub. */
+     scrub either. What stays is the narration. Each screen runs its own
+     one-shot timeline when you reach it, so the beats land in the order
+     they do on desktop while the OS keeps the scrolling to itself.
+
+     Scrub was never what told the story; it only decided who drove. */
   gsap.registerPlugin(ScrollTrigger);
   gsap.set(dw,{scale:1,opacity:1});
-  gsap.set(['#c1','#c2','#c3','#aceans','#acetxt','#acecite','#art'],{opacity:1,y:0});
-  document.getElementById('acebub').textContent=ASK;
+
+  const pane=document.querySelectorAll('#rail .pane');
+  const notes=pane[1], chat=pane[2];
+  /* a card belongs to the screen it narrates, so it moves onto it */
+  notes.append(document.getElementById('c1'), document.getElementById('c2'));
+  chat.append(document.getElementById('c3'));
+  pane[0].append(document.getElementById('introHint'));
+
+  gsap.set(['#c1','#c2','#c3'],{y:16});
+  gsap.set(['#aceans','#acetxt','#acecite'],{y:14});
+  const arrive=(el,fn)=>ScrollTrigger.create({trigger:el,start:'top 60%',once:true,onEnter:fn});
+
+  /* 1 · the handwriting lands, then the argument piles onto it */
+  gsap.set(pcs,{opacity:0,y:14});
+  arrive(notes,()=>{
+    gsap.timeline()
+      .to(pcs,{opacity:1,y:0,duration:.5,stagger:.07,ease:'power2.out'})
+      .to('#c1',{opacity:1,y:0,duration:.5,ease:'back.out(1.4)'},'-=.2')
+      .to('#c2',{opacity:1,y:0,duration:.5,ease:'back.out(1.4)'},'+=.45');
+  });
+
+  /* 2 · ace answers, in the order a person reads it */
+  const bub=document.getElementById('acebub');
+  arrive(chat,()=>{
+    gsap.timeline()
+      .to({n:0},{n:ASK.length,duration:1.1,ease:'none',
+        onUpdate(){bub.textContent=ASK.slice(0,Math.round(this.targets()[0].n))}})
+      .to('#aceans',{opacity:1,y:0,duration:.42,ease:'back.out(1.5)'},'+=.2')
+      .to('#acetxt',{opacity:1,y:0,duration:.42},'-=.14')
+      .to('#acecite',{opacity:1,y:0,duration:.42},'-=.22')
+      .to('#c3',{opacity:1,y:0,duration:.5,ease:'back.out(1.4)'},'-=.1');
+  });
+
+  /* 3 · the payoff: emerald opens out, as it does on desktop */
+  const art=document.getElementById('art');
+  gsap.set(art,{opacity:1,clipPath:'circle(0% at 50% 45%)'});
+  arrive(art,()=>gsap.to(art,{clipPath:'circle(150% at 50% 45%)',
+    duration:.9,ease:'power2.out'}));
+
   wireReveals();
 }
 else{
