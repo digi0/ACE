@@ -1,33 +1,44 @@
 import { useState } from "react";
 import { SignIn, SignUp } from "@clerk/clerk-react";
-import { dark } from "@clerk/themes";
-import SparklesCore from "./SparklesCore";
+import { AceTile } from "./AceMark.jsx";
 
+/**
+ * Sign in / sign up.
+ *
+ * CONVERTED TO TAILWIND + ZERO CHROMA. This page used to be a dark canvas with
+ * a ~226 kB animated sparkles field behind a blurred glass card. None of that
+ * survives the language: Zero Chroma is flat, square, six greys, no gradients,
+ * no shadows, no blur. Dropping SparklesCore also takes tsparticles out of the
+ * bundle entirely — see the note in the commit if you want the sparkles back.
+ *
+ * The period: the Clerk primary button (Continue). It is the one action on the
+ * page, so the mark above it drops its dot rather than competing.
+ */
 export default function LoginPage() {
   const [mode, setMode] = useState("signin");
 
-  // Always dark on this page — Sparkles needs a dark canvas.
-  // The Clerk widget must fit inside the .login-card. Clerk sizes its own
-  // wrapper (.cl-cardBox) to the *viewport* — width 25rem with a viewport-based
-  // max-width — not to its parent, so inside our padded glass card it overflows
-  // to the right on phones. Pinning rootBox + cardBox + card to width:100% /
-  // minWidth:0 / maxWidth:100% makes the widget shrink to the card. cardBox is
-  // the wrapper the original fix missed: it sits BETWEEN rootBox and card and is
-  // the element that actually carries the width.
+  // Clerk sizes its own wrapper (.cl-cardBox) to the VIEWPORT — width 25rem with
+  // a viewport-based max-width — not to its parent, so inside a padded card it
+  // overflows to the right on phones. Pinning rootBox + cardBox + card to
+  // width:100% / minWidth:0 / maxWidth:100% makes the widget shrink to the card.
+  // cardBox is the one an earlier fix missed: it sits BETWEEN rootBox and card
+  // and is the element that actually carries the width.
   const appearance = {
-    baseTheme: dark,
     variables: {
-      colorPrimary: "#3b82f6",
+      colorPrimary: "#00875A",          // the period
       colorBackground: "transparent",
-      colorInputBackground: "rgba(255,255,255,0.06)",
-      colorInputText: "#fff",
-      borderRadius: "8px",
+      colorText: "#0A0A0A",
+      colorTextSecondary: "#666666",
+      colorInputBackground: "#FFFFFF",
+      colorInputText: "#0A0A0A",
+      colorNeutral: "#0A0A0A",
+      borderRadius: "0",
       fontFamily: "inherit",
       fontSize: "13px",
     },
     elements: {
       rootBox: { width: "100%", minWidth: 0, maxWidth: "100%" },
-      cardBox: { width: "100%", minWidth: 0, maxWidth: "100%" },
+      cardBox: { width: "100%", minWidth: 0, maxWidth: "100%", boxShadow: "none", border: "none" },
       card: {
         boxShadow: "none",
         background: "transparent",
@@ -42,50 +53,35 @@ export default function LoginPage() {
       form: { width: "100%" },
       formFieldRow: { width: "100%" },
       formField: { width: "100%" },
-      formFieldInput: { width: "100%", boxSizing: "border-box" },
-      formButtonPrimary: { width: "100%", boxSizing: "border-box" },
+      formFieldInput: { width: "100%", boxSizing: "border-box", borderRadius: 0 },
+      // Ink on emerald measures 4.35:1 and fails AA; pure white is 4.55 and passes.
+      formButtonPrimary: {
+        width: "100%", boxSizing: "border-box", borderRadius: 0,
+        color: "#FFFFFF", textTransform: "none", fontWeight: 600,
+      },
       socialButtons: { width: "100%" },
-      socialButtonsBlockButton: { width: "100%", boxSizing: "border-box" },
-      socialButtonsIconButton: { boxSizing: "border-box" },
+      socialButtonsBlockButton: { width: "100%", boxSizing: "border-box", borderRadius: 0 },
+      socialButtonsIconButton: { boxSizing: "border-box", borderRadius: 0 },
     },
   };
 
   return (
-    <div className="login-page">
-      <SparklesCore
-        background="transparent"
-        minSize={0.8}
-        maxSize={2}
-        particleDensity={180}
-        particleColor="#ffffff"
-        className="login-sparkles-bg"
-      />
+    <div className="flex min-h-screen items-center justify-center bg-ground p-5 font-sans">
+      <div className="w-full max-w-[420px]">
 
-      <div className="login-center">
-        {/* Brand */}
-        <div className="login-brand">
-          <div className="login-logo">
-            <svg width="20" height="13.5" viewBox="-44 -41 148 100" aria-hidden>
-              <g transform="rotate(-11 5 12)">
-                <circle cx="0" cy="12" r="31" fill="none" stroke="#F6F6F6" strokeWidth="22" />
-                <rect x="30" y="-32" width="22" height="88" rx="11" fill="#F6F6F6" />
-              </g>
-              <circle cx="82" cy="38" r="18" fill="#00875A" />
-            </svg>
-          </div>
-          <span className="login-brand-name">ACE</span>
+        <div className="mb-7 flex items-center gap-2.5">
+          <AceTile size={36} period={false} />
+          <span className="text-[15px] font-semibold tracking-[-0.01em] text-ink">ACE</span>
         </div>
-        <p className="login-brand-sub">Academic Counseling Engine</p>
 
-        {/* Card */}
-        <div className="login-card">
-          <h2 className="login-card-title">
-            {mode === "signin" ? "Welcome back" : "Create your account"}
-          </h2>
-          <p className="login-card-subtitle">
+        <div className="border border-rule bg-card p-9">
+          <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-ink">
+            {mode === "signin" ? "welcome back" : "create your account"}
+          </h1>
+          <p className="mt-2 mb-7 max-w-[52ch] text-[14px] leading-[1.4] text-mute">
             {mode === "signin"
-              ? "Sign in to access your academic advisor"
-              : "Sign up to get started with ACE"}
+              ? "sign in to pick up where you left off."
+              : "sign up and point ace at your degree."}
           </p>
 
           {mode === "signin" ? (
@@ -94,20 +90,21 @@ export default function LoginPage() {
             <SignUp routing="virtual" appearance={appearance} signInUrl="#signin" />
           )}
 
-          <p className="login-switch">
-            {mode === "signin" ? "Don't have an account?" : "Already have an account?"}
-            {" "}
+          <p className="mt-6 border-t border-rule pt-5 text-[13px] text-mute">
+            {mode === "signin" ? "no account yet?" : "already have an account?"}{" "}
             <button
-              className="login-switch-btn"
-              onClick={() => setMode((m) => (m === "signin" ? "signup" : "signin"))}
               type="button"
+              className="text-ink underline underline-offset-2"
+              onClick={() => setMode((m) => (m === "signin" ? "signup" : "signin"))}
             >
-              {mode === "signin" ? "Sign up" : "Sign in"}
+              {mode === "signin" ? "sign up" : "sign in"}
             </button>
           </p>
         </div>
 
-        <p className="login-footer">Built for Penn State students</p>
+        <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.14em] text-mute">
+          Built for Penn State students
+        </p>
       </div>
     </div>
   );

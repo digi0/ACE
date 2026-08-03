@@ -1,0 +1,15 @@
+{
+  "//": "Editor-only. Mirrors the `@` alias in frontend/vite.config.js so imports resolve in the IDE. Lives at the repo root because the workspace opens here, not in frontend/. Vite does the real resolution at build time — keep the two in sync.",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["frontend/src/*"]
+    },
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "esnext",
+    "checkJs": false
+  },
+  "exclude": ["node_modules", "frontend/node_modules", "frontend/dist", ".venv"]
+}

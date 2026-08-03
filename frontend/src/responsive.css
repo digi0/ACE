@@ -21,6 +21,18 @@
      regressions, which is exactly what this split exists to prevent.
    ════════════════════════════════════════════════════════════════════ */
 
+/* ── Widget rail: a SECOND, wider breakpoint ─────────────────────────────────
+   Distinct from the 768px mobile line above and deliberately so. The rail is
+   the third column; below ~1180px keeping it would squeeze the chat column
+   under a readable measure. Nothing is lost — the same progress and deadlines
+   are on the Dashboard, which stays one click away in the top bar. */
+@media (max-width: 1180px) {
+  .wpanel { display: none; }
+  /* The trigger goes with it — a control that opens a hidden panel is a dead
+     button, and worse than no button. */
+  .rail-toggle { display: none; }
+}
+
 @media (max-width: 768px) {
   /* Use the dynamic viewport height so the bottom nav and chat input never
      hide behind mobile browser chrome. No-op where dvh is unsupported. */
