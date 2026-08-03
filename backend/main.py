@@ -1,6 +1,7 @@
 import logging
 import os
 import re
+import time
 from datetime import datetime, timezone
 
 from fastapi import FastAPI, Query, Form, UploadFile, File, HTTPException, Depends, Header
@@ -19,7 +20,8 @@ from backend.clerk_auth import (
     get_current_user_any,
     fetch_user_details,
 )
-from backend.services.chat_service import ask_advisor, ask_advisor_stream
+from backend.services.chat_service import ask_advisor_stream
+from backend.services.transcript_service import set_rating, review_summary
 from backend.services.student_doc_service import (
     load_student_document,
     clear_student_document,
@@ -55,6 +57,35 @@ app = FastAPI()
 # Create all tables (safe to call repeatedly — only creates if missing)
 Base.metadata.create_all(bind=engine)
 
+
+def _ensure_columns():
+    """Add columns that `create_all` cannot, because their table already exists.
+
+    `create_all` only creates *missing tables* — it never alters an existing one.
+    So a new nullable column on a table already live in prod Postgres needs an
+    explicit ALTER. Idempotent and fail-soft: a boot must not die over this.
+    """
+    from sqlalchemy import inspect, text
+
+    wanted = {("messages", "rating"): "INTEGER"}
+    try:
+        inspector = inspect(engine)
+        tables = set(inspector.get_table_names())
+        with engine.begin() as conn:
+            for (table, column), coltype in wanted.items():
+                if table not in tables:
+                    continue  # create_all just made it, with the column included
+                existing = {c["name"] for c in inspector.get_columns(table)}
+                if column in existing:
+                    continue
+                conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {column} {coltype}"))
+                logger.info("_ensure_columns | added %s.%s", table, column)
+    except Exception as e:
+        logger.error("_ensure_columns | skipped: %s", e, exc_info=True)
+
+
+_ensure_columns()
+
 # ── CORS ──────────────────────────────────────────────────────────────────────
 ALLOWED_ORIGINS = os.getenv(
     "ALLOWED_ORIGINS",
@@ -82,6 +113,42 @@ class ChatMessage(BaseModel):
 class ChatRequest(BaseModel):
     question: str = Field(..., min_length=1, max_length=2000)
     history: List[ChatMessage] = Field(default_factory=list)
+    # Client-minted conversation UUID. Optional: without it the exchange still
+    # streams normally, it just isn't recorded.
+    conversation_id: str | None = Field(default=None, max_length=64)
+
+
+class RatingRequest(BaseModel):
+    rating: int = Field(..., ge=-1, le=1)
+
+
+# ── Chat rate limit ───────────────────────────────────────────────────────────
+# One student shouldn't be able to torch the OpenAI budget. Sliding window of
+# per-user request timestamps.
+# ponytail: in-process dict — resets on deploy and is per-worker, so N workers
+# allow N× the limit. Move to a DB/Redis counter if we ever run more than one.
+CHAT_RATE_LIMIT = int(os.getenv("CHAT_RATE_LIMIT", "30"))      # requests
+CHAT_RATE_WINDOW = int(os.getenv("CHAT_RATE_WINDOW", "3600"))  # seconds
+_chat_hits: dict[str, list[float]] = {}
+
+
+def check_chat_rate_limit(user_id: str):
+    """Raise 429 if this user is over the window. No-op when the limit is 0."""
+    if CHAT_RATE_LIMIT <= 0:
+        return
+    now = time.monotonic()
+    hits = [t for t in _chat_hits.get(user_id, []) if now - t < CHAT_RATE_WINDOW]
+    if len(hits) >= CHAT_RATE_LIMIT:
+        retry_after = int(CHAT_RATE_WINDOW - (now - hits[0])) + 1
+        _chat_hits[user_id] = hits
+        logger.warning("chat rate limit hit | user_id=%r", user_id)
+        raise HTTPException(
+            status_code=429,
+            detail=f"You've hit the message limit ({CHAT_RATE_LIMIT}/hour). Try again shortly.",
+            headers={"Retry-After": str(retry_after)},
+        )
+    hits.append(now)
+    _chat_hits[user_id] = hits
 
 
 class MajorRequest(BaseModel):
@@ -93,11 +160,6 @@ class MajorRequest(BaseModel):
 @app.get("/")
 def root():
     return {"message": "PSU Academic Advisor Backend Running"}
-
-
-@app.get("/chat")
-def chat_with_advisor(question: str = Query(...)):
-    return ask_advisor(question)
 
 
 @app.get("/programs")
@@ -167,7 +229,12 @@ def get_current_calendar():
 
 
 @app.post("/calendar/refresh")
-def refresh_calendar_endpoint():
+def refresh_calendar_endpoint(
+    key: str = Query(default=None),
+    x_admin_key: str | None = Header(default=None),
+):
+    """Re-scrape the PSU academic calendar. Key-gated: it hits PSU's servers."""
+    _require_admin(key, x_admin_key)
     try:
         data = refresh_calendar()
         return {
@@ -367,6 +434,19 @@ def _require_admin(key, x_admin_key):
         raise HTTPException(status_code=403, detail="Invalid admin key.")
 
 
+@app.get("/admin/review")
+def admin_review(
+    days: int = Query(default=7, ge=1, le=90),
+    key: str = Query(default=None),
+    x_admin_key: str | None = Header(default=None),
+    db: Session = Depends(get_db),
+):
+    """The weekly review: what students asked, what they rated down, what landed
+    ungrounded. Key-gated — these are real student questions."""
+    _require_admin(key, x_admin_key)
+    return review_summary(db, days=days)
+
+
 @app.get("/admin/costs")
 def admin_costs(
     key: str = Query(default=None),
@@ -444,13 +524,33 @@ async def chat_stream(
     current_user: dict = Depends(get_current_user),
 ):
     user_id = current_user["uid"]
+    check_chat_rate_limit(user_id)
     logger.info("chat/stream | question=%r | history_turns=%d | user_id=%r", req.question[:80], len(req.history), user_id)
     history = [{"role": m.role, "content": m.content} for m in req.history]
     return StreamingResponse(
-        ask_advisor_stream(req.question, history=history, user_id=user_id),
+        ask_advisor_stream(
+            req.question,
+            history=history,
+            user_id=user_id,
+            conversation_id=req.conversation_id,
+        ),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+@app.post("/messages/{message_id}/rating")
+def rate_message(
+    message_id: int,
+    req: RatingRequest,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Thumbs up/down on an answer. Scoped to the caller's own conversations."""
+    ok = set_rating(db, message_id, req.rating, current_user["uid"])
+    if not ok:
+        raise HTTPException(status_code=404, detail="Message not found.")
+    return {"ok": True}
 
 
 @app.get("/dashboard")

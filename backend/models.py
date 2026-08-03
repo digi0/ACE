@@ -63,12 +63,17 @@ class Message(Base):
     content = Column(Text, nullable=False)
     intent = Column(String(64), nullable=True)
     sources_json = Column(Text, nullable=True)
+    # Student feedback on an assistant answer: 1 = thumbs up, -1 = thumbs down,
+    # NULL = not rated. Always NULL on user-role rows.
+    rating = Column(Integer, nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     conversation = relationship("Conversation", back_populates="messages")
 
     __table_args__ = (
         Index("ix_messages_conversation_id", "conversation_id"),
+        # Drives the weekly review query, which scans by recency.
+        Index("ix_messages_created_at", "created_at"),
     )
 
 

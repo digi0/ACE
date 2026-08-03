@@ -1,13 +1,10 @@
 import logging
-import os
 import re
 import json
 from datetime import date, timedelta
-from openai import OpenAI
 from dotenv import load_dotenv
-from backend.config import OPENAI_CHAT_MODEL
+from backend.services import llm
 from backend.services.embedding_service import semantic_search
-from backend.services.cost_service import record_usage
 from backend.services.student_doc_service import (
     has_student_doc,
     build_student_doc_context,
@@ -20,10 +17,10 @@ from backend.services.program_service import (
     get_double_dips,
 )
 from backend.services.policy_service import build_policy_snippet, policy_sources
+from backend.services.transcript_service import save_exchange
 
 load_dotenv()
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 logger = logging.getLogger(__name__)
 
 
@@ -554,136 +551,6 @@ def build_student_progress_answer(student_doc):
     return "\n".join(lines)
 
 
-def ask_advisor(question, user_id: str = None):
-    intent = detect_question_intent(question)
-
-    retrieved_records = semantic_search(question, top_k=10)
-    records = select_top_records(retrieved_records, intent)
-
-    context = build_context_from_records(records)
-    rules = extract_requirement_rules(records)
-    rule_summary = build_rule_summary(rules)
-    sources = build_sources(records)
-
-    student_doc_context = ""
-    student_doc = get_current_student_doc(user_id) if (user_id and has_student_doc(user_id)) else {}
-
-    if user_id and has_student_doc(user_id):
-        student_doc_context = build_student_doc_context(user_id)
-
-    user_major = get_user_major(user_id) if user_id else None
-    program_snippet = build_program_context_snippet(user_major) if user_major else ""
-
-    # Deterministic path first for student-progress questions
-    if intent == "student_progress" and student_doc:
-        deterministic_answer = build_student_progress_answer(student_doc)
-        if deterministic_answer:
-            return {
-                "answer": deterministic_answer,
-                "sources": sources,
-                "intent": intent,
-                "rule_summary": rule_summary,
-                "used_student_doc": True
-            }
-
-    system_prompt = f"""
-You are ACE, the Academic Counselling Engine for Penn State students.
-
-The student's question intent is: {intent}
-{"The student's selected major is: " + user_major if user_major else ""}
-
-You must answer using only:
-1. the provided advising records,
-2. the extracted rules,
-3. the uploaded student academic document if it is provided,
-4. the program requirements if provided below.
-{program_snippet}
-
-Strict rules:
-- Give a direct answer first.
-- If courses or requirements are involved, list the actual courses as bullets.
-- Section labels such as "Probability and Statistics (6 credits)" should NOT be bullets. They should appear as headings followed by the course options.
-- If there are options, alternatives, or either/or choices, show them clearly.
-- For either/or requirements, format them like this:
-  Either:
-  - Option 1
-  - Option 2
-- Do not split one either/or rule awkwardly across multiple bullets.
-- If the student is asking for contact help and the uploaded student document contains a "Student's personally assigned advisor" field, use that advisor name as the primary answer. Only mention general department advisors from the vault records as secondary/alternative contacts.
-- If the student is asking about transfer credit or ETM, explain the rule clearly and simply.
-- If the records contain explicit rule language such as "may substitute", "can substitute", "may be substituted", "either/or", "required", or "must complete", follow that wording exactly.
-- For substitution questions, do not reinterpret the rule. If the records say a course may substitute for another course, answer yes.
-- For requirement questions, prioritize explicit requirement rules over vague summaries.
-- If a student document is provided and the question is personal, use that document to personalize the answer.
-- If the uploaded student document does not contain enough information to answer the personal question, say that clearly.
-- Prefer exact handbook rule language when available.
-- Do not say "typically", "likely", or "may need" unless the records themselves are uncertain.
-- Do not invent requirements, options, policies, emails, contacts, grades, GPA values, or substitutions.
-- If the records are incomplete, say that clearly.
-- Keep the wording student-friendly and specific.
-- Do not mention internal record numbers.
-- Do not add generic advice like checking degree audit unless the records specifically support it.
-"""
-
-    user_prompt = f"""
-Student question:
-{question}
-
-Relevant advising records:
-{context}
-
-Extracted rule summary:
-{rule_summary}
-
-Uploaded student academic document:
-{student_doc_context if student_doc_context else "No student document uploaded."}
-
-Write the answer in this style:
-1. Start with 1 to 2 sentences directly answering the question.
-2. If courses are listed under a requirement heading (for example "Probability and Statistics (6 credits)"), write the heading normally and place the course options under it as bullets.
-3. If there is an either/or requirement, write:
-   Either:
-   - first option
-   - second option
-4. Keep course requirement bullets clean and specific.
-5. If the question is about contact information, clearly list the person or office and how to reach them.
-6. If the question is about substitution or replacement, first answer yes or no, then state the exact substitution rule from the records in simple words.
-7. If the question is personal and a student document is uploaded, use that document directly.
-8. Only use details that appear in the records, extracted rule summary, or uploaded student document.
-"""
-
-    try:
-        completion = client.chat.completions.create(
-            model=OPENAI_CHAT_MODEL,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt}
-            ],
-            temperature=0.0
-        )
-
-        answer = completion.choices[0].message.content
-        record_usage("chat", OPENAI_CHAT_MODEL, completion.usage, user_id=user_id)
-
-        return {
-            "answer": answer,
-            "sources": sources,
-            "intent": intent,
-            "rule_summary": rule_summary,
-            "used_student_doc": bool(student_doc_context)
-        }
-
-    except Exception as e:
-        return {
-            "answer": "The chatbot could not answer right now. Please check your API key, billing, or quota and try again.",
-            "sources": sources,
-            "intent": intent,
-            "rule_summary": rule_summary,
-            "used_student_doc": bool(student_doc_context),
-            "error": str(e)
-        }
-
-
 _DECLARED_MAJOR_KEYWORDS = [
     "declared my major",
     "declared the major",
@@ -1043,11 +910,41 @@ def _build_dynamic_gen_ed_snippet(program_name: str, prog: dict | None, double_d
         for dd in double_dips:
             cats = ", ".join(dd.get("gen_ed_categories", []))
             tag = "Prescribed" if dd.get("is_prescribed") else "Elective option"
-            lines.append(f"  - {dd['code']} ({dd.get('credits','')} cr) — Gen Ed: {cats} [{tag}]")
+            title = dd.get("title", "")
+            lines.append(
+                f"  - {dd['code']}{' — ' + title if title else ''}"
+                f" ({dd.get('credits','')} cr) — Gen Ed: {cats} [{tag}]"
+            )
 
-    lines.append("")
-    lines.append("Use the above program-specific Gen Ed overlap data to answer the student's question accurately.")
+    # The program data says what overlaps; it never says what the categories ARE.
+    # A student asking "which gen eds do I still need?" needs both.
+    lines.append(NEUTRAL_GEN_ED_SNIPPET)
+    lines.append(
+        "Answer using BOTH blocks: the university-wide categories are what the "
+        "student still has to satisfy, and the program data above says which of "
+        "them their major already covers. For each course you name, say which Gen "
+        "Ed category it fills AND how it counts for the major — 'Prescribed' means "
+        "it is a required major course, 'Elective option' means it counts only if "
+        "the student picks it for that requirement. Write it in plain sentences; "
+        "never copy the bracketed tags above verbatim. This student has already "
+        "selected their major — do not tell them to select one."
+    )
     return "\n".join(lines)
+
+
+# Extra answer rules appended for intents where a bare fact isn't a useful
+# answer. A drop date with no "regular vs late drop" and no "do it in LionPATH"
+# leaves the student still not knowing what to do.
+_INTENT_ANSWER_RULES = {
+    "deadline": (
+        "- Deadline answers must be actionable, not just a date: distinguish the "
+        "regular drop deadline from the late-drop deadline, name the term you are "
+        "quoting, say the student does it in LionPATH, and link the official "
+        "calendar (https://registrar.psu.edu/academic-calendar/). Mention that a "
+        "late drop shows a 'W' on the transcript but does not affect GPA when the "
+        "student is asking about dropping.\n"
+    ),
+}
 
 
 def build_degree_audit_advisory(doc_type, declared):
@@ -1075,7 +972,8 @@ def build_degree_audit_advisory(doc_type, declared):
     return ""
 
 
-def ask_advisor_stream(question, history=None, user_id: str = None, major: str = None):
+def ask_advisor_stream(question, history=None, user_id: str = None, major: str = None,
+                       conversation_id: str = None):
     """Generator that yields SSE-formatted chunks for the chat response.
 
     history: list of {"role": "user"|"assistant", "content": str} dicts
@@ -1228,7 +1126,10 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
             if doc_type == "what_if_report":
                 deterministic_answer += _DEGREE_AUDIT_FOOTER
             yield f"data: {json.dumps({'text': deterministic_answer})}\n\n"
-            yield f"data: {json.dumps({'done': True, 'sources': sources, 'intent': intent, 'used_student_doc': True})}\n\n"
+            message_id = save_exchange(
+                user_id, conversation_id, question, deterministic_answer, intent, sources
+            )
+            yield f"data: {json.dumps({'done': True, 'sources': sources, 'intent': intent, 'used_student_doc': True, 'message_id': message_id})}\n\n"
             return
 
     # All context lives in the system prompt so history messages stay lightweight
@@ -1261,7 +1162,7 @@ The detected intent for the current question is: {intent}
 - Do not mention internal record numbers.
 - If a Degree Audit Advisory is present above, include the recommendation naturally in your answer when it is relevant to what the student asked.
 - Keep the tone student-friendly and specific.
-"""
+{_INTENT_ANSWER_RULES.get(intent, "")}"""
 
     try:
         # Build messages: system → history (capped at 6) → current question
@@ -1273,25 +1174,18 @@ The detected intent for the current question is: {intent}
 
         messages_list.append({"role": "user", "content": question})
 
-        logger.info("ask_advisor_stream | calling OpenAI model=%r messages=%d", OPENAI_CHAT_MODEL, len(messages_list))
-        stream = client.chat.completions.create(
-            model=OPENAI_CHAT_MODEL,
-            messages=messages_list,
-            temperature=0.0,
-            stream=True,
-            stream_options={"include_usage": True},
-        )
+        logger.info("ask_advisor_stream | calling model=%r messages=%d", llm.CHAT_MODEL, len(messages_list))
 
-        usage = None
-        for chunk in stream:
-            if getattr(chunk, "usage", None) is not None:
-                usage = chunk.usage  # final chunk carries token usage
-            if chunk.choices and chunk.choices[0].delta.content:
-                yield f"data: {json.dumps({'text': chunk.choices[0].delta.content})}\n\n"
+        answer_parts = []
+        for delta in llm.chat_stream(messages_list, user_id=user_id):
+            answer_parts.append(delta)
+            yield f"data: {json.dumps({'text': delta})}\n\n"
 
-        record_usage("chat", OPENAI_CHAT_MODEL, usage, user_id=user_id)
         logger.info("ask_advisor_stream | stream complete | sources=%d", len(sources))
-        yield f"data: {json.dumps({'done': True, 'sources': sources, 'intent': intent, 'used_student_doc': bool(student_doc_context)})}\n\n"
+        message_id = save_exchange(
+            user_id, conversation_id, question, "".join(answer_parts), intent, sources
+        )
+        yield f"data: {json.dumps({'done': True, 'sources': sources, 'intent': intent, 'used_student_doc': bool(student_doc_context), 'message_id': message_id})}\n\n"
 
     except Exception as e:
         logger.error("ask_advisor_stream | error: %s", e, exc_info=True)
