@@ -56,15 +56,15 @@ export default function SuggestedPlan({ selectedMajor }) {
 
   if (!selectedMajor) {
     return wrap(
-      <div className="audit-banner">
+      <div className="audit-banner audit-banner--note">
         Select your major to see its college-recommended semester-by-semester plan.
       </div>
     );
   }
-  if (loading) return wrap(<div className="audit-banner">Loading your suggested plan…</div>);
+  if (loading) return wrap(<div className="audit-banner audit-banner--note">Loading your suggested plan…</div>);
   if (plans.length === 0) {
     return wrap(
-      <div className="audit-banner">
+      <div className="audit-banner audit-banner--note">
         We don't have a published suggested plan for <strong>{programName || selectedMajor}</strong> yet.
         Check your required courses on the <strong>Dashboard</strong> or ask ACE in chat.
       </div>
@@ -100,7 +100,7 @@ export default function SuggestedPlan({ selectedMajor }) {
                 cursor: 'pointer',
                 border: '1px solid var(--border)',
                 background: i === activeIdx ? 'var(--accent)' : 'var(--bg-card)',
-                color: i === activeIdx ? '#fff' : 'var(--text-secondary, var(--text))',
+                color: i === activeIdx ? 'var(--bg-card)' : 'var(--text-secondary)',
                 fontWeight: i === activeIdx ? 600 : 500,
               }}
             >

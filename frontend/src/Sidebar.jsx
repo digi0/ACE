@@ -1,76 +1,14 @@
+import { useEffect, useRef, useState } from "react";
 import {
-  ChevronLeft, GraduationCap, LogOut, Pencil,
-  Plus, Compass, MessageSquare,
-  Upload, AlertCircle, Info, CheckCircle, Settings,
+  ChevronLeft, ChevronUp, LogOut, Plus, MessageSquare, Settings, Compass,
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
-import { PRIMARY, TOOLS, SETTINGS_ID } from "./nav.js";
-
-/* ── Deadlines (Spring 2026 — calendar scraper will replace) ── */
-const SPRING_DEADLINES = [
-  { iso: "2026-01-13", label: "First day of classes" },
-  { iso: "2026-01-17", label: "Last day to add (full-sem)" },
-  { iso: "2026-01-20", label: "MLK Day – No classes" },
-  { iso: "2026-02-14", label: "Last day to drop (no W)" },
-  { iso: "2026-03-09", label: "Spring Break begins" },
-  { iso: "2026-03-21", label: "Last day to withdraw (W)" },
-  { iso: "2026-04-11", label: "Last day of classes" },
-  { iso: "2026-04-12", label: "Final Exams begin" },
-  { iso: "2026-05-10", label: "Summer tuition due" },
-];
-
-// Major-neutral short labels for the degree-progress widget. Matches are
-// generic requirement-block vocabulary, so they read correctly for any major
-// (a "Prescribed Courses" block → "Required", not "Core CS").
-const REQ_LABEL_MAP = [
-  { match: /prescribed|required|^core\b/i,    label: "Required"  },
-  { match: /math|quantif/i,                   label: "Math"      },
-  { match: /gen.*ed|general.*educ/i,          label: "Gen Ed"    },
-  { match: /elective/i,                       label: "Electives" },
-  { match: /science|physics|natural\s*sci/i,  label: "Science"   },
-  { match: /writing|communication|english|speak/i, label: "Writing" },
-];
-
-/* ── Helpers ── */
-function daysAway(iso) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return Math.round((new Date(iso + "T00:00:00") - today) / 86400000);
-}
-
-function fmtDate(iso) {
-  const [, mm, dd] = iso.split("-").map(Number);
-  const M = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  return `${M[mm]} ${dd}`;
-}
-
-function reqLabel(title) {
-  for (const { match, label } of REQ_LABEL_MAP) {
-    if (match.test(title)) return label;
-  }
-  return title.length > 16 ? title.slice(0, 15) + "…" : title;
-}
-
-/* ── Logo: ink square, the ace. mark (a leans -11°, period level) ── */
-function SbLogo() {
-  return (
-    <div className="sb-logo">
-      <svg width="17" height="11.5" viewBox="-44 -41 148 100" aria-hidden>
-        <g transform="rotate(-11 5 12)">
-          <circle cx="0" cy="12" r="31" fill="none" stroke="#F6F6F6" strokeWidth="22" />
-          <rect x="30" y="-32" width="22" height="88" rx="11" fill="#F6F6F6" />
-        </g>
-        <circle cx="82" cy="38" r="18" fill="#00875A" />
-      </svg>
-    </div>
-  );
-}
+import { AceWordmark } from "./AceMark.jsx";
+import { TOOLS, SETTINGS_ID } from "./nav.js";
 
 /* ── Main component ── */
 export default function Sidebar({
   user, signOut,
-  selectedMajor, setShowMajorModal,
-  auditData,
   darkMode, setDarkMode,
   onCollapse,
   onNavigate,
@@ -85,174 +23,58 @@ export default function Sidebar({
     .split(/[\s@]/).filter(Boolean)
     .map(n => n[0]).join("").slice(0, 2).toUpperCase();
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const upcomingDeadlines = SPRING_DEADLINES
-    .map(d => ({ ...d, days: daysAway(d.iso) }))
-    .filter(d => d.days >= 0)
-    .slice(0, 3);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const accountRef = useRef(null);
 
-  const hasAudit = auditData && auditData.available;
-
-  const reqRows = hasAudit
-    ? (auditData.remaining_requirements ?? [])
-        .filter(r => (r.credits_required ?? 0) > 0)
-        .slice(0, 4)
-        .map(r => {
-          const cr = r.credits_required;
-          const needed = r.credits_needed ?? 0;
-          return { label: reqLabel(r.title), pct: Math.min(100, Math.round(((cr - needed) / cr) * 100)) };
-        })
-    : [];
+  // Close on outside click or Escape. Both matter: the menu holds Sign out, and
+  // a popover you can only dismiss by re-clicking the trigger is a trap on a
+  // narrow sidebar where the trigger may be scrolled out of reach.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onDown = (e) => {
+      if (!accountRef.current?.contains(e.target)) setMenuOpen(false);
+    };
+    const onKey = (e) => { if (e.key === "Escape") setMenuOpen(false); };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
 
   return (
     <aside className="sidebar" data-tour="sidebar">
 
-      {/* ── Top: brand + user + major ── */}
+      {/* ── Top: brand + user ── */}
       <div className="sb-top">
         <div className="sb-header">
+          {/* The real wordmark, not a tile plus the letters "ACE" in the UI
+              font. This is the app's ONE brand moment — the top bar carries no
+              logo while this is visible, so the two never double up. 116px sits
+              comfortably above the 96px legibility floor from BRAND.md §2. */}
           <div className="sb-brand">
-            <SbLogo />
-            <span className="sb-brand-name">ACE</span>
+            <AceWordmark width={116} />
           </div>
           <div className="sb-header-btns">
-            <ThemeToggle value={darkMode} onChange={setDarkMode} size={18} />
+            {/* Track height in px; the sky artwork is em-scaled off it, so this
+                one number drives the whole thing. Around 18 is the floor —
+                below that the moon spots and stars stop resolving. */}
+            <ThemeToggle value={darkMode} onChange={setDarkMode} size={21} />
             <button className="sb-icon-btn" onClick={onCollapse} title="Collapse sidebar">
               <ChevronLeft size={14} />
             </button>
           </div>
         </div>
 
-        <div className="sb-user">
-          <div className="sb-avatar">{initials}</div>
-          <div className="sb-user-info">
-            <div className="sb-user-name">{user?.displayName || user?.email}</div>
-            <div className="sb-user-email">{user?.email}</div>
-          </div>
-          <button className="sb-icon-btn" title="Sign out" onClick={signOut}>
-            <LogOut size={13} />
-          </button>
-        </div>
-
-        <button className="sb-major" onClick={() => setShowMajorModal(true)}>
-          <GraduationCap size={12} className="sb-major-icon" />
-          {selectedMajor
-            ? <span className="sb-major-name">{selectedMajor}</span>
-            : <span className="sb-major-name sb-major-name--empty">Set your major</span>
-          }
-          <Pencil size={10} className="sb-major-edit" />
-        </button>
-
         <hr className="sb-divider" />
       </div>
 
-      {/* ── Middle: scrollable content ── */}
+      {/* ── Middle: scrollable content ──
+          Primary nav went back to the top bar, and the major chip, degree
+          progress, and deadlines moved to the widget rail. What's left is the
+          one job this panel should have had all along: getting you somewhere. */}
       <div className="sb-middle">
-
-        {/* Primary nav — the four main views. Lives here (not in the top bar)
-            so every destination in the app has exactly one entry point and
-            one place that can show it as active. */}
-        <nav className="sb-nav" aria-label="Primary">
-          {PRIMARY.map(({ id, label, Icon }) => (
-            <button
-              key={id}
-              /* the onboarding tour anchors its Dashboard step here — the
-                 top-bar tab it used to point at is gone */
-              data-tour={id === "dashboard" ? "dashboard-tab" : undefined}
-              className={`sb-nav-btn${activeView === id ? " sb-nav-btn--active" : ""}`}
-              aria-current={activeView === id ? "page" : undefined}
-              onClick={() => onNavigate(id)}
-            >
-              <Icon size={14} className="sb-nav-icon" strokeWidth={activeView === id ? 2.2 : 1.75} />
-              <span className="sb-nav-label">{label}</span>
-            </button>
-          ))}
-        </nav>
-
-        {/* Status Card or Upload Prompt */}
-        {hasAudit ? (
-          <div className="sb-status">
-            <div className="sb-status-hdr">
-              <span className="sb-section-label">DEGREE PROGRESS</span>
-              <span className={`sb-status-badge sb-status-badge--${(auditData.status || "in-progress").toLowerCase().replace(/\s+/g, "-")}`}>
-                {auditData.status || "In Progress"}
-              </span>
-            </div>
-
-            <div className="sb-stat-row">
-              <span className="sb-stat-big">{Math.round(auditData.degree_progress_pct ?? 0)}</span>
-              <span className="sb-stat-suffix">% complete</span>
-            </div>
-
-            <div className="sb-bar">
-              <div className="sb-bar-fill" style={{ width: `${Math.min(100, auditData.degree_progress_pct ?? 0)}%` }} />
-            </div>
-
-            <div className="sb-stat-sub">
-              {auditData.credits_completed ?? 0} of {auditData.credits_required ?? 0} credits earned
-            </div>
-
-            {reqRows.length > 0 && (
-              <div className="sb-reqs">
-                {reqRows.map((r, i) => (
-                  <div key={i} className="sb-req-row">
-                    <span className="sb-req-label">{r.label}</span>
-                    <span className="sb-req-pct">{r.pct}%</span>
-                    <div className="sb-req-bar">
-                      <div className={`sb-req-fill ${r.pct >= 70 ? "sb-req-fill--dark" : "sb-req-fill--gold"}`}
-                        style={{ width: `${r.pct}%` }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {auditData.alerts && auditData.alerts.length > 0 && (
-              <div className="sb-alerts">
-                {auditData.alerts.slice(0, 2).map((a, i) => (
-                  <div key={i} className={`sb-alert sb-alert--${a.type}`}>
-                    {a.type === "warning" && <AlertCircle size={10} />}
-                    {a.type === "success" && <CheckCircle size={10} />}
-                    {a.type === "info"    && <Info size={10} />}
-                    <span>{a.message}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ) : (
-          <button className="sb-upload-compact" onClick={() => onNavigate("chat")}>
-            <Upload size={13} className="sb-upload-compact-icon" />
-            <span className="sb-upload-compact-text">
-              Upload audit for personalized dashboard
-            </span>
-          </button>
-        )}
-
-        {/* Deadlines */}
-        <div className="sb-section">
-          <div className="sb-section-hdr">
-            <span className="sb-section-label">DEADLINES</span>
-            <button className="sb-section-link" onClick={() => onNavigate("calendar")}>All dates</button>
-          </div>
-          {upcomingDeadlines.length === 0 ? (
-            <button
-              className="sb-empty sb-empty-link"
-              onClick={() => onNavigate("calendar")}
-            >
-              Spring 2026 complete — view full calendar
-            </button>
-          ) : upcomingDeadlines.map((d, i) => (
-            <div key={i} className="sb-dl-row">
-              <span className="sb-dl-date">{fmtDate(d.iso)}</span>
-              <span className={`sb-dl-dot sb-dl-dot--${d.days <= 7 ? "red" : d.days <= 21 ? "amber" : "gray"}`} />
-              <div className="sb-dl-info">
-                <span className="sb-dl-label">{d.label}</span>
-                <span className="sb-dl-meta">{d.days}d away</span>
-              </div>
-            </div>
-          ))}
-        </div>
 
         {/* Tools */}
         <div className="sb-section">
@@ -267,7 +89,7 @@ export default function Sidebar({
                 aria-current={activeView === id ? "page" : undefined}
                 onClick={() => onNavigate(id)}
               >
-                <Icon size={13} className="sb-tool-icon" />
+                <Icon size={15} className="sb-tool-icon" />
                 <span className="sb-tool-label">{label}</span>
               </button>
             ))}
@@ -295,24 +117,64 @@ export default function Sidebar({
 
       </div>
 
-      {/* ── Bottom: actions ── */}
+      {/* ── Bottom: new chat + account ──
+          The profile moved down here so every account action lives in one
+          place. It used to sit at the top as avatar + name + email over two
+          lines, where the email rendered at 2.32:1 — half the AA minimum — and
+          duplicated the name for anyone without a display name set. One line at
+          full contrast now; the email and the actions live in the menu. */}
       <div className="sb-bottom">
         <button className="sb-new-btn" onClick={onNewConversation}>
           <Plus size={13} strokeWidth={2} />
           New conversation
         </button>
-        <div className="sb-bottom-links">
+
+        <div className="sb-account" ref={accountRef}>
+          {menuOpen && (
+            <div className="sb-account-menu" role="menu">
+              {user?.email && (
+                <div className="sb-account-email" title={user.email}>{user.email}</div>
+              )}
+              <button
+                role="menuitem"
+                className={`sb-account-item${activeView === SETTINGS_ID ? " sb-account-item--active" : ""}`}
+                onClick={() => { setMenuOpen(false); onNavigate(SETTINGS_ID); }}
+              >
+                <Settings size={13} aria-hidden />
+                Settings
+              </button>
+              <button
+                role="menuitem"
+                className="sb-account-item"
+                onClick={() => { setMenuOpen(false); onStartTour(); }}
+              >
+                <Compass size={13} aria-hidden />
+                Take the tour
+              </button>
+              <hr className="sb-account-sep" />
+              {/* Sign out is behind one deliberate click now. It used to be a
+                  13px icon permanently parked beside the user's name — the
+                  smallest target in the sidebar and the only destructive one. */}
+              <button
+                role="menuitem"
+                className="sb-account-item sb-account-item--exit"
+                onClick={() => { setMenuOpen(false); signOut(); }}
+              >
+                <LogOut size={13} aria-hidden />
+                Sign out
+              </button>
+            </div>
+          )}
+
           <button
-            className={`sb-tour-btn${activeView === SETTINGS_ID ? " sb-tour-btn--active" : ""}`}
-            aria-current={activeView === SETTINGS_ID ? "page" : undefined}
-            onClick={() => onNavigate(SETTINGS_ID)}
+            className={`sb-account-btn${menuOpen ? " sb-account-btn--open" : ""}`}
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-expanded={menuOpen}
+            aria-haspopup="menu"
           >
-            <Settings size={12} />
-            Settings
-          </button>
-          <button className="sb-tour-btn" onClick={onStartTour}>
-            <Compass size={12} />
-            Take the tour
+            <span className="sb-avatar" aria-hidden>{initials}</span>
+            <span className="sb-account-name">{displayName}</span>
+            <ChevronUp size={13} className="sb-account-caret" aria-hidden />
           </button>
         </div>
       </div>

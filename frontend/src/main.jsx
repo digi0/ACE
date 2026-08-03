@@ -2,6 +2,9 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ClerkProvider } from '@clerk/clerk-react'
 import { Analytics } from '@vercel/analytics/react'
+// Tailwind first: its utilities are layered, so the unlayered rules in
+// index.css/responsive.css still win while the migration is in flight.
+import './tailwind.css'
 import './index.css'
 import './responsive.css'
 import App from './App.jsx'

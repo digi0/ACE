@@ -1,13 +1,4 @@
-import { MessageSquare, LayoutGrid, BookOpen, GraduationCap } from "lucide-react";
-
-// The four primary views, mirroring the desktop top-bar tabs. Tools (GPA,
-// calendar, prereqs, etc.) and chat history stay in the drawer, not here.
-const NAV_ITEMS = [
-  { id: "chat",      label: "Chat",      Icon: MessageSquare },
-  { id: "dashboard", label: "Dashboard", Icon: LayoutGrid },
-  { id: "resources", label: "Resources", Icon: BookOpen },
-  { id: "gened",     label: "Gen Ed",    Icon: GraduationCap },
-];
+import { PRIMARY } from "./nav.js";
 
 /**
  * Fixed bottom tab bar shown only on mobile (App renders it behind a
@@ -17,7 +8,7 @@ const NAV_ITEMS = [
 export default function MobileBottomNav({ activeView, onNavigate }) {
   return (
     <nav className="mobile-bottom-nav" aria-label="Primary">
-      {NAV_ITEMS.map((item) => {
+      {PRIMARY.map((item) => {
         const Icon = item.Icon;
         const active = activeView === item.id;
         return (

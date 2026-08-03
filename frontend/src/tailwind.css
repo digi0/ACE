@@ -1,0 +1,122 @@
+/* ════════════════════════════════════════════════════════════════════
+   tailwind.css — the Tailwind entry point and the Zero Chroma theme
+   ────────────────────────────────────────────────────────────────────
+   MIGRATION CONTRACT — read before editing:
+
+   • Tailwind is being introduced INCREMENTALLY. index.css (the desktop
+     baseline) and responsive.css (the mobile layer) still govern every
+     component that has not been converted yet.
+
+   • Preflight is deliberately NOT imported. Tailwind's reset would restyle
+     every heading, list, and input in the app at once, while the plain-CSS
+     rules that assume the old defaults are still live. Import it in the
+     final step, once nothing depends on those defaults.
+
+   • Precedence: Tailwind utilities live in @layer utilities, and UNLAYERED
+     css always beats layered css. Every rule in index.css is unlayered, so
+     it WINS over any utility class. That is intentional — it means a
+     half-converted component keeps working — but it also means converting a
+     component is not done until its rules are DELETED from index.css.
+     If a utility "isn't applying", that is the reason.
+
+   • Colours come from brand/tokens.css (BRAND.md: import it, never retype
+     the hex values). @theme maps them to Tailwind's colour namespace, so
+     `bg-ground`, `text-ink`, `border-rule`, `bg-period` all resolve to the
+     brand variables at runtime and follow the theme automatically.
+   ════════════════════════════════════════════════════════════════════ */
+
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@import "../../brand/tokens.css";
+
+/* Every styled button in this app had to null out the UA defaults itself, and
+   the ones that forgot rendered as native grey shrink-to-fit pills in the wrong
+   font (the graduation-checklist section headers, for one). Reset once, in
+   @layer base so Tailwind utilities still outrank it — unlayered, it silently
+   beat `bg-period` on the first converted component. Preflight replaces this
+   block at the end of the migration. */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* `text-align: inherit` is load-bearing. Dozens of plain-CSS buttons are
+     full-width rows whose label is a `flex: 1` child — with the UA's
+     `text-align: center` those labels centre inside the stretched box (the
+     graduation-checklist section headers show it immediately). The whole
+     stylesheet was written against left-aligned button text, so inherit is the
+     safe default here; converted components opt into `text-center` explicitly. */
+  button {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+  }
+}
+
+@theme {
+  /* Zero Chroma: six greys, no hue, plus the period.
+     THE LAW: the emerald appears once per view, and it is always the period. */
+  --color-ground: var(--ace-ground);
+  --color-card:   var(--ace-card);
+  --color-rule:   var(--ace-rule);
+  --color-ghost:  var(--ace-ghost);
+  --color-mute:   var(--ace-mute);
+  --color-ink:    var(--ace-ink);
+  --color-period: var(--ace-period);
+
+  /* ── The migration seam ───────────────────────────────────────────────
+     Components style themselves through THESE names, never through the
+     palette directly. Right now they point at index.css's legacy tokens, so
+     a freshly-converted component sits flush next to its unconverted
+     neighbours instead of looking alien mid-migration. The Zero Chroma pass
+     repoints these seven lines at the --ace-* tokens above, and every
+     converted component follows in one commit — no second pass over markup.
+
+     Do NOT reach past these for `bg-card`/`text-ink` in product components
+     until that flip happens; that is what causes a half-rebranded screen. */
+  --color-surface: var(--bg-card);
+  --color-page:    var(--bg);
+  --color-line:    var(--border);
+  --color-body:    var(--text);
+  --color-dim:     var(--text-secondary);
+  --color-faint:   var(--text-muted);
+  --color-accent:  var(--accent);
+
+  --font-sans: var(--ace-sans);
+  --font-mono: var(--ace-mono);
+
+  /* Radius 0 globally; the logo tile is the one exception (20%). */
+  --radius-tile: var(--ace-radius-tile);
+
+  /* One curve for ~80% of motion. Exits stay pinned at 120ms; only ENTER
+     durations scale with the mass of the arriving thing. */
+  --ease-ace: var(--ace-ease);
+}
+
+/* brand/tokens.css switches to dark on `prefers-color-scheme`, but the product
+   switches on a `data-theme` attribute that App.jsx writes from localStorage —
+   so without this bridge the OS would override the user's own toggle. Values
+   mirror the provisional dark twin in tokens.css; both get settled together in
+   the dark-mode pass (BRAND.md §4.4). */
+:root[data-theme="light"] {
+  --ace-ground: #F6F6F6;
+  --ace-card:   #FFFFFF;
+  --ace-rule:   #E4E4E4;
+  --ace-ghost:  #B2B2B2;
+  --ace-mute:   #666666;
+  --ace-ink:    #0A0A0A;
+}
+:root[data-theme="dark"] {
+  --ace-ground: #0E0E0D;
+  --ace-card:   #161615;
+  --ace-rule:   rgba(244, 239, 228, 0.16);
+  --ace-ghost:  #4A4844;
+  --ace-mute:   #8F8B80;
+  --ace-ink:    #F4EFE4;
+}

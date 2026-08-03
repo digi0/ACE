@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect, useCallback, lazy, Suspense } from "react";
+import { useState, useRef, useEffect, useLayoutEffect, useCallback, lazy, Suspense } from "react";
 import ReactMarkdown from "react-markdown";
 import {
   ChevronRight, GraduationCap, BookOpen, CalendarClock,
-  Compass, Upload, MessageSquare, Send, Paperclip, X, ExternalLink, Menu,
+  Compass, Upload, MessageSquare, Send, Paperclip, X, ExternalLink, Menu, PanelRight,
+  ThumbsUp, ThumbsDown,
 } from "lucide-react";
 import { BGPattern } from "./BGPattern.jsx";
 import Sidebar from "./Sidebar.jsx";
@@ -11,7 +12,9 @@ import AccessGate from "./AccessGate.jsx";
 import { apiFetch, apiStream } from "./api.js";
 import { useIsMobile } from "./useIsMobile.js";
 import MobileBottomNav from "./MobileBottomNav.jsx";
-import { viewLabel } from "./nav.js";
+import { AceTile } from "./AceMark.jsx";
+import WidgetRail from "./WidgetRail.jsx";
+import { PRIMARY, viewLabel } from "./nav.js";
 
 // Lazy-loaded views — each becomes its own chunk fetched on first use, so the
 // initial load stays lean. LoginPage pulls in the ~226 kB tsparticles sparkles,
@@ -29,24 +32,6 @@ const GenEdExplorer       = lazy(() => import("./GenEdExplorer.jsx"));
 const SettingsPanel       = lazy(() => import("./SettingsPanel.jsx"));
 const StickyBoard         = lazy(() => import("./StickyBoard.jsx"));
 
-/* ── Icons ─────────────────────────────────────── */
-/* The ace. mark: the a leans -11°, the period never does. */
-function AceMark({ size = 16, ink = "#F6F6F6" }) {
-  return (
-    <svg
-      width={size}
-      height={size * (100 / 148)}
-      viewBox="-44 -41 148 100"
-      aria-hidden
-    >
-      <g transform="rotate(-11 5 12)">
-        <circle cx="0" cy="12" r="31" fill="none" stroke={ink} strokeWidth="22" />
-        <rect x="30" y="-32" width="22" height="88" rx="11" fill={ink} />
-      </g>
-      <circle cx="82" cy="38" r="18" fill="#00875A" />
-    </svg>
-  );
-}
 
 
 /* Rotating hero keyword: "What are we <planning|scheduling|…> today?"
@@ -56,39 +41,102 @@ function AceMark({ size = 16, ink = "#F6F6F6" }) {
    transition while the duplicate is showing). */
 const ROTATING_WORDS = ["planning", "scheduling", "mapping", "tracking", "solving", "exploring"];
 
+/* MUST match the transition durations on .wb-rotator / .wb-rotator-track in
+   index.css. The slide is driven by CSS; this is how JS knows it has finished. */
+const SLIDE_MS = 800;
+
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
 function RotatingWord() {
   const [idx, setIdx] = useState(0);
   const [snap, setSnap] = useState(false);
-  const [winW, setWinW] = useState(null);
+  const boxRef = useRef(null);
   const itemRefs = useRef([]);
+  const settledW = useRef(null);
+
+  const widthOf = useCallback(
+    (i) => itemRefs.current[i % ROTATING_WORDS.length]?.offsetWidth ?? null,
+    []
+  );
+
+  /* The box width is driven imperatively rather than through state. It is a
+     measured DOM value written straight back to the DOM, so routing it through
+     a render adds a frame and buys nothing. */
+  const applyWidth = useCallback((px, instant) => {
+    const box = boxRef.current;
+    if (!box) return;
+    /* offsetWidth is the layout ADVANCE width. Glyphs can paint past it — Plus
+       Jakarta's "g" does — and the box clips on both axes, so a box sized to
+       the exact measurement sliced the tail off ("planninc today?"). A sliver
+       of the font size covers the overhang; too small to see in the sentence,
+       enough for the ink to land in. */
+    const w = px + parseFloat(getComputedStyle(box).fontSize) * 0.08;
+    if (instant) {
+      box.style.transition = "none";
+      box.style.width = `${w}px`;
+      void box.offsetWidth;        // flush, so the NEXT change still animates
+      box.style.transition = "";
+    } else {
+      box.style.width = `${w}px`;
+    }
+  }, []);
 
   useEffect(() => {
-    const iv = setInterval(() => setIdx((i) => i + 1), 4000);
+    // Under reduced motion the CSS disables both transitions, so transitionend
+    // never fires — the duplicate-word snap-back below would never run and the
+    // track would roll off the end into blank space after one lap. Step
+    // straight through the real indices instead.
+    const reduced = prefersReducedMotion();
+    const iv = setInterval(
+      () => setIdx((i) => (reduced ? (i + 1) % ROTATING_WORDS.length : i + 1)),
+      4000
+    );
     return () => clearInterval(iv);
   }, []);
 
-  // The window's width follows the ACTIVE word (animated in CSS), so the rest
-  // of the sentence stays snug — no gap after short words. Re-measured when
-  // fonts finish loading and on resize (the font size is container-relative).
-  const measure = useCallback(() => {
-    const el = itemRefs.current[idx % ROTATING_WORDS.length];
-    if (el) setWinW(el.offsetWidth);
-  }, [idx]);
+  /* The box hugs the ACTIVE word so the rest of the sentence stays snug. The
+     catch is that it also has `overflow: hidden` for the vertical slot effect,
+     so easing the width to the incoming word's size clipped whatever was on
+     screen: growing cut the arriving word ("scheduli| today?"), shrinking left
+     a gap after the departing one ("mapping    today?").
 
-  useEffect(() => { measure(); }, [measure]);
-  useEffect(() => {
-    if (document.fonts?.ready) document.fonts.ready.then(measure);
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, [measure]);
-
-  // Rolled onto the duplicate first word → instantly reset to the real one.
-  const handleEnd = () => {
-    if (idx >= ROTATING_WORDS.length) {
-      setSnap(true);
-      setIdx(0);
+     Fix is to never let the box be narrower than the word inside it. Grow
+     immediately and without easing, hold that width for the whole slide, and
+     only shrink once the word has landed (see handleEnd). */
+  useLayoutEffect(() => {
+    const next = widthOf(idx);
+    if (next == null) return;
+    if (settledW.current == null || next > settledW.current) {
+      applyWidth(next, true);
+      if (settledW.current == null) settledW.current = next;
     }
-  };
+  }, [idx, widthOf, applyWidth]);
+
+  /* Settle on a timer rather than on transitionend. transitionend looks like
+     the natural hook but it silently never fires in several real states — a
+     background tab, a hidden pane, an interrupted transition, and any browser
+     honouring prefers-reduced-motion (our CSS sets transition:none there). Any
+     of those left the box frozen at the previous word's width, which is the
+     ~33px clip this was supposed to fix. A timer always fires. */
+  useEffect(() => {
+    const t = setTimeout(() => {
+      // Landing on the duplicate means we wrap: the track jumps back to row 0
+      // with no transition, so the width must jump with it. Easing it while the
+      // word teleports is what left the box at the outgoing word's size.
+      const wrapping = idx >= ROTATING_WORDS.length;
+      if (wrapping) {
+        setSnap(true);
+        setIdx(0);
+      }
+      const exact = widthOf(wrapping ? 0 : idx);
+      if (exact == null) return;
+      settledW.current = exact;
+      applyWidth(exact, wrapping);
+    }, SLIDE_MS);
+    return () => clearTimeout(t);
+  }, [idx, widthOf, applyWidth]);
 
   // Re-enable the transition one frame after the silent snap-back.
   useEffect(() => {
@@ -97,22 +145,37 @@ function RotatingWord() {
     return () => cancelAnimationFrame(raf);
   }, [snap]);
 
+  // Font swap and resize both change the measurement (the size is
+  // container-relative), so re-measure without animating.
+  useEffect(() => {
+    const remeasure = () => {
+      const exact = widthOf(idx);
+      if (exact == null) return;
+      settledW.current = exact;
+      applyWidth(exact, true);
+    };
+    document.fonts?.ready?.then(remeasure);
+    window.addEventListener("resize", remeasure);
+    return () => window.removeEventListener("resize", remeasure);
+  }, [idx, widthOf, applyWidth]);
+
+  const active = idx % ROTATING_WORDS.length;
+
   return (
-    <span
-      className="wb-rotator"
-      aria-live="polite"
-      style={winW == null ? undefined : { width: winW }}
-    >
+    <span className="wb-rotator" ref={boxRef}>
       <span
         className={`wb-rotator-track${snap ? " wb-rotator-track--snap" : ""}`}
         // each row is exactly 1.35em tall — translate per ROW (em-based)
         style={{ transform: `translateY(calc(${snap ? 0 : idx} * -1.35em))` }}
-        onTransitionEnd={handleEnd}
       >
         {[...ROTATING_WORDS, ROTATING_WORDS[0]].map((w, i) => (
           <span
             className="wb-rotator-item"
             key={i}
+            /* Only the visible word is exposed. Without this the h1 reads as
+               "What are we planning scheduling mapping … today?", and an
+               aria-live region here would re-announce the heading every 4s. */
+            aria-hidden={i === active ? undefined : "true"}
             ref={(el) => { itemRefs.current[i] = el; }}
           >
             {w}
@@ -123,15 +186,12 @@ function RotatingWord() {
   );
 }
 
-function AceLogo({ size = 36 }) {
-  const iconSize = Math.round(size * 0.62);
-  const radius = Math.round(size * 0.2);
-  return (
-    <div className="ace-logo-box" style={{ width: size, height: size, borderRadius: radius }}>
-      <AceMark size={iconSize} />
-    </div>
-  );
-}
+/* Keeps its period. This only renders when the sidebar is COLLAPSED, so at that
+   moment it is the single brand element on screen — dropping the dot there
+   would show the identity with its defining feature removed. While the sidebar
+   is open this doesn't render at all and <AceWordmark> owns the period, so the
+   one-emerald-per-view rule still holds either way. */
+const AceLogo = ({ size = 36 }) => <AceTile size={size} />
 
 /* ── Constants ─────────────────────────────────── */
 const SUGGESTION_CHIPS = [
@@ -298,6 +358,36 @@ function MajorSelectModal({ userId, onSelect, onSkip }) {
   );
 }
 
+/* ── Answer rating ─────────────────────────────────
+   Thumbs on an answer. The rating itself is the point: a down-rated answer is
+   the only direct signal a student gives that ACE got it wrong. */
+function MessageRating({ rating, onRate }) {
+  const rated = rating === 1 || rating === -1;
+  return (
+    <div className="message-rating" role="group" aria-label="Was this answer helpful?">
+      {!rated && <span className="message-rating-label">was this helpful?</span>}
+      <button
+        type="button"
+        className={`message-rating-btn${rating === 1 ? " is-active" : ""}`}
+        aria-label="Helpful"
+        aria-pressed={rating === 1}
+        onClick={() => onRate(rating === 1 ? null : 1)}
+      >
+        <ThumbsUp size={13} strokeWidth={2.25} aria-hidden />
+      </button>
+      <button
+        type="button"
+        className={`message-rating-btn${rating === -1 ? " is-active" : ""}`}
+        aria-label="Not helpful"
+        aria-pressed={rating === -1}
+        onClick={() => onRate(rating === -1 ? null : -1)}
+      >
+        <ThumbsDown size={13} strokeWidth={2.25} aria-hidden />
+      </button>
+    </div>
+  );
+}
+
 /* ── App ───────────────────────────────────────── */
 function App() {
   const { user, syncData, signOut } = useAuth();
@@ -322,6 +412,46 @@ function App() {
   const [activeView, setActiveView] = useState("chat");
   const [followUpChips, setFollowUpChips] = useState([]);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("ace_darkmode") === "1");
+  /* Control panel. Two ways in, on purpose:
+       hover  — transient peek, closes when the pointer leaves
+       click  — pins it open, remembered per browser
+     Hover alone would make it unreachable by keyboard and invisible on touch,
+     where there is no hover state at all. */
+  const [railPinned, setRailPinned] = useState(() => localStorage.getItem("ace_rail") === "1");
+  const [railHover, setRailHover] = useState(false);
+  const railTimer = useRef(null);
+  const railOpen = railPinned || railHover;
+
+  // Small grace period so the pointer can cross the gap from the trigger to the
+  // panel without it closing underneath.
+  const openRail  = () => { clearTimeout(railTimer.current); setRailHover(true); };
+  const closeRail = () => {
+    clearTimeout(railTimer.current);
+    railTimer.current = setTimeout(() => setRailHover(false), 180);
+  };
+  useEffect(() => () => clearTimeout(railTimer.current), []);
+
+  const toggleRailPin = () => {
+    setRailPinned((prev) => {
+      const next = !prev;
+      localStorage.setItem("ace_rail", next ? "1" : "0");
+      if (next) setRailHover(false);   // pinned now; drop the transient state
+      return next;
+    });
+  };
+
+  // Escape closes it however it was opened.
+  useEffect(() => {
+    if (!railOpen) return;
+    const onKey = (e) => {
+      if (e.key !== "Escape") return;
+      setRailHover(false);
+      setRailPinned(false);
+      localStorage.setItem("ace_rail", "0");
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [railOpen]);
   const [chatFont, setChatFont] = useState(() => localStorage.getItem("ace_chatfont") || "md");
   const [auditData, setAuditData] = useState(null);
 
@@ -464,6 +594,26 @@ function App() {
   }, [user?.uid]);
 
   // ── Send (real SSE streaming) ──
+  // Optimistic: the thumb fills immediately and stays filled. A failed POST is
+  // logged, not surfaced — a student mid-question should not get an error toast
+  // about telemetry.
+  const rateMessage = async (index, messageId, value) => {
+    setMessages((prev) => {
+      const next = [...prev];
+      if (next[index]) next[index] = { ...next[index], rating: value };
+      return next;
+    });
+    if (value === null) return; // un-rating is local only; nothing to record
+    try {
+      await apiFetch(`/messages/${messageId}/rating`, {
+        method: "POST",
+        body: JSON.stringify({ rating: value }),
+      });
+    } catch (err) {
+      console.warn("rating failed to save", err);
+    }
+  };
+
   const handleSend = async (text) => {
     const query = (text !== undefined ? text : input).trim();
     if (!query || loading) return;
@@ -475,8 +625,12 @@ function App() {
     setLoading(true);
     setFollowUpChips([]);
 
+    // Resolve the conversation id locally: setActiveConvId is async, so reading
+    // activeConvId below would still be the previous value on the first message
+    // of a new chat — which would file that exchange under the wrong conversation.
+    let convId = activeConvId;
     if (messages.length === 0) {
-      const convId = Date.now();
+      convId = Date.now();
       setActiveConvId(convId);
       setConversations((prev) => [{ preview: query, id: convId, messages: [] }, ...prev]);
     }
@@ -489,7 +643,13 @@ function App() {
       .slice(-6);
 
     try {
-      const response = await apiStream("/chat/stream", { question: query, history });
+      const response = await apiStream("/chat/stream", {
+        question: query,
+        history,
+        // String(): ids are minted with Date.now(), so they arrive as numbers —
+        // the backend field is a string and Pydantic will not coerce one.
+        conversation_id: convId != null ? String(convId) : null,
+      });
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -535,6 +695,7 @@ function App() {
                 ...next[next.length - 1],
                 streaming: false,
                 sources: data.sources ?? [],
+                messageId: data.message_id ?? null,
               };
               return next;
             });
@@ -661,8 +822,6 @@ function App() {
       {/* ── Sidebar ─────────────────────────── */}
       <Sidebar
         user={user} signOut={signOut}
-        selectedMajor={selectedMajor} setShowMajorModal={setShowMajorModal}
-        auditData={auditData}
         darkMode={darkMode} setDarkMode={setDarkMode}
         onCollapse={() => setSidebarCollapsed(true)}
         conversations={conversations} activeConvId={activeConvId}
@@ -697,11 +856,15 @@ function App() {
       {/* ── Main panel ──────────────────────── */}
       <div className="main-panel">
 
-        {/* The top bar names where you are; the sidebar is the only thing that
-            moves you. It used to carry a second tab strip that could only
-            represent four of the eleven views, so it sat blank or stale
-            whenever a tool was open. */}
+        {/* The top bar owns the four primary views. Tools live in the sidebar,
+            so when one is open no tab is active — the label next to the wordmark
+            names it instead, which is what stops the bar from going blank and
+            leaving you with no idea where you are. */}
         <header className="top-bar">
+          {/* No wordmark here — the sidebar owns the brand, and carrying it in
+              both put two lockups in one viewport. The tile reappears only when
+              the sidebar is collapsed, so the brand is always present exactly
+              once. What this bar states instead is where you are. */}
           <div className="top-bar-brand">
             <button
               className="top-bar-hamburger"
@@ -710,9 +873,37 @@ function App() {
             >
               <Menu size={20} aria-hidden />
             </button>
-            <AceLogo size={30} />
-            <span className="top-bar-name">ACE</span>
+            {sidebarCollapsed && <AceLogo size={26} />}
             <span className="top-bar-view" aria-live="polite">{viewLabel(activeView)}</span>
+          </div>
+          <div className="top-bar-right">
+            <nav className="top-bar-nav" aria-label="Primary">
+              {PRIMARY.map(({ id, label }) => (
+                <button
+                  key={id}
+                  data-tour={id === "dashboard" ? "dashboard-tab" : undefined}
+                  className={`top-bar-tab${activeView === id ? " top-bar-tab--active" : ""}`}
+                  aria-current={activeView === id ? "page" : undefined}
+                  onClick={() => navigate(id)}
+                >
+                  {label}
+                </button>
+              ))}
+            </nav>
+            <button
+              className={`rail-toggle${railOpen ? " rail-toggle--on" : ""}`}
+              onClick={toggleRailPin}
+              onMouseEnter={openRail}
+              onMouseLeave={closeRail}
+              onFocus={openRail}
+              onBlur={closeRail}
+              aria-pressed={railPinned}
+              aria-expanded={railOpen}
+              title={railPinned ? "Unpin panel" : "Pin panel open"}
+            >
+              <PanelRight size={16} strokeWidth={1.9} aria-hidden />
+              <span className="sr-only">{railPinned ? "Unpin panel" : "Pin panel open"}</span>
+            </button>
           </div>
         </header>
 
@@ -795,7 +986,11 @@ function App() {
         ) : (
         <>
         <div className="chat-area">
-          <BGPattern variant="dots" fill="#e4e4e7" size={20} />
+          {/* fade-edges keeps the dot field off the chrome: dots stay dense
+              behind the empty-state cards and dissolve before they reach the
+              top bar, sidebar, and input. Flat (mask="none") they ran edge to
+              edge and fought every border on the screen. */}
+          <BGPattern variant="dots" mask="fade-edges" fill="var(--dots)" size={22} />
           {!hasMessages ? (
             <div className="wb-welcome">
               <div className="wb-welcome-head">
@@ -875,6 +1070,13 @@ function App() {
                               </div>
                             ))}
                           </div>
+                        )}
+                        {!msg.streaming && msg.messageId && (
+                          <MessageRating
+                            messageId={msg.messageId}
+                            rating={msg.rating}
+                            onRate={(value) => rateMessage(i, msg.messageId, value)}
+                          />
                         )}
                       </>
                     ) : (
@@ -973,6 +1175,23 @@ function App() {
           <MobileBottomNav activeView={activeView} onNavigate={navigate} />
         )}
       </div>
+
+      {/* ── Widget rail ──────────────────────
+          Opt-in, not permanent: closed by default and toggled from the top bar,
+          so the default screen stays the chat. Also hidden below 1180px
+          (responsive.css) — at that width a third column squeezes the chat
+          past a readable measure, and the same content is on the Dashboard. */}
+      {!isMobile && railOpen && (
+        <WidgetRail
+          selectedMajor={selectedMajor}
+          onChangeMajor={() => setShowMajorModal(true)}
+          auditData={auditData}
+          onNavigate={navigate}
+          pinned={railPinned}
+          onMouseEnter={openRail}
+          onMouseLeave={closeRail}
+        />
+      )}
 
       {/* ── Onboarding tour ──────────────────── */}
       {showTour && (
