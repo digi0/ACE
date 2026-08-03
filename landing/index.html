@@ -523,16 +523,21 @@ button{font:inherit}
   .rail{position:static;display:block;width:100%;transform:none!important;will-change:auto}
   .pane{width:100%;height:100svh}
 
-  /* each card rides on the screen it narrates, exactly as it overlays the
-     device on desktop. The script re-parents them; placement is here. */
-  .caps{display:none}                    /* the shell, once emptied */
-  .pane .cap{position:absolute;left:5%;right:5%;z-index:6;pointer-events:none}
-  /* the cards run full-bleed here, so they sit LOW: the handwriting reads
-     above them (header, the two questions, the top of the diagram) and the
-     argument piles over the rest of it. c3 clears the chat input. */
-  .pane #c1{top:42%}
-  .pane #c2{top:63%}
-  .pane #c3{bottom:15%}
+  /* ONE SCREEN, ONE JOB. On desktop the cards overlay the iPad because
+     there is room around them. At 390px full-bleed they land straight on
+     the circled "Required: FALL 2026" and blank out "Remaining Credits",
+     which is the best thing on the page. The handwriting already narrates
+     itself, so it gets the screen to itself and the argument gets its own
+     (the script moves this block between the notes and the chat). */
+  .caps{position:static;min-height:100svh;padding:0 20px;background:var(--cream);
+    display:flex;flex-direction:column;justify-content:center;gap:18px}
+  /* .caps .cap, not .cap: a later mobile block re-sets .cap at 18px, and
+     these are the screen's content now rather than an overlay on it, so
+     they carry the size an overlay could never afford. */
+  .caps .cap{position:static;font-size:clamp(23px,6.2vw,29px);
+    line-height:1.16;padding:18px 20px;box-shadow:7px 7px 0 var(--ink)}
+  .caps .cap .cite{font-size:12.5px}
+  #c3{display:none}   /* the chat screen shows this. Saying it too is noise */
 
   /* the payoff is its own screen, and the emerald still arrives as a wipe:
      the script clips it to zero and opens it. Left un-clipped here so a
@@ -1125,25 +1130,30 @@ else if(MOB.matches){
 
   const pane=document.querySelectorAll('#rail .pane');
   const notes=pane[1], chat=pane[2];
-  /* a card belongs to the screen it narrates, so it moves onto it */
-  notes.append(document.getElementById('c1'), document.getElementById('c2'));
-  chat.append(document.getElementById('c3'));
+
+  /* the argument comes OFF the evidence and becomes the screen after it.
+     Overlaid on a phone it covered the circled "Required: FALL 2026" and
+     the credits line, so the two fought and neither read. */
+  const caps=document.getElementById('caps');
+  notes.after(caps);
   pane[0].append(document.getElementById('introHint'));
 
-  gsap.set(['#c1','#c2','#c3'],{y:16});
+  gsap.set(['#c1','#c2'],{y:18});
   gsap.set(['#aceans','#acetxt','#acecite'],{y:14});
   const arrive=(el,fn)=>ScrollTrigger.create({trigger:el,start:'top 60%',once:true,onEnter:fn});
 
-  /* 1 · the handwriting lands, then the argument piles onto it */
+  /* 1 · the notes land, a line at a time, with nothing on top of them */
   gsap.set(pcs,{opacity:0,y:14});
-  arrive(notes,()=>{
+  arrive(notes,()=>gsap.to(pcs,{opacity:1,y:0,duration:.5,stagger:.09,ease:'power2.out'}));
+
+  /* 2 · then the argument, on a screen of its own */
+  arrive(caps,()=>{
     gsap.timeline()
-      .to(pcs,{opacity:1,y:0,duration:.5,stagger:.07,ease:'power2.out'})
-      .to('#c1',{opacity:1,y:0,duration:.5,ease:'back.out(1.4)'},'-=.2')
-      .to('#c2',{opacity:1,y:0,duration:.5,ease:'back.out(1.4)'},'+=.45');
+      .to('#c1',{opacity:1,y:0,duration:.5,ease:'back.out(1.4)'})
+      .to('#c2',{opacity:1,y:0,duration:.5,ease:'back.out(1.4)'},'+=.32');
   });
 
-  /* 2 · ace answers, in the order a person reads it */
+  /* 3 · ace answers, in the order a person reads it */
   const bub=document.getElementById('acebub');
   arrive(chat,()=>{
     gsap.timeline()
@@ -1151,8 +1161,7 @@ else if(MOB.matches){
         onUpdate(){bub.textContent=ASK.slice(0,Math.round(this.targets()[0].n))}})
       .to('#aceans',{opacity:1,y:0,duration:.42,ease:'back.out(1.5)'},'+=.2')
       .to('#acetxt',{opacity:1,y:0,duration:.42},'-=.14')
-      .to('#acecite',{opacity:1,y:0,duration:.42},'-=.22')
-      .to('#c3',{opacity:1,y:0,duration:.5,ease:'back.out(1.4)'},'-=.1');
+      .to('#acecite',{opacity:1,y:0,duration:.42},'-=.22');
   });
 
   /* 3 · the payoff: emerald opens out, as it does on desktop */
