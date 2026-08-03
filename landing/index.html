@@ -1,266 +1,1257 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ace. — the navigation layer for college</title>
-  <meta name="description" content="every question about being a student here — courses, money, places, people — answered with a receipt. free for students. first 100 get early access.">
-  <link rel="canonical" href="https://www.acecollege.app/">
-  <meta property="og:title" content="ace. — the navigation layer for college">
-  <meta property="og:description" content="college is a tangle. ace is the route through it. ask anything — courses, deadlines, money, places — and get an answer with its receipt.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.acecollege.app/">
-  <meta property="og:image" content="https://www.acecollege.app/poster.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#0B0D10">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='24' fill='%230A0A0A'/%3E%3Cg transform='translate(42.6,55.8) scale(0.6)'%3E%3Cg transform='rotate(-11 5 12)'%3E%3Ccircle cx='0' cy='12' r='31' fill='none' stroke='%23F6F6F6' stroke-width='22'/%3E%3Crect x='30' y='-32' width='22' height='88' rx='11' fill='%23F6F6F6'/%3E%3C/g%3E%3Ccircle cx='82' cy='38' r='18' fill='%2300875A'/%3E%3C/g%3E%3C/svg%3E">
-  <link rel="stylesheet" href="/system.css?v=43">
-  <link rel="stylesheet" href="/styles.css?v=43">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ace. the friend who's a year ahead</title>
+<!--
+  v11 · TIGHTENED.
+
+  Changes from the long cut:
+   · the four PSU screenshots are gone. Four university systems failing in a
+     row reads as an attack on the institution, not as a student's day.
+   · hero is 3 panes, not 7. The scroll is roughly half as long.
+   · the folder stack is back, as its own section.
+   · every size raised. Nothing under 12px anywhere on the page.
+   · copy rewritten short and plain.
+   · section 05 (receipts) removed. 04 kept as it was.
+   · NO EM DASHES ANYWHERE. House rule.
+-->
+<style>
+@font-face{font-family:Recia;src:url('/type/fonts/recia-700.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:Recia;src:url('/type/fonts/recia-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Switzer;src:url('/type/fonts/switzer-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Switzer;src:url('/type/fonts/switzer-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Switzer;src:url('/type/fonts/switzer-700.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:Tabular;src:url('/type/fonts/tabular-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Tabular;src:url('/type/fonts/tabular-600.woff2') format('woff2');font-weight:600;font-display:swap}
+/* the opener only. Quicksand's full stop is a true circle, so the line rhymes
+   with the period in the ace mark. */
+@font-face{font-family:Quicksand;src:url('/type/fonts/quicksand-600.woff2') format('woff2');font-weight:600;font-display:swap}
+
+:root{
+  --cream:#FBF6EC; --paper:#FFFDF6; --ink:#14120E; --dim:#4E4940; --faint:#7C766C;
+  --rule:#DED7C6;
+  --emerald:#00875A; --red:#E5323B; --yellow:#FFC53D; --cobalt:#1B49E4; --orange:#F0620C;
+  --hair:1.5px; --ease:cubic-bezier(.16,.84,.44,1); --pad:clamp(20px,3.6vw,52px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--cream);scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:Switzer,system-ui,sans-serif;
+  font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+/* nothing on this page goes under 12px */
+.mono{font-family:Tabular,ui-monospace,monospace;font-size:12px;letter-spacing:.13em;
+  text-transform:uppercase;line-height:1.4}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   THE OPENER
+   Not a separate screen. It is the iPad's first screen, shown full bleed
+   because the device starts zoomed in. Scrolling swipes it away like any
+   other screen on the device, and the iPad appears around it as it goes.
+   ══════════════════════════════════════════════════════════════════════ */
+.ground{position:absolute;inset:0;background:#07070A;z-index:0}
+.intro{background:#07070A;color:#F2F0EA;display:grid;place-items:center;isolation:isolate}
+.intro-in{position:relative;z-index:3;width:100%;padding:0 5%;display:flex;justify-content:center}
+.intro-line{position:relative;display:inline-block;text-align:left;white-space:nowrap;
+  font-family:Quicksand,Switzer,sans-serif;font-weight:600;line-height:1.14;letter-spacing:-.018em}
+.intro-line .sizer{visibility:hidden}
+.intro-line .live{position:absolute;inset:0}
+/* The full stop is not type, it IS the mark's dot. In the wordmark the period
+   is r=18 against an x-height of 84 units, so ~0.43 of x-height, which is
+   roughly twice a typographic full stop. No face gives you that, so it is
+   drawn. Lifted off #00875A because this ground is near-black. */
+.intro-line{color:#FFFFFF}
+.intro-line .dot{display:inline-block;width:.235em;height:.235em;border-radius:50%;
+  background:#00C07A;margin-left:.075em;vertical-align:baseline}
+.intro-line .live .dot{opacity:0}
+.caret{display:inline-block;width:.055em;height:.9em;background:#00C07A;
+  vertical-align:-.07em;margin-left:.09em;animation:blink 1.05s steps(1) infinite}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+.intro-hint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);
+  color:rgba(242,240,234,.5);z-index:9;opacity:0}
+
+/* mesh · four blobs, heavily blurred, drifting slowly */
+.fx-mesh{position:absolute;inset:-20%;z-index:1;pointer-events:none;
+  filter:blur(64px);opacity:.72}
+.fx-mesh span{position:absolute;width:52%;height:52%;border-radius:50%;mix-blend-mode:screen}
+.fx-mesh .b1{left:4%;top:6%;background:rgba(0,135,90,.9)}
+.fx-mesh .b2{right:2%;top:14%;background:rgba(27,73,228,.75)}
+.fx-mesh .b3{left:16%;bottom:2%;background:rgba(240,98,12,.46)}
+.fx-mesh .b4{right:18%;bottom:6%;background:rgba(255,197,61,.36)}
+
+/* ══ masthead ══ */
+/* the masthead reads whatever it is sitting on. --mt is its ink, --mb the
+   fill of the primary button, --mbt that button's text, --mbd every border. */
+.mast{position:fixed;inset:0 0 auto 0;z-index:60;display:flex;align-items:center;
+  justify-content:space-between;gap:16px;padding:16px var(--pad);
+  color:var(--mt);
+  --mt:#14120E; --mb:#00875A; --mbt:#fff; --mbd:#14120E; --msh:#14120E;
+  transition:color .55s var(--ease)}
+.mast svg{height:21px;width:auto;display:block;overflow:visible}
+.mast .g-a,.mast .g-c,.mast .g-e,.mast .g-dot{opacity:0}
+.mast[data-t="ink-co"]  {--mb:#1B49E4}
+.mast[data-t="ink-or"]  {--mb:#F0620C}
+.mast[data-t="onblue"]  {--mt:#fff; --mb:#fff; --mbt:#1B49E4; --mbd:#fff; --msh:rgba(0,0,0,.3)}
+.mast[data-t="ongreen"] {--mt:#fff; --mb:#fff; --mbt:#00875A; --mbd:#fff; --msh:rgba(0,0,0,.3)}
+.mast[data-t="onink"]   {--mt:#FBF6EC; --mb:#00875A; --mbt:#fff; --mbd:#FBF6EC; --msh:rgba(0,0,0,.5)}
+.mast-cta{display:flex;align-items:center;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:11px 18px;
+  font-size:15px;font-weight:500;border:2px solid var(--mbd);
+  box-shadow:4px 4px 0 var(--msh);cursor:pointer;white-space:nowrap;
+  transition:transform .14s var(--ease),box-shadow .14s var(--ease),
+             background .55s var(--ease),color .55s var(--ease),border-color .55s var(--ease)}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--msh)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--msh)}
+.btn-join{background:var(--mb);color:var(--mbt)}
+.signin{background:transparent;color:var(--mt)}
+.signin i{width:8px;height:8px;border-radius:50%;background:var(--mb);font-style:normal;
+  transition:background .55s var(--ease)}
+.mast[data-t="onblue"] .signin i,.mast[data-t="ongreen"] .signin i{background:currentColor}
+@media(max-width:620px){
+  .btn{padding:10px 13px;font-size:14px;box-shadow:3px 3px 0 var(--ink)}
+  .signin i{display:none}
+}
+
+/* ══ hero ══ */
+.stage{height:560svh;position:relative;z-index:1}
+.frame{position:sticky;top:0;height:100svh;overflow:hidden;display:grid;place-items:center}
+.wash{position:absolute;inset:0;background:var(--emerald);
+  clip-path:circle(0% at 50% 50%);will-change:clip-path;z-index:3}
+
+.devwrap{position:relative;z-index:2;will-change:transform}
+.dev{position:absolute;inset:0;background:url('/ink/ipad.webp') center/100% 100% no-repeat;
+  transform:rotate(-90deg);transform-origin:center;
+  filter:drop-shadow(0 4px 6px rgba(46,38,28,.24)) drop-shadow(0 46px 74px rgba(46,38,28,.32))}
+.scr{position:absolute;left:2.98%;top:3.92%;width:94.03%;height:92.16%;
+  overflow:hidden;background:#F4F2ED;border-radius:5px}
+
+.sb{position:absolute;left:0;right:0;top:0;height:5.4%;z-index:6;
+  display:flex;align-items:center;justify-content:space-between;padding:0 3.4%;
+  font-weight:600;color:#2A2622;font-size:clamp(7px,.8vw,12px)}
+.sb .r{display:flex;align-items:center;gap:.55em}
+.sb svg{height:.9em;width:auto;display:block}
+.batt{width:1.75em;height:.88em;border:1px solid currentColor;border-radius:2.5px;
+  position:relative;display:inline-block}
+.batt::before{content:'';position:absolute;inset:1.2px;right:36%;background:currentColor;border-radius:1px}
+.batt::after{content:'';position:absolute;right:-3px;top:31%;bottom:31%;width:2px;
+  background:currentColor;border-radius:0 1.5px 1.5px 0}
+
+.rail{position:absolute;left:0;top:5.4%;bottom:0;display:flex;width:300%;will-change:transform}
+.pane{width:calc(100%/3);height:100%;position:relative;overflow:hidden;background:#FFFEFB}
+
+
+
+
+/* pane 1 · the handwriting */
+.ffbar{position:absolute;left:0;right:0;top:0;height:7.4%;display:flex;align-items:center;
+  gap:.7em;padding:0 2.4%;background:#F7F5F0;border-bottom:1px solid #E6E1D6;
+  font-size:clamp(7px,.72vw,11px);color:#6E6A62;z-index:2}
+.ffbar .dot{width:.6em;height:.6em;border-radius:50%;background:#C9C2B4}
+.pcwrap{position:absolute;left:0;right:0;top:7.4%;bottom:0}
+.rulez{position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(to bottom,transparent 0 93%,#D6CDBA 93% 100%);
+  background-size:100% 5.6%}
+.rulez::after{content:'';position:absolute;top:0;bottom:0;left:5%;width:1px;
+  background:#E9C3BD;opacity:.75}
+.pc{position:absolute;background-size:100% 100%;background-repeat:no-repeat}
+
+/* pane 2 · ace answering */
+/* No sidebar. At this size it was 22% of the width spent on labels nobody can
+   read. One column, and everything roughly 1.6x, so the preview is legible
+   rather than merely present. */
+.aceui{position:absolute;inset:0;display:flex;background:#fff}
+.aceui .main{flex:1;display:flex;flex-direction:column;padding:6% 7% 4.5%}
+.aceui .bub{align-self:flex-end;max-width:74%;background:#F1EFE9;padding:2.6% 3.4%;
+  border-radius:16px 16px 4px 16px;font-size:clamp(12px,1.34vw,21px);line-height:1.4;
+  margin-bottom:5%;min-height:1.4em}
+.aceui .ans{font-family:Recia,serif;font-weight:700;font-size:clamp(34px,4.6vw,74px);
+  line-height:.86;letter-spacing:-.03em;margin-bottom:3.2%;opacity:0}
+.aceui .ans span{color:var(--emerald)}
+.aceui .txt{font-size:clamp(12px,1.28vw,20px);line-height:1.55;color:#33302A;
+  max-width:34ch;margin-bottom:4.5%;opacity:0}
+.aceui .cw{opacity:0}
+.aceui .cite2{display:inline-block;font-family:Tabular,monospace;font-size:clamp(9px,.95vw,14px);
+  letter-spacing:.1em;text-transform:uppercase;background:var(--emerald);color:#fff;padding:.6em 1em}
+.aceui .inp{margin-top:auto;display:flex;align-items:center;gap:3%;border:2px solid #E1DCD1;
+  border-radius:14px;padding:2.6% 3.2%}
+.aceui .inp .ph{flex:1;font-size:clamp(11px,1.15vw,18px);color:#8C8578;white-space:nowrap;overflow:hidden}
+.aceui .send{width:1.9em;height:1.9em;border-radius:50%;background:var(--emerald);flex:none}
+
+/* ══ caption boxes · they PILE, they don't replace each other ══ */
+.caps{position:absolute;inset:0;z-index:5;pointer-events:none}
+.cap{position:absolute;max-width:min(30ch,40vw);
+  font-family:Recia,Georgia,serif;font-weight:500;
+  font-size:clamp(19px,2.1vw,32px);line-height:1.12;letter-spacing:-.02em;
+  padding:clamp(15px,1.3vw,20px) clamp(19px,1.7vw,27px);
+  background:var(--paper);color:var(--ink);
+  border:2px solid var(--ink);box-shadow:7px 7px 0 var(--ink);
+  opacity:0;will-change:transform,opacity}
+.cap .cite{display:block;margin-top:11px;padding-top:10px;
+  border-top:1.5px solid rgba(20,18,14,.18);
+  font-family:Tabular,monospace;font-size:12px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--faint);font-weight:400;line-height:1.55}
+.cap.c-red{background:var(--red);color:#fff}
+.cap.c-red .cite{color:rgba(255,255,255,.82);border-top-color:rgba(255,255,255,.35)}
+.cap.c-emerald{background:var(--emerald);color:#fff}
+
+.hint{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);color:var(--faint);z-index:5}
+
+.art{position:absolute;left:50%;top:50%;translate:-50% -50%;width:min(760px,88vw);
+  color:#fff;opacity:0;z-index:4}
+.art .q{font-size:16px;color:rgba(255,255,255,.72);margin-bottom:16px}
+.art .v{font-family:Recia,Georgia,serif;font-weight:700;font-size:clamp(52px,8vw,104px);
+  line-height:.84;letter-spacing:-.03em;margin-bottom:20px}
+.art .b{font-size:clamp(16px,1.9vw,21px);line-height:1.5;max-width:42ch;margin-bottom:24px;
+  color:rgba(255,255,255,.96)}
+.art .plan{border-top:var(--hair) solid rgba(255,255,255,.34);margin-bottom:22px}
+.art .plan div{display:flex;justify-content:space-between;gap:14px;padding:13px 0;
+  border-bottom:var(--hair) solid rgba(255,255,255,.34);font-family:Tabular,monospace;
+  font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.art .plan span{color:rgba(255,255,255,.7)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-family:Tabular,monospace;font-size:12px;letter-spacing:.11em;text-transform:uppercase;
+  padding:8px 12px;background:rgba(255,255,255,.2);color:#fff}
+
+/* ══════════════════ the page below ══════════════════ */
+.sec{position:relative;z-index:1;padding:clamp(70px,11svh,140px) var(--pad)}
+.sec>*{max-width:1180px;margin-inline:auto}
+.slug{display:flex;align-items:center;gap:14px;color:var(--faint);margin-bottom:clamp(30px,4vw,56px)}
+.slug s{flex:1;height:var(--hair);background:currentColor;opacity:.4;text-decoration:none}
+.sec h2{font-family:Recia,Georgia,serif;font-weight:700;
+  font-size:clamp(32px,4.6vw,68px);line-height:.98;letter-spacing:-.032em}
+.sec h2 i{font-style:normal}
+.sec h2.ctr{text-align:center;max-width:19ch;margin-inline:auto;margin-bottom:clamp(36px,5vw,66px)}
+.lead{font-size:clamp(17px,1.35vw,20px);line-height:1.6;color:var(--dim);
+  max-width:42ch;margin-top:22px}
+
+/* 01 gap */
+.sec-gap{background:var(--cream)}
+.sec-gap h2 i{color:var(--cobalt)}
+.gap-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,5vw,80px);align-items:start}
+.figs{display:grid;border-top:2px solid var(--ink)}
+.fig{padding:24px 0;border-bottom:var(--hair) solid var(--rule);display:grid;
+  grid-template-columns:auto 1fr;gap:22px;align-items:baseline}
+.fig b{font-family:Tabular,monospace;font-size:clamp(38px,4.8vw,66px);letter-spacing:-.03em;
+  line-height:.9;font-weight:600}
+.fig span{color:var(--dim);font-size:16px;line-height:1.45}
+.fig em{grid-column:1/-1;font-style:normal;font-family:Tabular,monospace;font-size:12px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:9px;line-height:1.5}
+.fig-red b{color:var(--red)}
+
+/* 02 the folder stack */
+.sec-fold{background:var(--paper);border-top:2px solid var(--ink)}
+.fold-wrap{max-width:900px;margin-inline:auto}
+.fold{position:sticky;background:var(--cream);border:2px solid var(--ink);
+  box-shadow:8px 8px 0 var(--ink);padding:clamp(26px,3.4vw,52px);margin-bottom:26px}
+.fold .n{font-family:Tabular,monospace;font-size:12px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:18px}
+.fold h3{font-family:Recia,serif;font-weight:700;font-size:clamp(26px,3.2vw,44px);
+  line-height:1.0;letter-spacing:-.028em;margin-bottom:16px}
+.fold p{font-size:clamp(16px,1.25vw,19px);line-height:1.55;color:var(--dim);max-width:42ch}
+.fold .tab{position:absolute;top:-2px;left:clamp(26px,3.4vw,52px);
+  transform:translateY(-100%);padding:9px 20px;border:2px solid var(--ink);border-bottom:0;
+  font-family:Tabular,monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#fff}
+
+/* 03 breadth */
+.sec-breadth{background:var(--cobalt);color:#fff}
+.sec-breadth .slug{color:rgba(255,255,255,.7)}
+.lines{max-width:920px;margin-inline:auto;border-top:var(--hair) solid rgba(255,255,255,.34)}
+.lines li{display:grid;grid-template-columns:150px 1fr;gap:24px;align-items:baseline;
+  padding:20px 0;border-bottom:var(--hair) solid rgba(255,255,255,.34);list-style:none}
+.lines i{font-style:normal;font-family:Tabular,monospace;color:rgba(255,255,255,.68);
+  font-size:12px;letter-spacing:.15em;text-transform:uppercase}
+.lines p{font-size:clamp(18px,2.1vw,29px);line-height:1.18;letter-spacing:-.02em}
+.ask{max-width:920px;margin:clamp(36px,5vw,60px) auto 0}
+.ask>.mono{color:rgba(255,255,255,.7);margin-bottom:16px}
+.chips-row{display:flex;gap:10px;flex-wrap:wrap}
+.ch{font-size:16px;padding:13px 18px;cursor:pointer;background:transparent;color:#fff;
+  border:2px solid rgba(255,255,255,.55);transition:background .16s var(--ease),color .16s var(--ease)}
+.ch:hover,.ch.on{background:#fff;color:var(--cobalt);border-color:#fff}
+.ask-out{margin-top:24px;background:rgba(255,255,255,.12);
+  border:2px solid rgba(255,255,255,.5);padding:clamp(20px,2.2vw,30px)}
+.ask-q{font-size:16px;color:rgba(255,255,255,.78);margin-bottom:12px}
+.ask-a{font-size:clamp(18px,1.8vw,24px);line-height:1.45}
+.ask-note{margin-top:16px;color:rgba(255,255,255,.6)}
+
+/* 04 never dead-ends · unchanged */
+.sec-dead{background:var(--cream);border-top:2px solid var(--ink)}
+.sec-dead h2 i{color:var(--cobalt)}
+.dead-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,80px);align-items:center}
+.card{background:var(--paper);border:2px solid var(--ink);box-shadow:8px 8px 0 var(--ink);
+  padding:clamp(22px,2.2vw,32px)}
+.card .q{font-size:17px;line-height:1.4;color:var(--dim);margin-bottom:16px}
+.card .t{font-size:17px;line-height:1.55;margin-bottom:20px}
+.rows{border-top:var(--hair) solid rgba(20,18,14,.22);margin-bottom:18px}
+.rows div{display:flex;justify-content:space-between;gap:14px;padding:12px 0;
+  border-bottom:var(--hair) solid rgba(20,18,14,.16);font-family:Tabular,monospace;
+  font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.rows span{color:var(--faint)}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-family:Tabular,monospace;font-size:12px;letter-spacing:.11em;text-transform:uppercase;
+  padding:9px 12px;border:var(--hair) solid rgba(20,18,14,.3);color:var(--dim)}
+.tag-co{background:var(--cobalt);color:#fff;border-color:var(--cobalt)}
+
+/* 05 join */
+.sec-join{background:var(--emerald);color:#fff;padding-block:clamp(90px,15svh,180px)}
+.sec-join .slug{color:rgba(255,255,255,.66)}
+.sec-join h2{font-size:clamp(44px,7.4vw,112px);line-height:.92}
+.sec-join .lead{color:rgba(255,255,255,.92);max-width:38ch}
+/* ── the waitlist ──────────────────────────────────────────────────────
+   The gradient is the FIELD's border. The button is detached from it and
+   stands on its own, in the same language as every other button on the
+   site: 2px outline, hard offset shadow, presses in on click. */
+.wl{display:flex;align-items:stretch;gap:16px;margin-top:38px;max-width:700px}
+@keyframes wlflow{to{background-position:-300% 0}}
+.wl-field{flex:1;min-width:0;display:flex;padding:5px;
+  background:linear-gradient(90deg,#FFC53D,#F0620C,#E5323B,#1B49E4,#FFC53D);
+  background-size:300% 100%;
+  box-shadow:8px 8px 0 var(--ink), 0 22px 46px -22px rgba(0,0,0,.55);
+  animation:wlflow 11s linear infinite}
+.wl-field:focus-within{box-shadow:10px 10px 0 var(--ink), 0 26px 54px -22px rgba(0,0,0,.6)}
+.wl-in{flex:1;padding:20px 22px;font:inherit;font-size:18px;font-weight:500;
+  background:#0A4F37;color:#fff;border:0;min-width:0}
+.wl-in::placeholder{color:rgba(255,255,255,.6);font-weight:400}
+.wl-in:focus{outline:none;background:#083F2C}
+.wl-btn{padding:20px 30px;font-size:18px;font-weight:700;cursor:pointer;
+  background:var(--cream);color:var(--ink);border:2px solid var(--ink);
+  box-shadow:6px 6px 0 var(--ink);white-space:nowrap;
+  transition:transform .14s var(--ease),box-shadow .14s var(--ease),
+             background .16s var(--ease)}
+.wl-btn:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--ink);background:#fff}
+.wl-btn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink);background:var(--yellow)}
+.wl-btn:disabled{opacity:.7;cursor:default;transform:none;box-shadow:6px 6px 0 var(--ink)}
+.wl-err{margin-top:14px;font-size:16px;color:#FFE2E2}
+.wl-ok{margin-top:24px;font-family:Recia,serif;font-size:clamp(22px,2.6vw,34px);letter-spacing:-.02em}
+.wl-alt{margin-top:22px;font-size:17px;color:#fff;display:flex;align-items:center;
+  gap:12px;flex-wrap:wrap}
+.wl-alt a{display:inline-flex;align-items:center;gap:9px;padding:10px 18px;
+  font-size:16px;font-weight:600;color:var(--ink);background:var(--cream);
+  border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);text-decoration:none;
+  transition:transform .14s var(--ease),box-shadow .14s var(--ease)}
+.wl-alt a:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.wl-alt a:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.wl-alt a i{width:8px;height:8px;border-radius:50%;background:var(--emerald);font-style:normal}
+
+/* ══════════════════════════════════════════════════════════════════════
+   FOOTER
+   Technique ported from the Ruixen gradient footer (blurred columns on a
+   bell curve, scaled from the floor as you reach the end of the page),
+   rebuilt in vanilla and recoloured to our palette: ink to cobalt to
+   emerald to cream to yellow to orange to red, then out.
+   ══════════════════════════════════════════════════════════════════════ */
+.foot{position:relative;z-index:1;background:var(--ink);color:rgba(251,246,236,.66);
+  padding:clamp(48px,7svh,84px) var(--pad) 0;overflow:hidden;isolation:isolate}
+.foot-in{max-width:1180px;margin-inline:auto;position:relative;z-index:2}
+.foot-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:clamp(24px,4vw,56px);
+  padding-bottom:clamp(30px,4vw,48px)}
+.foot-brand svg{height:24px;width:auto;display:block;color:var(--cream);overflow:visible}
+.foot-brand p{margin-top:18px;max-width:32ch;font-size:15.5px;line-height:1.6;
+  color:rgba(251,246,236,.6)}
+.foot-col h4{font-family:Tabular,ui-monospace,monospace;font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--cream);margin-bottom:16px}
+.foot-col ul{list-style:none;display:grid;gap:11px}
+.foot-col a{font-size:15.5px;color:rgba(251,246,236,.62);transition:color .16s var(--ease)}
+.foot-col a:hover{color:var(--cream)}
+/* the disclaimer is the load-bearing part of this footer */
+.foot-note{border-top:1px solid rgba(251,246,236,.18);padding:24px 0;
+  font-size:13.5px;line-height:1.65;color:rgba(251,246,236,.5);max-width:92ch}
+.foot-note b{color:rgba(251,246,236,.72);font-weight:500}
+.disc-link,.foot-linkbtn{background:none;border:0;padding:0;cursor:pointer;
+  font:inherit;color:var(--cream);border-bottom:1px solid rgba(251,246,236,.45);
+  transition:border-color .16s var(--ease)}
+.disc-link:hover,.foot-linkbtn:hover{border-color:var(--cream)}
+.foot-linkbtn{font-size:15.5px;color:rgba(251,246,236,.62);border-bottom-color:transparent}
+.foot-linkbtn:hover{color:var(--cream);border-bottom-color:transparent}
+
+/* the join dialog · emerald, because that is what the join section is */
+.jd{border:0;padding:0;background:transparent;max-width:min(640px,92vw)}
+.jd::backdrop{background:rgba(7,7,10,.74)}
+.jd-in{background:var(--emerald);color:#fff;border:2px solid var(--ink);
+  box-shadow:10px 10px 0 var(--ink);padding:clamp(28px,3.6vw,46px);position:relative}
+.jd .disc-x{color:rgba(255,255,255,.72);border-color:rgba(255,255,255,.5)}
+.jd .disc-x:hover{color:#fff;border-color:#fff}
+.jd-kicker{color:rgba(255,255,255,.72);margin-bottom:14px}
+.jd h2{font-family:Recia,Georgia,serif;font-weight:700;font-size:clamp(32px,4.4vw,54px);
+  line-height:.96;letter-spacing:-.03em;margin-bottom:16px}
+.jd h2 span{color:var(--yellow)}
+.jd-sub{font-size:17px;line-height:1.55;color:rgba(255,255,255,.92);max-width:38ch;margin-bottom:6px}
+.jd .wl{margin-top:26px;max-width:none}
+.jd-alt{margin-top:22px;font-size:16px;color:#fff;display:flex;align-items:center;
+  gap:12px;flex-wrap:wrap}
+.jd-alt a{display:inline-flex;align-items:center;gap:9px;padding:9px 16px;font-size:15px;
+  font-weight:600;color:var(--ink);background:var(--cream);border:2px solid var(--ink);
+  box-shadow:4px 4px 0 var(--ink);text-decoration:none;
+  transition:transform .14s var(--ease),box-shadow .14s var(--ease)}
+.jd-alt a:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.jd-alt a i{width:8px;height:8px;border-radius:50%;background:var(--emerald);font-style:normal}
+
+/* the dialog · same cartoon treatment as the cards, so it belongs */
+.disc{border:0;padding:0;background:transparent;max-width:min(720px,92vw);
+  color:var(--ink)}
+.disc::backdrop{background:rgba(7,7,10,.72)}
+.disc-in{background:var(--paper);border:2px solid var(--ink);box-shadow:10px 10px 0 var(--ink);
+  padding:clamp(26px,3.4vw,44px);position:relative;max-height:82svh;overflow-y:auto}
+.disc-kicker{color:var(--red);margin-bottom:14px}
+.disc h2{font-family:Recia,Georgia,serif;font-weight:700;font-size:clamp(30px,3.6vw,46px);
+  line-height:1;letter-spacing:-.03em;margin-bottom:22px}
+.disc p{font-size:16px;line-height:1.62;color:var(--dim);margin-bottom:16px;max-width:60ch}
+.disc p b{color:var(--ink);font-weight:600}
+.disc-fine{margin-top:22px;padding-top:18px;border-top:var(--hair) solid var(--rule);
+  font-size:14px;color:var(--faint)}
+.disc-fine a{border-bottom:1px solid var(--rule);color:var(--dim)}
+.disc-fine a:hover{border-color:var(--ink);color:var(--ink)}
+.disc-x{position:absolute;top:clamp(18px,2vw,26px);right:clamp(18px,2vw,26px);
+  background:none;border:0;cursor:pointer;font-family:Tabular,ui-monospace,monospace;
+  font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
+  border-bottom:1.5px solid var(--rule);padding:2px 0}
+.disc-x:hover{color:var(--ink);border-color:var(--ink)}
+
+.foot-base{border-top:1px solid rgba(251,246,236,.18);padding:20px 0 26px;
+  display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center;
+  font-size:14px}
+.foot-base .dot{display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:var(--emerald);margin-right:8px;vertical-align:-1px}
+/* room for the glow to land in */
+.foot-pad{height:38vh}
+/* absolute inside the footer, not fixed to the viewport. Fixed positioning put
+   it outside the footer's own layout, so it did not paint until something else
+   forced a repaint (opening a dialog did it). The footer is the last thing on
+   the page, so its floor and the page floor are the same anyway. */
+.glow{position:absolute;left:0;right:0;bottom:0;height:38vh;pointer-events:none;z-index:0;
+  transform-origin:bottom;transform:scaleY(0);will-change:transform;opacity:.92}
+.glow svg{height:100%;width:100%;display:block}
+@media(max-width:900px){
+  .foot-top{grid-template-columns:1fr 1fr;gap:30px}
+  .foot-brand{grid-column:1/-1}
+  .foot-base{flex-direction:column;align-items:flex-start}
+  .foot-pad,.glow{height:28vh}
+}
+
+@media(max-width:900px){
+  .gap-grid,.dead-grid{grid-template-columns:1fr;gap:36px}
+  .lines li{grid-template-columns:1fr;gap:7px}
+  .wl{flex-direction:column;gap:14px}
+  .wl-field{padding:4px;box-shadow:6px 6px 0 var(--ink), 0 16px 30px -16px rgba(0,0,0,.5)}
+  .wl-in{padding:17px 18px;font-size:16.5px}
+  .wl-btn{padding:17px 22px;font-size:16.5px;box-shadow:5px 5px 0 var(--ink)}
+  .cap{max-width:74vw;font-size:clamp(17px,4.4vw,22px)}
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   MOBILE
+   The phone IS the device. The iPad frame is removed rather than shrunk,
+   so the screen content is full bleed and the handwriting stays readable.
+   ══════════════════════════════════════════════════════════════════════ */
+@media(max-width:760px){
+  body{font-size:16.5px}
+  .mast{padding:12px 16px;gap:10px}
+  .mast svg{height:19px}
+  .btn{padding:10px 14px;font-size:14px;box-shadow:3px 3px 0 var(--msh)}
+  .signin{display:none}                 /* sign in lives in the footer on mobile */
+
+  .stage{height:340svh}
+  /* no frame, no bezel, no drop shadow: the content owns the viewport */
+  .devwrap{width:100%!important;height:100svh!important}
+  .dev{display:none}
+  .scr{position:absolute;inset:0;border-radius:0;background:var(--cream)}
+  .sb{display:none}                      /* they already have a real status bar */
+  .rail{top:0}
+
+  .ffbar{height:5.4%;font-size:11px;padding:0 5%}
+  .pcwrap{top:5.4%}
+  .rulez{background-size:100% 3.4%}
+
+  /* ace, as a phone chat: the sidebar is desktop furniture */
+  .aceui .main{padding:14% 7% 8%}
+  .aceui .bub{max-width:88%;font-size:14px;padding:12px 14px;border-radius:14px 14px 4px 14px}
+  .aceui .ans{font-size:clamp(38px,13vw,60px)}
+  .aceui .txt{font-size:15px;line-height:1.55}
+  .aceui .cite2{font-size:11px;padding:7px 11px}
+  .aceui .inp{padding:12px 14px;border-radius:12px}
+  .aceui .inp .ph{font-size:13px}
+  .aceui .send{width:26px;height:26px}
+
+  /* captions sit under the content, full width, never over it */
+  .caps{top:auto;bottom:0;height:auto;padding:0 16px 4svh}
+  .cap{position:relative!important;left:auto!important;right:auto!important;
+    top:auto!important;bottom:auto!important;max-width:100%;width:100%;
+    margin:0 0 10px;font-size:19px;line-height:1.2;padding:14px 16px;
+    box-shadow:5px 5px 0 var(--ink)}
+  .cap .cite{font-size:12px;margin-top:9px;padding-top:8px}
+
+  .art{width:88vw}
+  .art .v{font-size:clamp(52px,17vw,80px)}
+  .art .b{font-size:16.5px}
+  .art .plan div{font-size:11.5px;padding:11px 0}
+
+  /* the folder stack cannot stack on a short screen: let it run */
+  .fold{position:relative!important;top:auto!important;margin-bottom:18px;
+    box-shadow:6px 6px 0 var(--ink);padding:24px 20px}
+  .fold .tab{position:relative;top:auto;left:auto;transform:none;
+    display:inline-block;margin-bottom:14px;border-bottom:2px solid var(--ink)}
+  .sec{padding:clamp(56px,9svh,90px) var(--pad)}
+  .sec h2{font-size:clamp(29px,8vw,40px)}
+  .sec h2.ctr{max-width:16ch}
+  .fig{grid-template-columns:1fr;gap:6px;padding:20px 0}
+  .fig b{font-size:clamp(40px,13vw,56px)}
+  .ch{font-size:15px;padding:12px 15px}
+  .foot{flex-direction:column;align-items:flex-start;gap:14px}
+}
+
+/* ── mobile · the remaining gaps ─────────────────────────────────────── */
+@media(max-width:760px){
+  /* every tappable thing clears 44px */
+  .btn{min-height:44px}
+  .ch{min-height:46px}
+  .wl-btn{min-height:52px}
+  .wl-alt a,.jd-alt a{min-height:44px}
+  .foot-col a,.foot-nav a,.disc-link,.foot-linkbtn{display:inline-block;padding:5px 0}
+  .disc-x{min-height:44px;display:inline-flex;align-items:center}
+
+  /* dialogs get the screen, not a floating card */
+  .jd,.disc{max-width:100vw;width:100vw;margin:0;top:auto;bottom:0;
+    transform:translateY(0);max-height:92svh}
+  .jd-in,.disc-in{border-left:0;border-right:0;border-bottom:0;box-shadow:none;
+    padding:26px 20px 34px;max-height:92svh;overflow-y:auto}
+  .jd h2{font-size:clamp(30px,8vw,40px)}
+  .jd-sub{font-size:16px}
+  .disc h2{font-size:clamp(28px,7.5vw,36px)}
+  .disc p{font-size:15.5px}
+
+  /* footer */
+  .foot{padding-top:44px}
+  .foot-top{grid-template-columns:1fr 1fr;gap:26px}
+  .foot-brand{grid-column:1/-1}
+  .foot-brand svg{height:21px}
+  .foot-note{font-size:14px;padding:20px 0}
+  .foot-base{flex-direction:column;align-items:flex-start;gap:10px;font-size:13.5px}
+
+  /* the opener line, and the caption pile */
+  .intro-hint{bottom:18px}
+  .cap{font-size:18px;line-height:1.22;padding:13px 15px;box-shadow:5px 5px 0 var(--ink)}
+  .cap .cite{font-size:11.5px}
+
+  /* nothing may push the page sideways */
+  html,body{max-width:100%;overflow-x:hidden}
+  .sec>*{max-width:100%}
+}
+@media(max-width:400px){
+  .mast{padding:11px 14px}
+  .mast svg{height:18px}
+  .btn{padding:10px 12px;font-size:13.5px}
+  .sec h2{font-size:clamp(26px,7.6vw,34px)}
+  .lines li{padding:16px 0}
+  .lines p{font-size:18px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .wl-field{animation:none}
+  .stage{height:auto}.frame{position:static;height:auto;min-height:100svh;padding-block:12svh}
+  .wash{clip-path:none!important}
+  .art{opacity:1!important;position:static;translate:none;color:var(--ink)}
+  .devwrap{display:none}.cap{opacity:1!important;position:relative;margin:16px auto}
+  .fold{position:relative!important;top:auto!important}
+}
+</style>
 </head>
 <body>
 
-<header class="bar" id="bar">
-  <a class="bar-mark" href="#top" aria-label="ace home">
-    <svg viewBox="-52 -40 156 100" aria-hidden="true">
-      <g transform="rotate(-11 5 12)">
-        <circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
-        <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/>
-      </g>
-      <circle cx="82" cy="38" r="18" fill="#00875A"/>
+<header class="mast" id="mast">
+  <a href="#" aria-label="ace home" id="markLink">
+    <svg viewBox="-54 -44 332.93 112" aria-hidden="true">
+      <g class="g-a"><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
+         <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/></g>
+      <g class="g-c"><path d="M 123.93 -11.75 A 31 31 0 1 0 123.93 35.75" fill="none"
+         stroke="currentColor" stroke-width="22" stroke-linecap="round"/></g>
+      <g class="g-e"><path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none"
+         stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
+         <rect x="150.93" y="1" width="72" height="22" rx="11" fill="currentColor"/></g>
+      <circle class="g-dot" cx="248.93" cy="38" r="18" fill="#00875A"/>
     </svg>
   </a>
-  <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">menu</button>
+  <div class="mast-cta">
+    <button type="button" class="btn btn-join" id="joinOpen">join the waitlist</button>
+    <a class="btn signin" href="https://app.acecollege.app"><i></i>sign in</a>
+  </div>
 </header>
 
-<div class="menu" id="menu" hidden>
-  <div class="menu-grid" id="menuGrid" aria-hidden="true"></div>
-  <nav class="menu-panel" aria-label="site">
-    <button class="menu-close" id="menuClose">close</button>
-    <ol class="menu-list">
-      <li><a href="#route"><i>01</i>how it answers</a></li>
-      <li><a href="#lines"><i>02</i>the six lines</a></li>
-      <li><a href="#transfer"><i>03</i>never dead-ends</a></li>
-      <li><a href="#join"><i>04</i>join the waitlist</a></li>
-      <li><a href="https://app.acecollege.app"><i>05</i>sign in</a></li>
-    </ol>
-    <p class="menu-foot">the navigation layer for college. © 2026 ace.</p>
-  </nav>
-</div>
 
-<!-- ==========================================================================
-     HERO — the network. every path the catalog allows, tangled.
-     As you scroll it resolves into an ordered transit fan: one question in,
-     six domains out. The morph pairs share an identical command sequence
-     (M + four L) — that is what makes `attr: d` legal. See SITE-SYSTEM.md §5.
-     ========================================================================== -->
-<section class="hero" id="top">
- <div class="hero-stick">
-  <svg class="net" viewBox="0 0 1200 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <g class="net-lines">
-      <path class="ln" style="--c: var(--l-academic)"
-            d="M -40 120 L 280 620 L 620 90 L 840 560 L 1240 300"
-            data-to="M -40 360 L 300 360 L 430 200 L 900 200 L 1240 200"/>
-      <path class="ln" style="--c: var(--l-logistics)"
-            d="M -40 580 L 350 110 L 520 660 L 960 180 L 1240 520"
-            data-to="M -40 360 L 330 360 L 460 260 L 900 260 L 1240 260"/>
-      <path class="ln" style="--c: var(--l-money)"
-            d="M -40 300 L 420 680 L 300 140 L 880 600 L 1240 90"
-            data-to="M -40 360 L 360 360 L 490 320 L 900 320 L 1240 320"/>
-      <path class="ln" style="--c: var(--l-places)"
-            d="M -40 660 L 200 180 L 700 640 L 780 120 L 1240 640"
-            data-to="M -40 360 L 390 360 L 520 400 L 900 400 L 1240 400"/>
-      <path class="ln" style="--c: var(--l-people)"
-            d="M -40 40 L 520 700 L 240 380 L 1020 60 L 1240 700"
-            data-to="M -40 360 L 420 360 L 550 460 L 900 460 L 1240 460"/>
-      <path class="ln" style="--c: var(--l-beyond)"
-            d="M -40 700 L 160 60 L 820 700 L 700 140 L 1240 40"
-            data-to="M -40 360 L 450 360 L 580 520 L 900 520 L 1240 520"/>
-    </g>
-  </svg>
 
-  <div class="hero-inner">
-    <h1 class="wordmark" aria-label="ace.">
-      <svg viewBox="-54 -44 332.93 112" aria-hidden="true">
-        <g class="g-a">
-          <circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
-          <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/>
-        </g>
-        <g class="g-c">
-          <path d="M 123.93 -11.75 A 31 31 0 1 0 123.93 35.75" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
-        </g>
-        <g class="g-e">
-          <path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
-          <rect x="150.93" y="1" width="72" height="22" rx="11" fill="currentColor"/>
-        </g>
-        <circle class="g-dot" cx="248.93" cy="38" r="18" fill="#00875A"/>
-      </svg>
-    </h1>
-    <p class="hero-lead">college is a tangle.<br>this is the route through it.</p>
-    <a class="hero-cta" href="#join">get early access</a>
+
+<!-- ══════════════ HERO · three panes ══════════════ -->
+<section class="stage" id="stage" data-mast="ink-em">
+  <div class="frame">
+    <div class="ground" id="ground"></div>
+    <div class="wash" id="wash"></div>
+
+    <div class="devwrap" id="devwrap">
+      <div class="dev"></div>
+      <div class="scr">
+        <div class="sb">
+          <span id="clock">2:14</span>
+          <span class="r">
+            <svg viewBox="0 0 16 12" fill="currentColor" aria-hidden="true">
+              <path d="M8 10.4 6.1 8.5a2.7 2.7 0 0 1 3.8 0zM4.2 6.6 2.9 5.3a7.2 7.2 0 0 1 10.2 0l-1.3 1.3a5.4 5.4 0 0 0-7.6 0zM1 3.4 2.3 4.7a8.1 8.1 0 0 1 11.4 0L15 3.4a9.9 9.9 0 0 0-14 0z"/>
+            </svg><i class="batt"></i>
+          </span>
+        </div>
+
+        <div class="rail" id="rail">
+
+          <!-- pane 0 · the opener. a screen on the device like any other. -->
+          <div class="pane intro" id="intro">
+            <div class="fx-mesh" aria-hidden="true">
+              <span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="b4"></span>
+            </div>
+            <div class="intro-in">
+              <p class="intro-line" id="introLine">
+                <span class="sizer" aria-hidden="true">college, sorted<i class="dot"></i></span>
+                <span class="live"><span id="typed"></span><i class="dot" id="introDot"></i><i class="caret" id="introCaret"></i></span>
+              </p>
+            </div>
+          </div>
+
+          <div class="pane">
+            <div class="ffbar"><i class="dot"></i><i class="dot"></i><i class="dot"></i>
+              <span style="margin-left:.7em">fall 26 planning</span></div>
+            <div class="pcwrap" id="pcwrap"><div class="rulez"></div></div>
+          </div>
+
+          <div class="pane">
+            <div class="aceui">
+              <div class="main">
+                <p class="bub" id="acebub"></p>
+                <p class="ans" id="aceans">yes<span>.</span></p>
+                <p class="txt" id="acetxt">retake MATH 230 in fall. it's the prereq gate for
+                  CMPSC 465. four courses across two semesters and you're clear.</p>
+                <p class="cw" id="acecite"><span class="cite2">cited · handbook p.14</span></p>
+                <div class="inp"><span class="ph">ask anything about being a student here</span>
+                  <i class="send"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <p class="intro-hint mono" id="introHint">scroll</p>
+
+    <div class="caps" id="caps">
+      <div class="cap"           id="c1" style="left:4%;top:14%">Every student plans their degree like this.</div>
+      <div class="cap c-red"     id="c2" style="left:9%;top:34%"><b>Nobody ever checks it.</b>
+        <span class="cite">48% have never had anyone confirm they're on track · student voice 2023</span></div>
+      <div class="cap c-emerald" id="c3" style="right:5%;bottom:14%">Ask once. Get the whole answer, and where it came from.</div>
+    </div>
+
+    <div class="art" id="art">
+      <p class="q">can i still graduate by spring '27 if i failed MATH 230?</p>
+      <p class="v">yes<span style="color:var(--yellow)">.</span></p>
+      <p class="b">retake MATH 230 in fall. it's the prereq gate for CMPSC 465.
+        four courses across two semesters and you're clear.</p>
+      <div class="plan">
+        <div><span>fa26</span><b>MATH 230 · CMPSC 311</b></div>
+        <div><span>sp27</span><b>CMPSC 465 · CAPSTONE</b></div>
+      </div>
+      <p class="chips"><span class="chip">cited · handbook p.14</span><span class="chip">087/120 credits</span></p>
+    </div>
+
+    <p class="hint mono" id="hint">scroll</p>
   </div>
-
-  <!-- the second beat: the network has resolved and now names itself -->
-  <p class="hero-legend" aria-hidden="true">
-    <b>six lines.</b> every question you have about being here, on one of them.
-  </p>
-  <p class="hero-hint mono" aria-hidden="true">scroll</p>
- </div>
 </section>
 
-<!-- ==========================================================================
-     01 · THE ROUTE — you ask, it routes. the station names ARE the answer.
-     ========================================================================== -->
-<section class="slab" id="route">
-  <header class="head">
-    <p class="eyebrow mono">01 — you ask</p>
-    <h2>it answers with the whole route<span class="dot">.</span></h2>
-    <p class="sub">not a paragraph you have to decode. the verdict, the stops, and
-      where the rule came from.</p>
-  </header>
-
-  <div class="card route-card">
-    <p class="route-q">can i still graduate by spring '27 if i failed MATH 230?</p>
-
-    <svg class="route-map" viewBox="0 0 900 270" role="img"
-         aria-label="Route: retake MATH 230 in fall, then CMPSC 311, then CMPSC 465 and the capstone, arriving spring 2027.">
-      <path class="rt-ghost" d="M 70 200 L 230 200 L 330 100 L 560 100 L 830 100"/>
-      <path class="rt-live"  id="rtLive" d="M 70 200 L 230 200 L 330 100 L 560 100 L 830 100"/>
-
-      <circle class="stn" cx="70"  cy="200" r="9"/>
-      <circle class="stn" cx="230" cy="200" r="9"/>
-      <circle class="stn" cx="330" cy="100" r="9"/>
-      <circle class="stn" cx="560" cy="100" r="9"/>
-      <circle class="stn stn-end" cx="830" cy="100" r="15"/>
-
-      <text class="stn-label mono" x="70"  y="240" text-anchor="middle">MATH 230</text>
-      <text class="stn-label mono" x="230" y="240" text-anchor="middle">CMPSC 311</text>
-      <text class="stn-label mono" x="330" y="70"  text-anchor="middle">CMPSC 465</text>
-      <text class="stn-label mono" x="560" y="70"  text-anchor="middle">CAPSTONE</text>
-      <text class="stn-label mono stn-label-end" x="830" y="70" text-anchor="middle">SPRING '27</text>
-    </svg>
-
-    <div class="route-foot">
-      <p class="route-verdict">yes<span class="dot dot-lit">.</span></p>
-      <p class="route-body">retake MATH 230 in fall — it's the prereq gate for CMPSC 465.
-        four courses across two semesters and you're clear.</p>
-      <p class="receipt"><span class="chip chip-cited">CITED · HANDBOOK P.14</span><span class="chip">12 CREDITS LEFT</span></p>
+<!-- ══════════════ 01 · THE GAP ══════════════ -->
+<section class="sec sec-gap" id="gap" data-mast="ink-co">
+  <p class="slug mono">01 the gap<s></s>why this exists</p>
+  <div class="gap-grid">
+    <div>
+      <h2>Some students know <i>someone a year ahead</i>. Most don't.</h2>
+      <p class="lead">That one friend knows which professor to take, that the deadline
+        moved, that you can petition the requirement. They didn't earn it. They got
+        lucky with a roommate.</p>
+      <p class="lead">It's the widest gap on campus, and it has nothing to do with how
+        smart you are.</p>
+    </div>
+    <div class="figs">
+      <div class="fig"><b>749</b><span>majors, every catalog year</span></div>
+      <div class="fig"><b>9,439</b><span>courses and what they need first</span></div>
+      <div class="fig fig-red"><b>48%</b><span>have never had anyone confirm they're on
+        track to graduate</span>
+        <em>inside higher ed / college pulse, student voice 2023</em></div>
     </div>
   </div>
 </section>
 
-<!-- ==========================================================================
-     02 · THE SIX LINES — the ecosystem claim, drawn instead of asserted.
-     Colour is never the only carrier: every line is named in text (§6).
-     ========================================================================== -->
-<section class="slab slab-paper" id="lines">
-  <header class="head">
-    <p class="eyebrow mono">02 — the network</p>
-    <h2>six lines, not one<span class="dot">.</span></h2>
-    <p class="sub">courses are where most people start. they're nowhere near where
-      it ends.</p>
-  </header>
-
-  <ol class="lines">
-    <li style="--c: var(--l-academic)">
-      <span class="ln-rail" aria-hidden="true"></span>
-      <span class="ln-name mono">ACADEMIC</span>
-      <p class="ln-q">which gen-ed clears my last requirement?</p>
-    </li>
-    <li style="--c: var(--l-logistics)">
-      <span class="ln-rail" aria-hidden="true"></span>
-      <span class="ln-name mono">LOGISTICS</span>
-      <p class="ln-q">where can i print at 2am?</p>
-    </li>
-    <li style="--c: var(--l-money)">
-      <span class="ln-rail" aria-hidden="true"></span>
-      <span class="ln-name mono">MONEY</span>
-      <p class="ln-q">how do i set up a payment plan?</p>
-    </li>
-    <li style="--c: var(--l-places)">
-      <span class="ln-rail" aria-hidden="true"></span>
-      <span class="ln-name mono">PLACES</span>
-      <p class="ln-q">is anything open to eat right now?</p>
-    </li>
-    <li style="--c: var(--l-people)">
-      <span class="ln-rail" aria-hidden="true"></span>
-      <span class="ln-name mono">PEOPLE</span>
-      <p class="ln-q">is it too late to join a club?</p>
-    </li>
-    <li style="--c: var(--l-beyond)">
-      <span class="ln-rail" aria-hidden="true"></span>
-      <span class="ln-name mono">BEYOND</span>
-      <p class="ln-q">what do i need for a spring internship?</p>
-    </li>
-  </ol>
-</section>
-
-<!-- ==========================================================================
-     03 · THE INTERCHANGE — a line ending is a transfer, never a dead end.
-     ========================================================================== -->
-<section class="slab" id="transfer">
-  <header class="head">
-    <p class="eyebrow mono">03 — the interchange</p>
-    <h2>when it isn't ours to answer, it transfers you<span class="dot">.</span></h2>
-    <p class="sub">you never hear "i can't help with that." you get the office, the
-      hours, and the exact thing to ask for.</p>
-  </header>
-
-  <div class="card xfer-card">
-    <p class="route-q">why is there a hold on my account?</p>
-    <p class="route-body">a housing deposit hold. the bursar can release it — ace can't.</p>
-    <dl class="rows mono">
-      <div><dt>OFFICE</dt><dd>BURSAR · 103 SHIELDS</dd></div>
-      <div><dt>OPENS</dt><dd>MON 09:00</dd></div>
-      <div><dt>ASK FOR</dt><dd>HOLD-RELEASE REVIEW</dd></div>
-    </dl>
-    <p class="receipt"><span class="chip chip-xfer">TRANSFERRED · NOT REFUSED</span></p>
+<!-- ══════════════ 02 · THE FOLDER STACK ══════════════ -->
+<section class="sec sec-fold" id="how" data-mast="ink-or">
+  <p class="slug mono">02 how it works<s></s>three things, that's it</p>
+  <h2 class="ctr">Three things, and you stop guessing.</h2>
+  <div class="fold-wrap">
+    <article class="fold" style="top:14svh;z-index:1">
+      <span class="tab" style="background:var(--cobalt)">01 upload</span>
+      <p class="n">takes 20 seconds</p>
+      <h3>Drop in your degree audit.</h3>
+      <p>The twelve page PDF nobody can read. ace reads it once and knows your major,
+        your catalog year, what you've passed and what's left.</p>
+    </article>
+    <article class="fold" style="top:18svh;z-index:2">
+      <span class="tab" style="background:var(--orange)">02 ask</span>
+      <p class="n">any hour, any question</p>
+      <h3>Ask like you'd ask a friend.</h3>
+      <p>Not keywords. Real questions. "Can I still graduate on time if I drop this?"
+        gets a real answer, with the handbook page it came from.</p>
+    </article>
+    <article class="fold" style="top:22svh;z-index:3">
+      <span class="tab" style="background:var(--emerald)">03 stay ahead</span>
+      <p class="n">so you never find out too late</p>
+      <h3>It watches the dates for you.</h3>
+      <p>Registration windows, drop deadlines, seats opening in the class you need.
+        Weeks early, not the night before.</p>
+    </article>
   </div>
 </section>
 
-<!-- ==========================================================================
-     SPECS — the departure board. mono over real numbers only.
-     ========================================================================== -->
-<section class="specs">
-  <dl class="spec-grid mono">
-    <div><dt id="specMajors">749</dt><dd>MAJORS</dd></div>
-    <div><dt id="specCourses">9439</dt><dd>COURSES</dd></div>
-    <div><dt id="specRules">46</dt><dd>HANDBOOK RULES CITED</dd></div>
-    <div><dt>24/7</dt><dd>INCLUDING 2AM</dd></div>
-  </dl>
+<!-- ══════════════ 03 · NOT JUST COURSES ══════════════ -->
+<section class="sec sec-breadth" id="breadth" data-mast="onblue">
+  <p class="slug mono">03 the whole place<s></s>not a course tool</p>
+  <h2 class="ctr">Courses are where you start, not where it ends.</h2>
+  <ol class="lines">
+    <li><i>academic</i><p>which gen-ed clears my last requirement?</p></li>
+    <li><i>money</i><p>how do i set up a payment plan?</p></li>
+    <li><i>logistics</i><p>where can i print at 2am?</p></li>
+    <li><i>places</i><p>is anything open to eat right now?</p></li>
+    <li><i>people</i><p>is it too late to join a club?</p></li>
+    <li><i>beyond</i><p>what do i need for a spring internship?</p></li>
+  </ol>
+  <div class="ask">
+    <p class="mono">try one</p>
+    <div class="chips-row" id="chips">
+      <button class="ch" data-a="third floor of Pattee, open 24 hours during the semester. the HUB lab shuts at 2am. both charge to your student account, no cash.">where can i print at 2am?</button>
+      <button class="ch" data-a="the bursar runs a four instalment plan for fall. enrolment closes August 20 and there's a $45 setup fee. it does not touch your aid.">how do i set up a payment plan?</button>
+      <button class="ch" data-a="no. the club fair is week three, but most orgs take members all semester. 41 of them are still open for fall. want the list for your college?">is it too late to join a club?</button>
+    </div>
+    <div class="ask-out" id="askOut" hidden>
+      <p class="ask-q" id="askQ"></p>
+      <p class="ask-a" id="askA"></p>
+      <p class="mono ask-note">example answer, real content</p>
+    </div>
+  </div>
 </section>
 
-<!-- ==========================================================================
-     JOIN — arrival. the one screen emerald is allowed to own.
-     ========================================================================== -->
-<section class="join" id="join">
-  <div class="join-inner">
-    <p class="eyebrow mono">04 — arrival</p>
-    <h2 class="join-line">college, sorted<span class="dot dot-onlit">.</span></h2>
-    <p class="sub">first cohort starts this fall. free for students — every major,
-      every catalog year.</p>
+<!-- ══════════════ 04 · NEVER DEAD-ENDS ══════════════ -->
+<section class="sec sec-dead" id="deadends" data-mast="ink-co">
+  <p class="slug mono">04 the interchange<s></s>never a dead end</p>
+  <div class="dead-grid">
+    <div>
+      <h2>When it isn't ours to answer, it <i>hands you over</i>.</h2>
+      <p class="lead">You never hear "I can't help with that." You get the office, the
+        hours, and the exact thing to ask for, so the next conversation you have is the
+        right one.</p>
+    </div>
+    <article class="card">
+      <p class="q">why is there a hold on my account?</p>
+      <p class="t">a housing deposit hold. the bursar can release it, ace can't.</p>
+      <div class="rows">
+        <div><span>office</span><b>BURSAR · 103 SHIELDS</b></div>
+        <div><span>opens</span><b>MON 09:00</b></div>
+        <div><span>ask for</span><b>HOLD-RELEASE REVIEW</b></div>
+      </div>
+      <p class="tags"><span class="tag tag-co">handed over, not refused</span></p>
+    </article>
+  </div>
+</section>
 
-    <form class="wl-form" id="waitlistForm" novalidate>
-      <input class="wl-input" id="wlEmail" type="email" required placeholder="you@psu.edu"
-             aria-label="email address" autocomplete="email">
+<!-- ══════════════ 05 · JOIN ══════════════ -->
+<section class="sec sec-join" id="join" data-mast="ongreen">
+  <div>
+    <p class="slug mono">05 access<s></s>first cohort, this fall</p>
+    <h2>Be the one who knows.</h2>
+    <p class="lead">Free for students. Every major, every catalog year. The first hundred
+      get in before anyone else.</p>
+    <form class="wl" id="waitlistForm" novalidate>
+      <span class="wl-field"><input class="wl-in" id="wlEmail" type="email" required
+             placeholder="you@psu.edu" aria-label="email address" autocomplete="email"></span>
       <button class="wl-btn" type="submit" id="wlSubmit">join the first 100</button>
     </form>
-    <p class="wl-error" id="wlError" role="alert" hidden></p>
-    <p class="wl-done" id="wlDone" role="status" hidden></p>
-    <p class="wl-code">already have an access code? <a href="https://app.acecollege.app">sign in</a></p>
+    <p class="wl-err" id="wlError" role="alert" hidden></p>
+    <p class="wl-ok"  id="wlDone"  role="status" hidden></p>
+    <p class="wl-alt">Already have an access code?
+      <a href="https://app.acecollege.app"><i></i>Sign in</a></p>
   </div>
 </section>
 
-<footer class="foot">
-  <span class="mono">749 MAJORS · 9439 COURSES · CITED TO THE PAGE</span>
-  <nav class="foot-links">
-    <a href="https://app.acecollege.app">sign in</a>
-    <a href="mailto:access@acecollege.app">faculty &amp; advisors</a>
-  </nav>
-  <span class="foot-legal">the navigation layer for college. © 2026 ace.</span>
+<footer class="foot" data-mast="onink">
+  <div class="foot-in">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <svg viewBox="-54 -44 332.93 112" aria-label="ace">
+          <g><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
+             <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/></g>
+          <path d="M 123.93 -11.75 A 31 31 0 1 0 123.93 35.75" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
+          <path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
+          <rect x="150.93" y="1" width="72" height="22" rx="11" fill="currentColor"/>
+          <circle cx="248.93" cy="38" r="18" fill="#00875A"/>
+        </svg>
+        <p>The friend who's a year ahead. Ask anything about being a student here
+           and get an answer with the page it came from.</p>
+      </div>
+
+      <div class="foot-col">
+        <h4>product</h4>
+        <ul>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#breadth">What it covers</a></li>
+          <li><a href="#join">Get access</a></li>
+          <li><a href="https://app.acecollege.app">Sign in</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h4>legal</h4>
+        <ul>
+          <li><a href="/privacy.html">Privacy policy</a></li>
+          <li><a href="/terms.html">Terms of use</a></li>
+          <li><a href="/accessibility.html">Accessibility</a></li>
+          <li><button type="button" class="foot-linkbtn" data-disc>Disclaimer</button></li>
+          <li><a href="/privacy.html#cookies">Cookies</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h4>contact</h4>
+        <ul>
+          <li><a href="mailto:hello@acecollege.app">hello@acecollege.app</a></li>
+          <li><a href="mailto:access@acecollege.app">Faculty &amp; advisers</a></li>
+          <li><a href="mailto:privacy@acecollege.app">Data requests</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="foot-note">
+      ace is an independent product and is not affiliated with, endorsed by, or
+      sponsored by The Pennsylvania State University.
+      <button type="button" class="disc-link" id="discOpen">Read the full disclaimer</button>
+    </p>
+
+    <div class="foot-base">
+      <span><span class="dot"></span>© 2026 ace. All rights reserved.</span>
+      <span class="mono">749 majors · 9,439 courses · cited to the page</span>
+      <span>Built for students at Penn State.</span>
+    </div>
+  </div>
+
+  <div class="foot-pad" aria-hidden="true"></div>
+
+  <div class="glow" id="glow" aria-hidden="true">
+    <svg viewBox="0 0 1271 599" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="glowg" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0"     stop-color="#14120E"/>
+          <stop offset="0.175" stop-color="#1B49E4"/>
+          <stop offset="0.295" stop-color="#00875A"/>
+          <stop offset="0.425" stop-color="#FBF6EC"/>
+          <stop offset="0.585" stop-color="#FFC53D"/>
+          <stop offset="0.700" stop-color="#F0620C"/>
+          <stop offset="0.815" stop-color="#E5323B"/>
+          <stop offset="1"     stop-color="#E5323B" stop-opacity="0"/>
+        </linearGradient>
+        <filter id="glowb" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="34"/>
+        </filter>
+      </defs>
+      <g id="glowbars"></g>
+    </svg>
+  </div>
 </footer>
 
+<dialog class="jd" id="joinDlg" aria-labelledby="jdTitle">
+  <div class="jd-in">
+    <button type="button" class="disc-x" id="joinClose" aria-label="Close">close</button>
+    <p class="mono jd-kicker">first cohort, this fall</p>
+    <h2 id="jdTitle">Be the one who knows<span>.</span></h2>
+    <p class="jd-sub">Free for students. Every major, every catalog year. The first
+      hundred get in before anyone else.</p>
+
+    <form class="wl" id="waitlistFormTop" novalidate>
+      <span class="wl-field"><input class="wl-in" id="wlEmailTop" type="email" required
+             placeholder="you@psu.edu" aria-label="email address" autocomplete="email"></span>
+      <button class="wl-btn" type="submit" id="wlSubmitTop">join the first 100</button>
+    </form>
+    <p class="wl-err" id="wlErrorTop" role="alert" hidden></p>
+    <p class="wl-ok"  id="wlDoneTop"  role="status" hidden></p>
+
+    <p class="jd-alt">Already have an access code?
+      <a href="https://app.acecollege.app"><i></i>Sign in</a></p>
+  </div>
+</dialog>
+
+<dialog class="disc" id="disc" aria-labelledby="discTitle">
+  <div class="disc-in">
+    <button type="button" class="disc-x" id="discClose" aria-label="Close">close</button>
+    <p class="mono disc-kicker">important</p>
+    <h2 id="discTitle">Disclaimer</h2>
+
+    <p><b>ace is an independent product.</b> It is not affiliated with, endorsed by,
+      or sponsored by The Pennsylvania State University. University names, marks and
+      course codes are used only to describe publicly published academic information.</p>
+
+    <p><b>Information can change.</b> Course, requirement, deadline and availability
+      information is drawn from public university publications and may be changed or
+      withdrawn by the university at any time, without notice to us.</p>
+
+    <p><b>ace does not replace your academic adviser.</b> Nothing here is official
+      academic advising, and ace gives no guarantee about graduation, enrolment,
+      course registration, financial aid, or any other academic or financial outcome.</p>
+
+    <p><b>Always confirm anything that matters.</b> Before you drop, add, defer, petition
+      or rely on a deadline, check it with your adviser or the relevant university
+      office. Decisions you make remain your own.</p>
+
+    <p class="disc-fine">Read alongside our <a href="/terms.html">Terms of use</a> and
+      <a href="/privacy.html">Privacy policy</a>. Last updated August 2026.</p>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="/app.js?v=43"></script>
+<script>
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const PANES = 3;
+
+const P=[
+ {n:'header',    x: 3.5,y: 2.0,w:22,ar:0.129},
+ {n:'q-465',     x: 3.5,y: 9.0,w:25,ar:0.111},
+ {n:'q-deadline',x: 3.5,y:15.5,w:18,ar:0.199},
+ {n:'q-aid',     x: 3.5,y:23.0,w:31,ar:0.119},
+ {n:'q-load',    x: 3.5,y:31.0,w:26,ar:0.183},
+ {n:'q-conflict',x: 3.5,y:42.0,w:32,ar:0.245},
+ {n:'bottom-1',  x: 3.5,y:57.0,w:24,ar:0.906},
+ {n:'diagram',   x:40.0,y: 3.0,w:56,ar:0.421},
+ {n:'q-advisor', x:41.0,y:39.0,w:35,ar:0.182},
+ {n:'q-minors',  x:40.0,y:51.0,w:42,ar:0.131},
+ {n:'bottom-2',  x:38.0,y:60.5,w:34,ar:0.568},
+ {n:'credits',   x:79.0,y:72.0,w:16,ar:0.253}];
+/* PORTRAIT layout for phones. Fewer pieces, much bigger: on a 390px screen
+   legibility beats density, and six readable notes say more than twelve
+   unreadable ones. */
+const P_MOBILE=[
+ {n:'header',    x: 6,y: 5,w:70,ar:0.129},
+ {n:'q-465',     x: 5,y:13,w:92,ar:0.111},
+ {n:'q-aid',     x: 3,y:21,w:96,ar:0.119},
+ {n:'diagram',   x: 1,y:31,w:98,ar:0.421},
+ {n:'q-advisor', x: 3,y:57,w:96,ar:0.182},
+ {n:'credits',   x:19,y:72,w:62,ar:0.253}];
+
+const MOB = matchMedia('(max-width:760px)');
+const wrap=document.getElementById('pcwrap');
+let pcs=[];
+function drawNotes(){
+  wrap.querySelectorAll('.pc').forEach(n=>n.remove());
+  const set = MOB.matches ? P_MOBILE : P;
+  const r = wrap.getBoundingClientRect();
+  const boxAR = r.height ? r.width/r.height : (MOB.matches?0.49:1/0.7283);
+  pcs = set.map(p=>{
+    const d=document.createElement('div'); d.className='pc';
+    /* height as a % of the container's HEIGHT, derived from its measured
+       aspect, so nothing is ever stretched at any viewport */
+    d.style.cssText=`left:${p.x}%;top:${p.y}%;width:${p.w}%;
+      height:${(p.w*boxAR*p.ar).toFixed(3)}%;background-image:url('/ink/${p.n}.webp')`;
+    wrap.appendChild(d); return d;
+  });
+}
+drawNotes();
+MOB.addEventListener('change',()=>{drawNotes();if(window.ScrollTrigger)ScrollTrigger.refresh()});
+
+const dw=document.getElementById('devwrap'), dev=dw.querySelector('.dev');
+function layout(){
+  if(MOB.matches){ dw.style.width=''; dw.style.height=''; drawNotes(); return; }
+  const W=innerWidth,H=innerHeight,AR=1381/1859;
+  const h=Math.min(H*0.80, W*0.90*AR), w=h/AR;
+  dw.style.width=w+'px'; dw.style.height=h+'px';
+  dev.style.width=h+'px'; dev.style.height=w+'px';
+  dev.style.left=((w-h)/2)+'px'; dev.style.top=((h-w)/2)+'px';
+  drawNotes();
+}
+layout(); fitLine();
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fitLine);
+addEventListener('resize',()=>{layout();fitLine();if(window.ScrollTrigger)ScrollTrigger.refresh()});
+
+/* ══════════════════════════════════════════════════════════════════════
+   THE OPENER
+   ══════════════════════════════════════════════════════════════════════ */
+const LINE="college, sorted";
+
+
+/* fit the line to one line, always. measured, not guessed: the opener lives
+   inside a scaled container, so any vw-based size would be multiplied by the
+   zoom and overflow. */
+function fitLine(){
+  const el=document.getElementById('introLine');
+  const box=el.parentElement, sz=el.querySelector('.sizer');
+  el.style.fontSize='100px';
+  const w=sz.getBoundingClientRect().width;
+  const avail=box.getBoundingClientRect().width;
+  /* Both measurements come back SCALED by the container's transform, so their
+     ratio is sound and gives a correct LOCAL font size. Mixing in an unscaled
+     height cap (an earlier attempt) silently never engaged. Width only. */
+  if(w>0&&avail>0) el.style.fontSize=Math.max(6,(100*avail/w)*0.235)+'px';
+}
+
+{
+  const out=document.getElementById('typed'), hint=document.getElementById('introHint');
+  if(reduced){ out.textContent=LINE; document.getElementById('introDot').style.opacity=1;
+               document.getElementById('introCaret').style.display='none'; hint.style.opacity=1; }
+  else{
+    let i=0;
+    const tick=()=>{
+      out.textContent=LINE.slice(0,++i);
+      if(i<LINE.length){
+        /* 16 characters, so each one gets time to land. ~1.2s total. */
+        let d = 54 + Math.random()*34;
+        if(LINE[i-1]===' ' || LINE[i-1]===',') d += 90;
+        setTimeout(tick,d);
+      } else {
+        /* the same landing as the wordmark's period: drop, overshoot, settle */
+        const dot=document.getElementById('introDot');
+        gsap.fromTo(dot,{opacity:0,y:'-1.1em',scale:.35},
+          {opacity:1,y:0,scale:1,duration:.82,ease:'elastic.out(1,.5)',delay:.16});
+        gsap.to('#introCaret',{opacity:0,duration:.14,delay:.16,
+          onComplete(){document.getElementById('introCaret').style.display='none'}});
+        gsap.to(hint,{opacity:1,duration:.45,delay:.6});
+        gsap.to(hint,{y:3,duration:1.3,ease:'sine.inOut',yoyo:true,repeat:-1,delay:1.1});
+      }
+    };
+    setTimeout(tick,300);
+  }
+  if(!reduced){
+    ['.b1','.b2','.b3','.b4'].forEach((s,k)=>
+      gsap.to('.fx-mesh '+s,{xPercent:(k%2?-1:1)*13,yPercent:(k<2?1:-1)*15,scale:1.16,
+        duration:17+k*3,ease:'sine.inOut',yoyo:true,repeat:-1,delay:k*1.6}));
+  }
+}
+
+/* ── the corner mark assembles ────────────────────────────────────────
+   the `a` spins in, then `c` and `e` ROLL out from behind it (they translate
+   and rotate together, which is what rolling is), then the dot drops. */
+if(!reduced){
+  const M='.mast ';
+  gsap.set(M+'.g-a',{opacity:0,rotate:-210,scale:.55,svgOrigin:'11 12'});
+  gsap.set(M+'.g-c',{opacity:0,x:-104,rotate:-320,svgOrigin:'104 12'});
+  gsap.set(M+'.g-e',{opacity:0,x:-176,rotate:-320,svgOrigin:'181 12'});
+  gsap.set(M+'.g-dot',{opacity:0,y:-64,scale:.4,svgOrigin:'248.93 38'});
+  gsap.timeline({delay:.15})
+    .to(M+'.g-a',{opacity:1,rotate:0,scale:1,duration:.72,ease:'back.out(1.5)'},0)
+    .to(M+'.g-c',{opacity:1,duration:.02},.30)
+    .to(M+'.g-c',{x:0,rotate:0,duration:.66,ease:'power3.out'},.30)
+    .to(M+'.g-e',{opacity:1,duration:.02},.42)
+    .to(M+'.g-e',{x:0,rotate:0,duration:.66,ease:'power3.out'},.42)
+    .to(M+'.g-dot',{opacity:1,duration:.03},.80)
+    .to(M+'.g-dot',{y:0,scale:1,duration:.8,ease:'elastic.out(1,.5)'},.80);
+}
+
+if(reduced){ document.getElementById('art').style.opacity=1; }
+else{
+  const lenis=new Lenis({lerp:.085,smoothWheel:true,syncTouch:true});
+  requestAnimationFrame(function raf(t){lenis.raf(t);requestAnimationFrame(raf)});
+  gsap.registerPlugin(ScrollTrigger); lenis.on('scroll',ScrollTrigger.update);
+  const EASE=gsap.parseEase('0.16,0.84,0.44,1');
+
+  /* THE PULL-BACK · at rest the glass fills the viewport, so you are inside
+     the screen. Scrolling scales the device back to size and the iPad appears
+     around you. Exact inverse of the push-through at the end. */
+  function zoomToFill(){
+    const r=dw.getBoundingClientRect();
+    const gw=r.width*(MOB.matches?1:0.9403), gh=r.height*(MOB.matches?1:0.9216);
+    return gw&&gh ? Math.max(innerWidth/gw, innerHeight/gh)*1.02 : 4.6;
+  }
+  let ZIN=zoomToFill();
+  addEventListener('resize',()=>{ZIN=zoomToFill()});
+  gsap.set(dw,{scale:ZIN});
+  gsap.set('#ground',{backgroundColor:'#07070A'});
+
+  const tl=gsap.timeline({defaults:{ease:'none'},
+    scrollTrigger:{trigger:'#stage',start:'top top',end:'bottom bottom',scrub:.8}});
+
+  /* the opener SWIPES away like any other screen on the device, and the iPad
+     scales back into view at the same time. one move, two reveals. */
+  /* ── the opening, in four beats, in this order ──────────────────────
+     hold      you are inside the screen, reading the line
+     pull back the iPad appears AROUND the opener
+     hold      the opener is now visibly a screen on a device
+     swipe     only then does it leave, like any other screen
+     Doing the pull-back and the swipe together (the last version) meant the
+     opener was gone before you ever saw it sitting on the iPad. */
+  tl.to('#introHint',{opacity:0,duration:.02},.045)
+    .to(dw,{scale:1,duration:.11,ease:'power2.inOut'},.06)
+    .to('#ground',{backgroundColor:'#FBF6EC',duration:.06},.08)
+    /* .16 to .25 is deliberately empty: the opener sits on the device */
+    .to('#rail',{xPercent:-(100/PANES)*1,duration:.11,ease:'power2.inOut'},.25)
+    .to('#hint',{opacity:0,duration:.03},.30);
+
+  /* three panes. captions PILE on the notes pane instead of replacing. */
+  
+  gsap.set(['#c1','#c2','#c3'],{y:16});
+  tl.to('#c1',{opacity:1,y:0,duration:.05,ease:'back.out(1.4)'},.42)
+    .to('#c2',{opacity:1,y:0,duration:.05,ease:'back.out(1.4)'},.52)
+    .to(['#c1','#c2'],{opacity:0,y:-14,duration:.04,ease:'power2.in'},.62);
+
+    /* the chat gets the longest dwell on the page: it is the only place the
+     product actually answers, and it has to be readable, not glimpsed. */
+  tl.to('#rail',{xPercent:-(100/PANES)*2,duration:.10,ease:'power2.inOut'},.60);
+  /* a gentle push in while it is on screen, so the type grows as you read it */
+  tl.to(dw,{scale:1.14,duration:.22,ease:'power1.inOut'},.62);
+
+  gsap.set(['#aceans','#acetxt','#acecite'],{y:14});
+  const Q="can i still graduate by spring '27 if i failed MATH 230?";
+  const bub=document.getElementById('acebub');
+  tl.to({n:0},{n:Q.length,duration:.115,
+      onUpdate(){bub.textContent=Q.slice(0,Math.round(this.targets()[0].n))}},.725);
+  tl.to('#aceans',{opacity:1,y:0,duration:.022},.865)
+    .to('#acetxt',{opacity:1,y:0,duration:.022},.888)
+    .to('#acecite',{opacity:1,y:0,duration:.022},.908)
+    .to('#c3',{opacity:1,y:0,duration:.04,ease:'back.out(1.4)'},.885);
+
+  /* scaling a full-bleed layer 4.4x is the most expensive frame on the page
+     and it is where a mid-range phone drops frames. On mobile the emerald
+     wipe carries the same beat on its own. */
+  const out=.945, THROUGH = MOB.matches ? 1.4 : 4.8;
+  tl.to('#c3',{opacity:0,duration:.02},out)
+    .to(dw,{scale:THROUGH,duration:.07,ease:'power2.in'},out)
+    .to('#wash',{clipPath:'circle(140% at 50% 50%)',duration:.045,ease:'power2.out'},out+.035)
+    .to(dw,{opacity:0,duration:.02},out+.075)
+    .to('#mast',{duration:.01,onStart(){setMast('ongreen')},
+      onReverseComplete(){setMast('ink-em')}},out+.045)
+    .to('#art',{opacity:1,duration:.03},out+.075);
+
+  /* one reveal rule for the whole page below */
+  gsap.utils.toArray('.sec .slug, .sec h2, .sec .lead, .fig, .fold, .lines li, .ask, .wl, .wl-alt, .card')
+    .forEach(el=>{
+      gsap.set(el,{opacity:0,y:24});
+      ScrollTrigger.create({trigger:el,start:'top 88%',once:true,
+        onEnter:()=>gsap.to(el,{opacity:1,y:0,duration:.62,ease:EASE,overwrite:true})});
+    });
+}
+
+/* ── the masthead reads the section under it ─────────────────────── */
+const mastEl=document.getElementById('mast');
+const setMast=t=>mastEl.setAttribute('data-t',t);
+setMast('ink-em');
+if(!reduced && window.ScrollTrigger){
+  document.querySelectorAll('[data-mast]').forEach(sec=>{
+    const t=sec.dataset.mast;
+    ScrollTrigger.create({trigger:sec,start:'top 60px',end:'bottom 60px',
+      onToggle:s=>{ if(s.isActive) setMast(t); }});
+  });
+}
+
+/* try one */
+{
+  const out=document.getElementById('askOut'), q=document.getElementById('askQ'),
+        a=document.getElementById('askA');
+  document.querySelectorAll('#chips .ch').forEach(b=>{
+    b.addEventListener('click',()=>{
+      document.querySelectorAll('#chips .ch').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      q.textContent=b.textContent; a.textContent=b.dataset.a; out.hidden=false;
+      if(window.gsap&&!reduced) gsap.fromTo(out,{opacity:0,y:12},{opacity:1,y:0,duration:.45,ease:'power2.out'});
+    });
+  });
+}
+
+/* waitlist · ONE implementation, wired to both forms. The page form keeps its
+   original ids so nothing depending on them breaks. Contract unchanged. */
+function wireWaitlist(F){
+  const API=window.ACE_API_URL||'https://web-production-7ffe.up.railway.app';
+  const form=document.getElementById(F.form), input=document.getElementById(F.input),
+        btn=document.getElementById(F.btn), err=document.getElementById(F.err),
+        ok=document.getElementById(F.ok);
+  if(!form) return;
+  const fail=m=>{err.textContent=m;err.hidden=false;btn.disabled=false;btn.textContent='join the first 100'};
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const email=input.value.trim(); err.hidden=true;
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ fail("that email doesn't look right, mind checking it"); return; }
+    btn.disabled=true; btn.textContent='joining…';
+    try{
+      const referral=new URLSearchParams(location.search).get('ref')||'landing';
+      const res=await fetch(`${API}/waitlist`,{method:'POST',
+        headers:{'Content-Type':'application/json'},body:JSON.stringify({email,referral})});
+      const data=await res.json().catch(()=>({}));
+      if(!res.ok) throw new Error(data?.detail||'something went wrong.');
+      const n=String(data.position).padStart(3,'0');
+      ok.textContent = data.already ? `already on the list, you're #${n}.`
+        : data.position<=100 ? `you're in. #${n} of the first 100.`
+        : `you're in. #${n} on the list.`;
+      form.hidden=true; ok.hidden=false;
+    }catch(ex){ fail((ex.message||'something went wrong, try again.').toLowerCase()); }
+  });
+}
+wireWaitlist({form:'waitlistForm',   input:'wlEmail',   btn:'wlSubmit',   err:'wlError',   ok:'wlDone'});
+wireWaitlist({form:'waitlistFormTop',input:'wlEmailTop',btn:'wlSubmitTop',err:'wlErrorTop',ok:'wlDoneTop'});
+
+/* the masthead CTA opens the form rather than throwing you down the page */
+{
+  const jd=document.getElementById('joinDlg');
+  document.getElementById('joinOpen').addEventListener('click',()=>{
+    jd.showModal(); setTimeout(()=>document.getElementById('wlEmailTop').focus(),40);
+  });
+  document.getElementById('joinClose').addEventListener('click',()=>jd.close());
+  jd.addEventListener('click',e=>{ if(e.target===jd) jd.close(); });
+}
+/* ══════════════════════════════════════════════════════════════════════
+   THE FOOTER GLOW
+   Blurred columns on a gentle bell curve, scaled up from the floor over the
+   last screen of scroll so it is at full height exactly at the end of the
+   page. Technique from the Ruixen gradient footer, rebuilt in vanilla and
+   recoloured to our palette.
+   ══════════════════════════════════════════════════════════════════════ */
+{
+  const VBW=1271, VBH=599, BARS=13, PEAK=.98, VALLEY=.58;
+  const g=document.getElementById('glowbars'), band=document.getElementById('glow');
+  const colW=VBW/BARS, mid=(BARS-1)/2;
+  let bars='';
+  for(let i=0;i<BARS;i++){
+    /* power falloff rather than a true bell: short at the edges, flat-topped
+       through the middle, which is what gives it the pyramid rise */
+    const t = mid ? Math.abs(i-mid)/mid : 0;
+    const barH = PEAK*VBH*(VALLEY + (1-VALLEY)*(1-Math.pow(t,1.24)));
+    bars += `<g filter="url(#glowb)"><rect x="${(i*colW).toFixed(2)}" y="${(VBH-barH).toFixed(2)}"`
+          + ` width="${(colW*1.55).toFixed(2)}" height="${barH.toFixed(2)}" fill="url(#glowg)"/></g>`;
+  }
+  g.innerHTML=bars;
+
+  const clamp01=v=>v<0?0:v>1?1:v;
+  const measure=()=>{
+    /* offsetHeight ignores the transform, so the band can measure itself */
+    const hh=band.offsetHeight||1;
+    const left=document.documentElement.scrollHeight - innerHeight - (window.scrollY||0);
+    band.style.transform=`scaleY(${clamp01((hh-left)/hh).toFixed(4)})`;
+  };
+  measure();
+  addEventListener('scroll',measure,{passive:true});
+  addEventListener('resize',measure,{passive:true});
+  /* ScrollTrigger already ticks every frame for the hero, so hang the
+     measurement off it too: that covers smooth-scroll cases where the native
+     scroll event lags behind what is actually on screen. */
+  if(window.ScrollTrigger) ScrollTrigger.create({start:0,end:'max',onUpdate:measure});
+}
+
+/* the disclaimer dialog. native <dialog> so Escape, focus return and the
+   backdrop are the platform's job, not ours. */
+{
+  const d=document.getElementById('disc');
+  const open=()=>d.showModal();
+  document.getElementById('discOpen').addEventListener('click',open);
+  document.querySelectorAll('[data-disc]').forEach(b=>b.addEventListener('click',open));
+  document.getElementById('discClose').addEventListener('click',()=>d.close());
+  /* clicking the backdrop: the dialog element itself fills the backdrop area */
+  d.addEventListener('click',e=>{ if(e.target===d) d.close(); });
+}
+</script>
 </body>
 </html>

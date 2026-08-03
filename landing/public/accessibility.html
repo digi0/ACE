@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accessibility · ace</title>
+<meta name="description" content="What ace has done for accessibility, what is not right yet, and how to tell us.">
+<meta name="robots" content="index,follow">
+<link rel="stylesheet" href="/legal.css?v=1">
+</head>
+<body>
+
+<header class="bar">
+  <a href="/" aria-label="ace home">
+    <svg viewBox="-54 -44 332.93 112" aria-hidden="true">
+      <g><circle cx="0" cy="12" r="31" fill="none" stroke="currentColor" stroke-width="22"/>
+         <rect x="30" y="-32" width="22" height="88" rx="11" fill="currentColor"/></g>
+      <path d="M 123.93 -11.75 A 31 31 0 1 0 123.93 35.75" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
+      <path d="M 211.93 12 A 31 31 0 1 0 186.31 42.53" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/>
+      <rect x="150.93" y="1" width="72" height="22" rx="11" fill="currentColor"/>
+      <circle cx="248.93" cy="38" r="18" fill="#00875A"/>
+    </svg>
+  </a>
+  <a class="back" href="/">Back to ace</a>
+</header>
+
+<main class="wrap">
+  <p class="kicker mono">legal</p>
+  <h1>Accessibility</h1>
+  <p class="stand">Every student should be able to use ace. This page says what we have
+    done, what is honestly not right yet, and how to tell us when we have got it
+    wrong.</p>
+  <p class="dates">effective 2 august 2026 · last updated 2 august 2026</p>
+
+  <nav class="toc" aria-label="Contents">
+    <p>contents</p>
+    <ol>
+      <li><a class="in" href="#aim">What we are aiming for</a></li>
+      <li><a class="in" href="#done">What we have done</a></li>
+      <li><a class="in" href="#gaps">Known problems</a></li>
+      <li><a class="in" href="#alt">If something is unusable</a></li>
+      <li><a class="in" href="#report">Telling us about a problem</a></li>
+      <li><a class="in" href="#scope">Scope and limits</a></li>
+    </ol>
+  </nav>
+
+  <section id="aim">
+    <h2>1. What we are aiming for</h2>
+    <p>We are working towards <b>WCAG 2.2 Level AA</b>. We are not claiming to have got
+      there. A statement that claims full conformance without an audit is worth nothing,
+      so this page describes where we actually are.</p>
+    <p>ace is a small team building in the open. When a barrier is reported to us, fixing
+      it goes to the top of the list rather than into a backlog.</p>
+  </section>
+
+  <section id="done">
+    <h2>2. What we have done</h2>
+    <ul>
+      <li><b>Reduced motion is respected.</b> This site is heavily animated. If your system
+        is set to reduce motion, the scroll choreography is switched off and the content is
+        shown as ordinary stacked sections. Nothing is hidden behind an animation you
+        cannot trigger.</li>
+      <li><b>Real text, not pictures of text.</b> Content is selectable, searchable,
+        translatable and readable by a screen reader. Decorative graphics are marked so
+        assistive technology skips them.</li>
+      <li><b>Keyboard use.</b> Links, buttons and form fields are reachable and operable
+        with a keyboard, and focus is visible rather than removed.</li>
+      <li><b>Semantic structure.</b> Headings run in order, landmarks are used, and form
+        fields have labels.</li>
+      <li><b>Colour is not the only signal.</b> Where colour carries meaning it is paired
+        with a word or a symbol.</li>
+      <li><b>Type sizing.</b> Nothing on the marketing site is set below 12px, body text is
+        17px, and the layout reflows on zoom rather than clipping.</li>
+      <li><b>Native dialogs.</b> The disclaimer uses the browser's own dialog element, so
+        focus handling and Escape behave the way you expect.</li>
+    </ul>
+  </section>
+
+  <section id="gaps">
+    <h2>3. Known problems</h2>
+    <p>These are real and we would rather say so than let you find out yourself.</p>
+    <ul>
+      <li><b>The home page is scroll-driven.</b> The opening sequence tells its story
+        through scrolling. With reduced motion on you get everything as static content, but
+        the experience is plainer than the animated one.</li>
+      <li><b>No formal audit yet.</b> We have not had an independent WCAG audit or testing
+        with a broad panel of assistive technology users. We have tested with keyboard
+        navigation and screen readers ourselves, which is not the same thing.</li>
+      <li><b>Contrast on decorative layers.</b> Some background artwork and the footer
+        gradient are low contrast by design. No information is carried by them, but they
+        may be visually busy.</li>
+      <li><b>Uploaded PDFs.</b> ace reads text from the degree audit you upload. If your
+        PDF is a scan without a text layer, ace cannot read it and will say so. We cannot
+        fix the accessibility of a document the university produced.</li>
+      <li><b>Handwriting imagery.</b> Handwritten notes shown on the home page are images
+        and are marked decorative. Everything they convey is repeated in the text
+        alongside.</li>
+    </ul>
+  </section>
+
+  <section id="alt">
+    <h2>4. If something is unusable</h2>
+    <p>If any part of ace stops you getting an answer you need, email us and we will
+      answer your question directly, by email, while we fix the underlying problem. You
+      should not have to wait for a release to get help.</p>
+    <p>Write to
+      <a class="in" href="mailto:access@acecollege.app">access@acecollege.app</a>.</p>
+  </section>
+
+  <section id="report">
+    <h2>5. Telling us about a problem</h2>
+    <p>Email <a class="in" href="mailto:access@acecollege.app">access@acecollege.app</a>.
+      It helps if you can tell us:</p>
+    <ul>
+      <li>The page or part of the product.</li>
+      <li>What you were trying to do.</li>
+      <li>What happened instead.</li>
+      <li>Your browser, device, and any assistive technology you use.</li>
+    </ul>
+    <p>We aim to acknowledge within <b>5 working days</b> and to tell you what we are doing
+      about it within <b>15 working days</b>. If a fix will take longer, we will say so and
+      offer a way around it in the meantime.</p>
+  </section>
+
+  <section id="scope">
+    <h2>6. Scope and limits</h2>
+    <p>This statement covers acecollege.app and the ace application at
+      app.acecollege.app.</p>
+    <p>It does not cover university systems, third-party sites we link to, or documents
+      published by an institution. Where ace points you to a university office or form,
+      that page's accessibility is that institution's responsibility, not ours.</p>
+    <p>ace is independent and is not affiliated with, endorsed by, or sponsored by any
+      university.</p>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot-in">
+    <span>© 2026 ace. Independent, and not affiliated with any university.</span>
+    <nav class="foot-nav">
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="/accessibility.html">Accessibility</a>
+      <a href="/">Home</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
