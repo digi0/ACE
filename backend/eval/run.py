@@ -118,17 +118,18 @@ def parse_judge_response(raw: str) -> tuple[float, str]:
     return score, str(data.get("reason", ""))[:200]
 
 
-def judge_answer(item: dict, answer: str, client) -> tuple[float, str]:
-    completion = client.chat.completions.create(
-        model=_JUDGE_MODEL,
-        messages=[
+def judge_answer(item: dict, answer: str) -> tuple[float, str]:
+    from backend.services import llm
+
+    raw = llm.chat(
+        [
             {"role": "system", "content": _JUDGE_SYSTEM},
             {"role": "user", "content": build_judge_prompt(item, answer)},
         ],
-        temperature=0.0,
         response_format={"type": "json_object"},
+        feature="eval_judge",
     )
-    return parse_judge_response(completion.choices[0].message.content)
+    return parse_judge_response(raw)
 
 
 # ── Runner ──────────────────────────────────────────────────────────────────
@@ -165,11 +166,6 @@ def main() -> int:
         print("ERROR: OPENAI_API_KEY is not set — the eval calls the chat model.")
         return 2
 
-    client = None
-    if not args.no_judge:
-        from openai import OpenAI
-        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
     hard_failures = 0
     scores: list[float] = []
     rows: list[dict] = []
@@ -187,7 +183,7 @@ def main() -> int:
         score, reason = (None, "")
         if not args.no_judge and not error:
             try:
-                score, reason = judge_answer(item, answer, client)
+                score, reason = judge_answer(item, answer)
                 scores.append(score)
             except Exception as e:  # noqa: BLE001 — judge must never crash the run
                 reason = f"judge error: {e}"
