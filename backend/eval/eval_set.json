@@ -229,14 +229,15 @@
       "intent": "career",
       "question": "What clubs should I join as a CS major?",
       "expected_points": [
-        "sends the student to OrgCentral to find current student organizations",
-        "does NOT name specific clubs or organizations, because ACE has no club data",
-        "stays useful by suggesting what to search for, given the student's major"
+        "names real Penn State organisations from ACE's directory, with their profile links",
+        "does not invent organisations, meeting times, or membership requirements",
+        "points the student to the full directory for anything not listed"
       ],
       "must_not": [
-        "HackPSU",
-        "WiCS",
-        "Association for Computing Machinery"
+        "HackPSU"
+      ],
+      "must_contain": [
+        "discover.psu.edu/organization/"
       ]
     },
     {
@@ -260,6 +261,25 @@
         "points the student to their department and academic adviser",
         "does not name specific faculty or labs",
         "does not describe a computing curriculum"
+      ],
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "career-clubs-dance",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "career",
+      "question": "I'm interested in dancing — what should I join?",
+      "expected_points": [
+        "names specific Penn State dance organisations",
+        "includes links (profile, and Instagram where available)",
+        "says what each organisation actually does"
+      ],
+      "must_contain": [
+        "discover.psu.edu/organization/",
+        "instagram.com"
       ],
       "must_not": [
         "CMPSC",

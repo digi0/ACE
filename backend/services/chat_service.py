@@ -19,7 +19,8 @@ from backend.services.program_service import (
 )
 from backend.services.policy_service import build_policy_snippet, policy_sources
 from backend.services.transcript_service import save_exchange
-from backend.services.profile_service import build_profile_snippet, remember
+from backend.services.profile_service import build_profile_snippet, remember, get_profile
+from backend.services.clubs_service import build_clubs_snippet
 
 load_dotenv()
 
@@ -204,7 +205,8 @@ def detect_question_intent(question):
         "resume", "résumé", "cover letter", "handshake", "job", "jobs",
         "employer", "hiring", "linkedin", "networking", "career fair",
         "club", "clubs", "student org", "orgcentral", "extracurricular",
-        "get involved", "research opportunity", "undergraduate research",
+        "get involved", "should i join", "what to join", "somewhere to belong",
+        "meet people", "find my people", "research opportunity", "undergraduate research",
         "research lab", "work in a lab", "study abroad", "volunteer",
         "grad school", "graduate school", "portfolio",
     ]
@@ -736,9 +738,13 @@ WHERE THE REAL DATA LIVES:
   adviser, who knows which faculty take undergraduates.
 
 RULES FOR THIS TOPIC — these override the general answer rules:
-- Do NOT name specific clubs, student organisations, labs, faculty, companies,
-  or job postings. Not even ones you believe exist. Send the student to
-  OrgCentral or Career Services to see the current, real list.
+- If a MATCHING PENN STATE STUDENT ORGANISATIONS section appears below, those
+  organisations are real and came from ACE's own directory — name them, describe
+  them, and give their links. That section is the ONLY source of organisation
+  names you may use.
+- Otherwise do NOT name specific clubs, student organisations, labs, faculty,
+  companies, or job postings. Not even ones you believe exist. Send the student
+  to OrgCentral or Career Services to see the current, real list.
 - You MAY be specific about the student's own academic record — their major,
   the courses they have completed, and what their program's plan contains —
   because that is grounded above. Use it to make the answer about them: what
@@ -1293,6 +1299,15 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
 
     resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
     career_snippet = CAREER_RESOURCES_SNIPPET if intent == "career" else ""
+    # Real organisations, matched on what ACE has learned about the student and
+    # on the question itself. Appended to the career block, whose rules defer to
+    # it when present and keep refusing to invent names when it is absent.
+    if intent == "career":
+        career_snippet += build_clubs_snippet(
+            (get_profile(user_id) or {}).get("interests") if user_id else None,
+            question=question,
+            major=user_major or "",
+        )
     profile_snippet = build_profile_snippet(user_id) if user_id else ""
     # Logistics gets the calendar too: "when is my registration window" is a
     # steps question whose answer needs real dates.
