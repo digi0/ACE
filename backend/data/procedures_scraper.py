@@ -87,7 +87,9 @@ _EXTRACT_SYSTEM = (
     "deadline, an office, or a form that is not written there. If the page does not "
     "state something, use an empty string or empty list. Prefer the page's own "
     "wording for rules. Steps must be the actions a STUDENT takes, in order, and "
-    "concrete enough to follow."
+    "concrete enough to follow. For who_to_contact, name the OFFICE and never an "
+    "individual staff member — a named person goes stale, and a personal name does "
+    "not belong in a file ACE quotes into answers."
 )
 
 _SCHEMA_HINT = """Return JSON only, exactly this shape:
