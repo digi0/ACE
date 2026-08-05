@@ -13,8 +13,15 @@ two ways:
      expected_points. Captures quality/nuance that substring checks can't.
      Skipped with --no-judge.
 
+Judge scores drift between runs on the same answer — some items score anywhere
+from 0.50 to 1.00 — so a single run cannot detect a small regression. `--runs 3`
+answers and grades each item three times, averages, and flags any item whose
+best and worst run differ by 0.3 or more as VOLATILE. A volatile item is not
+evidence of anything; fix its expected_points or read it by hand.
+
 Usage:
     python -m backend.eval.run                 # full run (hard asserts + judge)
+    python -m backend.eval.run --runs 3        # 3-run average + volatility report
     python -m backend.eval.run --no-judge      # hard asserts only (no judge cost)
     python -m backend.eval.run --filter psych  # only items whose id/major matches
     python -m backend.eval.run --set path.json # use a different eval set
@@ -143,13 +150,55 @@ def load_items(path: Path, filt: str | None) -> list[dict]:
     return items
 
 
+def run_item(item, runs, judge_on):
+    """Answer and grade one item `runs` times. Returns (answers, hards, scores, reasons).
+
+    Each run REGENERATES the answer as well as re-judging it, because both are
+    sources of variance and a student only ever experiences the pair. Judging one
+    frozen answer repeatedly would measure the grader and flatter the pipeline.
+    """
+    answers, hards, scores, reasons = [], [], [], []
+    for _ in range(runs):
+        answer, error = collect_answer(item["question"], item.get("major"))
+        hard = check_hard_assertions(answer, item)
+        if error:
+            hard.append(f"pipeline error: {error}")
+        answers.append(answer)
+        hards.append(hard)
+
+        if judge_on and not error:
+            try:
+                score, reason = judge_answer(item, answer)
+                scores.append(score)
+                reasons.append(reason)
+            except Exception as e:  # noqa: BLE001 — the judge must never crash a run
+                reasons.append(f"judge error: {e}")
+    return answers, hards, scores, reasons
+
+
+def spread(scores):
+    """(mean, min, max) or (None, None, None)."""
+    if not scores:
+        return None, None, None
+    return sum(scores) / len(scores), min(scores), max(scores)
+
+
+# A gap this wide between the best and worst run means one number tells you
+# nothing — the item, not the pipeline, is what moved.
+VARIANCE_FLAG = 0.3
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Run the ACE answer-quality eval.")
     ap.add_argument("--set", default=str(_DEFAULT_SET), help="path to eval set JSON")
     ap.add_argument("--no-judge", action="store_true", help="hard assertions only (no judge calls)")
     ap.add_argument("--filter", default=None, help="only items whose id or major contains this")
     ap.add_argument("--threshold", type=float, default=0.7, help="judge score below this is flagged")
+    ap.add_argument("--runs", type=int, default=1, metavar="N",
+                    help="answer and grade each item N times, and average "
+                         "(3 is enough to stop chasing noise; costs N x the calls)")
     args = ap.parse_args()
+    runs = max(1, args.runs)
 
     # Load the repo-root .env so OPENAI_API_KEY is available even when it isn't
     # exported in the shell (chat_service also calls this, but we check the key
@@ -167,48 +216,66 @@ def main() -> int:
         return 2
 
     hard_failures = 0
-    scores: list[float] = []
     rows: list[dict] = []
+    judge_on = not args.no_judge
 
-    print(f"Running {len(items)} eval item(s) | model={OPENAI_CHAT_MODEL} | judge={'off' if args.no_judge else 'on'}\n")
+    calls = len(items) * runs * (2 if judge_on else 1)
+    print(f"Running {len(items)} eval item(s) x {runs} run(s) | model={OPENAI_CHAT_MODEL} "
+          f"| judge={'on' if judge_on else 'off'} | ~{calls} model calls\n")
 
     for item in items:
-        answer, error = collect_answer(item["question"], item.get("major"))
-        hard = check_hard_assertions(answer, item)
-        if error:
-            hard.append(f"pipeline error: {error}")
-        if hard:
+        answers, hards, scores, reasons = run_item(item, runs, judge_on)
+
+        # An item fails hard if ANY run fails. A must_not that holds two times in
+        # three is not holding — that is exactly the leak worth catching.
+        failed_runs = [h for h in hards if h]
+        if failed_runs:
             hard_failures += 1
+        mean, lo, hi = spread(scores)
+        volatile = mean is not None and (hi - lo) >= VARIANCE_FLAG
 
-        score, reason = (None, "")
-        if not args.no_judge and not error:
-            try:
-                score, reason = judge_answer(item, answer)
-                scores.append(score)
-            except Exception as e:  # noqa: BLE001 — judge must never crash the run
-                reason = f"judge error: {e}"
+        rows.append({"item": item, "hard": failed_runs, "mean": mean,
+                     "lo": lo, "hi": hi, "volatile": volatile, "reasons": reasons})
 
-        rows.append({"item": item, "hard": hard, "score": score, "reason": reason})
-
-        status = "FAIL" if hard else "ok  "
-        score_s = "  -  " if score is None else f"{score:.2f}"
-        print(f"[{status}] {score_s}  {item['id']:<24} ({item.get('major','—')})")
-        for f in hard:
-            print(f"          ✗ {f}")
-        if reason and not args.no_judge:
-            print(f"          · {reason}")
+        status = "FAIL" if failed_runs else "ok  "
+        score_s = "  -  " if mean is None else f"{mean:.2f}"
+        band = ""
+        if mean is not None and runs > 1:
+            band = f"  [{lo:.2f}–{hi:.2f}]{'  ⚠ volatile' if volatile else ''}"
+        print(f"[{status}] {score_s}  {item['id']:<24} ({item.get('major','—')}){band}")
+        for h in failed_runs:
+            for f in h:
+                print(f"          ✗ {f}")
+        # One reason is enough when they agree; show each when the runs disagree.
+        for reason in (reasons if volatile else reasons[:1]):
+            if reason:
+                print(f"          · {reason}")
 
     # ── Summary ──
     n = len(items)
+    graded = [r for r in rows if r["mean"] is not None]
     print("\n" + "─" * 60)
-    print(f"Hard assertions: {n - hard_failures}/{n} passed")
-    if scores:
-        mean = sum(scores) / len(scores)
-        below = [r for r in rows if r["score"] is not None and r["score"] < args.threshold]
-        print(f"Judge mean score: {mean:.2f} over {len(scores)} item(s)")
+    print(f"Hard assertions: {n - hard_failures}/{n} passed"
+          + (f"  (an item fails if any of its {runs} runs fails)" if runs > 1 else ""))
+    if graded:
+        mean = sum(r["mean"] for r in graded) / len(graded)
+        below = [r for r in graded if r["mean"] < args.threshold]
+        print(f"Judge mean score: {mean:.2f} over {len(graded)} item(s)"
+              + (f", averaged across {runs} runs" if runs > 1 else ""))
         print(f"Below threshold ({args.threshold}): {len(below)}")
         for r in below:
-            print(f"  - {r['item']['id']} ({r['score']:.2f})")
+            print(f"  - {r['item']['id']} ({r['mean']:.2f})")
+
+        volatile = [r for r in graded if r["volatile"]]
+        if volatile:
+            print(f"\nVolatile ({VARIANCE_FLAG:+.1f} or more between best and worst run): "
+                  f"{len(volatile)}")
+            for r in volatile:
+                print(f"  - {r['item']['id']} [{r['lo']:.2f}–{r['hi']:.2f}]")
+            print("  These items cannot detect a small regression. Tighten their "
+                  "expected_points, or read the answers by hand.")
+        elif runs > 1:
+            print("\nNo volatile items — a change in the mean is worth believing.")
 
     # Non-zero exit on any hard failure so this is usable as a gate.
     return 1 if hard_failures else 0
