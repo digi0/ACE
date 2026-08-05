@@ -18,12 +18,15 @@
       "intent": "gen_ed",
       "question": "Which gen ed courses also count toward my major?",
       "expected_points": [
-        "identifies at least one double-dip course that satisfies both Gen Ed and a CMPSC requirement",
-        "names specific course codes"
+        "names specific course codes that count toward both General Education and the Computer Science major",
+        "for each course named, says which General Education category it satisfies",
+        "makes clear which courses are required for the major and which count only if the student chooses them"
       ],
       "must_not": [],
       "must_contain": [
-        "ENGL 202C"
+        "CMPSC 150N",
+        "PHYS 211",
+        "GWS"
       ]
     },
     {
