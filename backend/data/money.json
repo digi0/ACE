@@ -167,12 +167,12 @@
    "topic": "refunds",
    "what_it_is": "This page outlines possible reasons for not receiving a refund.",
    "steps": [],
-   "who_to_contact": "Office of Student Aid, ''",
+   "who_to_contact": "Office of the Bursar, 814-865-6528",
    "amounts": [
     "14 days from receipt of that payment"
    ],
    "timing": "once weekly for paper refund checks",
-   "notes": "eRefund is recommended for faster receipt of future refunds.",
+   "notes": "eRefund is recommended for faster receipt of future refunds. Financial aid that has not yet disbursed is one possible cause — the Office of Student Aid (814-865-6301) handles disbursement.",
    "source_url": "https://www.bursar.psu.edu/faq/why-have-i-not-received-my-refund",
    "source_title": "Why have I not received my refund?"
   },

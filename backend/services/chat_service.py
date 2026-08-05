@@ -13,6 +13,7 @@ from backend.services.student_doc_service import (
 )
 from backend.services.program_service import (
     get_program,
+    get_prerequisites,
     build_program_context_snippet,
     build_recommendation_context,
     get_double_dips,
@@ -20,11 +21,12 @@ from backend.services.program_service import (
 from backend.services.policy_service import build_policy_snippet, policy_sources
 from backend.services.transcript_service import save_exchange
 from backend.services.profile_service import build_profile_snippet, remember, get_profile
-from backend.services.clubs_service import build_clubs_snippet
-from backend.services.procedures_service import build_procedures_snippet
-from backend.services.places_service import build_places_snippet
+from backend.services.clubs_service import build_clubs_snippet, search_clubs
+from backend.services.procedures_service import build_procedures_snippet, find_procedures
+from backend.services.places_service import build_places_snippet, find_places
 from backend.services.events_service import build_events_snippet
 from backend.services.money_service import build_money_snippet
+from backend.services.visual_policy import decide as decide_visual, build_visual_directive
 
 load_dotenv()
 
@@ -907,6 +909,60 @@ def _deadlines_snippet_property() -> str:
     return _get_deadlines_snippet()
 
 
+def _count_visual_material(question, intent, user_major, student_doc):
+    """How many items each visual block would actually have to work with.
+
+    All local lookups — JSON and dict reads, no API calls — so this is cheap to
+    run on every request. The point is that the policy can never authorise a
+    block that has nothing behind it.
+    """
+    counts = {}
+    try:
+        procs = find_procedures(question)
+        if procs:
+            counts["checklist"] = max(len(p.get("steps") or []) for p in procs)
+
+        places = find_places(question)
+        clubs = search_clubs([question]) if intent == "career" else []
+        cards = len(places) + len(clubs)
+        if cards:
+            counts["cards"] = cards
+
+        if intent in ("deadline", "logistics"):
+            counts["strip"] = _upcoming_deadline_count()
+
+        if user_major and intent in ("recommendation", "student_progress"):
+            audit = (student_doc or {}).get("audit_parse") or {}
+            done = [c.get("code") for c in audit.get("completed_courses", []) if c.get("code")]
+            ctx = build_recommendation_context(user_major, done)
+            if ctx and ctx.get("propose"):
+                counts["plan"] = len(ctx["propose"])
+
+        # A prereq map only makes sense when the student named a course.
+        for code in extract_course_codes(question)[:1]:
+            prereqs = get_prerequisites(code)
+            if prereqs:
+                counts["map"] = len(prereqs) + 1
+    except Exception as exc:  # noqa: BLE001 — counting must never break an answer
+        logger.warning("_count_visual_material | %s", exc)
+    return counts
+
+
+def _upcoming_deadline_count() -> int:
+    """Dated events left in the current term — the strip's raw material."""
+    try:
+        from backend.services.calendar_scraper import load_calendar
+        today = date.today().isoformat()
+        data = load_calendar() or {}
+        for sem in data.get("semesters", []):
+            future = [e for e in sem.get("events", []) if (e.get("iso_date") or "") >= today]
+            if future:
+                return len(future)
+    except Exception:  # noqa: BLE001
+        pass
+    return 0
+
+
 def _build_recommendation_snippet(program_name, student_doc):
     """Grounding for "what should I take next semester?".
 
@@ -1340,6 +1396,16 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     aid_snippet = FINANCIAL_AID_RESOURCES_SNIPPET if intent == "financial_aid" else ""
     intl_snippet = INTERNATIONAL_RESOURCES_SNIPPET if intent == "international" else ""
 
+    # How much visual the answer may reach for. Counted from what actually
+    # matched — a block never fires on data that isn't there.
+    visual_counts = _count_visual_material(question, intent, user_major, student_doc)
+    visual = decide_visual(question, intent, visual_counts, bool(student_doc))
+    visual_directive = build_visual_directive(
+        question, intent, visual_counts, bool(student_doc)
+    )
+    logger.info("visual policy | level=%s block=%s | %s",
+                visual["level"], visual["block"], visual["reason"])
+
     # Build program requirements context if user has a major selected
     program_snippet = ""
     if user_major:
@@ -1450,7 +1516,7 @@ The detected intent for the current question is: {intent}
 - Do not mention internal record numbers.
 - If a Degree Audit Advisory is present above, include the recommendation naturally in your answer when it is relevant to what the student asked.
 - Keep the tone student-friendly and specific.
-{_INTENT_ANSWER_RULES.get(intent, "")}"""
+{_INTENT_ANSWER_RULES.get(intent, "")}{visual_directive}"""
 
     try:
         # Build messages: system → history (capped at 6) → current question
@@ -1476,7 +1542,7 @@ The detected intent for the current question is: {intent}
         # Learn from what the student said, after their answer is already on
         # screen — the extraction call must never sit in front of the response.
         remember(user_id, question)
-        yield f"data: {json.dumps({'done': True, 'sources': sources, 'intent': intent, 'used_student_doc': bool(student_doc_context), 'message_id': message_id})}\n\n"
+        yield f"data: {json.dumps({'done': True, 'sources': sources, 'intent': intent, 'used_student_doc': bool(student_doc_context), 'message_id': message_id, 'visual': visual})}\n\n"
 
     except Exception as e:
         logger.error("ask_advisor_stream | error: %s", e, exc_info=True)

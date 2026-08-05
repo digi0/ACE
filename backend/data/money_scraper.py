@@ -78,7 +78,12 @@ _EXTRACT_SYSTEM = (
     "This record is for NAVIGATION: how billing works and who to contact. Do NOT "
     "extract anything that reads as advice about an individual student's financial "
     "aid, borrowing, or eligibility. Institutional phone numbers and office email "
-    "addresses are wanted; an individual person's contact details are not."
+    "addresses are wanted; an individual person's contact details are not.\n"
+    "who_to_contact is the office that OWNS this page and this process. A page may "
+    "mention another office as a possible cause or a related step — that belongs in "
+    "notes, never in who_to_contact. A bursar page is owned by the Bursar even when "
+    "it mentions financial aid; sending a student to the wrong office is the most "
+    "expensive mistake this record can make."
 )
 
 # Built by concatenation, not %-formatting: the example value contains a literal

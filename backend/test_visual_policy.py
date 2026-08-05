@@ -101,10 +101,13 @@ def test_every_decision_explains_itself():
 
 def test_directive_matches_the_decision():
     d0 = vp.build_visual_directive("who do I email?", "contact")
-    assert "prose only" in d0.lower()
+    assert "answer in prose" in d0.lower()
+    # The policy governs STRUCTURE, not length. A directive that suppresses
+    # detail is how a gen-ed answer loses its per-course explanation.
+    assert "detail the question deserves" in d0
 
     d2 = vp.build_visual_directive("can I take CMPSC 465?", "courses", {"map": 5})
-    assert "compact map" in d2 and "two sentences" in d2
+    assert "compact map" in d2 and "what each one means" in d2
 
     d3 = vp.build_visual_directive("show me the map for CMPSC 465", "courses", {"map": 5})
     assert "full map" in d3

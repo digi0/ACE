@@ -188,15 +188,23 @@ def build_visual_directive(question, intent, counts=None, has_audit=False):
     if d["offer"] and d["block"]:
         return ("\n\nVISUAL POLICY: answer in prose. Do not produce a table or a "
                 f"long list. End with exactly one short offer: \"{offer_line(d['block'])}\"")
+    # These govern STRUCTURE, not length. Telling the model to be brief is how a
+    # gen-ed answer loses the per-course explanation that made it useful — the
+    # goal is to stop unwarranted scaffolding, not to withhold detail.
     if d["level"] == 0:
-        return ("\n\nVISUAL POLICY: prose only. No tables, no ASCII diagrams, no "
-                "long bulleted breakdowns. Answer plainly and stop.")
+        return ("\n\nVISUAL POLICY: answer in prose. Do not build a table, an ASCII "
+                "diagram, or a visual layout. A plain list is fine when the answer "
+                "genuinely is a list of things — just don't dress it up. Give the "
+                "detail the question deserves.")
     if d["level"] == 1:
-        return ("\n\nVISUAL POLICY: prose, with the key number or date stated once "
-                "and clearly. No table, no list of more than three items.")
+        return ("\n\nVISUAL POLICY: prose, with the key number or date stated once and "
+                "clearly. No table and no diagram. Explain what it means for the "
+                "student — the emphasis is on that one value, not on brevity.")
     if d["level"] == 2:
-        return (f"\n\nVISUAL POLICY: a compact {d['block']} is warranted — keep it to the "
-                "items that answer the question, and keep the prose around it to two "
-                "sentences. Do not restate the block in prose underneath it.")
-    return (f"\n\nVISUAL POLICY: the student asked to see this. Produce the full "
-            f"{d['block']}, and keep prose to a single framing sentence.")
+        return (f"\n\nVISUAL POLICY: a compact {d['block']} is warranted. Lead with the "
+                "direct answer, then present the items, and say what each one means "
+                "for this student. Don't present the same items twice in two "
+                "different forms.")
+    return (f"\n\nVISUAL POLICY: the student asked to see this laid out. Produce the "
+            f"full {d['block']}, with a framing sentence and whatever explanation the "
+            "items need to be understood.")
