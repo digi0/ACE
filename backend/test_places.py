@@ -46,6 +46,22 @@ def test_questions_route_to_the_right_part_of_campus():
         assert got and got[0] == expected, f"{question!r} → {got}, wanted {expected}"
 
 
+def test_student_phrasing_finds_the_right_part_of_campus():
+    # Written the way a student types, not the way a directory is indexed.
+    # "I'm starving" and "somewhere quiet to cram" both matched nothing before.
+    for q, want in [
+        ("I'm starving, where do I go", "dining"),
+        ("somewhere quiet to cram", "study_space"),
+        ("where can I do laundry", "housing"),
+        ("I need to see a doctor", "health"),
+        ("how do I get to campus without a car", "transit"),
+        ("my laptop broke, who fixes it", "it_printing"),
+        ("where do I work out", "recreation"),
+        ("got a ticket on my windshield", "parking"),
+    ]:
+        assert want in ps.detect_categories(q), f"{q!r} → {ps.detect_categories(q)}"
+
+
 def test_unrelated_questions_match_nothing():
     for q in ["what math courses are required for my major?", "when is the drop deadline?", ""]:
         assert ps.find_places(q) == [], f"{q!r} should not pull a campus place"

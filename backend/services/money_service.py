@@ -36,20 +36,26 @@ TOPIC_TRIGGERS = {
     ],
     "refunds": [
         "refund", "refunded", "credit balance", "erefund", "money back",
-        "overpaid", "direct deposit",
+        "overpaid", "direct deposit", "money i'm owed", "money im owed",
+        "owed money", "owe me money", "get my money",
     ],
     "late_fees": [
         "late fee", "late payment", "past due", "delinquent", "financial hold",
         "didn't pay", "did not pay", "missed a payment", "balance due",
+        "can't pay", "cannot pay", "can't afford the", "on hold", "account is on hold",
     ],
     "payments": [
         "pay my bill", "pay tuition", "make a payment", "payment plan",
         "credit card", "pay by check", "529", "how do i pay",
+        "parents pay", "parents want to pay", "someone else pay", "pay for me",
+        "authorized user", "third party pay",
     ],
     "billing": [
         "my bill", "tuition bill", "student account", "what is this charge",
         "what's this charge", "charge on my account", "invoice", "statement",
         "tuition due", "when is tuition due",
+        "weird charge", "unexpected charge", "charge i don't", "don't recognise",
+        "don't recognize", "being charged", "what am i paying for",
     ],
     "forms": ["bursar form", "student account form"],
     "third_party": ["third party billing", "employer pays", "sponsor", "sponsored billing"],

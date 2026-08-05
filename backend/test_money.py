@@ -31,6 +31,20 @@ def test_navigational_questions_are_answered():
         assert ms.build_money_snippet(q), f"{q!r} should produce grounding"
 
 
+def test_student_phrasing_finds_the_navigation():
+    # Only one of these six matched before — the triggers were written in the
+    # bursar's words, not a student's.
+    for q, want in [
+        ("there's a weird charge I don't recognise", "billing"),
+        ("who do I ask about money I'm owed", "refunds"),
+        ("I can't pay by the due date", "late_fees"),
+        ("my account is on hold for money", "late_fees"),
+        ("how do I set up a payment plan", "payments"),
+        ("my parents want to pay my tuition", "payments"),
+    ]:
+        assert want in ms.detect_topics(q), f"{q!r} → {ms.detect_topics(q)}"
+
+
 def test_advice_questions_are_refused_even_with_no_data_match():
     # The dangerous case: a pure advice question matches no navigational topic,
     # so without an explicit guard it would sail through with no boundary at all.

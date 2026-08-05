@@ -36,6 +36,102 @@ def test_missing_a_deadline_routes_to_the_petition():
         assert ps.detect_topics(q)[0] == "petition", f"{q!r} → {ps.detect_topics(q)}"
 
 
+# How a student describes their situation, per topic. Written deliberately in
+# their words rather than the registrar's. When this table was first run, 36 of
+# 39 cases matched NOTHING — the procedures dataset was reachable only by someone
+# who already knew the institutional vocabulary, which is the opposite of who
+# needs it. Add to this table before adding trigger phrases.
+STUDENT_PHRASINGS = {
+    "withdrawal": [
+        "I want to quit school this semester",
+        "I'm thinking of dropping out",
+        "I stopped going to my classes, what happens",
+        "can I leave in the middle of the term",
+        "how do I get out of this semester entirely",
+        "I don't want to be enrolled anymore",
+    ],
+    "leave_of_absence": [
+        "I need to take a year off",
+        "can I pause my degree for a bit",
+        "I want to step away for a semester and come back",
+        "I'm going through something and need time",
+        "family emergency, I can't be here this term",
+    ],
+    "re_enrollment": [
+        "I dropped out two years ago and want to finish",
+        "how do I come back after leaving",
+        "I want to start again at Penn State",
+        "I was gone a while, can I return",
+        "I got suspended, how do I get back in",
+    ],
+    "late_drop": [
+        "I want to get out of one class",
+        "can I quit just one course",
+        "how do I remove a class from my schedule",
+        "I want to unenroll from a class",
+    ],
+    "petition": [
+        "is there any way to appeal this",
+        "can I ask for an exception",
+        "who decides if I can get out of this rule",
+        "I have a really good reason, can they make an exception",
+    ],
+    "registration": [
+        "I can't sign up for classes yet",
+        "why can't I enroll",
+        "when does my registration window open",
+        "the system won't let me add anything",
+    ],
+    "change_program": [
+        "I want to switch what I'm studying",
+        "I don't like my major anymore",
+        "can I move to a different campus",
+        "I want to study something else",
+    ],
+    "graduation": [
+        "how do I make sure I actually graduate",
+        "what do I do to walk in May",
+        "am I signed up to graduate",
+        "how do I get my diploma",
+    ],
+    "transcripts": [
+        "I need my grades sent to another school",
+        "how do I get a copy of my record",
+        "grad school wants my academic history",
+    ],
+}
+
+
+def test_every_topic_is_reachable_in_plain_english():
+    misses = []
+    for topic, questions in STUDENT_PHRASINGS.items():
+        for q in questions:
+            if topic not in ps.detect_topics(q):
+                misses.append(f"  {topic}: {q!r} → {ps.detect_topics(q) or 'nothing'}")
+    assert not misses, "student phrasings that find nothing:\n" + "\n".join(misses)
+
+
+def test_ordinary_questions_still_pull_no_procedure():
+    # Widening the triggers must not turn every question into paperwork.
+    for q in [
+        "what math courses are required for my major?",
+        "where can I eat on campus?",
+        "who is my adviser?",
+        "what clubs should I join?",
+        "when is the last day to drop?",   # a date question, not a procedure
+        "how many credits do I need?",
+        "I'm stressed about finals",
+    ]:
+        assert ps.find_procedures(q) == [], f"{q!r} pulled {ps.find_procedures(q)}"
+
+
+def test_scope_words_separate_one_course_from_the_whole_term():
+    # "get out of one class" and "get out of this semester" differ by scope
+    # alone, and they lead to completely different paperwork.
+    assert "late_drop" in ps.detect_topics("I want to get out of one class")
+    assert "withdrawal" in ps.detect_topics("how do I get out of this semester entirely")
+
+
 def test_students_words_find_the_procedure_not_just_the_policy_name():
     # A student who knows to say "grade forgiveness" always found it. One
     # describing what actually happened to them did not, and got an ungrounded

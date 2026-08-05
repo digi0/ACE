@@ -28,6 +28,8 @@ CATEGORY_TRIGGERS = {
         "hungry", "meal plan", "meal swipe", "commons", "cafe", "coffee",
         "late night food", "halal", "vegan", "vegetarian", "gluten",
         "where to eat", "restaurant", "dining hall",
+        # How a hungry student actually types it.
+        "starving", "grab food", "get food", "something to eat", "grab a bite",
     ],
     "housing": [
         "housing", "dorm", "dorms", "residence hall", "res hall", "live on campus",
@@ -41,6 +43,7 @@ CATEGORY_TRIGGERS = {
     "study_space": [
         "study space", "study spot", "place to study", "quiet space", "study room",
         "group study", "somewhere to study", "reserve a room",
+        "somewhere quiet", "quiet place", "cram", "pull an all", "study session",
         # Bare "study" too: "where should I study tonight?" is the natural
         # phrasing and matched none of the phrases above. Guarded below, because
         # "study abroad" is a career question, not a room booking.
@@ -63,6 +66,8 @@ CATEGORY_TRIGGERS = {
     "parking": [
         "parking", "park my car", "parking permit", "parking ticket", "tow",
         "where do i park", "parking pass", "garage",
+        # Getting ticketed or towed is how most students meet this office.
+        "ticket on my", "parking fine", "ticketed", "towed", "boot on my car",
     ],
     "it_printing": [
         "print", "printing", "printer", "wifi", "wi-fi", "it help", "computer lab",
