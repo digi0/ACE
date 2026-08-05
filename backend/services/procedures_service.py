@@ -54,6 +54,16 @@ TOPIC_TRIGGERS = {
         "incomplete grade", "credit by exam", "challenge exam", "satisfactory",
         "unsatisfactory", "s/u grade", "pass fail", "academic warning",
         "academic suspension", "probation",
+        # The names students actually use. Matching only the policy's own term
+        # meant someone who knew to say "grade forgiveness" got the procedure and
+        # someone describing what happened to them ("I retook it") got an
+        # ungrounded guess — exactly backwards, since not knowing the vocabulary
+        # is why they are asking.
+        "retook", "retake", "retaking", "repeated", "repeating", "took it again",
+        "take it again", "second attempt", "failed a course", "failed a class",
+        "old grade", "previous grade", "first grade", "original grade",
+        "grade removed", "remove the grade", "grade replaced", "grade replacement",
+        "does the old grade", "still count", "replace my grade", "bad grade",
     ],
     "registration": [
         "late registration", "registration timetable", "when can i register",

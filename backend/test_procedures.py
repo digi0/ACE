@@ -36,6 +36,21 @@ def test_missing_a_deadline_routes_to_the_petition():
         assert ps.detect_topics(q)[0] == "petition", f"{q!r} → {ps.detect_topics(q)}"
 
 
+def test_students_words_find_the_procedure_not_just_the_policy_name():
+    # A student who knows to say "grade forgiveness" always found it. One
+    # describing what actually happened to them did not, and got an ungrounded
+    # answer instead — the opposite of who needs help. Every phrasing below
+    # returned nothing before the trigger list was widened.
+    for q in [
+        "I failed a course and retook it. Can the old grade be removed?",
+        "I repeated a class, does the old grade still count?",
+        "took it again — does the first grade go away?",
+        "can I replace my grade from last term?",
+    ]:
+        assert "grades" in ps.detect_topics(q), f"{q!r} → {ps.detect_topics(q)}"
+        assert ps.find_procedures(q), f"{q!r} found no procedure"
+
+
 def test_a_plain_date_question_is_not_a_petition():
     # "When is the deadline" must NOT be turned into paperwork.
     assert ps.detect_topics("when is the late drop deadline?")[0] == "late_drop"
