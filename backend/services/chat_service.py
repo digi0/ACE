@@ -24,7 +24,9 @@ from backend.services.profile_service import build_profile_snippet, remember, ge
 from backend.services.clubs_service import build_clubs_snippet, search_clubs
 from backend.services.procedures_service import build_procedures_snippet, find_procedures
 from backend.services.places_service import build_places_snippet, find_places
-from backend.services.events_service import build_events_snippet
+from backend.services.events_service import (
+    build_events_snippet, find_events, mentions_events, is_stale as is_events_stale,
+)
 from backend.services.money_service import build_money_snippet
 from backend.services.visual_policy import decide as decide_visual, build_visual_directive
 
@@ -909,7 +911,7 @@ def _deadlines_snippet_property() -> str:
     return _get_deadlines_snippet()
 
 
-def _count_visual_material(question, intent, user_major, student_doc):
+def _count_visual_material(question, intent, user_major, student_doc, history=None):
     """How many items each visual block would actually have to work with.
 
     All local lookups — JSON and dict reads, no API calls — so this is cheap to
@@ -923,13 +925,28 @@ def _count_visual_material(question, intent, user_major, student_doc):
             counts["checklist"] = max(len(p.get("steps") or []) for p in procs)
 
         places = find_places(question)
-        clubs = search_clubs([question]) if intent == "career" else []
+        # Mirror build_clubs_snippet's own fallback: question first, then the
+        # student's major. Without it the counter said "no cards" while the
+        # snippet was happily listing six clubs — the policy and the grounding
+        # disagreed about what data existed.
+        clubs = []
+        if intent == "career":
+            clubs = search_clubs([question]) or (
+                search_clubs([user_major.split(",")[0]]) if user_major else []
+            )
         cards = len(places) + len(clubs)
         if cards:
             counts["cards"] = cards
 
         if intent in ("deadline", "logistics"):
             counts["strip"] = _upcoming_deadline_count()
+
+        # Events were never counted, so "what's happening this week" could not
+        # reach a block no matter how many events the snippet had found.
+        if mentions_events(question) and not is_events_stale():
+            found = find_events(question)
+            if found:
+                counts["cards"] = max(counts.get("cards", 0), len(found))
 
         if user_major and intent in ("recommendation", "student_progress"):
             audit = (student_doc or {}).get("audit_parse") or {}
@@ -938,8 +955,15 @@ def _count_visual_material(question, intent, user_major, student_doc):
             if ctx and ctx.get("propose"):
                 counts["plan"] = len(ctx["propose"])
 
-        # A prereq map only makes sense when the student named a course.
-        for code in extract_course_codes(question)[:1]:
+        # A prereq map only makes sense when a course is on the table — but
+        # "map out the prereqs for these classes" names none, because the courses
+        # were named a turn ago. Fall back to the recent conversation so anaphora
+        # ("these", "them", "that one") still finds something to draw.
+        codes = extract_course_codes(question)
+        if not codes and history:
+            recent = " ".join(m.get("content", "") for m in history[-6:])
+            codes = extract_course_codes(recent)
+        for code in codes[:1]:
             prereqs = get_prerequisites(code)
             if prereqs:
                 counts["map"] = len(prereqs) + 1
@@ -1398,7 +1422,9 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
 
     # How much visual the answer may reach for. Counted from what actually
     # matched — a block never fires on data that isn't there.
-    visual_counts = _count_visual_material(question, intent, user_major, student_doc)
+    visual_counts = _count_visual_material(
+        question, intent, user_major, student_doc, history=history
+    )
     visual = decide_visual(question, intent, visual_counts, bool(student_doc))
     visual_directive = build_visual_directive(
         question, intent, visual_counts, bool(student_doc)

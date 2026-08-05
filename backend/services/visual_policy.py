@@ -84,7 +84,9 @@ INTENT_BLOCK = {
 # Questions about one course's eligibility are the strongest visual case there
 # is — the AND/OR structure is genuinely unreadable as prose.
 _PREREQ_QUESTION = re.compile(
-    r"\b(prereq\w*|pre-?requisite|eligible|can i take|am i able to take|"
+    # "pre req" and "pre-req" are how students actually spell it; matching only
+    # the closed-up form missed "map out the pre req map for these classes".
+    r"\b(pre[\s-]?req\w*|pre[\s-]?requisite|eligible|can i take|am i able to take|"
     r"do i need .* before|unlocks?|unlocked|opens up|before i can take)\b", re.I
 )
 
@@ -129,10 +131,18 @@ def decide(question, intent, counts=None, has_audit=False):
         if candidate and counts.get(candidate):
             block = candidate
 
-    if not block and asked:
-        # They asked to see something and we do hold structured data — just not
-        # the kind this intent usually reaches for. Use what exists.
-        block = next((b for b in _FALLBACK_ORDER if counts.get(b)), None)
+    if not block:
+        with_data = [b for b in _FALLBACK_ORDER if counts.get(b)]
+        # One kind of structured material and only one — there is nothing to be
+        # ambiguous about. "I failed a course and retook it" produced a
+        # 4-step checklist that decide() could not reach, because the question
+        # says neither "how do I" nor anything the intent's own block matches.
+        if len(with_data) == 1:
+            block = with_data[0]
+        elif asked and with_data:
+            # Several candidates: only honour the fallback when they asked, so a
+            # course question is not answered with whatever was lying around.
+            block = with_data[0]
 
     if not block:
         # Nothing structured to draw. If they asked anyway, say so rather than

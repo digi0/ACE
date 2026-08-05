@@ -116,6 +116,22 @@ def test_recommendation_context():
     assert build_recommendation_context("Not A Real Program 9999", []) is None
 
 
+def test_visual_counts_resolve_anaphora_from_history():
+    # "map out the prereqs for these classes" names no course — the courses were
+    # named a turn ago. Without the history fallback the student asked to see a
+    # map and got told there was nothing to draw.
+    from backend.services.chat_service import _count_visual_material
+
+    q = "can you map out the pre req map for these classes"
+    cs = "Computer Science, B.S. (Engineering)"
+    assert _count_visual_material(q, "courses", cs, {}) == {}, "no history → nothing"
+
+    history = [{"role": "assistant",
+                "content": "You could take CMPSC 465, CMPSC 431W and STAT 318 next term."}]
+    counts = _count_visual_material(q, "courses", cs, {}, history=history)
+    assert counts.get("map"), f"history should surface a course to map, got {counts}"
+
+
 def test_classify_major():
     # The CMPSC handbook documents the UP Engineering program — it must route to RAG.
     assert classify_major("Computer Science, B.S. (Engineering)") == "cs"
@@ -156,6 +172,7 @@ def test_filter_records_by_scope():
 
 if __name__ == "__main__":
     test_detect_question_intent()
+    test_visual_counts_resolve_anaphora_from_history()
     test_recommendation_context()
     test_classify_major()
     test_select_top_records()
