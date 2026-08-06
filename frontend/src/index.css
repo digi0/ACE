@@ -4681,9 +4681,14 @@ body {
 .ab-cards--clubs, .ab-cards--places, .ab-cards--events {
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
 }
-/* The card face rakes 135° — the same angle .suggestion-chip uses, so they read
-   as one surface language — and the EDGE carries a slow iridescent spectrum that
-   travels around the card, over a lifted shadow.
+/* A flat card face, and the spectrum confined to the 1px edge travelling round it.
+
+   The face MUST stay fully opaque, and that is load-bearing rather than a style
+   choice: the edge layer is painted across the whole border-box and is hidden
+   only by the face sitting on top of it. Any transparency in --ab-face and the
+   spectrum comes through the middle of the card. It did — hover was tinting the
+   face with --accent-bg, which is rgba at 0.10, so hovering a card washed the
+   whole thing in rainbow. Hover now moves the card, not its fill.
 
    The spectrum runs at full strength. It starts and ends on the emerald so the
    travel loops seamlessly and the brand colour is the one the eye lands on when
@@ -4694,7 +4699,7 @@ body {
    brand, not an oversight — brand/BRAND.md §5 is the place to record it if it
    stays. */
 .ab-card {
-  --ab-face: linear-gradient(135deg, var(--bg-card) 0%, var(--bg) 100%);
+  --ab-face: linear-gradient(var(--bg-card), var(--bg-card));
   --ab-edge: linear-gradient(115deg,
     #00875A 0%, #00B894 14%, #0091E6 28%, #5B4FE0 42%,
     #B429CC 56%, #F0345C 70%, #F59E0B 84%, #00875A 100%);
@@ -4723,10 +4728,9 @@ body {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
               0 6px 18px rgba(0, 0, 0, 0.40);
 }
+/* Lift and shadow only. Nothing here may touch --ab-face; see above. */
 .ab-card:hover {
   transform: translateY(-2px);
-  /* Only one card is hovered at a time, so the period stays spent once. */
-  --ab-face: linear-gradient(135deg, var(--bg-card) 0%, var(--accent-bg) 160%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7),
               0 12px 26px rgba(0, 0, 0, 0.11);
 }
