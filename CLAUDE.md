@@ -228,7 +228,13 @@ Tables:
 - `user_docs` — uploaded Degree Audit / What-If, one-per-user in practice; cascade-deletes with the user
 - `conversations` + `messages` — chat history, FK chain cascades
 
-Schema is created by `Base.metadata.create_all(bind=engine)` at FastAPI startup. There is no Alembic migration in use yet — adding a non-nullable column to an existing prod Postgres table will require either a one-off `ALTER TABLE` or wiring up Alembic. Existing nullable columns are safe to add via `create_all` (no-ops if the table exists; new columns must be defaulted).
+Schema is managed by **Alembic** (`alembic.ini`, `backend/migrations/`). `create_all()` is gone, as is the hand-rolled ALTER pass that grew beside it.
+
+To change the schema: edit `backend/models.py`, then `alembic revision --autogenerate -m "what changed"`, then read the generated file before committing it. Migrations run twice — from the `Procfile` before uvicorn accepts traffic, and again at import in `main.py` so local dev can't drift. The second is a no-op.
+
+**Guard every step on what the database already has.** `0001_baseline` and `0002` both do, and that is what let Alembic be adopted on a live database without anyone running `alembic stamp head` by hand at the right moment. Three shapes reach head from different directions: a fresh checkout, prod Postgres, and a box the old `_ensure_columns` already patched.
+
+The line that used to sit here said "existing nullable columns are safe to add via `create_all`". **That was never true** — `create_all` only ever creates *missing tables* and never alters an existing one, whatever the column's nullability. It cost a false production alarm on 2026-08-06. Indexes have the same trap and are easier to miss, because a fresh SQLite file gets them from the model definition while a long-running Postgres never does.
 
 ### Frontend
 
