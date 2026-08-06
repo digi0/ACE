@@ -1,5 +1,5 @@
 {
- "_about": "Penn State campus places and services. Built by `python -m backend.data.places_scraper`. HOURS ARE DELIBERATELY NOT STORED — they change by term and by day; each record carries the live hours page instead. map_url is a Google Maps search, not a verified pin. LLM extraction is not bit-for-bit reproducible: diff before committing.",
+ "_about": "Penn State campus places and services. Built by `python -m backend.data.places_scraper`. HOURS ARE DELIBERATELY NOT STORED — they change by term and by day; each record carries the live hours page instead. map_url is a Google Maps search, not a verified pin. LLM extraction is not bit-for-bit reproducible: diff before committing. A record with \"primary\": true is the front door to its category — the one to name first when the question picks a category but nothing inside it (\"I need to see a doctor\" named no record, so file order won and the answer opened on Lactation Rooms).",
  "scraped_at": "2026-08-03T21:21:54.605496+00:00",
  "count": 178,
  "hours_urls": {
@@ -1951,7 +1951,8 @@
    "url": "https://studentaffairs.psu.edu/health-wellbeing/recreation",
    "map_url": "https://www.google.com/maps/search/?api=1&query=Campus+Recreation+101+Intramural+%28IM%29+Building%2C+679+Curtin+Rd%2C+University+Park%2C+PA+16802+Penn+State+University+Park",
    "hours_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation",
-   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation"
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/recreation",
+   "primary": true
   },
   {
    "id": "mccoy-natatorium",
@@ -2094,7 +2095,8 @@
    "url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services",
    "map_url": "https://www.google.com/maps/search/?api=1&query=University+Health+Services+%28UHS%29+Student+Health+Center%2C+University+Park+campus+Penn+State+University+Park",
    "hours_url": "",
-   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services"
+   "source_url": "https://studentaffairs.psu.edu/health-wellbeing/medical-services",
+   "primary": true
   },
   {
    "id": "pharmacy",
@@ -2209,7 +2211,8 @@
    "url": "https://transportation.psu.edu",
    "map_url": "https://www.google.com/maps/search/?api=1&query=Transportation+Services++Penn+State+University+Park",
    "hours_url": "",
-   "source_url": "https://transportation.psu.edu"
+   "source_url": "https://transportation.psu.edu",
+   "primary": true
   },
   {
    "id": "student-parking",
@@ -2223,7 +2226,8 @@
    "url": "https://transportation.psu.edu/parking",
    "map_url": "https://www.google.com/maps/search/?api=1&query=Student+Parking++Penn+State+University+Park",
    "hours_url": "",
-   "source_url": "https://transportation.psu.edu/parking"
+   "source_url": "https://transportation.psu.edu/parking",
+   "primary": true
   },
   {
    "id": "faculty-staff-parking",

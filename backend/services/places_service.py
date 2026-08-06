@@ -58,6 +58,17 @@ CATEGORY_TRIGGERS = {
         "health center", "student health", "uhs", "doctor", "clinic", "sick",
         "counseling", "caps", "mental health", "therapy", "pharmacy",
         "immunization", "vaccine",
+        # Taken from what the eight health records themselves say they do —
+        # "Fill prescriptions", "X-ray and imaging services", "lab work",
+        # "University Ambulance Service" — because a student asks for the
+        # SERVICE, not the department. "where can I get a prescription" matched
+        # nothing at all while the Pharmacy record said it in as many words.
+        "prescription", "prescriptions", "refill", "medication",
+        "x-ray", "xray", "imaging", "radiology", "scan",
+        "lab work", "blood test", "blood work", "bloodwork",
+        "ambulance", "medical emergency", "urgent care",
+        "physical therapy", "rehab", "injury", "injured", "illness",
+        "breastfeeding", "lactation", "nurse", "checkup", "check-up",
     ],
     "transit": [
         "bus", "buses", "shuttle", "cata", "get around campus", "transit",
@@ -120,41 +131,111 @@ _GENERIC_NAME_WORDS = {
     "center", "centre", "building", "hall", "services", "service",
 }
 
+# Words that carry no topic and appear in every other question — and, crucially,
+# in every other DESCRIPTION. "I hurt my knee and need rehab" scored CAPS above
+# Physical Therapy because CAPS has the longer paragraph and so contained "and"
+# and "need" more often. Grammar was outvoting the one word that meant something.
+_WEAK_WORDS = {
+    "where", "what", "when", "which", "there", "here", "need", "needs", "want",
+    "have", "does", "should", "could", "would", "will", "with", "from", "about",
+    "some", "this", "that", "these", "those", "your", "yours", "mine", "help",
+    "find", "look", "know", "make", "take", "give", "tell", "please", "thanks",
+    "just", "like", "much", "many", "more", "most", "also", "into", "near",
+    "around", "over", "and", "the", "for", "are", "but", "not", "you", "can",
+    "was", "were", "its", "their", "them", "they", "through", "including",
+    "available", "offers", "offering", "provide", "provides", "providing",
+    "access", "various", "every", "well", "your",
+}
+
+
+# Hyphens are kept: splitting on them turns "x-ray" into "x" and "ray", and a
+# three-letter fragment is below every length floor here, so the Radiology record
+# — which says "X-ray and imaging services" — was unreachable by the word for it.
+_WORD = re.compile(r"[a-z][a-z\-]{2,}")
+
+
+def _words(text: str) -> set[str]:
+    return {w for w in _WORD.findall((text or "").lower())
+            if w not in _GENERIC_NAME_WORDS and w not in _WEAK_WORDS}
+
+
+def _overlap(asked: set[str], described: set[str]) -> int:
+    """How many asked-for words the text covers, allowing for word forms.
+
+    Exact matching alone left "prescription" not matching "Fill prescriptions"
+    and "rehab" not matching "rehabilitation" — so the record that literally
+    describes the service lost to the category's front door. Prefix matching from
+    five characters is enough for the endings that matter (-s, -es, -ing, -ation)
+    without pulling "car" onto "carpark".
+    """
+    hits = 0
+    for a in asked:
+        if a in described:
+            hits += 1
+        elif len(a) >= 5 and any(d.startswith(a) or a.startswith(d)
+                                 for d in described if len(d) >= 5):
+            hits += 1
+    return hits
+
 
 def _relevance(place: dict, q: str) -> int:
     """Extra credit for a place the question actually names or describes."""
-    score = 0
-    asked = set(re.findall(r"[a-z]+", q))
-    words = {w for w in re.findall(r"[a-z]+", place["name"].lower())
-             if len(w) > 3 and w not in _GENERIC_NAME_WORDS}
-    score += 3 * len(words & asked)
-    for tag in place.get("good_for", []):
-        if tag.lower() in q:
-            score += 2
+    asked = _words(q)
+    score = 3 * _overlap(asked, _words(place["name"]))
+    # good_for used to be matched by asking whether the whole tag appeared in the
+    # question, so a student saying "rehab" never reached the record tagged
+    # "rehabilitation" and lost to whichever record the front door favoured.
+    score += 2 * _overlap(asked, _words(" ".join(place.get("good_for") or [])))
     # What a place DOES, not just what it is called. A student says "I need to
     # see a doctor"; no record is named "doctor", so on name alone every health
     # record scored zero and the answer led with whatever sat first in the file.
-    described = {w for w in re.findall(r"[a-z]+", (place.get("what_it_is") or "").lower())
-                 if len(w) > 3 and w not in _GENERIC_NAME_WORDS}
-    score += len(described & asked)
+    score += _overlap(asked, _words(place.get("what_it_is")))
     return score
 
 
-def find_places(question: str, limit=MAX_PLACES) -> list[dict]:
-    categories = detect_categories(question)
-    if not categories:
+# A question can name a category and nothing inside it — "I need to see a doctor"
+# matches no record by name or description, so every health record scored zero and
+# whatever sat first in the file won. It was Lactation Rooms. The dataset now
+# marks a front door per category where one genuinely exists; this breaks the tie.
+def _rank(place: dict, q: str) -> tuple:
+    return (-_relevance(place, q), 0 if place.get("primary") else 1)
+
+
+def _described_by(question: str, places: list[dict]) -> list[str]:
+    """Categories reachable through the records' OWN words, not the trigger list.
+
+    "where can I get a prescription" matched nothing, while the Pharmacy record
+    says "Fill prescriptions" in as many words. Hand-written triggers will always
+    trail the data, so when they come up empty the descriptions are searched
+    directly. Two distinct content words must land on the same record — one is
+    how "what math courses do I need" turns into a campus map.
+    """
+    asked = {w for w in re.findall(r"[a-z]{4,}", (question or "").lower())
+             if w not in _GENERIC_NAME_WORDS and w not in _WEAK_WORDS}
+    if len(asked) < 2:
         return []
+    best = {}
+    for p in places:
+        text = f"{p['name']} {p.get('what_it_is','')} {' '.join(p.get('good_for') or [])}".lower()
+        hits = len(asked & set(re.findall(r"[a-z]{4,}", text)))
+        if hits >= 2:
+            best[p["category"]] = max(best.get(p["category"], 0), hits)
+    return [c for c, _ in sorted(best.items(), key=lambda kv: -kv[1])]
+
+
+def find_places(question: str, limit=MAX_PLACES) -> list[dict]:
     places = load_places()
     if not places:
+        return []
+    categories = detect_categories(question) or _described_by(question, places)
+    if not categories:
         return []
 
     q = (question or "").lower()
     picked = []
     for category in categories:
-        matches = sorted(
-            [p for p in places if p["category"] == category],
-            key=lambda p: -_relevance(p, q),
-        )
+        matches = sorted([p for p in places if p["category"] == category],
+                         key=lambda p: _rank(p, q))
         picked.extend(matches)
         if len(picked) >= limit:
             break

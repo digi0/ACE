@@ -62,6 +62,58 @@ def test_student_phrasing_finds_the_right_part_of_campus():
         assert want in ps.detect_categories(q), f"{q!r} → {ps.detect_categories(q)}"
 
 
+def test_the_question_reaches_the_record_that_answers_it():
+    """Every one of these opened on the wrong record, and for two reasons.
+
+    A question can name a category and nothing inside it — "I need to see a
+    doctor" matches no health record by name, so all eight scored zero and file
+    order won, which put Lactation Rooms first. Hence `primary` in places.json.
+
+    And when the question DID name the service, word forms lost it: "prescription"
+    never matched "Fill prescriptions", "rehab" never matched "rehabilitation",
+    and "x-ray" was split into "x" and "ray" and dropped for being too short.
+    """
+    for q, want in [
+        ("I need to see a doctor", "University Health Services (UHS)"),
+        ("where can I get a prescription", "Pharmacy"),
+        ("I need an x-ray", "Radiology"),
+        ("where do I get blood work done", "Laboratory"),
+        ("is there an ambulance on campus", "Emergency Medical Services (EMS)"),
+        ("I hurt my knee and need rehab", "Physical Therapy"),
+        ("where can I get emotional support", "Counseling and Psychological Services (CAPS)"),
+        ("where do I work out", "Campus Recreation"),
+        ("where do I park my car", "Student Parking"),
+    ]:
+        got = [p["name"] for p in ps.find_places(q)]
+        assert got[:1] == [want], f"{q!r} → {got[:3]}, wanted {want}"
+
+
+def test_grammar_does_not_outvote_meaning():
+    """CAPS beat Physical Therapy on "I hurt my knee and need rehab" because it
+    has the longer paragraph, so it contained "and" and "need" more often. The
+    stop-word list existed but was only applied to the fallback path."""
+    q = "I hurt my knee and need rehab"
+    assert not (ps._words(q) & {"and", "need"}), "grammar must not score"
+    scores = {p["name"]: ps._relevance(p, q) for p in ps.load_places()
+              if p["category"] == "health"}
+    assert scores["Physical Therapy"] > scores[
+        "Counseling and Psychological Services (CAPS)"]
+
+
+def test_a_category_front_door_is_only_claimed_where_one_exists():
+    """`primary` marks the record to name first when the question picks a
+    category but nothing in it. Peer lists — dining, housing, libraries — have no
+    front door, and flagging one would be an editorial opinion posing as data."""
+    by_cat = {}
+    for p in ps.load_places():
+        if p.get("primary"):
+            by_cat.setdefault(p["category"], []).append(p["name"])
+    assert all(len(v) == 1 for v in by_cat.values()), f"two front doors: {by_cat}"
+    assert set(by_cat) == {"health", "recreation", "transit", "parking"}, by_cat
+    for peer in ("dining", "housing", "library", "study_space", "it_printing"):
+        assert peer not in by_cat, f"{peer} is a peer list, not a hierarchy"
+
+
 def test_unrelated_questions_match_nothing():
     for q in ["what math courses are required for my major?", "when is the drop deadline?", ""]:
         assert ps.find_places(q) == [], f"{q!r} should not pull a campus place"
