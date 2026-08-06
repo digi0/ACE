@@ -10,7 +10,7 @@
  * as a quotation of a plan rather than the plan.
  */
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 function Links({ links }) {
   if (!links?.length) return null;
@@ -23,32 +23,93 @@ function Links({ links }) {
   );
 }
 
-/* ── cards: clubs, places, events, course slots ─────────────────────────── */
+/* ── cards: clubs, places, events, course slots ───────────────────────────────
+ *
+ * A carousel, not a grid. Six dining halls in an auto-fit grid inside a chat
+ * column reflowed into a ragged two-and-a-half-column block whose last row was
+ * half empty and whose cards were clipped — the width available here is neither
+ * wide enough for a real grid nor stable enough to design one against. A rail
+ * gives every card the same width whatever the column does, and makes the fact
+ * that there are more of them off the right-hand edge legible instead of lost.
+ *
+ * Native scroll-snap does the work; the arrows are for mouse users, who cannot
+ * swipe a trackpad. It is NOT wrapped in .ab — that class is the glass panel,
+ * and a rail of cards is not a panel. Inheriting it was the original bug: the
+ * grid got overflow:hidden and a gloss overlay from .ab while .ab-cards stripped
+ * only the background and border, so the cards were clipped by a box that had
+ * stopped looking like one.
+ */
 export function CardsBlock({ data }) {
+  const rail = useRef(null);
+  const [edge, setEdge] = useState({ left: false, right: false });
+
+  const measure = useCallback(() => {
+    const el = rail.current;
+    if (!el) return;
+    setEdge({
+      left: el.scrollLeft > 4,
+      right: el.scrollLeft + el.clientWidth < el.scrollWidth - 4,
+    });
+  }, []);
+
+  useEffect(() => {
+    measure();
+    const el = rail.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [measure, data]);
+
   if (!data?.items?.length) return null;
   const { kind, items, hours_url } = data;
+
+  const step = (dir) => {
+    const el = rail.current;
+    if (!el) return;
+    const card = el.querySelector(".ab-card");
+    const by = card ? card.offsetWidth + 10 : el.clientWidth * 0.8;
+    el.scrollBy({ left: dir * by, behavior: "smooth" });
+  };
+
   return (
-    <div className={`ab ab-cards ab-cards--${kind}`}>
-      {items.map((it, i) => (
-        <div className={`ab-card${it.state === "blocked" ? " is-blocked" : ""}`} key={i}>
-          <div className="ab-card-main">
-            <span className="ab-card-title">{it.title}</span>
-            {it.subtitle && <span className="ab-card-sub">{it.subtitle}</span>}
-            {it.meta && <span className="ab-card-meta">{it.meta}</span>}
-            {it.body && <span className="ab-card-body">{it.body}</span>}
-            {it.note && <span className="ab-card-note">{it.note}</span>}
-            <Links links={it.links} />
-          </div>
-          {it.value != null && (
-            <span className="ab-card-value">{it.value}<i>{it.unit}</i></span>
-          )}
+    <div className={`ab-carousel ab-carousel--${kind}`}>
+      <div className={`ab-rail-wrap${edge.left ? " fade-l" : ""}${edge.right ? " fade-r" : ""}`}>
+        <div className="ab-cards" ref={rail} onScroll={measure}
+             tabIndex={0} role="group" aria-label={`${items.length} ${kind}`}>
+          {items.map((it, i) => (
+            <div className={`ab-card${it.state === "blocked" ? " is-blocked" : ""}`} key={i}>
+              <div className="ab-card-main">
+                <span className="ab-card-title">{it.title}</span>
+                {it.subtitle && <span className="ab-card-sub">{it.subtitle}</span>}
+                {it.meta && <span className="ab-card-meta">{it.meta}</span>}
+                {it.body && <span className="ab-card-body">{it.body}</span>}
+                {it.note && <span className="ab-card-note">{it.note}</span>}
+                <Links links={it.links} />
+              </div>
+              {it.value != null && (
+                <span className="ab-card-value">{it.value}<i>{it.unit}</i></span>
+              )}
+            </div>
+          ))}
         </div>
-      ))}
-      {hours_url && (
-        <a className="ab-foot-link" href={hours_url} target="_blank" rel="noreferrer">
-          live hours →
-        </a>
-      )}
+        {edge.left && (
+          <button className="ab-nav ab-nav--l" onClick={() => step(-1)}
+                  aria-label="Previous">‹</button>
+        )}
+        {edge.right && (
+          <button className="ab-nav ab-nav--r" onClick={() => step(1)}
+                  aria-label="Next">›</button>
+        )}
+      </div>
+      <div className="ab-carousel-foot">
+        <span className="ab-rail-meta">{items.length} {kind}</span>
+        {hours_url && (
+          <a className="ab-foot-link" href={hours_url} target="_blank" rel="noreferrer">
+            live hours →
+          </a>
+        )}
+      </div>
     </div>
   );
 }

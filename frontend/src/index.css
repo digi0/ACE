@@ -4752,9 +4752,71 @@ body {
   font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: .06em;
 }
 /* cards */
-.ab-cards { display: grid; gap: 7px; padding: 0; border: none; background: none; }
-.ab-cards--clubs, .ab-cards--places, .ab-cards--events {
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+/* ── the card rail ───────────────────────────────────────────────────────────
+   An auto-fit grid in a chat column reflowed into a ragged two-and-a-half
+   columns with a half-empty last row, and the cards were being clipped by the
+   .ab panel they had wrongly inherited. A rail gives every card the same width
+   whatever the column is doing, and turns "there are more" into something you
+   can see rather than something that gets cut off. */
+.ab-carousel { display: block; }
+.ab-rail-wrap { position: relative; }
+.ab-cards {
+  display: flex;
+  gap: 10px;
+  /* overflow-x:auto makes the Y axis 'auto' too, so the hover lift and the card
+     shadow would be clipped without room to sit in. */
+  overflow-x: auto;
+  padding: 8px 2px 12px;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  overscroll-behavior-x: contain;
+}
+.ab-cards::-webkit-scrollbar { height: 6px; }
+.ab-cards::-webkit-scrollbar-thumb {
+  background: var(--border); border-radius: 999px;
+}
+.ab-cards::-webkit-scrollbar-track { background: transparent; }
+.ab-cards:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
+.ab-cards > .ab-card {
+  flex: 0 0 clamp(224px, 58%, 292px);
+  scroll-snap-align: start;
+}
+/* Faded only on the side that actually has more — a card that fades at rest
+   when there is nothing past it reads as a rendering fault. */
+.ab-rail-wrap.fade-r .ab-cards {
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 44px), transparent 100%);
+  mask-image: linear-gradient(90deg, #000 calc(100% - 44px), transparent 100%);
+}
+.ab-rail-wrap.fade-l .ab-cards {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 44px);
+  mask-image: linear-gradient(90deg, transparent 0, #000 44px);
+}
+.ab-rail-wrap.fade-l.fade-r .ab-cards {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 44px,
+                                      #000 calc(100% - 44px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 44px,
+                              #000 calc(100% - 44px), transparent 100%);
+}
+/* For mouse users, who cannot swipe a trackpad. */
+.ab-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text); font-size: 17px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0 0 2px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+  transition: border-color .16s ease, transform .16s ease;
+}
+.ab-nav:hover { border-color: var(--accent-text); transform: translateY(-50%) scale(1.08); }
+.ab-nav:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.ab-nav--l { left: -6px; }
+.ab-nav--r { right: -6px; }
+.ab-carousel-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 0 2px;
 }
 /* A flat card face, and the spectrum confined to the 1px edge travelling round it.
 
@@ -4840,7 +4902,7 @@ body {
 }
 .ab-card-value i { font-style: normal; font-size: 10px; color: var(--text-muted); margin-left: 2px; }
 /* checklist sheet */
-.ab-sheet-body { display: grid; grid-template-columns: 1fr 175px; gap: 14px; }
+.ab-sheet-body { display: grid; grid-template-columns: minmax(0, 1fr) 175px; gap: 14px; }
 .ab-steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
 /* .ab-box was a painted square. It is a button now — the whole point of writing
    a petition as steps is knowing which one you are on when you come back to it. */
@@ -4907,7 +4969,7 @@ button.ab-box[aria-pressed="true"]::after {
   border: 1px solid var(--border); border-radius: 999px; padding: 1px 7px;
 }
 /* plan */
-.ab-plan-cols { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.ab-plan-cols { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(0, 200px)); }
 .ab-term header { border-bottom: 2px solid var(--text); padding-bottom: 5px; margin-bottom: 5px; }
 .ab-term h4 { font-size: 12.5px; font-weight: 800; margin: 0; }
 .ab-term ul { list-style: none; margin: 0; padding: 0; }
@@ -4927,8 +4989,8 @@ button.ab-box[aria-pressed="true"]::after {
 .ab-term footer b { font-family: var(--mono); font-size: 14px; }
 .ab-progress { height: 4px; background: var(--border); border-radius: 999px; margin-top: 11px; overflow: hidden; }
 .ab-progress i { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
-@media (max-width: 560px) {
-  .ab-sheet-body { grid-template-columns: 1fr; }
+@media (max-width: 620px) {
+  .ab-sheet-body { grid-template-columns: minmax(0, 1fr); }
   .ab-facts { border-left: none; border-top: 1px solid var(--border); padding: 10px 0 0; }
 }
 
