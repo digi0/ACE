@@ -1111,9 +1111,8 @@ def _build_block_data(block, question, intent, user_major, student_doc):
 def _recommendation_context(user_major, student_doc):
     if not user_major:
         return None
-    audit = (student_doc or {}).get("audit_parse") or {}
-    done = [c.get("code") for c in audit.get("completed_courses", []) if c.get("code")]
-    return build_recommendation_context(user_major, done)
+    done, doing = _audit_course_states(student_doc)
+    return build_recommendation_context(user_major, done, in_progress=doing)
 
 
 def _map_target_codes(question, history=None):
@@ -1211,10 +1210,8 @@ def _build_recommendation_snippet(program_name, student_doc):
     prerequisites they have not met yet. Everything proposed comes from the
     program's own suggested plan — the model is never asked to invent a schedule.
     """
-    audit = (student_doc or {}).get("audit_parse") or {}
-    completed = [c.get("code") for c in audit.get("completed_courses", []) if c.get("code")]
-
-    ctx = build_recommendation_context(program_name, completed)
+    completed, doing = _audit_course_states(student_doc)
+    ctx = build_recommendation_context(program_name, completed, in_progress=doing)
     if not ctx:
         return (
             "\n\n=== COURSE RECOMMENDATION ===\n"

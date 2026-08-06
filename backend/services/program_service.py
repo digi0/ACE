@@ -485,7 +485,8 @@ def _unmet_prereqs(code: str, done: set) -> list[str]:
     return outstanding
 
 
-def build_recommendation_context(program_name: str, completed_codes=None) -> dict | None:
+def build_recommendation_context(program_name: str, completed_codes=None,
+                                 in_progress=None) -> dict | None:
     """Work out where a student is in their plan and what comes next.
 
     This is what turns "what should I take next semester?" from a recital of the
@@ -506,6 +507,11 @@ def build_recommendation_context(program_name: str, completed_codes=None) -> dic
         return None
 
     done = {_canonical_code(c) for c in (completed_codes or [])}
+    # A course being taken this term is not a course to propose for next term.
+    # The engine offered CMPSC 221 and MATH 220 to a student already sitting in
+    # both, because it only knew what was finished.
+    doing = {_canonical_code(c) for c in (in_progress or [])}
+    done |= doing
     ordered = sorted(semesters.items(), key=lambda kv: _semester_sort_key(kv[0]))
 
     laid_out = []
