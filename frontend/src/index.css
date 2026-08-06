@@ -3527,8 +3527,8 @@ body {
 .gpa-history-name     { flex: 1; font-size: 13px; font-weight: 500; color: var(--text); }
 .gpa-history-gpa      { font-size: 14px; font-weight: 700; }
 .gpa-history-gpa--excellent { color: var(--accent-text); }
-.gpa-history-gpa--good      { color: var(--accent-text); }
-.gpa-history-gpa--average   { color: var(--accent-text); }
+.gpa-history-gpa--good      { color: var(--text); }
+.gpa-history-gpa--average   { color: var(--text-secondary); }
 .gpa-history-gpa--low       { color: #dc2626; }
 .gpa-history-credits  { font-size: 11.5px; color: var(--text-muted); white-space: nowrap; }
 .gpa-history-delete   { background: none; border: none; font-size: 16px; color: var(--border); cursor: pointer; padding: 0 2px; line-height: 1; transition: color 0.15s; }
@@ -3539,9 +3539,13 @@ body {
 .gpa-history-bar-label { font-size: 11.5px; color: var(--text-secondary); }
 .gpa-history-bar-track { height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
 .gpa-history-bar-fill  { height: 100%; border-radius: 5px; transition: width 0.5s ease; }
-.gpa-history-bar-fill--excellent { background: linear-gradient(90deg, var(--accent), var(--accent)); }
-.gpa-history-bar-fill--good      { background: linear-gradient(90deg, var(--accent), var(--accent)); }
-.gpa-history-bar-fill--average   { background: linear-gradient(90deg, var(--accent), var(--accent)); }
+/* The old ramp was green / blue / blue / red — two of the four already matched,
+   and collapsing blue into emerald made three identical. Four tiers need four
+   readings, and Zero Chroma spends the hue once: emerald is the best term, then
+   ink, then grey. Red stays, because failing is a different KIND of fact. */
+.gpa-history-bar-fill--excellent { background: var(--accent); }
+.gpa-history-bar-fill--good      { background: var(--text); }
+.gpa-history-bar-fill--average   { background: var(--text-secondary); }
 .gpa-history-bar-fill--low       { background: linear-gradient(90deg, #dc2626, #f87171); }
 
 .gpa-history-cumulative { background: var(--text); color: white; border-radius: 10px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; }
@@ -4677,13 +4681,30 @@ body {
 .ab-cards--clubs, .ab-cards--places, .ab-cards--events {
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
 }
+/* 135°, the same rake as .suggestion-chip, so the cards read as part of the
+   same surface language — but grounded in the card tokens rather than in
+   translucent white. A chip is a control and can be glass; a card holds data
+   and has to stay a solid, readable surface. Both tokens flip with the theme,
+   so this one rule is the light and dark treatment. */
 .ab-card {
   display: flex; gap: 12px; align-items: flex-start; justify-content: space-between;
   border: 1px solid var(--border); border-radius: var(--radius-md);
-  background: var(--bg-card); padding: 10px 12px;
-  transition: border-color .18s ease, transform .18s ease;
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  padding: 10px 12px;
+  transition: border-color .18s ease, transform .18s ease, background .18s ease,
+              box-shadow .18s ease;
 }
-.ab-card:hover { border-color: var(--accent-text); transform: translateY(-1px); }
+[data-theme="dark"] .ab-card { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05); }
+.ab-card:hover {
+  border-color: var(--accent-text); transform: translateY(-1px);
+  /* Only one card is hovered at a time, so the period stays spent once. */
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--accent-bg) 160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+[data-theme="dark"] .ab-card:hover {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 4px 14px rgba(0, 0, 0, 0.35);
+}
 .ab-card.is-blocked { border-style: dashed; }
 .ab-card.is-blocked .ab-card-title { color: var(--text-muted); }
 .ab-card-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
