@@ -27,7 +27,7 @@ from backend.services.places_service import build_places_snippet, find_places
 from backend.services.events_service import (
     build_events_snippet, find_events, mentions_events, is_stale as is_events_stale,
 )
-from backend.services.money_service import build_money_snippet
+from backend.services.money_service import build_money_snippet, find_money
 from backend.services.visual_policy import decide as decide_visual, build_visual_directive
 
 load_dotenv()
@@ -199,6 +199,14 @@ def detect_question_intent(question):
         "student health", "health center", "therapy", "therapist", "crisis",
         "emergency fund", "financial hardship", "can't afford", "cannot afford",
         "safe walk", "unsafe", "harassed", "emergency", "campus police",
+        # How someone in trouble actually types it. All of these routed to
+        # `general` and got a generic answer instead of the care resources —
+        # the one place a miss costs more than a bad answer.
+        "losing it", "falling apart", "can't keep up", "cant keep up",
+        "drowning", "barely holding", "can't cope", "cant cope", "at my limit",
+        "breaking point", "want to give up", "giving up", "behind on everything",
+        "spiraling", "spiralling", "panicking", "panic attack", "crying",
+        "too much going on", "can't do this", "cant do this",
         "recreation", "recsports", "intramural", "writing center", "tutoring",
         "calculus help",
     ]
@@ -911,6 +919,38 @@ def _deadlines_snippet_property() -> str:
     return _get_deadlines_snippet()
 
 
+# Intents the handbook genuinely serves. Everything else is answered by the
+# structured datasets, and pulling handbook chunks in only dilutes the prompt.
+# `contact` is deliberately NOT here: it covers both "who is my academic
+# adviser" (handbook) and "who do I email about this charge" (bursar). It falls
+# through to the no-other-grounding test, which picks correctly for each.
+_HANDBOOK_INTENTS = {"etm", "transfer", "substitution"}
+# Questions where citing the student's own program bulletin makes sense.
+_ACADEMIC_INTENTS = {"courses", "gen_ed", "student_progress", "recommendation"}
+
+
+def _has_other_grounding(question, intent, user_major) -> bool:
+    """True when a structured dataset already answers this, so the handbook is
+    not needed as a fallback. Cheap local lookups only."""
+    try:
+        if find_procedures(question) or find_places(question) or find_money(question):
+            return True
+        if mentions_events(question) and not is_events_stale() and find_events(question):
+            return True
+        if intent == "career" and (
+            search_clubs([question])
+            or (search_clubs([user_major.split(",")[0]]) if user_major else [])
+        ):
+            return True
+        if intent in ("recommendation", "gen_ed", "courses", "student_progress") and user_major:
+            return True
+        if intent in ("logistics", "deadline", "wellbeing", "financial_aid", "international"):
+            return True
+    except Exception as exc:  # noqa: BLE001 — never break an answer over this
+        logger.warning("_has_other_grounding | %s", exc)
+    return False
+
+
 def _count_visual_material(question, intent, user_major, student_doc, history=None):
     """How many items each visual block would actually have to work with.
 
@@ -1327,21 +1367,35 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     # with no major at all (None), we keep those records out so the model does
     # not silently treat the student as a CS/DS student.
     suppress_cs_ds = major_kind in (None, "other")
+
+    # The handbook index is 73 chunks of CMPSC/DTSCE procedure. It exists for the
+    # things the structured data lacks — entrance-to-major, petitions,
+    # substitutions, department contacts — and for nothing else. It used to load
+    # on EVERY question a CS/DS student asked, so "where can I eat on campus"
+    # arrived with 3,855 tokens of handbook competing with the 693-token answer,
+    # and came back citing the handbook. The launch cohort got the worst prompts
+    # in the product precisely because they were the only ones with an index.
+    use_handbook = not suppress_cs_ds and (
+        intent in _HANDBOOK_INTENTS or not _has_other_grounding(question, intent, user_major)
+    )
     logger.info(
         "ask_advisor_stream | intent=%r | major=%r (%s) | question=%r",
         intent, user_major, major_kind or "none", question[:80],
     )
 
-    if suppress_cs_ds:
+    if not use_handbook:
         records = []
         rule_summary = ""
-        if structured_only:
+        if structured_only or not suppress_cs_ds:
             # Has a known program — ground on its programs.json requirements.
             context = (
                 "(No indexed handbook records exist for this program. Use the "
                 "PROGRAM REQUIREMENTS section below as the authoritative source.)"
             )
-            sources = build_program_sources(user_major)
+            sources = (
+                build_program_sources(user_major)
+                if user_major and intent in _ACADEMIC_INTENTS else []
+            )
         else:
             # No major declared — stay neutral, no program to cite.
             context = (
@@ -1375,7 +1429,14 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     # Structured handbook policies — ETM, petitions, substitutions, contacts.
     # Deterministic lookup by (intent, major_kind); no retrieval involved. Only
     # CS/DS have handbooks, so this is empty for every other major.
-    policy_snippet = build_policy_snippet(intent, major_kind)
+    #
+    # Gated on the same test as the retrieval path above. INTENT_TOPICS maps
+    # `general` to advising/graduation topics, so a CS student asking where to
+    # eat was handed handbook policy AND cited to the CMPSC handbook PDF. That
+    # citation was the most visible symptom: a departmental handbook attached to
+    # a dining question. The handbook is authoritative for procedure and silent
+    # about everything else.
+    policy_snippet = build_policy_snippet(intent, major_kind) if use_handbook else ""
     if policy_snippet:
         for src in policy_sources(major_kind):
             if src["link"] not in {s["link"] for s in sources}:

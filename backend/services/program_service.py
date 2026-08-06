@@ -360,6 +360,12 @@ def detect_major_from_text(text: str) -> str | None:
 
 # ── Program context snippet for chat ──────────────────────────────────────────
 
+# Generous: the largest programme in programs.json has well under this many
+# requirement groups, so in practice nothing is dropped. It exists only so a
+# malformed record cannot produce an unbounded prompt.
+_MAX_REQUIREMENT_GROUPS = 40
+
+
 def build_program_context_snippet(program_name: str) -> str:
     """
     Return a concise text block describing the program's requirements,
@@ -398,13 +404,18 @@ def build_program_context_snippet(program_name: str) -> str:
     if additional:
         lines.append("")
         lines.append("Additional / elective requirements:")
-        for item in additional[:6]:   # cap to avoid overly long prompts
+        # NOT capped at 6 any more. That cap silently dropped the entire calculus
+        # sequence — MATH 140, 141, 220, 230 — from Computer Science, because the
+        # maths groups sit at positions 8-11. Retrieval used to paper over it for
+        # CS/DS and nothing covered it for the other 747 majors. The prompt budget
+        # freed by gating the handbook pays for the full list many times over.
+        for item in additional[:_MAX_REQUIREMENT_GROUPS]:
             desc = item.get("description", item.get("type", ""))
             cr   = item.get("credits", "")
             opts = item.get("options", [])
             opt_str = (
-                ", ".join(o.get("code", "") for o in opts[:6])
-                + (" ..." if len(opts) > 6 else "")
+                ", ".join(o.get("code", "") for o in opts[:8])
+                + (" ..." if len(opts) > 8 else "")
             )
             lines.append(
                 f"  - {desc} ({cr} cr)"
