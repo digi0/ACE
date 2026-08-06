@@ -1728,24 +1728,24 @@ body {
 .dash-upload-btn:hover { background: #1f2937; }
 
 /* ── Uploaded-document actions bar ───────────── */
+/* Shares the glass panel with everything else on this page — see the .ab/.pm
+   rule. Only the layout lives here. */
 .dash-doc-actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 10px 14px;
-  margin-bottom: 16px;
+  padding: 9px 10px 9px 14px;
+  margin-bottom: 14px;
 }
 .dash-doc-label {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
+  gap: 9px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  color: var(--text-secondary);
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1772,11 +1772,14 @@ body {
   border: 1px solid var(--text);
 }
 .dash-doc-btn--replace:hover { opacity: 0.85; }
+/* Red at rest made deleting look like the thing you came here to do. It earns
+   its colour on hover, when you are actually reaching for it. */
 .dash-doc-btn--remove {
-  background: var(--bg-card);
-  color: var(--red);
+  background: transparent;
+  color: var(--text-secondary);
   border: 1px solid var(--border);
 }
+.dash-doc-btn--remove:hover { color: var(--red); }
 .dash-doc-btn--remove:hover {
   background: #fef2f2;
   border-color: #fecaca;
@@ -1787,25 +1790,46 @@ body {
 }
 
 /* ── Alerts ──────────────────────────────────── */
+/* ── Notes ────────────────────────────────────────────────────────────────
+   These were filled bands — a full-width amber slab and a grey one — stacked
+   above the numbers, which read as two things going wrong before you had read
+   a single figure. They are standing facts about the document, so they get the
+   weight of a margin note: a hairline rule, a mono kicker, and the text. The
+   semantic colour survives in the rule and in the kicker, where two pixels of
+   amber say "check this" without shouting it. */
 .dash-alerts {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 2px;
+  margin: 0 0 18px;
 }
 .dash-alert {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 10px 14px;
-  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 0 7px 12px;
+  border-left: 2px solid var(--border);
+  background: none;
+  border-radius: 0;
   font-size: 13px;
   line-height: 1.5;
 }
-.dash-alert-icon { flex-shrink: 0; font-size: 14px; }
-.dash-alert--warning { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
-.dash-alert--info    { background: var(--blue-bg); color: var(--text); border: 1px solid var(--border); }
-.dash-alert--success { background: var(--accent-bg); color: var(--accent-text); border: 1px solid var(--accent-border); }
+.dash-alert-kicker {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.dash-alert-text { color: var(--text-secondary); }
+.dash-alert--warning { border-left-color: var(--amber); }
+.dash-alert--warning .dash-alert-kicker { color: var(--amber); }
+.dash-alert--success { border-left-color: var(--accent); }
+.dash-alert--success .dash-alert-kicker { color: var(--accent-text); }
+@media (max-width: 560px) {
+  .dash-alert { grid-template-columns: minmax(0, 1fr); gap: 1px; }
+}
 
 /* ── Top stat cards ──────────────────────────── */
 .dash-cards {
@@ -4658,7 +4682,7 @@ body {
 
    The border is the same travelling spectrum as .ab-card, at half speed, so a
    panel holding six shimmering cards does not race against them. */
-.ab, .pm, .stat-card, .dash-card, .rec-course-card {
+.ab, .pm, .stat-card, .dash-card, .rec-course-card, .dash-doc-actions {
   --panel-face: linear-gradient(var(--bg-card), var(--bg-card));
   --panel-edge: var(--edge-spectrum);
   position: relative;
@@ -4681,7 +4705,8 @@ body {
    face and below the content, and is pointer-transparent so it never eats a
    click on a node or a checkbox. */
 .ab::before, .pm::before,
-.stat-card::before, .dash-card::before, .rec-course-card::before {
+.stat-card::before, .dash-card::before, .rec-course-card::before,
+.dash-doc-actions::before {
   content: "";
   position: absolute;
   inset: 0 0 auto 0;
@@ -4695,7 +4720,7 @@ body {
 }
 [data-theme="dark"] .ab, [data-theme="dark"] .pm,
 [data-theme="dark"] .stat-card, [data-theme="dark"] .dash-card,
-[data-theme="dark"] .rec-course-card {
+[data-theme="dark"] .rec-course-card, [data-theme="dark"] .dash-doc-actions {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
     0 10px 30px rgba(0, 0, 0, 0.55),
@@ -4710,7 +4735,8 @@ body {
     rgba(255, 255, 255, 0) 100%);
 }
 @media (prefers-reduced-motion: reduce) {
-  .ab, .pm, .stat-card, .dash-card, .rec-course-card { animation: none; }
+  .ab, .pm, .stat-card, .dash-card, .rec-course-card,
+  .dash-doc-actions { animation: none; }
 }
 
 /* The block's own strip of the page, clear of the bubble and of the avatar

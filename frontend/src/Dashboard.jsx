@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { AlertTriangle, Info, CheckCircle, FileText, Upload, Trash2 } from "lucide-react";
+import { FileText, Upload, Trash2 } from "lucide-react";
 import { apiFetch } from "./api.js";
+
+// The word that replaces the icon. "check this" reads as an instruction, which
+// is what the What-If warning actually is; an amber triangle just reads alarm.
+const ALERT_KICKER = { warning: "check", info: "note", success: "on track" };
 
 /* ── Degree Progress Bar ────────────────────────────────────── */
 function DegreeProgressBar({ pct, completed, remaining, required }) {
@@ -164,15 +168,17 @@ export default function Dashboard({ uploadedFile, onUploadClick, onRemoveClick, 
         </div>
       </div>
 
-      {/* ── Alerts bar ────────────────────────────────── */}
+      {/* ── Notes ─────────────────────────────────────────
+          A kicker and a line of text against a rule, not a filled band. These
+          are standing facts about the document — what kind it is, what is under
+          way — and three coloured slabs stacked above the numbers read as three
+          things going wrong. */}
       {alerts.length > 0 && (
         <div className="dash-alerts">
           {alerts.map((a, i) => (
             <div key={i} className={`dash-alert dash-alert--${a.type}`}>
-              <span className="dash-alert-icon">
-                {a.type === "warning" ? <AlertTriangle size={14} /> : a.type === "success" ? <CheckCircle size={14} /> : <Info size={14} />}
-              </span>
-              {a.message}
+              <span className="dash-alert-kicker">{ALERT_KICKER[a.type] || "note"}</span>
+              <span className="dash-alert-text">{a.message}</span>
             </div>
           ))}
         </div>

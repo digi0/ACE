@@ -690,14 +690,21 @@ def get_dashboard(
             "message": "This data is from a What-If Report. Run a Degree Audit on LionPATH for official accuracy.",
         })
     if in_progress:
+        # It said "5 course(s) ... " and then named four of them. The count and
+        # the list disagreeing in the same sentence is the kind of thing a
+        # student notices and stops trusting the rest of the page over.
+        n = len(in_progress)
+        rest = n - 4
         alerts.append({
             "type": "info",
-            "message": f"{len(in_progress)} course(s) currently in progress: {', '.join(in_progress[:4])}.",
+            "message": (f"{n} course{'' if n == 1 else 's'} in progress: "
+                        + ", ".join(in_progress[:4])
+                        + (f", and {rest} more" if rest > 0 else "")),
         })
     if 0 < credits_needed <= 30:
         alerts.append({
             "type": "success",
-            "message": f"You're close! Only {credits_needed:.0f} credits remaining to graduate.",
+            "message": f"{credits_needed:.0f} credits remaining to graduate.",
         })
 
     return {
