@@ -111,10 +111,21 @@ def detect_categories(question: str) -> list[str]:
     return [c for _, c in sorted(scored, reverse=True)]
 
 
+# Words that appear in half the directory and in nearly every question, so
+# matching on them is noise dressed as a signal. "where can I eat on campus?"
+# ranked Campus Meal Plan first — above every actual dining hall — on the
+# strength of the word "campus" alone.
+_GENERIC_NAME_WORDS = {
+    "campus", "penn", "state", "university", "park", "student", "students",
+    "center", "centre", "building", "hall", "services", "service",
+}
+
+
 def _relevance(place: dict, q: str) -> int:
     """Extra credit for a place the question actually names or describes."""
     score = 0
-    words = {w for w in re.findall(r"[a-z]+", place["name"].lower()) if len(w) > 3}
+    words = {w for w in re.findall(r"[a-z]+", place["name"].lower())
+             if len(w) > 3 and w not in _GENERIC_NAME_WORDS}
     score += 3 * len(words & set(re.findall(r"[a-z]+", q)))
     for tag in place.get("good_for", []):
         if tag.lower() in q:
@@ -167,8 +178,7 @@ def build_places_snippet(question: str) -> str:
         lines.append("\nLive hours: " + "  ".join(hours_pages))
 
     lines.append(
-        "\nName these places, say what each is good for, and give the directions "
-        "link. ACE does NOT store opening hours — they change by term and by day. "
+        "\nACE does NOT store opening hours — they change by term and by day. "
         "Never state a time a place opens or closes; link the live hours page "
         "above and let the student check. Do not invent buildings, phone numbers, "
         "prices, or services beyond what is written here."

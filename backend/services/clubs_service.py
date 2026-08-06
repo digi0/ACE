@@ -199,9 +199,7 @@ def build_clubs_snippet(interests, question="", major="") -> str:
     ]
     lines += format_club_lines(matches)
     lines.append(
-        "\nName these organisations to the student and say what each one is, using "
-        "the summary above. Include the links that are listed — the profile always, "
-        "Instagram and website when present. Do NOT invent organisations, links, "
+        "\nDo NOT invent organisations, links, "
         "meeting times, or membership requirements beyond what is written here. "
         "These are the matches ACE found, not the complete list — tell the student "
         "the full directory is searchable at https://discover.psu.edu/organizations."

@@ -109,7 +109,19 @@ def test_directive_matches_the_decision():
     # A block with a renderer tells the model to stand back; one without tells it
     # to write the items out, because otherwise they reach the student nowhere.
     d2 = vp.build_visual_directive("can I take CMPSC 465?", "courses", {"map": 5})
-    assert "rendered beneath" in d2 and "do NOT" in d2
+    assert "rendered beneath" in d2 and "Do NOT reproduce" in d2
+    # The noun has to match the block. Told "every item", a checklist answer
+    # numbered all four petition steps out anyway — it did not read its steps as
+    # the "items" it was being told to leave alone.
+    assert "Every course" in d2
+    assert "Every step" in vp.build_visual_directive(
+        "how do I withdraw?", "logistics", {"checklist": 4})
+
+    # Naming the items is an instruction the PROSE branches carry and the
+    # rendered branches must not — that split is the whole fix for the answer
+    # that listed six dining halls and then drew the same six as cards.
+    assert "name them and include the links" in d0
+    assert "name them and include the links" not in d2
 
     # Every block the policy can choose now has a renderer, so the directive
     # tells the model to stand back for all of them. The unrendered branch stays
@@ -123,6 +135,88 @@ def test_directive_matches_the_decision():
     off = vp.build_visual_directive("what are all my requirements?", "student_progress",
                                     {"plan": 40}, has_audit=True)
     assert "exactly one short offer" in off and "Want me to" in off
+
+
+def test_grounding_snippets_do_not_give_presentation_orders():
+    """The bug this pins: "where can I eat on campus?" answered with six numbered
+    places and their links, and then rendered the same six as cards.
+
+    build_places_snippet ended with "Name these places ... and give the directions
+    link" — written when every answer was prose. Once a block rendered underneath,
+    the model held two contradictory orders and obeyed the more specific one. Only
+    build_visual_directive decides how items reach the student now; a snippet says
+    what is true and what may not be claimed, and stops there."""
+    from backend.services.places_service import build_places_snippet
+    from backend.services.clubs_service import build_clubs_snippet
+    from backend.services.procedures_service import build_procedures_snippet
+
+    banned = ("name these", "name them", "give the directions link",
+              "include the links", "walk the student through")
+    for label, snippet in [
+        ("places", build_places_snippet("where can I eat on campus?")),
+        ("clubs", build_clubs_snippet(None, question="what clubs are there for hiking?")),
+        ("procedures", build_procedures_snippet("how do I retroactively withdraw?")),
+    ]:
+        assert snippet, f"{label} produced no grounding to check"
+        low = snippet.lower()
+        for phrase in banned:
+            assert phrase not in low, f"{label} snippet still orders presentation: {phrase!r}"
+        # ...while the grounding it exists for survives.
+        assert "do not invent" in low or "not invent" in low, f"{label} lost its guard"
+
+
+def test_a_rendered_block_withholds_its_items_from_the_prompt():
+    """Instruction alone did not hold. "A block is rendered, do not repeat the
+    items" was in the directive while the full itemised list was ALSO in the
+    grounding, and the same dining question came back as six bullets on one run
+    and two clean sentences on the next. The model cannot transcribe what it was
+    never handed, so the list is withheld rather than discouraged."""
+    from backend.services import blocks as B
+    from backend.services.places_service import find_places
+    from backend.services.procedures_service import find_procedures
+
+    places = find_places("where can I eat on campus?")
+    cards = B.places_cards(places)
+    summary = B.grounding_summary("cards", cards)
+
+    assert summary, "a rendered block must still ground the answer"
+    for item in cards["items"]:
+        assert item["title"] not in summary, \
+            f"{item['title']!r} leaked into the prompt; the model will list it"
+    assert str(len(cards["items"])) in summary, "prose still needs the count"
+    assert "campus locations" in summary
+    assert cards["hours_url"] in summary, "the one shared link must survive"
+
+    checklist = B.procedure_checklist(find_procedures("how do I retroactively withdraw?"))
+    csum = B.grounding_summary("checklist", checklist)
+    for step in checklist["steps"]:
+        assert step not in csum, "the steps are the block's job"
+    # ...but what the student ACTS on stays: the office, the timing, the link,
+    # and enough context that the model does not invent qualifying grounds.
+    assert checklist["source"] in csum
+    assert any(f["v"] in csum for f in checklist["facts"]), "facts must survive"
+    assert checklist["what_it_is"] in csum
+
+    assert B.grounding_summary("cards", None) == ""
+
+
+def test_a_meal_plan_is_not_somewhere_you_can_walk_to():
+    from backend.services.blocks import places_cards
+    from backend.services.places_service import find_places, _relevance
+
+    places = find_places("where can I eat on campus?")
+    assert places, "the dining question must still find dining"
+    # "campus" is in the question and in the name, and that alone put a meal
+    # plan above every actual dining hall.
+    assert _relevance({"name": "Campus Meal Plan", "good_for": []},
+                      "where can I eat on campus?") == 0
+
+    cards = places_cards(places)
+    for item in cards["items"]:
+        if "Meal Plan" in item["title"]:
+            assert not any(l["label"] == "directions" for l in item["links"]), \
+                "a meal plan has no address; its directions link lands nowhere"
+        assert not item["body"].endswith(" loca"), "clipped mid-word"
 
 
 if __name__ == "__main__":

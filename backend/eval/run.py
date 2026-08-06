@@ -44,18 +44,25 @@ _JUDGE_MODEL = OPENAI_CHAT_MODEL  # judge with the same cheap model
 
 # ── Pipeline ────────────────────────────────────────────────────────────────
 
-def collect_answer(question: str, major: str | None) -> tuple[str, str | None]:
-    """Run a question through the chat pipeline and return (answer_text, error).
+def collect_answer(question: str, major: str | None) -> tuple[str, str | None, dict]:
+    """Run a question through the chat pipeline. Returns (text, error, visual).
 
     Consumes the SSE generator and concatenates the streamed text chunks. No
     user_id is passed, so no DB / uploaded-document context is involved — the
     major is supplied directly via the override parameter.
+
+    The `visual` payload comes back too, because an answer now reaches the
+    student through two channels. Grading only the text made the fix for the
+    duplicated dining answer look like a regression: the directions links moved
+    from six numbered prose bullets into the cards, which is exactly what was
+    wanted, and a text-only assertion read that as information lost.
     """
     # Imported lazily so --help and unit tests don't pull in OpenAI/the index.
     from backend.services.chat_service import ask_advisor_stream
 
     text_parts: list[str] = []
     error: str | None = None
+    visual: dict = {}
     for chunk in ask_advisor_stream(question, history=[], user_id=None, major=major):
         if not chunk.startswith("data: "):
             continue
@@ -67,15 +74,23 @@ def collect_answer(question: str, major: str | None) -> tuple[str, str | None]:
             text_parts.append(data["text"])
         if data.get("error"):
             error = data["error"]
-    return "".join(text_parts), error
+        if data.get("visual"):
+            visual = data["visual"]
+    return "".join(text_parts), error, visual
 
 
 # ── Scoring ─────────────────────────────────────────────────────────────────
 
-def check_hard_assertions(answer: str, item: dict) -> list[str]:
-    """Return a list of human-readable failure messages (empty == all passed)."""
+def check_hard_assertions(answer: str, item: dict, visual: dict | None = None) -> list[str]:
+    """Return a list of human-readable failure messages (empty == all passed).
+
+    Both channels count. A required link that reaches the student inside a
+    rendered card has reached the student; a forbidden word hiding in a block
+    payload has still leaked.
+    """
     failures: list[str] = []
-    low = answer.lower()
+    rendered = json.dumps(visual or {})
+    low = (answer + "\n" + rendered).lower()
     for needle in item.get("must_contain", []):
         if needle.lower() not in low:
             failures.append(f'missing required substring: "{needle}"')
@@ -93,16 +108,54 @@ _JUDGE_SYSTEM = (
     "answer, score how well the answer satisfies the expected points. Respond with "
     'JSON only: {"score": <float 0..1>, "reason": "<one sentence>"}. '
     "1.0 = fully covers every expected point accurately; 0.0 = misses them or is wrong. "
-    "Judge only against the expected points, not your own outside knowledge."
+    "Judge only against the expected points, not your own outside knowledge. "
+    "The answer may arrive in two parts: prose, and a rendered block the student "
+    "sees directly beneath it. Grade the WHOLE reply. A name or link that appears "
+    "in the block has reached the student, and repeating it in the prose as well "
+    "is duplication, not thoroughness — do not reward it."
 )
 
 
-def build_judge_prompt(item: dict, answer: str) -> str:
+def describe_block(visual: dict | None) -> str:
+    """The rendered block, written out as the student experiences it.
+
+    Without this the judge grades one channel of a two-channel answer. Moving the
+    dining list out of the prose and into cards — the whole point of the block —
+    scored 0.00 on three items for "does not name specific organisations", which
+    the student was in fact looking straight at.
+    """
+    data = (visual or {}).get("data")
+    if not data:
+        return ""
+    lines = [f"[{visual.get('block')} block, rendered directly beneath the prose]"]
+    for item in data.get("items") or []:
+        links = " ".join(l.get("url", "") for l in item.get("links") or [])
+        lines.append(f"- {item.get('title','')} | {item.get('meta','')} | "
+                     f"{item.get('body','')} | {links}".strip())
+    for step in data.get("steps") or []:
+        lines.append(f"- step: {step}")
+    for f in data.get("facts") or []:
+        lines.append(f"- {f['k']}: {f['v']}")
+    for ev in data.get("events") or []:
+        lines.append(f"- {ev.get('label','')} | {ev.get('date','')}")
+    for term in data.get("terms") or []:
+        for c in term.get("courses") or []:
+            lines.append(f"- {c.get('code','')} {c.get('title','')}")
+    if data.get("source"):
+        lines.append(f"- source: {data['source']}")
+    if data.get("hours_url"):
+        lines.append(f"- live hours: {data['hours_url']}")
+    return "\n".join(lines)
+
+
+def build_judge_prompt(item: dict, answer: str, visual: dict | None = None) -> str:
     points = "\n".join(f"- {p}" for p in item.get("expected_points", []))
+    block = describe_block(visual)
     return (
         f"Question:\n{item['question']}\n\n"
         f"Expected points a good answer should cover:\n{points or '(none specified)'}\n\n"
-        f"Assistant's answer:\n{answer}"
+        f"Assistant's answer (prose):\n{answer}"
+        + (f"\n\nAlso shown to the student:\n{block}" if block else "")
     )
 
 
@@ -125,13 +178,13 @@ def parse_judge_response(raw: str) -> tuple[float, str]:
     return score, str(data.get("reason", ""))[:200]
 
 
-def judge_answer(item: dict, answer: str) -> tuple[float, str]:
+def judge_answer(item: dict, answer: str, visual: dict | None = None) -> tuple[float, str]:
     from backend.services import llm
 
     raw = llm.chat(
         [
             {"role": "system", "content": _JUDGE_SYSTEM},
-            {"role": "user", "content": build_judge_prompt(item, answer)},
+            {"role": "user", "content": build_judge_prompt(item, answer, visual)},
         ],
         response_format={"type": "json_object"},
         feature="eval_judge",
@@ -159,8 +212,8 @@ def run_item(item, runs, judge_on):
     """
     answers, hards, scores, reasons = [], [], [], []
     for _ in range(runs):
-        answer, error = collect_answer(item["question"], item.get("major"))
-        hard = check_hard_assertions(answer, item)
+        answer, error, visual = collect_answer(item["question"], item.get("major"))
+        hard = check_hard_assertions(answer, item, visual)
         if error:
             hard.append(f"pipeline error: {error}")
         answers.append(answer)
@@ -168,7 +221,7 @@ def run_item(item, runs, judge_on):
 
         if judge_on and not error:
             try:
-                score, reason = judge_answer(item, answer)
+                score, reason = judge_answer(item, answer, visual)
                 scores.append(score)
                 reasons.append(reason)
             except Exception as e:  # noqa: BLE001 — the judge must never crash a run

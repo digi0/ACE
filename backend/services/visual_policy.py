@@ -211,6 +211,46 @@ def offer_line(block):
     }.get(block, "Want me to lay that out visually?")
 
 
+# Presentation lives HERE and nowhere else. The grounding snippets used to end
+# with their own instructions — "name these places and give the directions link",
+# "name these organisations and include the links" — written back when every
+# answer was prose. When a block started rendering underneath, the model was
+# holding two orders at once and obeyed the more specific one: "where can I eat
+# on campus?" came back as six numbered places with links, and then the same six
+# as cards. The snippets now state only what is TRUE and what may not be
+# claimed; how the items reach the student is this function's decision alone.
+_NAME_THEM = (
+    " When the grounding above lists real places, organisations, events, "
+    "offices or steps, name them and include the links given for each — the "
+    "student cannot see the data you were handed."
+)
+# "Do not list the same items again" was already in here, and the model bulleted
+# them anyway — a prohibition it can satisfy by changing the bullet character.
+# What it needs is the shape it should produce instead, which is why the example
+# is spelled out rather than described.
+# The noun matters. Written as "every item", a checklist answer still came back
+# with the four petition steps numbered out in full — the model did not read its
+# steps as the "items" it was being told not to repeat.
+_BLOCK_NOUN = {"map": "course", "cards": "item", "checklist": "step",
+               "strip": "date", "plan": "course"}
+
+
+def _block_has_them(block):
+    noun = _BLOCK_NOUN.get(block, "item")
+    return (
+        f" Every {noun} is already in that block, with its detail and its links. "
+        f"Do NOT reproduce the {noun}s in any form — no bullets, no numbering, no "
+        f"bolded names, no per-{noun} links, and no sentence that runs through them "
+        f"all in a row. Name at most TWO, and only where one genuinely stands out; "
+        f"describe the rest by what they have in common — how many, where they "
+        f"cluster, what the set means. Two or three sentences: the direct answer, "
+        f"and the one thing the student needs that the block cannot say. Shape to "
+        f"copy: \"There are six spots across the East, South and HUB districts — "
+        f"they're below, with directions. Hours shift every term, so check the live "
+        f"page before you walk over.\""
+    )
+
+
 def build_visual_directive(question, intent, counts=None, has_audit=False):
     """The prompt fragment telling the model how much visual to reach for."""
     d = decide(question, intent, counts, has_audit)
@@ -224,25 +264,25 @@ def build_visual_directive(question, intent, counts=None, has_audit=False):
         return ("\n\nVISUAL POLICY: answer in prose. Do not build a table, an ASCII "
                 "diagram, or a visual layout. A plain list is fine when the answer "
                 "genuinely is a list of things — just don't dress it up. Give the "
-                "detail the question deserves.")
+                "detail the question deserves." + _NAME_THEM)
     if d["level"] == 1:
         return ("\n\nVISUAL POLICY: prose, with the key number or date stated once and "
                 "clearly. No table and no diagram. Explain what it means for the "
-                "student — the emphasis is on that one value, not on brevity.")
+                "student — the emphasis is on that one value, not on brevity."
+                + _NAME_THEM)
     drawn = d["block"] in RENDERED_BLOCKS
     if d["level"] == 2:
         if drawn:
-            return (f"\n\nVISUAL POLICY: a {d['block']} is rendered beneath your answer. "
-                    "Lead with the direct answer and state the point in prose; do NOT "
-                    "list the same items again, the diagram shows them.")
+            return (f"\n\nVISUAL POLICY: a {d['block']} block is rendered beneath your answer."
+                    + _block_has_them(d['block']))
         return (f"\n\nVISUAL POLICY: a compact {d['block']} is warranted, but nothing "
                 "renders it — so the items must appear IN your answer. Lead with the "
                 "direct answer, then list them, and say what each one means for this "
                 "student.")
     if drawn:
         return (f"\n\nVISUAL POLICY: the student asked to see this, and a {d['block']} "
-                "is rendered beneath your answer. One framing sentence is enough; the "
-                "diagram carries the detail.")
+                "block is rendered beneath your answer. One framing sentence is enough."
+                + _block_has_them(d['block']))
     return (f"\n\nVISUAL POLICY: the student asked to see this laid out, and nothing "
             f"renders it — so lay it out IN your answer as a full {d['block']}, with a "
-            "framing sentence and whatever explanation the items need.")
+            "framing sentence and whatever explanation the items need." + _NAME_THEM)

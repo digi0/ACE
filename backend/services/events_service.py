@@ -189,8 +189,8 @@ def build_events_snippet(question: str, interests=None) -> str:
         f"\nTimes above are already Eastern (campus time) — repeat them as given "
         f"and do not convert or adjust them. These are real events from ACE's "
         f"directory, refreshed "
-        f"{snapshot_age_days()} day(s) ago. Give the name, when it is, where, and "
-        f"the link. Do NOT invent events, times, or locations, and do not describe "
+        f"{snapshot_age_days()} day(s) ago. Do NOT invent events, times, or "
+        f"locations, and do not describe "
         f"this as the complete list — the full calendar is at {EVENTS_PAGE}."
     )
     return "\n".join(lines)

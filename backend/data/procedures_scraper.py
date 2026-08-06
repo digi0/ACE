@@ -89,7 +89,13 @@ _EXTRACT_SYSTEM = (
     "wording for rules. Steps must be the actions a STUDENT takes, in order, and "
     "concrete enough to follow. For who_to_contact, name the OFFICE and never an "
     "individual staff member — a named person goes stale, and a personal name does "
-    "not belong in a file ACE quotes into answers."
+    "not belong in a file ACE quotes into answers. who_to_contact is the office "
+    "that OWNS this page and this process, not every office the page mentions. A "
+    "petitions page is owned by the petitions office even when it warns you that a "
+    "petition affects your aid; offices mentioned as a consequence or an aside "
+    "belong in consequences or notes. This mattered: 'Student Petition Types' came "
+    "back owned by the Office of Student Aid, so ACE sent a student filing a "
+    "retroactive withdrawal to the wrong building."
 )
 
 _SCHEMA_HINT = """Return JSON only, exactly this shape:

@@ -16,6 +16,15 @@ from datetime import date, datetime
 logger = logging.getLogger(__name__)
 
 
+def _clip(text: str, limit: int) -> str:
+    """Cut on a word, not through one. A hard slice ended a dining card on
+    'accepted at every Campus Dining loca', which reads as a rendering bug."""
+    text = (text or "").strip()
+    if len(text) <= limit:
+        return text
+    return text[:limit].rsplit(" ", 1)[0].rstrip(" ,;:.") + "…"
+
+
 def _iso_days_away(iso: str) -> int | None:
     try:
         return (date.fromisoformat(iso[:10]) - date.today()).days
@@ -34,7 +43,7 @@ def clubs_cards(clubs):
         if c.get("website"):
             links.append({"label": "website", "url": c["website"]})
         items.append({"title": c["name"].replace(" at University Park", ""),
-                      "body": (c.get("summary") or "")[:180], "links": links})
+                      "body": _clip(c.get("summary"), 180), "links": links})
     return {"kind": "clubs", "items": items} if items else None
 
 
@@ -42,10 +51,14 @@ def places_cards(places):
     items = []
     for p in places:
         links = [{"label": "info", "url": p["url"]}]
-        if p.get("map_url"):
+        # A meal plan is not somewhere you can walk to. Its map_url is a Google
+        # search for its own name, which lands nowhere — offer directions only
+        # when the record names a place specific enough to stand in front of.
+        where = (p.get("where") or "").strip()
+        if p.get("map_url") and where and where.lower() not in {"campus", "university park"}:
             links.append({"label": "directions", "url": p["map_url"]})
-        items.append({"title": p["name"], "meta": p.get("where") or "",
-                      "body": (p.get("what_it_is") or "")[:160], "links": links})
+        items.append({"title": p["name"], "meta": where,
+                      "body": _clip(p.get("what_it_is"), 160), "links": links})
     hours = sorted({p["hours_url"] for p in places if p.get("hours_url")})
     return {"kind": "places", "items": items, "hours_url": hours[0] if hours else ""} if items else None
 
@@ -95,8 +108,12 @@ def procedure_checklist(procedures):
         facts.append({"k": "forms", "v": ", ".join(p["forms"])[:120]})
     if p.get("policy_refs"):
         facts.append({"k": "policy", "v": ", ".join(p["policy_refs"])})
+    # what_it_is / when_to_use ride along for grounding_summary, not for the
+    # renderer. Without them the model filled the gap it could feel — one run
+    # invented "medical or personal circumstances" as the qualifying grounds.
     return {"title": p["title"], "steps": p["steps"][:8], "facts": facts,
-            "source": p.get("source_url", "")}
+            "source": p.get("source_url", ""),
+            "what_it_is": p.get("what_it_is", ""), "when_to_use": p.get("when_to_use", "")}
 
 
 # ── plan ─────────────────────────────────────────────────────────────────────
@@ -121,6 +138,74 @@ def term_plan(ctx, total_credits=None, completed_credits=None):
     if total_credits:
         out["progress"] = {"done": completed_credits or 0, "total": total_credits}
     return out
+
+
+# ── grounding, when the block is the one carrying the items ──────────────────
+
+def grounding_summary(block: str, data: dict) -> str:
+    """What the model is told INSTEAD of the itemised list, once a block renders.
+
+    Telling it "a block is rendered, don't repeat the items" while also handing it
+    the full list is asking it to ignore data sitting in front of it, and it
+    complied about half the time — the same dining question came back as six
+    bullets on one run and two clean sentences on the next. Prompt wording was not
+    the lever. Withholding the list is: the model cannot transcribe what it was
+    never given, so what reaches the student is the block, every time.
+
+    What survives is what prose still has to carry — how many, where they cluster,
+    the one shared link, and the office or timing a student has to act on.
+    """
+    if not data:
+        return ""
+    lines = []
+
+    if block == "cards":
+        items = data.get("items") or []
+        if not items:
+            return ""
+        kind = {"places": "campus locations", "clubs": "student organisations",
+                "events": "upcoming events", "courses": "courses"}.get(
+                    data.get("kind"), "options")
+        lines.append(f"{len(items)} {kind} are rendered in a block below your answer.")
+        clusters = sorted({(i.get("meta") or "").strip() for i in items} - {""})
+        if clusters:
+            lines.append("They sit across: " + ", ".join(clusters[:6]) + ".")
+        if data.get("hours_url"):
+            lines.append(f"Shared live-hours page (link this): {data['hours_url']}")
+
+    elif block == "checklist":
+        lines.append(f"An ordered checklist for \"{data.get('title', '')}\" is "
+                     f"rendered below your answer, with every step in it.")
+        if data.get("what_it_is"):
+            lines.append(f"What it is: {data['what_it_is']}")
+        if data.get("when_to_use"):
+            lines.append(f"When a student uses it: {data['when_to_use']}")
+        # The office and the timing are the parts a student ACTS on, so those
+        # stay in prose even though the block also shows them.
+        for f in data.get("facts") or []:
+            lines.append(f"{f['k']}: {f['v']}")
+        if data.get("source"):
+            lines.append(f"Source — ALWAYS include this link: {data['source']}")
+
+    elif block == "strip":
+        lines.append(f"{len(data.get('events') or [])} dated deadlines for "
+                     f"{data.get('term', 'this term')} are rendered below.")
+
+    elif block == "plan":
+        n = sum(len(t.get("courses") or []) for t in data.get("terms") or [])
+        lines.append(f"A term plan of {n} courses is rendered below your answer.")
+
+    if not lines:
+        return ""
+    return (
+        "\n\n=== RENDERED BLOCK (the student sees these; you have NOT been given "
+        "the individual entries) ===\n"
+        + "\n".join(lines)
+        + "\nWrite about the set, not the entries. Do not name, list, number or "
+        "invent individual entries — you do not have them, and the block already "
+        "shows every one. Do not state opening hours, prices, or dates that are "
+        "not written above."
+    )
 
 
 # ── strip ────────────────────────────────────────────────────────────────────

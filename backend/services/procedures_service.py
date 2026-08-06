@@ -221,9 +221,7 @@ def build_procedures_snippet(question: str) -> str:
     lines = ["\n\n=== PENN STATE PROCEDURE (what the student actually does) ==="]
     lines += [format_procedure(p) for p in matches]
     lines.append(
-        "\nWalk the student through these steps in order, name the form and the "
-        "office, and state the timing rule if one is given. Link the source. Do NOT "
-        "invent steps, forms, offices, fees, or deadlines beyond what is written "
+        "\nDo NOT invent steps, forms, offices, fees, or deadlines beyond what is written "
         "above — this sends someone to file real paperwork, and a wrong step costs "
         "them a term. If the student's situation is not covered, say so and send "
         "them to their academic adviser or campus registrar."

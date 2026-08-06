@@ -1618,45 +1618,6 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
             if src["link"] not in {s["link"] for s in sources}:
                 sources.append(src)
 
-    resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
-    career_snippet = CAREER_RESOURCES_SNIPPET if intent == "career" else ""
-    # Real organisations, matched on what ACE has learned about the student and
-    # on the question itself. Appended to the career block, whose rules defer to
-    # it when present and keep refusing to invent names when it is absent.
-    if intent == "career":
-        career_snippet += build_clubs_snippet(
-            (get_profile(user_id) or {}).get("interests") if user_id else None,
-            question=question,
-            major=user_major or "",
-        )
-    profile_snippet = build_profile_snippet(user_id) if user_id else ""
-    # Logistics gets the calendar too: "when is my registration window" is a
-    # steps question whose answer needs real dates.
-    deadline_snippet = (
-        _get_deadlines_snippet() if intent in ("deadline", "logistics") else ""
-    )
-    logistics_snippet = LOGISTICS_SNIPPET if intent == "logistics" else ""
-    # Procedures are matched on the QUESTION, not the intent. "I need to
-    # retroactively withdraw" routes to `deadline` on the word "withdraw" and
-    # would come back with a wall of dates — exactly the wrong answer for
-    # someone who has already missed the deadline.
-    procedures_snippet = build_procedures_snippet(question)
-    # Campus places, matched on the question for the same reason procedures are:
-    # "where can I study tonight" has no intent of its own and would otherwise
-    # fall through to `general` with nothing behind it.
-    places_snippet = build_places_snippet(question)
-    money_snippet = build_money_snippet(question)
-    events_snippet = build_events_snippet(
-        question,
-        (get_profile(user_id) or {}).get("interests") if user_id else None,
-    )
-    recommendation_snippet = (
-        _build_recommendation_snippet(user_major, student_doc)
-        if intent == "recommendation" and user_major else ""
-    )
-    aid_snippet = FINANCIAL_AID_RESOURCES_SNIPPET if intent == "financial_aid" else ""
-    intl_snippet = INTERNATIONAL_RESOURCES_SNIPPET if intent == "international" else ""
-
     # How much visual the answer may reach for. Counted from what actually
     # matched — a block never fires on data that isn't there.
     visual_counts = _count_visual_material(
@@ -1698,6 +1659,67 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
         if not visual["data"]:
             visual["block"] = None
 
+    resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
+    career_snippet = CAREER_RESOURCES_SNIPPET if intent == "career" else ""
+    # Real organisations, matched on what ACE has learned about the student and
+    # on the question itself. Appended to the career block, whose rules defer to
+    # it when present and keep refusing to invent names when it is absent. Kept
+    # in its own variable so the cards block can take its place below.
+    clubs_snippet = ""
+    if intent == "career":
+        clubs_snippet = build_clubs_snippet(
+            (get_profile(user_id) or {}).get("interests") if user_id else None,
+            question=question,
+            major=user_major or "",
+        )
+    profile_snippet = build_profile_snippet(user_id) if user_id else ""
+    # Logistics gets the calendar too: "when is my registration window" is a
+    # steps question whose answer needs real dates.
+    deadline_snippet = (
+        _get_deadlines_snippet() if intent in ("deadline", "logistics") else ""
+    )
+    logistics_snippet = LOGISTICS_SNIPPET if intent == "logistics" else ""
+    # Procedures are matched on the QUESTION, not the intent. "I need to
+    # retroactively withdraw" routes to `deadline` on the word "withdraw" and
+    # would come back with a wall of dates — exactly the wrong answer for
+    # someone who has already missed the deadline.
+    procedures_snippet = build_procedures_snippet(question)
+    # Campus places, matched on the question for the same reason procedures are:
+    # "where can I study tonight" has no intent of its own and would otherwise
+    # fall through to `general` with nothing behind it.
+    places_snippet = build_places_snippet(question)
+    money_snippet = build_money_snippet(question)
+    events_snippet = build_events_snippet(
+        question,
+        (get_profile(user_id) or {}).get("interests") if user_id else None,
+    )
+    recommendation_snippet = (
+        _build_recommendation_snippet(user_major, student_doc)
+        if intent == "recommendation" and user_major else ""
+    )
+    aid_snippet = FINANCIAL_AID_RESOURCES_SNIPPET if intent == "financial_aid" else ""
+    intl_snippet = INTERNATIONAL_RESOURCES_SNIPPET if intent == "international" else ""
+
+    # When a block carries the items, the prose grounding for those same items is
+    # WITHHELD rather than merely discouraged. "Don't repeat the list" alongside
+    # the list itself was obeyed on maybe half of runs — the dining answer came
+    # back as six bullets and then the same six as cards. The model cannot list
+    # what it was never handed, so this is the only version that holds every time.
+    _owner = {"places": "places", "clubs": "clubs", "events": "events"}
+    if visual.get("data") and visual.get("block") in ("cards", "checklist"):
+        summary = B.grounding_summary(visual["block"], visual["data"])
+        owner = ("procedures" if visual["block"] == "checklist"
+                 else _owner.get((visual["data"] or {}).get("kind")))
+        if summary and owner == "places":
+            places_snippet = summary
+        elif summary and owner == "clubs":
+            clubs_snippet = summary
+        elif summary and owner == "events":
+            events_snippet = summary
+        elif summary and owner == "procedures":
+            procedures_snippet = summary
+    career_snippet += clubs_snippet
+
     register = _register_for(intent, question,
                              bool(procedures_snippet), bool(money_snippet))
     # The generic either/or bullet template fights the prerequisite block, which
@@ -1708,8 +1730,6 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
         "- For either/or requirements use exactly:\n"
         "  Either:\n  - Option A\n  - Option B"
     )
-    if prereq_graph and visual.get("block") == "map":
-        visual["data"] = prereq_graph
     logger.info("visual policy | level=%s block=%s | %s",
                 visual["level"], visual["block"], visual["reason"])
 
@@ -1821,7 +1841,7 @@ SHAPE — every answer is the verdict, then the substance, then the citation.
 REGISTER — {register}
 
 - Ground every answer in the records, rules and student document provided; use the conversation history only to follow context.
-- List courses as bullets when you are listing several. Do NOT bullet section labels (e.g. "Probability and Statistics (6 credits)") — use them as headings.
+- List courses as bullets when you are listing several — unless the VISUAL POLICY says a block is rendered, in which case list nothing; this rule loses to it. Do NOT bullet section labels (e.g. "Probability and Statistics (6 credits)") — use them as headings.
 {either_rule}
 - For contact questions, use the advisor name from the student document first; only mention department contacts as secondary.
 - Quote exact handbook language when available. Do not say "typically" or "likely" unless the records themselves are uncertain.
