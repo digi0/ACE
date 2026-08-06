@@ -286,6 +286,31 @@ def prereq_map(
     return data
 
 
+@app.get("/prereq-graph/{code:path}")
+def prereq_graph(
+    code: str,
+    current_user: dict | None = Depends(get_optional_user),
+    db: Session = Depends(get_db),
+):
+    """One course's prerequisite graph, in the student's own terms.
+
+    The chat stream already ships this for the course that was asked about. This
+    exists so the rendered map can RE-CENTRE when a student clicks a node —
+    following "what do I need for 465?" into "…and what does 360 need?" without
+    going back to the chat and spending a model call on a lookup that is local.
+    """
+    from backend.services.chat_service import _audit_course_states
+    from backend.services.program_service import build_prereq_graph
+    from backend.services.student_doc_service import get_current_student_doc
+
+    doc = get_current_student_doc(current_user["uid"], db) if current_user else None
+    done, doing = _audit_course_states(doc)
+    graph = build_prereq_graph(code.upper().strip(), done, in_progress=doing)
+    if not graph:
+        raise HTTPException(status_code=404, detail=f"no course record for {code}")
+    return graph
+
+
 # ── Suggested academic plan (major-aware) ─────────────────────────────────────
 
 @app.get("/suggested-plan")

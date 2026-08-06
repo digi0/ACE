@@ -200,6 +200,38 @@ def test_a_rendered_block_withholds_its_items_from_the_prompt():
     assert B.grounding_summary("cards", None) == ""
 
 
+def test_every_block_type_withholds_its_own_items():
+    """The duplication was closed for cards and checklist first, and the other
+    three kept doing it — which is why it still showed up in almost every answer.
+    A map recited its own prerequisites; a plan listed every course it drew."""
+    from backend.services import blocks as B
+
+    graph = {"target": {"code": "CMPSC 465", "title": "Algorithms"},
+             "groups": [[{"code": "CMPSC 122", "done": True},
+                         {"code": "CMPSC 132", "done": False}],
+                        [{"code": "CMPSC 360", "in_progress": True}]],
+             "unlocks": [{"code": "CMPSC 465W"}], "has_record": True,
+             "eligible": False, "on_track": True}
+    m = B.grounding_summary("map", graph)
+    assert "on track" in m, "the verdict IS the answer and must survive"
+    assert "CMPSC 360" in m, "the one course in play is worth naming"
+    assert "CMPSC 122" not in m, "a satisfied prerequisite is the map's job"
+    assert "CMPSC 465W" not in m, "what it unlocks is the map's job"
+
+    # No audit: the map states the requirement, the prose must not personalise it.
+    blind = B.grounding_summary("map", {**graph, "has_record": False})
+    assert "can or cannot" in blind
+    assert "CMPSC 360" not in blind, "no record means no claim about this student"
+
+    plan = B.grounding_summary("plan", {
+        "terms": [{"label": "Next Term", "total": 15, "courses": [
+            {"code": "PSYCH 100"}, {"code": "ENGL 15"}, {"code": "LA 83"}]}],
+        "personalised": True})
+    assert "3 courses" in plan and "15 credits" in plan
+    for code in ("PSYCH 100", "ENGL 15", "LA 83"):
+        assert code not in plan, f"{code} leaked; the plan draws it"
+
+
 def test_a_meal_plan_is_not_somewhere_you_can_walk_to():
     from backend.services.blocks import places_cards
     from backend.services.places_service import find_places, _relevance

@@ -4,10 +4,13 @@
  * data on the chat stream's done event. These draw it. Every component returns
  * null on missing data, so a block is never drawn empty.
  *
- * Shapes follow the demos: contained inside the bubble rather than full-bleed,
- * a planner's ruled rows and running totals, and the accent used once per block
- * — on the thing the answer is about.
+ * They sit OUTSIDE the message bubble, on the page's dotted surface — see
+ * .msg-visual. A bubble is the shape of something said; these are things you
+ * work with, and squeezing a planner spread into a speech bubble made it read
+ * as a quotation of a plan rather than the plan.
  */
+
+import { useState } from "react";
 
 function Links({ links }) {
   if (!links?.length) return null;
@@ -50,19 +53,58 @@ export function CardsBlock({ data }) {
   );
 }
 
-/* ── checklist: a procedure you can tick off ────────────────────────────── */
+/* ── checklist: a procedure you can tick off ─────────────────────────────────
+ *
+ * It called itself a checklist and had painted-on boxes. A retroactive
+ * withdrawal is filed over days, across offices, and the whole value of writing
+ * it as steps is knowing which one you are on when you come back to it — so the
+ * ticks persist, keyed by the procedure rather than by the message, and a
+ * student who asks the same question twice finds their progress where they left
+ * it. localStorage is right for this: it is one person's place in a form, not
+ * a record ACE should be holding on a server.
+ */
+function useTicks(key, count) {
+  const store = `ace_steps_${key}`;
+  const [done, setDone] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(store) || "[]");
+      return new Set(saved.filter((i) => i < count));
+    } catch { return new Set(); }
+  });
+  const toggle = (i) => setDone((prev) => {
+    const next = new Set(prev);
+    next.has(i) ? next.delete(i) : next.add(i);
+    try { localStorage.setItem(store, JSON.stringify([...next])); } catch { /* full or blocked */ }
+    return next;
+  });
+  return [done, toggle];
+}
+
 export function ChecklistBlock({ data }) {
-  if (!data?.steps?.length) return null;
+  const steps = data?.steps || [];
+  const key = (data?.title || "steps").toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const [done, toggle] = useTicks(key, steps.length);
+  if (!steps.length) return null;
+
   return (
     <div className="ab ab-sheet">
       <div className="ab-rail">
         <span className="ab-tab">{data.title?.slice(0, 28) || "steps"}</span>
-        <span className="ab-rail-meta">{data.steps.length} steps</span>
+        <span className="ab-rail-meta">
+          {done.size}/{steps.length} done
+        </span>
+        {done.size > 0 && done.size === steps.length && (
+          <span className="ab-rail-done">all clear</span>
+        )}
       </div>
       <div className="ab-sheet-body">
         <ol className="ab-steps">
-          {data.steps.map((s, i) => (
-            <li key={i}><i className="ab-box" aria-hidden />{s}</li>
+          {steps.map((s, i) => (
+            <li key={i} className={done.has(i) ? "is-done" : ""}>
+              <button type="button" className="ab-box" onClick={() => toggle(i)}
+                      aria-pressed={done.has(i)} aria-label={`Step ${i + 1}: ${s}`} />
+              <span className="ab-step-text">{s}</span>
+            </li>
           ))}
         </ol>
         {data.facts?.length > 0 && (

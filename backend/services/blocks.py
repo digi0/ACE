@@ -193,8 +193,61 @@ def grounding_summary(block: str, data: dict) -> str:
 
     elif block == "plan":
         n = sum(len(t.get("courses") or []) for t in data.get("terms") or [])
-        lines.append(f"A term plan of {n} courses is rendered below your answer.")
+        total = sum(t.get("total") or 0 for t in data.get("terms") or [])
+        lines.append(f"A term plan of {n} courses ({total} credits) is rendered below.")
+        if not data.get("personalised"):
+            lines.append("No audit is uploaded, so this is the standard slate for the "
+                         "program rather than a personal plan — say so.")
+        blocked = [c for t in data.get("terms") or []
+                   for c in t.get("courses") or [] if c.get("blocked")]
+        if blocked:
+            lines.append(f"{len(blocked)} of them are blocked by unmet prerequisites — "
+                         f"the block marks which.")
 
+    elif block == "map":
+        # The one block whose grounding is the ANSWER, not a list. A student
+        # asking "can I take 465?" needs the verdict and the specific thing
+        # standing in the way; they do not need every prerequisite recited,
+        # which is what the map is for.
+        target = data.get("target") or {}
+        lines.append(f"A prerequisite map for {target.get('code','')} is rendered below, "
+                     f"with every prerequisite and what the course opens.")
+        if data.get("has_record"):
+            if data.get("eligible"):
+                lines.append("VERDICT: eligible now — every prerequisite is complete.")
+            elif data.get("on_track"):
+                lines.append("VERDICT: on track — every requirement is either done or "
+                             "in progress this term, so it clears before next term.")
+            else:
+                lines.append("VERDICT: not yet eligible — at least one requirement is "
+                             "untouched.")
+        else:
+            # Without a record, "still outstanding" is a claim about a student
+            # whose transcript we have never seen — it came back as "No, you
+            # cannot take CMPSC 465" for someone we know nothing about. The map
+            # states the requirement; the prose must not personalise it.
+            lines.append("No audit is uploaded, so ACE does not know what this "
+                         "student has taken. Do NOT say they can or cannot take it, "
+                         "and do NOT list what they still need. Say what the course "
+                         "requires in general and point at the map.")
+            return _wrap(lines)
+        # With a record, only the courses actually in play get named: what they
+        # are sitting in, and what is still untouched. Usually nought to two.
+        doing, todo = [], []
+        for group in data.get("groups") or []:
+            if any(n.get("done") for n in group):
+                continue
+            for n in group:
+                (doing if n.get("in_progress") else todo).append(n.get("code", ""))
+        if doing:
+            lines.append("In progress right now: " + ", ".join(doing))
+        if todo and not doing:
+            lines.append("Still outstanding: " + ", ".join(todo[:3]))
+
+    return _wrap(lines)
+
+
+def _wrap(lines: list[str]) -> str:
     if not lines:
         return ""
     return (
@@ -202,7 +255,7 @@ def grounding_summary(block: str, data: dict) -> str:
         "the individual entries) ===\n"
         + "\n".join(lines)
         + "\nWrite about the set, not the entries. Do not name, list, number or "
-        "invent individual entries — you do not have them, and the block already "
+        "invent individual entries beyond what is written above — the block already "
         "shows every one. Do not state opening hours, prices, or dates that are "
         "not written above."
     )

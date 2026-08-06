@@ -4646,9 +4646,84 @@ body {
 
 /* ── Answer blocks (cards / checklist / strip / plan) ────────────────────────
    Contained inside the bubble, planner-ruled, accent used once per block. */
-.ab {
-  margin: 12px 0 4px; border: 1px solid var(--border);
-  border-radius: var(--radius-md); background: var(--bg); padding: 11px 12px;
+/* ── the glass panel every block sits on ────────────────────────────────────
+   .ab and .pm share it: one surface, so a map and a planner read as the same
+   kind of object.
+
+   Glass here is LIGHTING, not transparency, and that is deliberate. The face has
+   to stay fully opaque or the gradient border shows through the middle of the
+   panel — the same trap the cards fell into. So the depth comes from a bright
+   inset rim along the top edge, a specular sweep across the upper third, and a
+   soft cast shadow onto the dotted surface underneath. backdrop-filter is
+   pointless behind an opaque fill; none is used.
+
+   The border is the same travelling spectrum as .ab-card, at half speed, so a
+   panel holding six shimmering cards does not race against them. */
+.ab, .pm {
+  --panel-face: linear-gradient(var(--bg-card), var(--bg-card));
+  --panel-edge: linear-gradient(115deg,
+    #00875A 0%, #00B894 14%, #0091E6 28%, #5B4FE0 42%,
+    #B429CC 56%, #F0345C 70%, #F59E0B 84%, #00875A 100%);
+  position: relative;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: var(--panel-face) padding-box, var(--panel-edge) border-box;
+  background-size: auto, 300% 100%;
+  background-repeat: no-repeat, repeat;
+  padding: 14px 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03),
+    0 10px 30px rgba(0, 0, 0, 0.09),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+  animation: ab-sheen 36s linear infinite;
+  overflow: hidden;
+}
+/* The specular sweep — the thing that actually reads as glass. Sits above the
+   face and below the content, and is pointer-transparent so it never eats a
+   click on a node or a checkbox. */
+.ab::before, .pm::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 58%;
+  background: linear-gradient(170deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.12) 45%,
+    rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  border-radius: 13px 13px 0 0;
+}
+[data-theme="dark"] .ab, [data-theme="dark"] .pm {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 10px 30px rgba(0, 0, 0, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+}
+[data-theme="dark"] .ab::before, [data-theme="dark"] .pm::before {
+  background: linear-gradient(170deg,
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(255, 255, 255, 0.02) 45%,
+    rgba(255, 255, 255, 0) 100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ab, .pm { animation: none; }
+}
+
+/* The block's own strip of the page, clear of the bubble and of the avatar
+   gutter, so it sits on the dotted surface rather than inside the conversation. */
+.msg-visual {
+  max-width: 760px;
+  margin: -8px 0 0 40px;
+  animation: msg-visual-in 420ms cubic-bezier(.165, .84, .44, 1) both;
+}
+@keyframes msg-visual-in {
+  from { opacity: 0; transform: translateY(8px) scale(.995); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .msg-visual { animation: none; }
 }
 .ab-links { display: flex; gap: 11px; margin-top: 6px; flex-wrap: wrap; }
 .ab-links a {
@@ -4767,6 +4842,34 @@ body {
 /* checklist sheet */
 .ab-sheet-body { display: grid; grid-template-columns: 1fr 175px; gap: 14px; }
 .ab-steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+/* .ab-box was a painted square. It is a button now — the whole point of writing
+   a petition as steps is knowing which one you are on when you come back to it. */
+button.ab-box {
+  appearance: none; -webkit-appearance: none; background: var(--bg-card);
+  border: 1.5px solid var(--border); border-radius: 4px;
+  width: 15px; height: 15px; flex: 0 0 15px; padding: 0; margin-top: 1px;
+  cursor: pointer; position: relative;
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+button.ab-box:hover { border-color: var(--accent-text); transform: scale(1.08); }
+button.ab-box:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+button.ab-box[aria-pressed="true"] {
+  background: var(--accent); border-color: var(--accent);
+}
+button.ab-box[aria-pressed="true"]::after {
+  content: ""; position: absolute; left: 4px; top: 1px;
+  width: 4px; height: 8px; border: solid #fff;
+  border-width: 0 2px 2px 0; transform: rotate(42deg);
+}
+.ab-steps li.is-done .ab-step-text {
+  color: var(--text-muted); text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.ab-step-text { transition: color 160ms ease; }
+.ab-rail-done {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--accent-text);
+}
 .ab-steps li {
   display: flex; gap: 9px; align-items: flex-start; font-size: 13.5px;
   padding: 5px 0; line-height: 1.45;
@@ -4833,10 +4936,7 @@ body {
    Groups on the left, wires converging on the course asked about, what it opens
    on the right. Three node states, because "in progress" is what answers a
    question about a future term. */
-.pm {
-  margin: 12px 0 4px; border: 1px solid var(--border);
-  border-radius: var(--radius-md); background: var(--bg); padding: 11px 12px;
-}
+/* .pm shares the glass panel declared above with .ab. */
 .pm-head { display: flex; align-items: center; gap: 9px; margin-bottom: 6px; flex-wrap: wrap; }
 .pm-label {
   font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em;
@@ -4866,7 +4966,36 @@ body {
    student actually asked about competing with its own prerequisites. */
 .pm-mark { font-size: 11px; fill: var(--text); text-anchor: end; }
 .pm-mark.now { fill: var(--text-secondary); }
-.pm-node rect { fill: var(--bg-card); stroke: var(--border); stroke-width: 1; }
+/* The tween. Nodes are positioned by transform on a <g> and keyed by course
+   code, so on a re-centre React moves the same element and the browser
+   interpolates — courses that appear in both graphs slide to their new place
+   instead of the picture blinking. That continuity is what makes it read as one
+   graph you are moving through. */
+.pm-node { transition: transform 420ms cubic-bezier(.165, .84, .44, 1); }
+.pm-node rect {
+  fill: var(--bg-card); stroke: var(--border); stroke-width: 1;
+  transition: fill 220ms ease, stroke 220ms ease;
+}
+.pm-node.is-clickable { cursor: pointer; }
+.pm-node.is-clickable:hover rect { stroke: var(--accent-text); stroke-width: 1.5; }
+.pm-node.is-clickable:focus-visible { outline: none; }
+.pm-node.is-clickable:focus-visible rect {
+  stroke: var(--accent-text); stroke-width: 2;
+}
+.pm.is-loading .pm-svg { opacity: .55; transition: opacity 120ms ease; }
+.pm-back {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text-secondary);
+  background: none; border: 1px solid var(--border); border-radius: 999px;
+  padding: 2px 9px; cursor: pointer; margin-left: auto;
+}
+.pm-back:hover { border-color: var(--accent-text); color: var(--accent-text); }
+.pm-hint {
+  margin-left: auto; font-style: normal; opacity: .8;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pm-node { transition: none; }
+}
 .pm-node.is-done rect { stroke: var(--text); fill: var(--bg-card); }
 .pm-node.is-doing rect { stroke: var(--text-secondary); stroke-dasharray: 4 3; }
 .pm-node.is-todo rect { stroke: var(--border); }

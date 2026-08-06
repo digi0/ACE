@@ -1,4 +1,4 @@
-/* Prerequisite map — drawn, not listed.
+/* Prerequisite map — drawn, not listed, and walkable.
  *
  * The rule is "(CMPSC 122 or CMPSC 132) AND (CMPSC 360 or MATH 311W)". A list of
  * chips cannot show that: you cannot see which options belong to the same slot,
@@ -8,7 +8,21 @@
  *
  * Three states per node, because two is not enough: passed, in progress this
  * term (the state that answers "can I take this NEXT fall?"), and not taken.
+ *
+ * Clicking any node re-centres the map on that course. The real question is
+ * never one course deep — "can I take 465?" becomes "…so what does 360 need?" —
+ * and answering that by typing another chat message spends a model call on a
+ * lookup that is local. /prereq-graph does it in one request.
+ *
+ * Nodes are positioned by transform on a <g>, not by x/y on the rect, so the
+ * re-centre TWEENS: the courses that appear in both graphs slide to their new
+ * places instead of the whole picture blinking. That continuity is the point —
+ * it is what makes it read as one graph you are moving through rather than a
+ * series of unrelated pictures.
  */
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { apiFetch } from "./api";
 
 const W = 720;
 const COL = { group: 12, gw: 196, target: 300, tw: 176, unlock: 536, uw: 172 };
@@ -41,10 +55,56 @@ function stateOf(n) {
   return "todo";
 }
 
+function Node({ code, title, x, y, w, h, cls, onOpen, mark, credits, sub }) {
+  const clickable = Boolean(onOpen);
+  return (
+    <g
+      className={`pm-node ${cls}${clickable ? " is-clickable" : ""}`}
+      transform={`translate(${x} ${y})`}
+      onClick={clickable ? onOpen : undefined}
+      onKeyDown={clickable ? (e) => (e.key === "Enter" || e.key === " ") && onOpen(e) : undefined}
+      tabIndex={clickable ? 0 : undefined}
+      role={clickable ? "button" : undefined}
+      aria-label={clickable ? `Re-centre the map on ${code}` : code}
+    >
+      <rect width={w} height={h} rx="3" />
+      <text className="pm-code" x="11" y={sub ? 13 : h / 2 + 4}>{code}</text>
+      {sub && <text className="pm-sub" x="11" y="24">{sub}</text>}
+      {credits && <text className="pm-cr" x={w - 13} y="21">{credits} cr</text>}
+      {mark && <text className={`pm-mark ${mark.cls}`} x={w - 12} y={h / 2 + 4}>{mark.glyph}</text>}
+      {title && <title>{title}</title>}
+    </g>
+  );
+}
+
 export default function PrereqMapBlock({ data }) {
-  if (!data?.target) return null;
+  const [graph, setGraph] = useState(data);
+  const [trail, setTrail] = useState([]);
+  const [loading, setLoading] = useState(null);
+  const live = useRef(true);
+
+  useEffect(() => { setGraph(data); setTrail([]); }, [data]);
+  useEffect(() => () => { live.current = false; }, []);
+
+  const open = useCallback(async (code, { back = false } = {}) => {
+    if (!code || code === graph?.target?.code) return;
+    setLoading(code);
+    try {
+      const next = await apiFetch(`/prereq-graph/${encodeURIComponent(code)}`);
+      if (!live.current || !next?.target) return;
+      setTrail((t) => (back ? t.slice(0, -1) : [...t, graph.target.code]));
+      setGraph(next);
+    } catch {
+      // A course with no record in programs.json simply is not walkable. The
+      // map it already shows stays correct, so failing silently is honest here.
+    } finally {
+      if (live.current) setLoading(null);
+    }
+  }, [graph]);
+
+  if (!graph?.target) return null;
   const { target, groups = [], unlocks = [], unlocks_more = 0,
-          eligible, on_track, has_record } = data;
+          eligible, on_track, has_record } = graph;
 
   const shown = unlocks.slice(0, 4);
   const rest = unlocks.length - shown.length + (unlocks_more || 0);
@@ -56,11 +116,19 @@ export default function PrereqMapBlock({ data }) {
     : on_track ? { label: "on track — finish what's in progress", tone: "ok" }
     : { label: "not yet eligible", tone: "" };
 
+  const clip = (s, n) => (s || "").length > n ? s.slice(0, n - 1) + "…" : (s || "");
+
   return (
-    <figure className="pm" aria-label={`Prerequisite map for ${target.code}`}>
+    <figure className={`pm${loading ? " is-loading" : ""}`}
+            aria-label={`Prerequisite map for ${target.code}`}>
       <figcaption className="pm-head">
         <span className="pm-label">prerequisite map</span>
         {verdict && <span className={`pm-verdict ${verdict.tone}`}>{verdict.label}</span>}
+        {trail.length > 0 && (
+          <button className="pm-back" onClick={() => open(trail[trail.length - 1], { back: true })}>
+            ← {trail[trail.length - 1]}
+          </button>
+        )}
       </figcaption>
 
       <svg className="pm-svg" viewBox={`0 0 ${W} ${height}`} role="img">
@@ -86,47 +154,31 @@ export default function PrereqMapBlock({ data }) {
             <text className="pm-grouplabel" x={COL.group} y={g.top + 10}>
               {groups.length > 1 ? `group ${i + 1} — one of` : "requires"}
             </text>
+            {/* Keyed by CODE, not by index, so React moves the same node rather
+                than rebuilding it — which is what lets the tween happen. */}
             {g.nodes.map((n) => (
-              <g key={n.code} className={`pm-node is-${stateOf(n)}`}>
-                <rect x={COL.group} y={n.y} width={COL.gw} height={n.h} rx="3" />
-                <text className="pm-code" x={COL.group + 11} y={n.y + (n.title ? 13 : 18)}>
-                  {n.code}
-                </text>
-                {n.title && (
-                  <text className="pm-sub" x={COL.group + 11} y={n.y + 24}>
-                    {n.title.length > 30 ? n.title.slice(0, 29) + "…" : n.title}
-                  </text>
-                )}
-                {n.done && <text className="pm-mark" x={COL.group + COL.gw - 12} y={n.y + 18}>✓</text>}
-                {n.in_progress && (
-                  <text className="pm-mark now" x={COL.group + COL.gw - 12} y={n.y + 18}>◐</text>
-                )}
-              </g>
+              <Node key={n.code} code={n.code} title={n.title}
+                    sub={n.title ? clip(n.title, 30) : ""}
+                    x={COL.group} y={n.y} w={COL.gw} h={n.h}
+                    cls={`is-${stateOf(n)}`} onOpen={() => open(n.code)}
+                    mark={n.done ? { glyph: "✓", cls: "" }
+                        : n.in_progress ? { glyph: "◐", cls: "now" } : null} />
             ))}
           </g>
         ))}
 
         {/* the course asked about */}
-        <g className="pm-node is-target">
-          <rect x={COL.target} y={tY} width={COL.tw} height="52" rx="4" />
-          <text className="pm-code" x={COL.target + 13} y={tY + 21}>{target.code}</text>
-          <text className="pm-sub" x={COL.target + 13} y={tY + 36}>
-            {(target.title || "").length > 26 ? target.title.slice(0, 25) + "…" : target.title}
-          </text>
-          {target.credits && (
-            <text className="pm-cr" x={COL.target + COL.tw - 13} y={tY + 21}>{target.credits} cr</text>
-          )}
-        </g>
+        <Node key={target.code} code={target.code} title={target.title}
+              sub={clip(target.title, 26)} x={COL.target} y={tY}
+              w={COL.tw} h={52} cls="is-target" credits={target.credits} />
 
         {/* what it opens */}
         {shown.length > 0 && (
           <text className="pm-grouplabel" x={COL.unlock} y={laidUnlocks[0].y - 7}>opens</text>
         )}
         {laidUnlocks.map((u) => (
-          <g key={u.code} className="pm-node is-next">
-            <rect x={COL.unlock} y={u.y} width={COL.uw} height="22" rx="3" />
-            <text className="pm-code sm" x={COL.unlock + 10} y={u.y + 15}>{u.code}</text>
-          </g>
+          <Node key={u.code} code={u.code} title={u.title} x={COL.unlock} y={u.y}
+                w={COL.uw} h={22} cls="is-next" onOpen={() => open(u.code)} />
         ))}
         {rest > 0 && laidUnlocks.length > 0 && (
           <text className="pm-more" x={COL.unlock}
@@ -139,6 +191,7 @@ export default function PrereqMapBlock({ data }) {
         <span><i className="k doing" />in progress</span>
         <span><i className="k todo" />not taken</span>
         <span><i className="k target" />asked about</span>
+        <span className="pm-hint">click any course to follow it</span>
       </div>
     </figure>
   );

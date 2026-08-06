@@ -1706,10 +1706,12 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     # back as six bullets and then the same six as cards. The model cannot list
     # what it was never handed, so this is the only version that holds every time.
     _owner = {"places": "places", "clubs": "clubs", "events": "events"}
-    if visual.get("data") and visual.get("block") in ("cards", "checklist"):
-        summary = B.grounding_summary(visual["block"], visual["data"])
-        owner = ("procedures" if visual["block"] == "checklist"
-                 else _owner.get((visual["data"] or {}).get("kind")))
+    if visual.get("data") and visual.get("block"):
+        block = visual["block"]
+        summary = B.grounding_summary(block, visual["data"])
+        owner = ({"checklist": "procedures", "map": "prereq", "plan": "plan",
+                  "strip": "deadline"}.get(block)
+                 or _owner.get((visual["data"] or {}).get("kind")))
         if summary and owner == "places":
             places_snippet = summary
         elif summary and owner == "clubs":
@@ -1718,6 +1720,13 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
             events_snippet = summary
         elif summary and owner == "procedures":
             procedures_snippet = summary
+        elif summary and owner == "prereq":
+            # The map draws the branching; the snippet keeps only the verdict.
+            prereq_snippet = summary
+        elif summary and owner == "plan":
+            recommendation_snippet = summary
+        elif summary and owner == "deadline":
+            deadline_snippet = summary
     career_snippet += clubs_snippet
 
     register = _register_for(intent, question,
@@ -1729,6 +1738,21 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     either_rule = "" if prereq_graph else (
         "- For either/or requirements use exactly:\n"
         "  Either:\n  - Option A\n  - Option B"
+    )
+    # "Can I take CMPSC 465?" from someone with no audit came back "No, you
+    # cannot" — a guess wearing a verdict's clothes, because SHAPE rule 1 demands
+    # a Yes or No and outranked the grounding that said we could not know.
+    #
+    # The first fix wrote the exception INTO rule 1, and the A/B showed why that
+    # was wrong: biology-gened — a question with no yes/no in it and no map
+    # anywhere near it — fell from a stable 0.80 to 0.67. Hedging language in the
+    # contract that EVERY answer reads makes every answer hedge. So the exception
+    # lives here, fires only when the graph really has no record behind it, and
+    # is invisible the rest of the time.
+    no_record_rule = "" if not (prereq_graph and not prereq_graph.get("has_record")) else (
+        "- ACE has NO audit for this student and cannot know what they have taken. "
+        "Do not answer whether THEY can take the course. Open by saying you cannot "
+        "tell without their audit, then state what the course requires.\n"
     )
     logger.info("visual policy | level=%s block=%s | %s",
                 visual["level"], visual["block"], visual["reason"])
@@ -1830,7 +1854,11 @@ The detected intent for the current question is: {intent}
 === HOW TO ANSWER ===
 SHAPE — every answer is the verdict, then the substance, then the citation.
 1. VERDICT first, in ONE line. If they asked a yes/no question, the first word is
-   Yes or No. Never open by restating the question, and never open with "Great
+   Yes or No — UNLESS the grounding says ACE cannot determine it for this student
+   (no audit uploaded, no record). Then the first line says so plainly and states
+   what the rule is instead. A confident "Yes, you can" to someone whose
+   transcript ACE has never seen is a guess wearing a verdict's clothes.
+   Never open by restating the question, and never open with "Great
    question", "As your academic counselling engine", or any preamble.
 2. SUBSTANCE — everything they asked for. Follow the VISUAL POLICY at the end:
    when it says a block is RENDERED beneath your answer, state the point in prose
@@ -1843,7 +1871,7 @@ REGISTER — {register}
 - Ground every answer in the records, rules and student document provided; use the conversation history only to follow context.
 - List courses as bullets when you are listing several — unless the VISUAL POLICY says a block is rendered, in which case list nothing; this rule loses to it. Do NOT bullet section labels (e.g. "Probability and Statistics (6 credits)") — use them as headings.
 {either_rule}
-- For contact questions, use the advisor name from the student document first; only mention department contacts as secondary.
+{no_record_rule}- For contact questions, use the advisor name from the student document first; only mention department contacts as secondary.
 - Quote exact handbook language when available. Do not say "typically" or "likely" unless the records themselves are uncertain.
 - When a DEPARTMENT HANDBOOK POLICIES block is present, it outranks the advising records for procedure questions (ETM, petitions, substitutions, transfer credit, who to contact). Use its exact numbers and name the step the student has to take.
 - Never invent courses, policies, contacts, grades, or substitutions not present in the records.

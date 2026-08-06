@@ -50,6 +50,11 @@
   .messages-list { padding: 20px 16px; }
   .input-section { padding: 10px 16px 16px; }
 
+  /* Answer blocks give up the avatar-gutter indent on a phone. A prerequisite
+     map is 720 units wide and scales to fit, so 40px of indent on top of the
+     16px gutter is 56px the diagram cannot spare. */
+  .msg-visual { margin-left: 0; }
+
   /* ── Bottom tab bar (rendered only on mobile — see MobileBottomNav.jsx) ── */
   .mobile-bottom-nav {
     display: flex;
