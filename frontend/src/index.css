@@ -4681,31 +4681,75 @@ body {
 .ab-cards--clubs, .ab-cards--places, .ab-cards--events {
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
 }
-/* 135°, the same rake as .suggestion-chip, so the cards read as part of the
-   same surface language — but grounded in the card tokens rather than in
-   translucent white. A chip is a control and can be glass; a card holds data
-   and has to stay a solid, readable surface. Both tokens flip with the theme,
-   so this one rule is the light and dark treatment. */
+/* The card face rakes 135° — the same angle .suggestion-chip uses, so they read
+   as one surface language — and the EDGE carries a slow iridescent spectrum that
+   travels around the card, over a lifted shadow.
+
+   The spectrum is deliberately desaturated (~45%), which is the one judgement
+   call in here. At full saturation a rainbow edge reads as colour CODING — the
+   eye asks what the green card means versus the violet one — and it competes
+   with the emerald, which is the only thing in ACE that is allowed to mean
+   something by being coloured. Held down to a sheen it reads as light catching
+   an edge, which is decoration and doesn't claim to signify. Both dials are one
+   line each: --ab-edge for the colours, ab-sheen's duration for the speed.
+
+   Zero Chroma says no second hue, so this is a deliberate exception to the
+   brand, not an oversight — brand/BRAND.md §5 is the place to record it if it
+   stays. */
 .ab-card {
+  --ab-face: linear-gradient(135deg, var(--bg-card) 0%, var(--bg) 100%);
+  --ab-edge: linear-gradient(115deg,
+    #00875A 0%, #2E9E92 14%, #4C8FC4 28%, #7E86C8 42%,
+    #B183B6 56%, #C98C8A 70%, #B8A06B 84%, #00875A 100%);
   display: flex; gap: 12px; align-items: flex-start; justify-content: space-between;
-  border: 1px solid var(--border); border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg) 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  /* transparent border + padding-box/border-box layering is what puts a gradient
+     in a border at all; border-image cannot do it and keep border-radius. */
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: var(--ab-face) padding-box, var(--ab-edge) border-box;
+  background-size: auto, 300% 100%;
+  background-repeat: no-repeat, repeat;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6),
+              0 6px 18px rgba(0, 0, 0, 0.07);
   padding: 10px 12px;
-  transition: border-color .18s ease, transform .18s ease, background .18s ease,
-              box-shadow .18s ease;
+  animation: ab-sheen 18s linear infinite;
+  transition: transform .18s ease, box-shadow .18s ease;
 }
-[data-theme="dark"] .ab-card { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05); }
+@keyframes ab-sheen {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 0 0, 300% 0; }
+}
+/* Staggered, so a grid of cards shimmers rather than pulsing in lockstep. */
+.ab-card:nth-child(2n) { animation-delay: -6s; }
+.ab-card:nth-child(3n) { animation-delay: -12s; }
+[data-theme="dark"] .ab-card {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
+              0 6px 18px rgba(0, 0, 0, 0.40);
+}
 .ab-card:hover {
-  border-color: var(--accent-text); transform: translateY(-1px);
+  transform: translateY(-2px);
   /* Only one card is hovered at a time, so the period stays spent once. */
-  background: linear-gradient(135deg, var(--bg-card) 0%, var(--accent-bg) 160%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 4px 14px rgba(0, 0, 0, 0.06);
+  --ab-face: linear-gradient(135deg, var(--bg-card) 0%, var(--accent-bg) 160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7),
+              0 12px 26px rgba(0, 0, 0, 0.11);
 }
 [data-theme="dark"] .ab-card:hover {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 4px 14px rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07),
+              0 12px 26px rgba(0, 0, 0, 0.55);
 }
-.ab-card.is-blocked { border-style: dashed; }
+/* A permanently moving edge is the kind of thing that makes some people ill. */
+@media (prefers-reduced-motion: reduce) {
+  .ab-card { animation: none; }
+}
+/* Blocked cards drop out of the shimmer entirely — a course you cannot take yet
+   should look inert, and a dashed transparent border would otherwise just chop
+   the spectrum into dashes and read as decoration rather than as a state. */
+.ab-card.is-blocked {
+  --ab-edge: none;
+  border: 1px dashed var(--border);
+  animation: none;
+  box-shadow: none;
+}
 .ab-card.is-blocked .ab-card-title { color: var(--text-muted); }
 .ab-card-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .ab-card-title { font-size: 14.5px; font-weight: 600; line-height: 1.3; }
