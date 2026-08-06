@@ -3,6 +3,7 @@ import os
 import re
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 
 from fastapi import FastAPI, Query, Form, UploadFile, File, HTTPException, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
@@ -58,37 +59,38 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-# Create all tables (safe to call repeatedly — only creates if missing)
-Base.metadata.create_all(bind=engine)
+def _migrate():
+    """Bring the database to head.
 
+    This replaces `Base.metadata.create_all()` plus the hand-rolled ALTER pass
+    that grew beside it. Both were the same idea — reconcile the database with
+    the models at boot — with no record of what had already been applied, so
+    every new column meant remembering to add a line to a second place. It was
+    missed once already: ix_messages_created_at exists on a fresh SQLite file
+    and never on the long-running Postgres, which is invisible locally.
 
-def _ensure_columns():
-    """Add columns that `create_all` cannot, because their table already exists.
+    Running at import rather than as a separate release step is deliberate: the
+    Procfile runs it too, so prod migrates before the server accepts traffic,
+    and this call is then a single no-op query. But local dev is started by hand
+    with `uvicorn --reload`, and a schema that only updates when you remember a
+    second command is a schema that drifts.
 
-    `create_all` only creates *missing tables* — it never alters an existing one.
-    So a new nullable column on a table already live in prod Postgres needs an
-    explicit ALTER. Idempotent and fail-soft: a boot must not die over this.
+    Fail-soft. A migration that cannot run is worth a loud log and a degraded
+    boot; it is not worth refusing to serve the requests that do not touch the
+    new column.
     """
-    from sqlalchemy import inspect, text
+    from alembic import command
+    from alembic.config import Config
 
-    wanted = {("messages", "rating"): "INTEGER", ("users", "profile_json"): "TEXT"}
+    ini = Path(__file__).resolve().parent.parent / "alembic.ini"
     try:
-        inspector = inspect(engine)
-        tables = set(inspector.get_table_names())
-        with engine.begin() as conn:
-            for (table, column), coltype in wanted.items():
-                if table not in tables:
-                    continue  # create_all just made it, with the column included
-                existing = {c["name"] for c in inspector.get_columns(table)}
-                if column in existing:
-                    continue
-                conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {column} {coltype}"))
-                logger.info("_ensure_columns | added %s.%s", table, column)
-    except Exception as e:
-        logger.error("_ensure_columns | skipped: %s", e, exc_info=True)
+        cfg = Config(str(ini))
+        command.upgrade(cfg, "head")
+    except Exception as e:  # noqa: BLE001
+        logger.error("migrations | could not reach head: %s", e, exc_info=True)
 
 
-_ensure_columns()
+_migrate()
 
 # ── CORS ──────────────────────────────────────────────────────────────────────
 ALLOWED_ORIGINS = os.getenv(
