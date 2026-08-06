@@ -200,6 +200,33 @@ def test_a_rendered_block_withholds_its_items_from_the_prompt():
     assert B.grounding_summary("cards", None) == ""
 
 
+def test_declining_the_strip_does_not_decline_the_answer():
+    """"I missed the late drop deadline, what now?" routes to `deadline`, which
+    claims the strip; the one-date guard then declines it and used to return —
+    so the four-step petition checklist sitting right there never got a look in.
+    Declining a block has to mean "keep looking", not "give up"."""
+    q = "I missed the late drop deadline, what now?"
+    d = lvl(q, "deadline", counts={"strip": 5, "checklist": 4})
+    assert d["block"] == "checklist" and d["level"] == 2, d
+
+    # With nothing else to show, one date still beats a term timeline.
+    d = lvl(q, "deadline", counts={"strip": 5})
+    assert d["block"] is None and d["level"] == 1, d
+
+
+def test_a_course_that_opens_things_is_worth_drawing():
+    """CMPSC 360 has no prerequisites and unlocks six. The counter only counted
+    prerequisites, so "show me what CMPSC 360 unlocks" — a direct request, for
+    precisely the shape the map exists to draw — rendered nothing."""
+    from backend.services.chat_service import _count_visual_material
+
+    counts = _count_visual_material("show me what CMPSC 360 unlocks", "courses",
+                                    "Computer Science, B.S. (Engineering)", {})
+    assert counts.get("map"), f"a course with 6 unlocks must be drawable, got {counts}"
+    assert lvl("show me what CMPSC 360 unlocks", "courses",
+               counts=counts)["block"] == "map"
+
+
 def test_every_block_type_withholds_its_own_items():
     """The duplication was closed for cards and checklist first, and the other
     three kept doing it — which is why it still showed up in almost every answer.

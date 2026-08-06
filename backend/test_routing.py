@@ -64,6 +64,19 @@ INTENT_CASES = [
     ("can I see my academic record?", "general"),
     ("what are the health requirements?", "gen_ed"),
 
+    # "need" and "take" were bare course keywords, so the two commonest verbs in
+    # English decided the topic: "I need to see a doctor" was a course question.
+    ("I need to see a doctor", "general"),
+    ("how long does it take to get a parking permit?", "general"),
+    # ...and they must still carry a course question that names no course word.
+    ("do I need organic chemistry?", "courses"),
+    ("do I need to take MATH 141?", "courses"),
+
+    # A student asks for "key dates"; only the registrar says "deadlines". This
+    # fell to `general`, which claims cards, found none, and apologised.
+    ("what are the key dates this semester?", "deadline"),
+    ("what important dates should I know this term?", "deadline"),
+
     # Regressions on intents that already worked.
     ("who do I talk to about my degree requirements?", "contact"),
     ("can STAT 440 substitute for MATH 232?", "substitution"),

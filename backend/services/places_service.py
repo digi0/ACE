@@ -124,12 +124,19 @@ _GENERIC_NAME_WORDS = {
 def _relevance(place: dict, q: str) -> int:
     """Extra credit for a place the question actually names or describes."""
     score = 0
+    asked = set(re.findall(r"[a-z]+", q))
     words = {w for w in re.findall(r"[a-z]+", place["name"].lower())
              if len(w) > 3 and w not in _GENERIC_NAME_WORDS}
-    score += 3 * len(words & set(re.findall(r"[a-z]+", q)))
+    score += 3 * len(words & asked)
     for tag in place.get("good_for", []):
         if tag.lower() in q:
             score += 2
+    # What a place DOES, not just what it is called. A student says "I need to
+    # see a doctor"; no record is named "doctor", so on name alone every health
+    # record scored zero and the answer led with whatever sat first in the file.
+    described = {w for w in re.findall(r"[a-z]+", (place.get("what_it_is") or "").lower())
+                 if len(w) > 3 and w not in _GENERIC_NAME_WORDS}
+    score += len(described & asked)
     return score
 
 

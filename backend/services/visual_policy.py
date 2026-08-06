@@ -166,8 +166,16 @@ def decide(question, intent, counts=None, has_audit=False):
                     "no structured data for a visual" if asked else "prose answers this")
 
     if block == "strip" and not _OVERVIEW_QUESTION.search(q) and not asked:
-        return _out(1, None, False,
-                    "one date asked for — a sentence beats a term timeline")
+        # A single date wants a sentence, not a term timeline. But refusing the
+        # strip must not refuse the ANSWER: "I missed the late drop deadline,
+        # what now?" routes to `deadline`, which claims the strip, which this
+        # guard then declines — and the four-step petition checklist sitting
+        # right there never got a look in. Decline the strip, then keep looking.
+        alt = [b for b in _FALLBACK_ORDER if b != "strip" and counts.get(b)]
+        if not alt:
+            return _out(1, None, False,
+                        "one date asked for — a sentence beats a term timeline")
+        block = alt[0]
 
     rule = BLOCK_RULES[block]
     n = counts.get(block, 0)

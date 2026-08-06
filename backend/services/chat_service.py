@@ -24,7 +24,9 @@ from backend.services.transcript_service import save_exchange
 from backend.services.profile_service import build_profile_snippet, remember, get_profile
 from backend.services.clubs_service import build_clubs_snippet, search_clubs
 from backend.services.procedures_service import build_procedures_snippet, find_procedures
-from backend.services.places_service import build_places_snippet, find_places
+from backend.services.places_service import (
+    build_places_snippet, find_places, detect_categories as detect_place_categories,
+)
 from backend.services.events_service import (
     build_events_snippet, find_events, mentions_events,
     is_stale as is_events_stale, local_time as events_local_time,
@@ -47,8 +49,17 @@ def detect_question_intent(question):
         "course", "courses", "class", "classes",
         "math", "stat", "cmpsc", "ds ", " ds ", "dtsce",
         "data sciences", "data science", "credits",
-        "requirement", "requirements", "take", "need"
+        "requirement", "requirements",
     ]
+    # "take" and "need" are the two commonest verbs in the language and carry no
+    # topic alone, but requiring an academic word beside them is too strict — "do
+    # I need organic chemistry?" has none and is plainly a course question. So
+    # they stay, and lose only to a question that is demonstrably about a PLACE:
+    # "I need to see a doctor", "how long does it take to get a parking permit".
+    # detect_place_categories is the same matcher that picks the campus dataset,
+    # so the two cannot drift apart.
+    if _ACADEMIC_CONTEXT.search(q) or not detect_place_categories(q):
+        course_keywords += ["take", "need"]
 
     contact_keywords = [
         "advisor", "adviser", "contact", "email", "phone",
@@ -191,6 +202,13 @@ def detect_question_intent(question):
         "spring 2026", "fall 2026", "summer 2026",
         "tuition due", "payment deadline", "bill due",
         "grade appeal", "grade deadline",
+        # "what deadlines are coming up?" routed here and drew the term strip;
+        # "what are the key dates this semester?" — the same question in the
+        # words most students reach for — fell through to `general`, which
+        # claims the cards block, found nothing, and answered with an apology.
+        "key date", "key dates", "important date", "important dates",
+        "term timeline", "what's due", "whats due", "what is due",
+        "dates this semester", "dates this term", "dates i should know",
     ]
 
     # Distress and support. The short tokens here were the worst offenders in the
@@ -302,6 +320,17 @@ def detect_question_intent(question):
         return "courses"
 
     return "general"
+
+
+# "need" and "take" were in course_keywords as bare words, so "I need to see a
+# doctor" was a course question and "how long does it take?" was a course
+# question. They are the two most common verbs in English and they carry no
+# topic on their own — they only mean "courses" next to something academic.
+_ACADEMIC_CONTEXT = re.compile(
+    r"\b(course|courses|class|classes|credit|credits|requirement|requirements|"
+    r"prereq\w*|semester|term|major|minor|gen ?ed|elective|electives|"
+    r"[a-z]{2,6}\s?\d{3}[a-z]?)\b", re.I
+)
 
 
 def filter_records_by_scope(records, major_kind):
@@ -1180,6 +1209,18 @@ def _count_visual_material(question, intent, user_major, student_doc, history=No
             prereqs = get_prerequisites(code)
             if prereqs:
                 counts["map"] = len(prereqs) + 1
+            else:
+                # A course with no prerequisites is still worth drawing when it
+                # OPENS things. CMPSC 360 has none and unlocks six, so counting
+                # only prerequisites meant "show me what CMPSC 360 unlocks" —
+                # a direct request, for the one shape the map exists to show —
+                # drew nothing at all. Only reached when prereqs is empty, so
+                # the extra lookup is rare.
+                done, doing = _audit_course_states(student_doc)
+                opens = len((build_prereq_graph(code, done, in_progress=doing)
+                             or {}).get("unlocks") or [])
+                if opens:
+                    counts["map"] = opens + 1
     except Exception as exc:  # noqa: BLE001 — counting must never break an answer
         logger.warning("_count_visual_material | %s", exc)
     return counts
@@ -1750,9 +1791,12 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     # lives here, fires only when the graph really has no record behind it, and
     # is invisible the rest of the time.
     no_record_rule = "" if not (prereq_graph and not prereq_graph.get("has_record")) else (
-        "- ACE has NO audit for this student and cannot know what they have taken. "
-        "Do not answer whether THEY can take the course. Open by saying you cannot "
-        "tell without their audit, then state what the course requires.\n"
+        "- ACE has NO audit for this student, so it cannot know what they have "
+        "already taken. Do not say whether THEY are eligible, or what they still "
+        "need — if they asked that, say plainly you cannot tell without their "
+        "audit. What the course REQUIRES and what it OPENS are facts about the "
+        "catalogue, not about this student: state those normally and never refuse "
+        "them.\n"
     )
     logger.info("visual policy | level=%s block=%s | %s",
                 visual["level"], visual["block"], visual["reason"])
