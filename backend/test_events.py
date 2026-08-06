@@ -32,6 +32,17 @@ def test_windows_narrow_the_result():
     assert len(week) <= len(month), "a 7-day window cannot exceed a 31-day one"
 
 
+def test_times_are_campus_time_not_utc():
+    # Engage stores UTC. Printing the raw hour told a student an event started
+    # at 11 PM when it starts at 7 PM — four hours late, for every event.
+    assert es.local_time("2026-08-07T23:00:00+00:00").endswith("7:00 PM")
+    assert es.local_time("2026-08-04T18:00:00+00:00").endswith("2:00 PM")
+    assert es.local_time("nonsense"), "must degrade rather than raise"
+    if not es.is_stale():
+        snippet = es.build_events_snippet("what's happening this week?")
+        assert "already Eastern" in snippet, "the model must not re-convert"
+
+
 def test_only_event_questions_get_events():
     assert es.mentions_events("what's happening on campus this week?")
     assert es.mentions_events("anything happening tonight?")

@@ -40,6 +40,22 @@ def test_partial_word_matches_do_not_win():
     assert not any("adult learner" in n for n in names), names
 
 
+def test_the_question_field_outranks_a_remembered_interest():
+    # A student whose profile said "dancing" asked what clubs to join AS A CS
+    # MAJOR and got four dance crews under a sentence about technology.
+    CS = "Computer Science, B.S. (Engineering)"
+    named = cs.build_clubs_snippet(["dancing"],
+                                   question="what clubs should I join as a CS major?",
+                                   major=CS).lower()
+    assert "comput" in named, "naming the field must surface field clubs"
+    assert "dance crew" not in named, "the interest must not override the field"
+
+    # With no field named, the remembered interest is still the best signal.
+    generic = cs.build_clubs_snippet(["dancing"], question="what clubs should I join?",
+                                     major=CS).lower()
+    assert "dance" in generic
+
+
 def test_no_match_returns_nothing_rather_than_a_near_miss():
     assert cs.search_clubs(["quidditch unicorn wizardry"]) == []
     assert cs.search_clubs([]) == []

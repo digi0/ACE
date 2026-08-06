@@ -14,6 +14,7 @@ import json
 import logging
 import re
 from datetime import date, datetime, timedelta
+from zoneinfo import ZoneInfo
 from functools import lru_cache
 from pathlib import Path
 
@@ -133,8 +134,23 @@ def find_events(question: str, interests=None, limit=MAX_EVENTS) -> list[dict]:
     return ranked[:limit] if score(ranked[0]) else events[:limit]
 
 
+# Engage returns UTC. Penn State runs on Eastern, so printing the raw stored
+# hour told a student an event started at 11 PM when it starts at 7 PM — four
+# hours late, every time, for every event.
+CAMPUS_TZ = ZoneInfo("America/New_York")
+
+
+def local_time(iso: str) -> str:
+    """'2026-08-07T23:00:00+00:00' -> 'Fri 7 Aug, 7:00 PM'."""
+    try:
+        dt = datetime.fromisoformat(iso).astimezone(CAMPUS_TZ)
+    except (TypeError, ValueError):
+        return (iso or "")[:16].replace("T", " ")
+    return dt.strftime("%a %-d %b, %-I:%M %p")
+
+
 def format_event(e: dict) -> str:
-    when = e["starts_on"][:16].replace("T", " ")
+    when = local_time(e["starts_on"])
     bits = [f"  - {e['name']} — {when}"]
     if e.get("location"):
         bits.append(f"at {e['location']}")
@@ -170,7 +186,9 @@ def build_events_snippet(question: str, interests=None) -> str:
     lines = ["\n\n=== UPCOMING PENN STATE EVENTS ==="]
     lines += [format_event(e) for e in matches]
     lines.append(
-        f"\nThese are real events from ACE's directory, refreshed "
+        f"\nTimes above are already Eastern (campus time) — repeat them as given "
+        f"and do not convert or adjust them. These are real events from ACE's "
+        f"directory, refreshed "
         f"{snapshot_age_days()} day(s) ago. Give the name, when it is, where, and "
         f"the link. Do NOT invent events, times, or locations, and do not describe "
         f"this as the complete list — the full calendar is at {EVENTS_PAGE}."

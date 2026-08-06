@@ -169,11 +169,24 @@ def build_clubs_snippet(interests, question="", major="") -> str:
     if not load_clubs():
         return ""
 
-    for basis, terms in (
-        ("interests", interests),
-        ("question", [question] if question else None),
-        ("major", _major_terms(major)),
-    ):
+    # Order matters, and it is not fixed. A student whose profile says "dancing"
+    # asked "what clubs should I join as a CS major?" and got four dance crews
+    # under a sentence about technology and networking — the remembered interest
+    # outranked the subject they had just named. When the question points at
+    # their field, the field wins; otherwise the interest does.
+    q_low = (question or "").lower()
+    field = _major_terms(major)
+    names_field = bool(field) and (
+        "major" in q_low or bool(_tokens(field[0]) & _tokens(q_low))
+    )
+    order = (
+        (("major", field), ("question", [question] if question else None),
+         ("interests", interests))
+        if names_field else
+        (("interests", interests), ("question", [question] if question else None),
+         ("major", field))
+    )
+    for basis, terms in order:
         matches = search_clubs(terms)
         if matches:
             break

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useLayoutEffect, useCallback, lazy, Suspense } from "react";
+import PrereqMapBlock from "./PrereqMapBlock";
 import ReactMarkdown from "react-markdown";
 import {
   ChevronRight, GraduationCap, BookOpen, CalendarClock,
@@ -696,6 +697,10 @@ function App() {
                 streaming: false,
                 sources: data.sources ?? [],
                 messageId: data.message_id ?? null,
+                // The backend's visual policy decides whether a block is
+                // warranted and ships the data for it. Renderers read this;
+                // when it is absent the answer is prose, which is the norm.
+                visual: data.visual ?? null,
               };
               return next;
             });
@@ -1056,6 +1061,9 @@ function App() {
                             }}
                           >{msg.content}</ReactMarkdown>
                           {msg.streaming && <span className="typing-cursor" />}
+                          {!msg.streaming && msg.visual?.block === "map" && msg.visual?.data && (
+                            <PrereqMapBlock data={msg.visual.data} />
+                          )}
                         </div>
                         {!msg.streaming && msg.sources?.length > 0 && (
                           <div className="message-sources">

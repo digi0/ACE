@@ -843,3 +843,101 @@ def build_suggested_plan(program_name: str) -> dict | None:
         "total_credits": prog.get("total_credits"),
         "plans": plans,
     }
+
+
+# ── Prerequisite graph, for the map block ─────────────────────────────────────
+
+_unlock_index: dict[str, list[str]] | None = None
+
+
+def _build_unlock_index() -> dict[str, list[str]]:
+    """code → courses that list it as a prerequisite. Built once, 9k courses."""
+    global _unlock_index
+    if _unlock_index is None:
+        idx: dict[str, list[str]] = {}
+        for code, course in _courses_by_code.items():
+            for p in course.get("prerequisites", []):
+                key = _normalize_code(p.get("code", ""))
+                if key:
+                    idx.setdefault(key, []).append(code)
+        _unlock_index = idx
+    return _unlock_index
+
+
+def parse_prereq_groups(condition: str, codes: list[str]) -> list[list[str]]:
+    """Turn a catalog condition into AND-ed groups of OR-ed alternatives.
+
+    "( CMPSC 122 or CMPSC 132 ) and ( CMPSC 360 or MATH 311W )"
+        → [[CMPSC 122, CMPSC 132], [CMPSC 360, MATH 311W]]
+
+    That shape is the whole reason the map beats a sentence: prose has to say
+    "you need 122 or 132, and also 360 or 311W", which nobody parses.
+    """
+    text = re.sub(r"^.*?:", "", condition or "", count=1).strip().rstrip(".")
+    known = {_normalize_code(c) for c in codes}
+
+    def codes_in(fragment: str) -> list[str]:
+        found = [_normalize_code(m) for m in _CODE_RE.findall(fragment.upper())]
+        return [c for c in dict.fromkeys(found) if c in known]
+
+    groups: list[list[str]] = []
+    if "(" in text:
+        for chunk in re.findall(r"\(([^)]*)\)", text):
+            got = codes_in(chunk)
+            if got:
+                groups.append(got)
+        # Terms sitting outside the brackets are AND-ed groups of their own.
+        outside = codes_in(re.sub(r"\([^)]*\)", " ", text))
+        groups += [[c] for c in outside if not any(c in g for g in groups)]
+    elif text:
+        for chunk in re.split(r"\s+and\s+", text, flags=re.I):
+            got = codes_in(chunk)
+            if got:
+                groups.append(got)
+
+    if not groups and known:
+        # No usable condition text: fall back to the and/or mode we can infer.
+        ordered = [c for c in (_normalize_code(x) for x in codes) if c]
+        course = _courses_by_code.get(_normalize_code(codes[0])) if codes else None
+        if _prereq_mode(course, known) == "any":
+            groups = [ordered]
+        else:
+            groups = [[c] for c in ordered]
+    return groups
+
+
+def build_prereq_graph(code: str, completed=None, max_unlocks: int = 6) -> dict | None:
+    """Everything the map block needs for one course. None if unknown."""
+    target = get_course(code)
+    if not target:
+        return None
+
+    done = {_canonical_code(c) for c in (completed or [])}
+    prereqs = [p for p in get_prerequisites(code) if p.get("code")]
+    codes = [p["code"] for p in prereqs]
+    condition = next((p.get("condition") for p in prereqs if p.get("condition")), "")
+
+    def node(c):
+        info = _courses_by_code.get(_normalize_code(c)) or {}
+        return {"code": _normalize_code(c),
+                "title": (info.get("title") or "").strip(),
+                "done": _canonical_code(c) in done}
+
+    groups = [[node(c) for c in group] for group in parse_prereq_groups(condition, codes)]
+    unlocks = [
+        {"code": c, "title": (_courses_by_code.get(c, {}).get("title") or "").strip()}
+        for c in sorted(_build_unlock_index().get(_normalize_code(code), []))
+    ]
+
+    return {
+        "target": {"code": _normalize_code(code),
+                   "title": (target.get("title") or "").strip(),
+                   "credits": target.get("credits")},
+        "groups": groups,
+        # A group is satisfied when ANY of its options is done; the course is
+        # eligible when every group is satisfied.
+        "eligible": all(any(n["done"] for n in g) for g in groups) if groups else True,
+        "has_record": bool(done),
+        "unlocks": unlocks[:max_unlocks],
+        "unlocks_more": max(0, len(unlocks) - max_unlocks),
+    }

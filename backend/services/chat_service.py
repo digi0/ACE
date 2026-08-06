@@ -14,6 +14,7 @@ from backend.services.student_doc_service import (
 from backend.services.program_service import (
     get_program,
     get_prerequisites,
+    build_prereq_graph,
     build_program_context_snippet,
     build_recommendation_context,
     get_double_dips,
@@ -951,6 +952,18 @@ def _has_other_grounding(question, intent, user_major) -> bool:
     return False
 
 
+def _map_target_codes(question, history=None):
+    """Course codes a map could be drawn about, current message first.
+
+    Falls back to the recent conversation because "map out the prereqs for these
+    classes" names none — they were named a turn ago.
+    """
+    codes = extract_course_codes(question)
+    if not codes and history:
+        codes = extract_course_codes(" ".join(m.get("content", "") for m in history[-6:]))
+    return codes
+
+
 def _count_visual_material(question, intent, user_major, student_doc, history=None):
     """How many items each visual block would actually have to work with.
 
@@ -999,10 +1012,7 @@ def _count_visual_material(question, intent, user_major, student_doc, history=No
         # "map out the prereqs for these classes" names none, because the courses
         # were named a turn ago. Fall back to the recent conversation so anaphora
         # ("these", "them", "that one") still finds something to draw.
-        codes = extract_course_codes(question)
-        if not codes and history:
-            recent = " ".join(m.get("content", "") for m in history[-6:])
-            codes = extract_course_codes(recent)
+        codes = _map_target_codes(question, history)
         for code in codes[:1]:
             prereqs = get_prerequisites(code)
             if prereqs:
@@ -1490,6 +1500,16 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     visual_directive = build_visual_directive(
         question, intent, visual_counts, bool(student_doc)
     )
+    # The renderer needs the graph, not just the verdict. Only built when a map
+    # was actually chosen, so no cost on the questions that stay prose.
+    if visual.get("block") == "map" and visual.get("level", 0) >= 2:
+        codes = _map_target_codes(question, history)
+        if codes:
+            audit = (student_doc or {}).get("audit_parse") or {}
+            done = [c.get("code") for c in audit.get("completed_courses", []) if c.get("code")]
+            graph = build_prereq_graph(codes[0], done)
+            if graph:
+                visual["data"] = graph
     logger.info("visual policy | level=%s block=%s | %s",
                 visual["level"], visual["block"], visual["reason"])
 
