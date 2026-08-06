@@ -15,11 +15,11 @@ function DegreeProgressBar({ pct, completed, remaining, required }) {
       </div>
       <div className="dpb-legend">
         <span className="dpb-legend-item">
-          <span className="dpb-dot dpb-dot--navy" />
+          <span className="dpb-dot dpb-dot--done" />
           Completed — {completed} cr
         </span>
         <span className="dpb-legend-item">
-          <span className="dpb-dot dpb-dot--gold" />
+          <span className="dpb-dot dpb-dot--left" />
           Remaining — {remaining} cr
         </span>
       </div>
@@ -184,13 +184,13 @@ export default function Dashboard({ uploadedFile, onUploadClick, onRemoveClick, 
           label="Credits Completed"
           value={credits_completed}
           sub={`of ${credits_required} required`}
-          variant="navy"
+          variant="done"
         />
         <StatCard
           label="Credits Remaining"
           value={credits_remaining}
           sub="to graduate"
-          variant="gold"
+          variant="left"
         />
         <StatCard
           label="Degree Progress"

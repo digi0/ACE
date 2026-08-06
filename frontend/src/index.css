@@ -36,6 +36,13 @@
      3.8:1 while white on a #00875A fill measures 4.6:1 — the fill survives both
      modes, the ink does not. Splitting them keeps the hue locked either way. */
   --accent-text:     #00875A;
+  /* The travelling edge, defined ONCE. It was written out in .ab-card and again
+     in .ab/.pm, and the dashboard would have been a third copy — three places to
+     forget when the palette moves. Identical in both themes on purpose: it is
+     light catching an edge, and light does not change colour with the theme. */
+  --edge-spectrum: linear-gradient(115deg,
+    #00875A 0%, #00B894 14%, #0091E6 28%, #5B4FE0 42%,
+    #B429CC 56%, #F0345C 70%, #F59E0B 84%, #00875A 100%);
   --accent-bg:       rgba(0,135,90,0.10);
   --accent-border:   rgba(0,135,90,0.25);
   --green:           #00875A;
@@ -1803,19 +1810,17 @@ body {
 /* ── Top stat cards ──────────────────────────── */
 .dash-cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
+  gap: 14px;
   margin-bottom: 20px;
 }
+/* Surface, radius, border and shadow all come from the shared glass rule above.
+   What stays here is only what makes a stat card a stat card. */
 .stat-card {
-  background: var(--bg-card);
-  border-radius: 12px;
-  padding: 20px;
-  border: 1px solid var(--border);
+  padding: 18px 20px;
   display: flex;
   flex-direction: column;
   gap: 4px;
-  box-shadow: var(--shadow-sm);
 }
 .stat-card-label {
   font-size: 11px;
@@ -1838,7 +1843,7 @@ body {
   color: var(--text-muted);
   margin-top: 2px;
 }
-.stat-card--gold  .stat-card-value { color: var(--accent-text); }
+.stat-card--left  .stat-card-value { color: var(--accent-text); }
 .stat-card--progress .stat-card-value { color: var(--text); }
 .stat-card--success  .stat-card-value { color: var(--green); }
 .stat-card--warning  .stat-card-value { color: var(--amber); }
@@ -1847,19 +1852,16 @@ body {
 /* ── Mid row: chart + recommended ───────────── */
 .dash-mid-row {
   display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 16px;
-  margin-bottom: 16px;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 14px;
+  margin-bottom: 14px;
+}
+@media (max-width: 780px) {
+  .dash-mid-row { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* ── Generic card shell ──────────────────────── */
-.dash-card {
-  background: var(--bg-card);
-  border-radius: 12px;
-  padding: 22px 24px;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-}
+.dash-card { padding: 20px 22px; }
 .dash-card-title {
   font-size: 11px;
   font-weight: 600;
@@ -1964,8 +1966,8 @@ body {
   border-radius: 2px;
   flex-shrink: 0;
 }
-.dpb-dot--navy { background: var(--text); }
-.dpb-dot--gold  { background: var(--accent); }
+.dpb-dot--done { background: var(--text); }
+.dpb-dot--left  { background: var(--accent); }
 .dpb-totals {
   font-size: 12px;
   color: var(--text-muted);
@@ -1979,9 +1981,6 @@ body {
   margin-bottom: 16px;
 }
 .rec-course-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
   padding: 12px 10px;
   display: flex;
   flex-direction: column;
@@ -4659,11 +4658,9 @@ body {
 
    The border is the same travelling spectrum as .ab-card, at half speed, so a
    panel holding six shimmering cards does not race against them. */
-.ab, .pm {
+.ab, .pm, .stat-card, .dash-card, .rec-course-card {
   --panel-face: linear-gradient(var(--bg-card), var(--bg-card));
-  --panel-edge: linear-gradient(115deg,
-    #00875A 0%, #00B894 14%, #0091E6 28%, #5B4FE0 42%,
-    #B429CC 56%, #F0345C 70%, #F59E0B 84%, #00875A 100%);
+  --panel-edge: var(--edge-spectrum);
   position: relative;
   margin: 0;
   border: 1px solid transparent;
@@ -4683,7 +4680,8 @@ body {
 /* The specular sweep — the thing that actually reads as glass. Sits above the
    face and below the content, and is pointer-transparent so it never eats a
    click on a node or a checkbox. */
-.ab::before, .pm::before {
+.ab::before, .pm::before,
+.stat-card::before, .dash-card::before, .rec-course-card::before {
   content: "";
   position: absolute;
   inset: 0 0 auto 0;
@@ -4695,20 +4693,24 @@ body {
   pointer-events: none;
   border-radius: 13px 13px 0 0;
 }
-[data-theme="dark"] .ab, [data-theme="dark"] .pm {
+[data-theme="dark"] .ab, [data-theme="dark"] .pm,
+[data-theme="dark"] .stat-card, [data-theme="dark"] .dash-card,
+[data-theme="dark"] .rec-course-card {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
     0 10px 30px rgba(0, 0, 0, 0.55),
     0 2px 6px rgba(0, 0, 0, 0.35);
 }
-[data-theme="dark"] .ab::before, [data-theme="dark"] .pm::before {
+[data-theme="dark"] .ab::before, [data-theme="dark"] .pm::before,
+[data-theme="dark"] .stat-card::before, [data-theme="dark"] .dash-card::before,
+[data-theme="dark"] .rec-course-card::before {
   background: linear-gradient(170deg,
     rgba(255, 255, 255, 0.10) 0%,
     rgba(255, 255, 255, 0.02) 45%,
     rgba(255, 255, 255, 0) 100%);
 }
 @media (prefers-reduced-motion: reduce) {
-  .ab, .pm { animation: none; }
+  .ab, .pm, .stat-card, .dash-card, .rec-course-card { animation: none; }
 }
 
 /* The block's own strip of the page, clear of the bubble and of the avatar
@@ -4837,9 +4839,7 @@ body {
    stays. */
 .ab-card {
   --ab-face: linear-gradient(var(--bg-card), var(--bg-card));
-  --ab-edge: linear-gradient(115deg,
-    #00875A 0%, #00B894 14%, #0091E6 28%, #5B4FE0 42%,
-    #B429CC 56%, #F0345C 70%, #F59E0B 84%, #00875A 100%);
+  --ab-edge: var(--edge-spectrum);
   display: flex; gap: 12px; align-items: flex-start; justify-content: space-between;
   /* transparent border + padding-box/border-box layering is what puts a gradient
      in a border at all; border-image cannot do it and keep border-radius. */
@@ -5076,3 +5076,19 @@ button.ab-box[aria-pressed="true"]::after {
 .pm-legend .k.done { border-color: var(--text); background: var(--bg-card); }
 .pm-legend .k.doing { border-color: var(--text-secondary); border-style: dashed; }
 .pm-legend .k.target { background: var(--accent); border-color: var(--accent); }
+
+/* ── dashboard: pacing for the shared glass surface ──────────────────────────
+   Every dashboard card carries the travelling edge, so they are offset against
+   each other — nine surfaces starting together pulse, the same nine offset read
+   as one slow drift. Negative delays start each mid-loop rather than waiting. */
+.dash-cards .stat-card:nth-child(2) { animation-delay: -9s; }
+.dash-cards .stat-card:nth-child(3) { animation-delay: -18s; }
+.dash-cards .stat-card:nth-child(4) { animation-delay: -27s; }
+.dash-mid-row .dash-card:nth-child(2) { animation-delay: -14s; }
+.dash-card--requirements { animation-delay: -22s; }
+.rec-grid .rec-course-card:nth-child(2n) { animation-delay: -12s; }
+.rec-grid .rec-course-card:nth-child(3n) { animation-delay: -24s; }
+
+/* The gloss sweep is sized for a tall panel; on a short stat card covering 58%
+   of it washes the number out. */
+.stat-card::before, .rec-course-card::before { height: 42%; }
