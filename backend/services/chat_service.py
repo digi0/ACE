@@ -1,13 +1,10 @@
 import logging
-import os
 import re
 import json
 from datetime import date, timedelta
-from openai import OpenAI
 from dotenv import load_dotenv
-from backend.config import OPENAI_CHAT_MODEL
+from backend.services import llm
 from backend.services.embedding_service import semantic_search
-from backend.services.cost_service import record_usage
 from backend.services.student_doc_service import (
     has_student_doc,
     build_student_doc_context,
@@ -16,14 +13,32 @@ from backend.services.student_doc_service import (
 )
 from backend.services.program_service import (
     get_program,
+    get_prerequisites,
+    build_prereq_graph,
     build_program_context_snippet,
+    build_recommendation_context,
     get_double_dips,
 )
 from backend.services.policy_service import build_policy_snippet, policy_sources
+from backend.services.transcript_service import save_exchange
+from backend.services.profile_service import build_profile_snippet, remember, get_profile
+from backend.services.clubs_service import build_clubs_snippet, search_clubs
+from backend.services.procedures_service import build_procedures_snippet, find_procedures
+from backend.services.places_service import (
+    build_places_snippet, find_places, detect_categories as detect_place_categories,
+)
+from backend.services.events_service import (
+    build_events_snippet, find_events, mentions_events,
+    is_stale as is_events_stale, local_time as events_local_time,
+)
+from backend.services.money_service import build_money_snippet, find_money
+from backend.services import blocks as B
+from backend.services.visual_policy import (
+    decide as decide_visual, build_visual_directive, _PREREQ_QUESTION,
+)
 
 load_dotenv()
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 logger = logging.getLogger(__name__)
 
 
@@ -34,8 +49,17 @@ def detect_question_intent(question):
         "course", "courses", "class", "classes",
         "math", "stat", "cmpsc", "ds ", " ds ", "dtsce",
         "data sciences", "data science", "credits",
-        "requirement", "requirements", "take", "need"
+        "requirement", "requirements",
     ]
+    # "take" and "need" are the two commonest verbs in the language and carry no
+    # topic alone, but requiring an academic word beside them is too strict — "do
+    # I need organic chemistry?" has none and is plainly a course question. So
+    # they stay, and lose only to a question that is demonstrably about a PLACE:
+    # "I need to see a doctor", "how long does it take to get a parking permit".
+    # detect_place_categories is the same matcher that picks the campus dataset,
+    # so the two cannot drift apart.
+    if _ACADEMIC_CONTEXT.search(q) or not detect_place_categories(q):
+        course_keywords += ["take", "need"]
 
     contact_keywords = [
         "advisor", "adviser", "contact", "email", "phone",
@@ -82,6 +106,9 @@ def detect_question_intent(question):
     "how many classes do i still need",
     "what courses do i need to graduate",
     "what do i still need to graduate",
+    # Catches the phrasings the two above miss ("what things do I need to
+    # graduate?"), which otherwise fell through to a generic requirement dump.
+    "need to graduate",
     # additional phrasings
     "what courses do i still have",
     "still have to complete",
@@ -107,10 +134,15 @@ def detect_question_intent(question):
     ]
 
 
+    # Gen-ed category codes are two-letter tokens that also live inside ordinary
+    # words: "sign up" contains "gn ", "things" contains "gs ", "through"
+    # contains "gh ". As bare substrings they routed "how do things work here?"
+    # to gen_ed. Match them as standalone tokens, same as the ap/ib fix above.
+    gen_ed_code = re.search(r"\b(ga|gh|gq|gn|gs|gha|ghw|gws|il)\b", q)
+
     gen_ed_keywords = [
-        "gen ed", "general education", "gened", "ga ", " ga ", "gh ", " gh ",
-        "gq ", " gq ", "gn ", " gn ", "gs ", " gs ", "gha", "us culture",
-        "international culture", " il ", "il course", "arts requirement",
+        "gen ed", "general education", "gened", "us culture",
+        "international culture", "il course", "arts requirement",
         "humanities requirement", "social science requirement",
         "natural science requirement", "quantification", "health requirement",
         "diversity requirement", "writing requirement", "speaking requirement",
@@ -119,6 +151,44 @@ def detect_question_intent(question):
         "kines 082", "phil 010", "musc 007", "musc 008", "thea 100",
         "psych 100", "econ 102", "anth 001", "intl 100",
     ]
+
+    # How the machine works, as opposed to when it happens. "How do I register"
+    # and "when does registration open" are different questions with different
+    # answers; both used to land on `deadline` and get a wall of dates. Keep
+    # these phrases specific — bare "registration" belongs to deadline.
+    logistics_keywords = [
+        "how do i register", "how to register", "how does registration work",
+        "how do i enroll", "how to enroll", "how does enrollment work",
+        "how do i sign up for class", "how do i add a class", "how do i drop a class",
+        "how do i swap", "how do i pick classes", "how do i choose classes",
+        "how do i build my schedule", "how do i get into a class",
+        "registration hold", "advising hold", "hold on my account", "clear my hold",
+        "lionpath", "lion path", "student center", "course cart", "schedule builder",
+        "enrollment appointment", "registration appointment", "registration window",
+        "orientation", "new student", "just enrolled", "just got accepted",
+        "just committed", "just started", "what do i do first", "where do i start",
+        "first steps", "waitlist", "wait list", "closed section", "class is full",
+        "how do i see my schedule", "how do i find my classes",
+    ]
+
+    # Asking ACE to propose, not to recite. These get a plan, not a requirement
+    # dump — see the recommendation grounding in ask_advisor_stream.
+    recommendation_keywords = [
+        "what should i take", "what should i sign up", "what should i register",
+        "what classes should i", "what courses should i", "which classes should i",
+        "which courses should i", "what do you recommend", "what would you suggest",
+        "recommend a course", "recommend classes", "recommend courses",
+        "course recommendation", "suggest a schedule", "suggest classes",
+        "suggest courses", "suggest a course", "build me a schedule",
+        "plan my semester", "plan my next semester", "help me plan",
+        "how many credits should i take", "good course load", "what's a good schedule",
+    ]
+    # "recommend"/"suggest" on their own are too broad ("suggest an advisor"), so
+    # require them to be about coursework.
+    proposes_courses = bool(
+        re.search(r"\b(recommend|suggest|advise)\b", q)
+        and re.search(r"\b(class|classes|course|courses|schedule|semester|term|credits?)\b", q)
+    )
 
     deadline_keywords = [
         "deadline", "deadlines", "due date", "last day to", "last day of",
@@ -132,18 +202,52 @@ def detect_question_intent(question):
         "spring 2026", "fall 2026", "summer 2026",
         "tuition due", "payment deadline", "bill due",
         "grade appeal", "grade deadline",
+        # "what deadlines are coming up?" routed here and drew the term strip;
+        # "what are the key dates this semester?" — the same question in the
+        # words most students reach for — fell through to `general`, which
+        # claims the cards block, found nothing, and answered with an apology.
+        "key date", "key dates", "important date", "important dates",
+        "term timeline", "what's due", "whats due", "what is due",
+        "dates this semester", "dates this term", "dates i should know",
     ]
 
+    # Distress and support. The short tokens here were the worst offenders in the
+    # whole router: "org" lives inside "organic", "rec" inside "record", "broke"
+    # inside "broken", so "do I need organic chemistry?" was answered out of the
+    # CAPS / 988 crisis block. Bare "health" is gone too — "health requirement"
+    # is the GHW gen-ed category, not a wellbeing question.
     wellbeing_keywords = [
         "stress", "stressed", "anxiety", "anxious", "overwhelmed", "burnout",
         "mental health", "depressed", "depression", "struggling", "counseling",
-        "caps", "uhs", "health", "sick", "therapy", "therapist", "crisis",
-        "emergency fund", "financial hardship", "broke", "can't afford",
+        "student health", "health center", "therapy", "therapist", "crisis",
+        "emergency fund", "financial hardship", "can't afford", "cannot afford",
         "safe walk", "unsafe", "harassed", "emergency", "campus police",
-        "extracurricular", "club", "clubs", "org", "student org", "orgcentral",
-        "rec", "recreation", "gym", "intramural", "career", "internship",
-        "resume", "job", "handshake", "writing center", "tutoring", "lrc",
-        "calc", "calculus help",
+        # How someone in trouble actually types it. All of these routed to
+        # `general` and got a generic answer instead of the care resources —
+        # the one place a miss costs more than a bad answer.
+        "losing it", "falling apart", "can't keep up", "cant keep up",
+        "drowning", "barely holding", "can't cope", "cant cope", "at my limit",
+        "breaking point", "want to give up", "giving up", "behind on everything",
+        "spiraling", "spiralling", "panicking", "panic attack", "crying",
+        "too much going on", "can't do this", "cant do this",
+        "recreation", "recsports", "intramural", "writing center", "tutoring",
+        "calculus help",
+    ]
+    wellbeing_token = re.search(r"\b(caps|uhs|lrc|gym|sick|broke)\b", q)
+
+    # Ring 3 — career, activities, research. These used to live in the wellbeing
+    # list, so "how do I find an internship?" was answered from a block that
+    # opens with counselling and the 988 crisis line. Checked AFTER wellbeing, so
+    # "I'm stressed about finding a job" still routes to support.
+    career_keywords = [
+        "career", "internship", "internships", "co-op", "cooperative education",
+        "resume", "résumé", "cover letter", "handshake", "job", "jobs",
+        "employer", "hiring", "linkedin", "networking", "career fair",
+        "club", "clubs", "student org", "orgcentral", "extracurricular",
+        "get involved", "should i join", "what to join", "somewhere to belong",
+        "meet people", "find my people", "research opportunity", "undergraduate research",
+        "research lab", "work in a lab", "study abroad", "volunteer",
+        "grad school", "graduate school", "portfolio",
     ]
 
     # Visa/immigration — unambiguous, checked first; ACE refers, never advises.
@@ -175,14 +279,27 @@ def detect_question_intent(question):
     if any(keyword in q for keyword in financial_aid_keywords):
         return "financial_aid"
 
+    # Logistics before deadline: "how do I register" is a steps question, and
+    # deadline owns bare "registration"/"register", so it would swallow it.
+    if any(keyword in q for keyword in logistics_keywords):
+        return "logistics"
+
     if any(keyword in q for keyword in deadline_keywords):
         return "deadline"
 
-    if any(keyword in q for keyword in gen_ed_keywords):
+    # Before courses/gen_ed, both of which match "take"/"class" and would turn a
+    # request for a proposal into a requirement recital.
+    if proposes_courses or any(keyword in q for keyword in recommendation_keywords):
+        return "recommendation"
+
+    if gen_ed_code or any(keyword in q for keyword in gen_ed_keywords):
         return "gen_ed"
 
-    if any(keyword in q for keyword in wellbeing_keywords):
+    if wellbeing_token or any(keyword in q for keyword in wellbeing_keywords):
         return "wellbeing"
+
+    if any(keyword in q for keyword in career_keywords):
+        return "career"
 
     if any(keyword in q for keyword in personal_progress_keywords):
         return "student_progress"
@@ -203,6 +320,17 @@ def detect_question_intent(question):
         return "courses"
 
     return "general"
+
+
+# "need" and "take" were in course_keywords as bare words, so "I need to see a
+# doctor" was a course question and "how long does it take?" was a course
+# question. They are the two most common verbs in English and they carry no
+# topic on their own — they only mean "courses" next to something academic.
+_ACADEMIC_CONTEXT = re.compile(
+    r"\b(course|courses|class|classes|credit|credits|requirement|requirements|"
+    r"prereq\w*|semester|term|major|minor|gen ?ed|elective|electives|"
+    r"[a-z]{2,6}\s?\d{3}[a-z]?)\b", re.I
+)
 
 
 def filter_records_by_scope(records, major_kind):
@@ -367,7 +495,12 @@ def build_program_sources(major_name):
 
 
 def extract_course_codes(text):
-    pattern = r"\b([A-Za-z]{2,6}\s?\d{3})\b"
+    # The trailing letter is not optional decoration: CMPSC 431W, CMPSC 483W,
+    # MATH 311W, ENGL 202C, CMPSC 150N and every honors H section were invisible
+    # to this function, so a question naming one got no prerequisite data and the
+    # model invented some. Writing-intensive courses are a big slice of any
+    # degree, and they were the slice ACE could not see.
+    pattern = r"\b([A-Za-z]{2,6}\s?\d{3}[A-Za-z]?)\b"
     matches = re.findall(pattern, text)
     cleaned = []
 
@@ -554,136 +687,6 @@ def build_student_progress_answer(student_doc):
     return "\n".join(lines)
 
 
-def ask_advisor(question, user_id: str = None):
-    intent = detect_question_intent(question)
-
-    retrieved_records = semantic_search(question, top_k=10)
-    records = select_top_records(retrieved_records, intent)
-
-    context = build_context_from_records(records)
-    rules = extract_requirement_rules(records)
-    rule_summary = build_rule_summary(rules)
-    sources = build_sources(records)
-
-    student_doc_context = ""
-    student_doc = get_current_student_doc(user_id) if (user_id and has_student_doc(user_id)) else {}
-
-    if user_id and has_student_doc(user_id):
-        student_doc_context = build_student_doc_context(user_id)
-
-    user_major = get_user_major(user_id) if user_id else None
-    program_snippet = build_program_context_snippet(user_major) if user_major else ""
-
-    # Deterministic path first for student-progress questions
-    if intent == "student_progress" and student_doc:
-        deterministic_answer = build_student_progress_answer(student_doc)
-        if deterministic_answer:
-            return {
-                "answer": deterministic_answer,
-                "sources": sources,
-                "intent": intent,
-                "rule_summary": rule_summary,
-                "used_student_doc": True
-            }
-
-    system_prompt = f"""
-You are ACE, the Academic Counselling Engine for Penn State students.
-
-The student's question intent is: {intent}
-{"The student's selected major is: " + user_major if user_major else ""}
-
-You must answer using only:
-1. the provided advising records,
-2. the extracted rules,
-3. the uploaded student academic document if it is provided,
-4. the program requirements if provided below.
-{program_snippet}
-
-Strict rules:
-- Give a direct answer first.
-- If courses or requirements are involved, list the actual courses as bullets.
-- Section labels such as "Probability and Statistics (6 credits)" should NOT be bullets. They should appear as headings followed by the course options.
-- If there are options, alternatives, or either/or choices, show them clearly.
-- For either/or requirements, format them like this:
-  Either:
-  - Option 1
-  - Option 2
-- Do not split one either/or rule awkwardly across multiple bullets.
-- If the student is asking for contact help and the uploaded student document contains a "Student's personally assigned advisor" field, use that advisor name as the primary answer. Only mention general department advisors from the vault records as secondary/alternative contacts.
-- If the student is asking about transfer credit or ETM, explain the rule clearly and simply.
-- If the records contain explicit rule language such as "may substitute", "can substitute", "may be substituted", "either/or", "required", or "must complete", follow that wording exactly.
-- For substitution questions, do not reinterpret the rule. If the records say a course may substitute for another course, answer yes.
-- For requirement questions, prioritize explicit requirement rules over vague summaries.
-- If a student document is provided and the question is personal, use that document to personalize the answer.
-- If the uploaded student document does not contain enough information to answer the personal question, say that clearly.
-- Prefer exact handbook rule language when available.
-- Do not say "typically", "likely", or "may need" unless the records themselves are uncertain.
-- Do not invent requirements, options, policies, emails, contacts, grades, GPA values, or substitutions.
-- If the records are incomplete, say that clearly.
-- Keep the wording student-friendly and specific.
-- Do not mention internal record numbers.
-- Do not add generic advice like checking degree audit unless the records specifically support it.
-"""
-
-    user_prompt = f"""
-Student question:
-{question}
-
-Relevant advising records:
-{context}
-
-Extracted rule summary:
-{rule_summary}
-
-Uploaded student academic document:
-{student_doc_context if student_doc_context else "No student document uploaded."}
-
-Write the answer in this style:
-1. Start with 1 to 2 sentences directly answering the question.
-2. If courses are listed under a requirement heading (for example "Probability and Statistics (6 credits)"), write the heading normally and place the course options under it as bullets.
-3. If there is an either/or requirement, write:
-   Either:
-   - first option
-   - second option
-4. Keep course requirement bullets clean and specific.
-5. If the question is about contact information, clearly list the person or office and how to reach them.
-6. If the question is about substitution or replacement, first answer yes or no, then state the exact substitution rule from the records in simple words.
-7. If the question is personal and a student document is uploaded, use that document directly.
-8. Only use details that appear in the records, extracted rule summary, or uploaded student document.
-"""
-
-    try:
-        completion = client.chat.completions.create(
-            model=OPENAI_CHAT_MODEL,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt}
-            ],
-            temperature=0.0
-        )
-
-        answer = completion.choices[0].message.content
-        record_usage("chat", OPENAI_CHAT_MODEL, completion.usage, user_id=user_id)
-
-        return {
-            "answer": answer,
-            "sources": sources,
-            "intent": intent,
-            "rule_summary": rule_summary,
-            "used_student_doc": bool(student_doc_context)
-        }
-
-    except Exception as e:
-        return {
-            "answer": "The chatbot could not answer right now. Please check your API key, billing, or quota and try again.",
-            "sources": sources,
-            "intent": intent,
-            "rule_summary": rule_summary,
-            "used_student_doc": bool(student_doc_context),
-            "error": str(e)
-        }
-
-
 _DECLARED_MAJOR_KEYWORDS = [
     "declared my major",
     "declared the major",
@@ -761,6 +764,51 @@ CAMPUS_RESOURCES_SNIPPET = """
 - Nighttime escort: Safe Walk — https://police.psu.edu/services/safewalk
 - Student crisis support: Student Care & Advocacy — https://studentaffairs.psu.edu/student-care
 Mention the most relevant 1–2 resources naturally at the end of your response. Do not list all of them.
+"""
+
+
+# Ring 3 (career + activities) is the roadmap ring: ACE has no dataset of clubs,
+# labs, employers, or postings. Asked "what clubs should I join as a CS major?"
+# it used to answer from the model's own memory — four named organisations with
+# confident descriptions, none of them grounded in anything ACE holds. Inventing
+# an institution's student organisations is the same failure as inventing a
+# course, and harder for a student to catch.
+#
+# So this block does two jobs: route to the systems that DO hold the data, and
+# forbid naming specifics ACE cannot see.
+CAREER_RESOURCES_SNIPPET = """
+=== CAREER, CLUBS & RESEARCH — REFER, DO NOT INVENT ===
+
+ACE has NO data on student organisations, labs, employers, job postings, or
+application deadlines. It cannot see which clubs exist, which are active, who
+is hiring, or what any of them require.
+
+WHERE THE REAL DATA LIVES:
+- Jobs, internships, career fairs, resume help: Career Services —
+  https://careerservices.psu.edu/ and Handshake — https://psu.joinhandshake.com/
+- Student organisations, clubs, getting involved: OrgCentral —
+  https://orgcentral.psu.edu/ (searchable by interest — this is where the
+  student finds the current list)
+- Research with faculty: the student's own department, and their academic
+  adviser, who knows which faculty take undergraduates.
+
+RULES FOR THIS TOPIC — these override the general answer rules:
+- If a MATCHING PENN STATE STUDENT ORGANISATIONS section appears below, those
+  organisations are real and came from ACE's own directory — name them, describe
+  them, and give their links. That section is the ONLY source of organisation
+  names you may use.
+- Otherwise do NOT name specific clubs, student organisations, labs, faculty,
+  companies, or job postings. Not even ones you believe exist. Send the student
+  to OrgCentral or Career Services to see the current, real list.
+- You MAY be specific about the student's own academic record — their major,
+  the courses they have completed, and what their program's plan contains —
+  because that is grounded above. Use it to make the answer about them: what
+  their coursework already prepares them for, and what to search for.
+- You MAY describe the general shape of the process (when recruiting happens,
+  what a career fair is, that research usually starts by contacting faculty).
+- Be encouraging and concrete about the NEXT ACTION, not about names you cannot
+  verify. "Search OrgCentral for computing and data groups" is a good answer.
+  "Join ACM and HackPSU" is not — ACE cannot confirm either exists.
 """
 
 
@@ -909,6 +957,413 @@ def _get_deadlines_snippet() -> str:
 def _deadlines_snippet_property() -> str:
     return _get_deadlines_snippet()
 
+
+# Intents the handbook genuinely serves. Everything else is answered by the
+# structured datasets, and pulling handbook chunks in only dilutes the prompt.
+# `contact` is deliberately NOT here: it covers both "who is my academic
+# adviser" (handbook) and "who do I email about this charge" (bursar). It falls
+# through to the no-other-grounding test, which picks correctly for each.
+_HANDBOOK_INTENTS = {"etm", "transfer", "substitution"}
+# Questions where citing the student's own program bulletin makes sense.
+_ACADEMIC_INTENTS = {"courses", "gen_ed", "student_progress", "recommendation"}
+
+
+def _has_other_grounding(question, intent, user_major) -> bool:
+    """True when a structured dataset already answers this, so the handbook is
+    not needed as a fallback. Cheap local lookups only."""
+    try:
+        if find_procedures(question) or find_places(question) or find_money(question):
+            return True
+        if mentions_events(question) and not is_events_stale() and find_events(question):
+            return True
+        if intent == "career" and (
+            search_clubs([question])
+            or (search_clubs([user_major.split(",")[0]]) if user_major else [])
+        ):
+            return True
+        if intent in ("recommendation", "gen_ed", "courses", "student_progress") and user_major:
+            return True
+        if intent in ("logistics", "deadline", "wellbeing", "financial_aid", "international"):
+            return True
+    except Exception as exc:  # noqa: BLE001 — never break an answer over this
+        logger.warning("_has_other_grounding | %s", exc)
+    return False
+
+
+# Register follows the stakes — the voice decision, made concrete. The same
+# product should not speak about a dance club and a Faculty Senate petition in
+# the same tone: warmth reassures in one and reads as flippant in the other.
+_HIGH_STAKES = {"deadline", "financial_aid", "international", "substitution",
+                "etm", "transfer"}
+_WARM = {"career", "wellbeing"}
+
+_REGISTER = {
+    "high": ("precise and calm. Exact dates, exact amounts, the office by name. "
+             "No reassurance padding and no exclamation — something with a "
+             "deadline or a cost is riding on this answer."),
+    "warm": ("like a friend a year ahead — plain, encouraging, no jargon. This is "
+             "about belonging or about a rough patch, so sound like a person."),
+    "plain": ("plain and practical. Direct, concrete, no filler. Neither chatty "
+              "nor formal."),
+}
+
+
+def _register_for(intent, question, has_procedure, has_money):
+    """Which of the three registers this answer should be written in."""
+    if intent in _HIGH_STAKES or has_procedure or has_money:
+        return _REGISTER["high"]
+    if intent in _WARM:
+        return _REGISTER["warm"]
+    return _REGISTER["plain"]
+
+
+def _audit_course_states(student_doc):
+    """(completed, in_progress) course codes from an uploaded audit.
+
+    Completed is the union of the course rows and the requirement blocks the
+    audit itself marks Satisfied — transfer credit appears in the rows as
+    "CMPSC XFR100", so reading rows alone found one completed course in a report
+    showing 66 of 120 credits used.
+    """
+    doc = student_doc or {}
+    audit = doc.get("audit_parse") or {}
+    done = {c.get("code") for c in audit.get("completed_courses", []) if c.get("code")}
+    try:
+        from backend.services.audit_parser_service import satisfied_course_codes
+        done |= satisfied_course_codes(doc.get("text") or "")
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("_audit_course_states | %s", exc)
+    doing = {c for c in (audit.get("in_progress_courses") or []) if isinstance(c, str)}
+    return sorted(done), sorted(doing)
+
+
+def _build_prereq_snippet(graph) -> str:
+    """The enforced prerequisite rule, in words, for the prompt.
+
+    The renderer had this and the model did not, so a map showing "(CMPSC 122 or
+    CMPSC 132) and (CMPSC 360 or MATH 311W)" sat under prose claiming the
+    prerequisites were CMPSC 221 and 222 — inferred from the prescribed course
+    list, because nothing authoritative was in the prompt to contradict it.
+    """
+    if not graph:
+        return ""
+    t = graph["target"]
+    lines = ["\n\n=== ENFORCED PREREQUISITE RULE (course catalog — authoritative) ===",
+             f"{t['code']} — {t['title']}" + (f" ({t['credits']} cr)" if t.get("credits") else "")]
+    if graph["groups"]:
+        lines.append("Every group below must be satisfied, and each group needs ONE of its options:")
+        for i, group in enumerate(graph["groups"], 1):
+            opts = "  OR  ".join(
+                n["code"] + (" [completed]" if n["done"]
+                             else " [in progress now]" if n.get("in_progress") else "")
+                for n in group
+            )
+            lines.append(f"  group {i}: {opts}")
+    else:
+        lines.append("This course has no listed prerequisites.")
+
+    if graph.get("has_record"):
+        if graph["eligible"]:
+            status = "every group already satisfied — eligible now."
+        elif graph.get("on_track"):
+            status = ("every group is either satisfied or IN PROGRESS this term, so "
+                      "they are on track to be eligible next term provided they pass. "
+                      "Say yes, and name the in-progress course they must pass.")
+        else:
+            status = "a group is neither satisfied nor in progress — not yet eligible."
+        lines.append("Status from their audit: " + status)
+    else:
+        lines.append("No audit uploaded, so completion is unknown — describe the rule, "
+                     "do not assert whether they personally qualify.")
+
+    if graph.get("unlocks"):
+        more = f" (+{graph['unlocks_more']} more)" if graph.get("unlocks_more") else ""
+        lines.append("Taking it opens: "
+                     + ", ".join(u["code"] for u in graph["unlocks"]) + more)
+
+    lines.append(
+        "RULES: this rule is authoritative and complete. State it exactly, including "
+        "the or/and structure. Do NOT say 'typically', do NOT infer prerequisites "
+        "from the requirement or prescribed-course lists elsewhere in this prompt, "
+        "and do NOT name any course as a prerequisite unless it appears above.\n"
+        "SHAPE: lead with a direct yes or no, then state the rule as ONE plain "
+        "sentence — 'you need CMPSC 122 or 132, plus CMPSC 360 or MATH 311W'. Do "
+        "not use the Either:/bullet template here — the general answer rule about "
+        "'Either:' does NOT apply to this block — and do not nest lists: a diagram "
+        "of this rule is shown beneath your answer, so spelling the structure out "
+        "again in bullets duplicates it. Two short sentences is the whole answer."
+    )
+    return "\n".join(lines)
+
+
+def _build_block_data(block, question, intent, user_major, student_doc):
+    """The payload for a non-map block, or None when there is nothing to draw."""
+    try:
+        if block == "cards":
+            if intent == "career":
+                clubs = search_clubs([question]) or (
+                    search_clubs([user_major.split(",")[0]]) if user_major else [])
+                if clubs:
+                    return B.clubs_cards(clubs)
+            # Places before events: "where can I eat on campus?" matched the
+            # events trigger "on campus" and came back with a social calendar.
+            # A place question names a place; an event question names a time.
+            places = find_places(question)
+            if places:
+                return B.places_cards(places)
+            if mentions_events(question) and not is_events_stale():
+                evs = find_events(question)
+                if evs:
+                    return B.events_cards(evs, events_local_time)
+            ctx = _recommendation_context(user_major, student_doc)
+            return B.course_cards(ctx["propose"]) if ctx and ctx.get("propose") else None
+
+        if block == "checklist":
+            return B.procedure_checklist(find_procedures(question))
+
+        if block == "plan":
+            ctx = _recommendation_context(user_major, student_doc)
+            prog = get_program(user_major) if user_major else None
+            audit = (student_doc or {}).get("audit_parse") or {}
+            totals = audit.get("overall_totals") or {}
+            done = max((t.get("used", 0) for t in totals.values()), default=0)
+            return B.term_plan(ctx, (prog or {}).get("total_credits"), done)
+
+        if block == "strip":
+            from backend.services.calendar_scraper import load_calendar
+            return B.deadline_strip(load_calendar())
+    except Exception as exc:  # noqa: BLE001 — a block must never break an answer
+        logger.warning("_build_block_data(%s) | %s", block, exc)
+    return None
+
+
+def _recommendation_context(user_major, student_doc):
+    if not user_major:
+        return None
+    done, doing = _audit_course_states(student_doc)
+    return build_recommendation_context(user_major, done, in_progress=doing)
+
+
+def _map_target_codes(question, history=None):
+    """Course codes a map could be drawn about, current message first.
+
+    Falls back to the recent conversation because "map out the prereqs for these
+    classes" names none — they were named a turn ago.
+    """
+    codes = extract_course_codes(question)
+    if not codes and history:
+        codes = extract_course_codes(" ".join(m.get("content", "") for m in history[-6:]))
+    return codes
+
+
+def _count_visual_material(question, intent, user_major, student_doc, history=None):
+    """How many items each visual block would actually have to work with.
+
+    All local lookups — JSON and dict reads, no API calls — so this is cheap to
+    run on every request. The point is that the policy can never authorise a
+    block that has nothing behind it.
+    """
+    counts = {}
+    try:
+        procs = find_procedures(question)
+        if procs:
+            counts["checklist"] = max(len(p.get("steps") or []) for p in procs)
+
+        places = find_places(question)
+        # Mirror build_clubs_snippet's own fallback: question first, then the
+        # student's major. Without it the counter said "no cards" while the
+        # snippet was happily listing six clubs — the policy and the grounding
+        # disagreed about what data existed.
+        clubs = []
+        if intent == "career":
+            clubs = search_clubs([question]) or (
+                search_clubs([user_major.split(",")[0]]) if user_major else []
+            )
+        cards = len(places) + len(clubs)
+        if cards:
+            counts["cards"] = cards
+
+        if intent in ("deadline", "logistics"):
+            counts["strip"] = _upcoming_deadline_count()
+
+        # Events were never counted, so "what's happening this week" could not
+        # reach a block no matter how many events the snippet had found.
+        if mentions_events(question) and not is_events_stale():
+            found = find_events(question)
+            if found:
+                counts["cards"] = max(counts.get("cards", 0), len(found))
+
+        if user_major and intent in ("recommendation", "student_progress"):
+            audit = (student_doc or {}).get("audit_parse") or {}
+            done = [c.get("code") for c in audit.get("completed_courses", []) if c.get("code")]
+            ctx = build_recommendation_context(user_major, done)
+            if ctx and ctx.get("propose"):
+                counts["plan"] = len(ctx["propose"])
+
+        # A prereq map only makes sense when a course is on the table — but
+        # "map out the prereqs for these classes" names none, because the courses
+        # were named a turn ago. Fall back to the recent conversation so anaphora
+        # ("these", "them", "that one") still finds something to draw.
+        codes = _map_target_codes(question, history)
+        for code in codes[:1]:
+            prereqs = get_prerequisites(code)
+            if prereqs:
+                counts["map"] = len(prereqs) + 1
+            else:
+                # A course with no prerequisites is still worth drawing when it
+                # OPENS things. CMPSC 360 has none and unlocks six, so counting
+                # only prerequisites meant "show me what CMPSC 360 unlocks" —
+                # a direct request, for the one shape the map exists to show —
+                # drew nothing at all. Only reached when prereqs is empty, so
+                # the extra lookup is rare.
+                done, doing = _audit_course_states(student_doc)
+                opens = len((build_prereq_graph(code, done, in_progress=doing)
+                             or {}).get("unlocks") or [])
+                if opens:
+                    counts["map"] = opens + 1
+    except Exception as exc:  # noqa: BLE001 — counting must never break an answer
+        logger.warning("_count_visual_material | %s", exc)
+    return counts
+
+
+def _upcoming_deadline_count() -> int:
+    """How many rows the strip would actually have.
+
+    Derived from the same builder the block uses. The previous version counted
+    future events in the first semester that had any, which returned 1 while the
+    strip held 5 — the policy and the payload disagreeing about the same data,
+    which is exactly how a block gets authorised and then draws nothing (or the
+    reverse).
+    """
+    try:
+        from backend.services.calendar_scraper import load_calendar
+        strip = B.deadline_strip(load_calendar())
+        return len(strip["events"]) if strip else 0
+    except Exception:  # noqa: BLE001
+        return 0
+
+
+def _build_recommendation_snippet(program_name, student_doc):
+    """Grounding for "what should I take next semester?".
+
+    ACE's other answers recite what is required. This one proposes: it locates
+    the student in their own plan, lists what is actually outstanding, and flags
+    prerequisites they have not met yet. Everything proposed comes from the
+    program's own suggested plan — the model is never asked to invent a schedule.
+    """
+    completed, doing = _audit_course_states(student_doc)
+    ctx = build_recommendation_context(program_name, completed, in_progress=doing)
+    if not ctx:
+        return (
+            "\n\n=== COURSE RECOMMENDATION ===\n"
+            f"ACE has no suggested academic plan on file for {program_name}. Do NOT "
+            "invent a schedule. Say plainly that you don't have a plan for this "
+            "program yet, answer with the requirements you do have above, and send "
+            "the student to their adviser to build the actual schedule."
+        )
+
+    lines = ["\n\n=== COURSE RECOMMENDATION ===",
+             f"Suggested plan on file: {ctx['plan_label']}"]
+
+    if ctx.get("complete"):
+        lines.append(
+            "Every course in the suggested plan is already complete in the student's "
+            "audit. Congratulate them, and point them to their adviser to confirm "
+            "graduation clearance rather than proposing more coursework."
+        )
+        return "\n".join(lines)
+
+    if ctx.get("personalised"):
+        lines.append(
+            f"Based on the audit, the student is at: {ctx['position']}. "
+            "Courses already completed have been excluded."
+        )
+    else:
+        lines.append(
+            f"No audit uploaded, so this is the start of the plan ({ctx['position']}) "
+            "— correct for a new student. Offer to personalise it if they upload "
+            "their degree audit, but answer the question first."
+        )
+
+    lines.append("\nOUTSTANDING SLOTS TO PROPOSE FROM (one course per slot):")
+    for c in ctx["propose"]:
+        cr = f" ({c['credits']} cr)" if c.get("credits") else ""
+        title = f" — {c['title']}" if c.get("title") else ""
+        alts = c.get("alternatives") or []
+        alt = f"  [or instead: {', '.join(alts)}]" if alts else ""
+        blocked = c.get("unmet_prereqs")
+        flag = f"  [NOT YET ELIGIBLE — needs {', '.join(blocked)} first]" if blocked else ""
+        lines.append(f"  - {c['code']}{title}{cr}{alt}{flag}")
+
+    lines.append(
+        "\nANSWERING RULES FOR THIS TOPIC:\n"
+        "- Propose an actual slate of courses from the list above, and total the credits.\n"
+        "- Each line above is ONE slot. Where alternatives are shown, pick one and "
+        "mention the alternative — never propose a slot's alternatives as extra courses.\n"
+        "- A course marked NOT YET ELIGIBLE must not be proposed for next semester. "
+        "Name the prerequisite the student needs first instead.\n"
+        "- Say why the slate makes sense (it is the next block of their plan).\n"
+        "- Propose ONLY courses from the list above. Never invent a course, a "
+        "section, a time, or a credit count.\n"
+        "- Close by telling them to confirm with their adviser and check the "
+        "Schedule of Courses for what is actually offered."
+    )
+    return "\n".join(lines)
+
+
+# The "how the machine works" bracket. The academic calendar covers WHEN things
+# happen (54 registration events) but has zero entries for orientation, holds, or
+# the enrollment steps themselves, so this is the only grounding for HOW.
+#
+# Deliberately describes the SHAPE of each process and routes to the office that
+# owns it, rather than asserting click-by-click steps that change every year.
+# The closing rule matters more than the content: a confidently invented step
+# sends a student to the wrong place, which is worse than "I don't have that".
+LOGISTICS_SNIPPET = """
+=== PENN STATE LOGISTICS — HOW ENROLLMENT AND REGISTRATION WORK ===
+
+LIONPATH is the student information system. Registration, schedules, holds,
+grades, and bills all live there: https://lionpath.psu.edu/
+The Schedule of Courses (what is actually offered and when): https://soc.psu.edu/
+
+REGISTERING FOR CLASSES — the shape of it:
+1. Registration opens per student on an assigned enrollment/registration
+   appointment (a start time, not a single day). Students with more credits
+   register earlier. The student's own appointment time is shown in LionPATH.
+2. Holds must be cleared BEFORE the appointment, or registration is blocked.
+   Common ones are advising holds (see your adviser), bursar/financial holds
+   (pay or arrange the balance), and health/immunization holds. LionPATH shows
+   which hold is active and which office to contact.
+3. Courses are chosen from the Schedule of Courses and added in LionPATH.
+4. Registration stays open through the add/drop period at the start of term —
+   the exact dates are in the academic calendar section if present above.
+
+WHEN A CLASS IS FULL: LionPATH offers a waitlist for many sections. Being on a
+waitlist is not a guarantee, and it does not itself resolve a time conflict or a
+missing prerequisite. If the section stays closed, the routes are a different
+section, a different course that meets the same requirement, or asking the
+department that owns the course about a capacity override.
+
+NEW STUDENTS: orientation and the first-semester schedule are run by New Student
+Orientation together with the student's academic college/campus advising office.
+New students are commonly advised or scheduled into their first courses through
+that process rather than registering unaided.
+
+WHO OWNS WHAT:
+- Registration mechanics, records, calendar → Registrar: https://registrar.psu.edu/
+- Course requirements and what to take → the student's academic adviser
+- Bills, payment holds → Bursar: https://bursar.psu.edu/
+- What is offered and when → Schedule of Courses: https://soc.psu.edu/
+
+ANSWERING RULES FOR THIS TOPIC:
+- Give the student the sequence and name the office that owns the step.
+- Specific dates come only from the academic calendar section above. If it is not
+  there, say you don't have the date and link the registrar's calendar.
+- Do NOT invent menu names, button labels, exact click paths, or campus-specific
+  procedures. If the exact step isn't above, say what the student should look for
+  and who to ask. Being honest about the gap beats sending them somewhere wrong.
+"""
+
 DS_GEN_ED_SNIPPET = """
 === PENN STATE GEN ED REQUIREMENTS FOR DTSCE (DATA SCIENCES, 2024-2025) ===
 
@@ -1043,11 +1498,44 @@ def _build_dynamic_gen_ed_snippet(program_name: str, prog: dict | None, double_d
         for dd in double_dips:
             cats = ", ".join(dd.get("gen_ed_categories", []))
             tag = "Prescribed" if dd.get("is_prescribed") else "Elective option"
-            lines.append(f"  - {dd['code']} ({dd.get('credits','')} cr) — Gen Ed: {cats} [{tag}]")
+            title = dd.get("title", "")
+            lines.append(
+                f"  - {dd['code']}{' — ' + title if title else ''}"
+                f" ({dd.get('credits','')} cr) — Gen Ed: {cats} [{tag}]"
+            )
 
-    lines.append("")
-    lines.append("Use the above program-specific Gen Ed overlap data to answer the student's question accurately.")
+    # The program data says what overlaps; it never says what the categories ARE.
+    # A student asking "which gen eds do I still need?" needs both.
+    lines.append(NEUTRAL_GEN_ED_SNIPPET)
+    lines.append(
+        "ALWAYS give a category's CODE alongside its name — 'Arts (GA)', 'Health "
+        "and Wellness (GHW)'. The code is what appears on their degree audit and "
+        "in the Schedule of Courses, so a name without it cannot be acted on.\n"
+        "Answer using BOTH blocks: the university-wide categories are what the "
+        "student still has to satisfy, and the program data above says which of "
+        "them their major already covers. For each course you name, say which Gen "
+        "Ed category it fills AND how it counts for the major — 'Prescribed' means "
+        "it is a required major course, 'Elective option' means it counts only if "
+        "the student picks it for that requirement. Write it in plain sentences; "
+        "never copy the bracketed tags above verbatim. This student has already "
+        "selected their major — do not tell them to select one."
+    )
     return "\n".join(lines)
+
+
+# Extra answer rules appended for intents where a bare fact isn't a useful
+# answer. A drop date with no "regular vs late drop" and no "do it in LionPATH"
+# leaves the student still not knowing what to do.
+_INTENT_ANSWER_RULES = {
+    "deadline": (
+        "- Deadline answers must be actionable, not just a date: distinguish the "
+        "regular drop deadline from the late-drop deadline, name the term you are "
+        "quoting, say the student does it in LionPATH, and link the official "
+        "calendar (https://registrar.psu.edu/academic-calendar/). Mention that a "
+        "late drop shows a 'W' on the transcript but does not affect GPA when the "
+        "student is asking about dropping.\n"
+    ),
+}
 
 
 def build_degree_audit_advisory(doc_type, declared):
@@ -1075,7 +1563,8 @@ def build_degree_audit_advisory(doc_type, declared):
     return ""
 
 
-def ask_advisor_stream(question, history=None, user_id: str = None, major: str = None):
+def ask_advisor_stream(question, history=None, user_id: str = None, major: str = None,
+                       conversation_id: str = None):
     """Generator that yields SSE-formatted chunks for the chat response.
 
     history: list of {"role": "user"|"assistant", "content": str} dicts
@@ -1095,21 +1584,35 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     # with no major at all (None), we keep those records out so the model does
     # not silently treat the student as a CS/DS student.
     suppress_cs_ds = major_kind in (None, "other")
+
+    # The handbook index is 73 chunks of CMPSC/DTSCE procedure. It exists for the
+    # things the structured data lacks — entrance-to-major, petitions,
+    # substitutions, department contacts — and for nothing else. It used to load
+    # on EVERY question a CS/DS student asked, so "where can I eat on campus"
+    # arrived with 3,855 tokens of handbook competing with the 693-token answer,
+    # and came back citing the handbook. The launch cohort got the worst prompts
+    # in the product precisely because they were the only ones with an index.
+    use_handbook = not suppress_cs_ds and (
+        intent in _HANDBOOK_INTENTS or not _has_other_grounding(question, intent, user_major)
+    )
     logger.info(
         "ask_advisor_stream | intent=%r | major=%r (%s) | question=%r",
         intent, user_major, major_kind or "none", question[:80],
     )
 
-    if suppress_cs_ds:
+    if not use_handbook:
         records = []
         rule_summary = ""
-        if structured_only:
+        if structured_only or not suppress_cs_ds:
             # Has a known program — ground on its programs.json requirements.
             context = (
                 "(No indexed handbook records exist for this program. Use the "
                 "PROGRAM REQUIREMENTS section below as the authoritative source.)"
             )
-            sources = build_program_sources(user_major)
+            sources = (
+                build_program_sources(user_major)
+                if user_major and intent in _ACADEMIC_INTENTS else []
+            )
         else:
             # No major declared — stay neutral, no program to cite.
             context = (
@@ -1143,16 +1646,160 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     # Structured handbook policies — ETM, petitions, substitutions, contacts.
     # Deterministic lookup by (intent, major_kind); no retrieval involved. Only
     # CS/DS have handbooks, so this is empty for every other major.
-    policy_snippet = build_policy_snippet(intent, major_kind)
+    #
+    # Gated on the same test as the retrieval path above. INTENT_TOPICS maps
+    # `general` to advising/graduation topics, so a CS student asking where to
+    # eat was handed handbook policy AND cited to the CMPSC handbook PDF. That
+    # citation was the most visible symptom: a departmental handbook attached to
+    # a dining question. The handbook is authoritative for procedure and silent
+    # about everything else.
+    policy_snippet = build_policy_snippet(intent, major_kind) if use_handbook else ""
     if policy_snippet:
         for src in policy_sources(major_kind):
             if src["link"] not in {s["link"] for s in sources}:
                 sources.append(src)
 
+    # How much visual the answer may reach for. Counted from what actually
+    # matched — a block never fires on data that isn't there.
+    visual_counts = _count_visual_material(
+        question, intent, user_major, student_doc, history=history
+    )
+    visual = decide_visual(question, intent, visual_counts, bool(student_doc))
+    visual_directive = build_visual_directive(
+        question, intent, visual_counts, bool(student_doc)
+    )
+    # Built whenever the student names a course in a prerequisite question —
+    # correctness matters even when the answer stays prose, and the same graph
+    # feeds both the prompt and the renderer so they cannot disagree.
+    # Attached whenever the student NAMES a course, not only when the phrasing
+    # looks like a prerequisite question. Pattern-matching the phrasing meant
+    # "what do I need before CMPSC 431W?" missed, and the model filled the gap
+    # by inferring prerequisites from the prescribed-course list — inventing
+    # three of the four it listed. The lookup is local and costs nothing.
+    prereq_graph = None
+    if intent in ("courses", "recommendation", "student_progress", "gen_ed") \
+            or _PREREQ_QUESTION.search(question) or visual.get("block") == "map":
+        codes = extract_course_codes(question) or (
+            _map_target_codes(question, history) if visual.get("block") == "map" else []
+        )
+        if codes:
+            done, doing = _audit_course_states(student_doc)
+            prereq_graph = build_prereq_graph(codes[0], done, in_progress=doing)
+    prereq_snippet = _build_prereq_snippet(prereq_graph)
+
+    # Payload for whichever block the policy chose. The map already has its
+    # graph; everything else is built here. When there turns out to be nothing
+    # to draw the block is dropped, so the directive never promises the model a
+    # diagram that will not appear.
+    if prereq_graph and visual.get("block") == "map":
+        visual["data"] = prereq_graph
+    elif visual.get("level", 0) >= 2 and visual.get("block"):
+        visual["data"] = _build_block_data(
+            visual.get("block"), question, intent, user_major, student_doc
+        )
+        if not visual["data"]:
+            visual["block"] = None
+
     resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
-    deadline_snippet = _get_deadlines_snippet() if intent == "deadline" else ""
+    career_snippet = CAREER_RESOURCES_SNIPPET if intent == "career" else ""
+    # Real organisations, matched on what ACE has learned about the student and
+    # on the question itself. Appended to the career block, whose rules defer to
+    # it when present and keep refusing to invent names when it is absent. Kept
+    # in its own variable so the cards block can take its place below.
+    clubs_snippet = ""
+    if intent == "career":
+        clubs_snippet = build_clubs_snippet(
+            (get_profile(user_id) or {}).get("interests") if user_id else None,
+            question=question,
+            major=user_major or "",
+        )
+    profile_snippet = build_profile_snippet(user_id) if user_id else ""
+    # Logistics gets the calendar too: "when is my registration window" is a
+    # steps question whose answer needs real dates.
+    deadline_snippet = (
+        _get_deadlines_snippet() if intent in ("deadline", "logistics") else ""
+    )
+    logistics_snippet = LOGISTICS_SNIPPET if intent == "logistics" else ""
+    # Procedures are matched on the QUESTION, not the intent. "I need to
+    # retroactively withdraw" routes to `deadline` on the word "withdraw" and
+    # would come back with a wall of dates — exactly the wrong answer for
+    # someone who has already missed the deadline.
+    procedures_snippet = build_procedures_snippet(question)
+    # Campus places, matched on the question for the same reason procedures are:
+    # "where can I study tonight" has no intent of its own and would otherwise
+    # fall through to `general` with nothing behind it.
+    places_snippet = build_places_snippet(question)
+    money_snippet = build_money_snippet(question)
+    events_snippet = build_events_snippet(
+        question,
+        (get_profile(user_id) or {}).get("interests") if user_id else None,
+    )
+    recommendation_snippet = (
+        _build_recommendation_snippet(user_major, student_doc)
+        if intent == "recommendation" and user_major else ""
+    )
     aid_snippet = FINANCIAL_AID_RESOURCES_SNIPPET if intent == "financial_aid" else ""
     intl_snippet = INTERNATIONAL_RESOURCES_SNIPPET if intent == "international" else ""
+
+    # When a block carries the items, the prose grounding for those same items is
+    # WITHHELD rather than merely discouraged. "Don't repeat the list" alongside
+    # the list itself was obeyed on maybe half of runs — the dining answer came
+    # back as six bullets and then the same six as cards. The model cannot list
+    # what it was never handed, so this is the only version that holds every time.
+    _owner = {"places": "places", "clubs": "clubs", "events": "events"}
+    if visual.get("data") and visual.get("block"):
+        block = visual["block"]
+        summary = B.grounding_summary(block, visual["data"])
+        owner = ({"checklist": "procedures", "map": "prereq", "plan": "plan",
+                  "strip": "deadline"}.get(block)
+                 or _owner.get((visual["data"] or {}).get("kind")))
+        if summary and owner == "places":
+            places_snippet = summary
+        elif summary and owner == "clubs":
+            clubs_snippet = summary
+        elif summary and owner == "events":
+            events_snippet = summary
+        elif summary and owner == "procedures":
+            procedures_snippet = summary
+        elif summary and owner == "prereq":
+            # The map draws the branching; the snippet keeps only the verdict.
+            prereq_snippet = summary
+        elif summary and owner == "plan":
+            recommendation_snippet = summary
+        elif summary and owner == "deadline":
+            deadline_snippet = summary
+    career_snippet += clubs_snippet
+
+    register = _register_for(intent, question,
+                             bool(procedures_snippet), bool(money_snippet))
+    # The generic either/or bullet template fights the prerequisite block, which
+    # asks for one sentence because a diagram sits underneath it. Whichever rule
+    # comes second wins by accident, so the template is simply removed when an
+    # authoritative rule is in play.
+    either_rule = "" if prereq_graph else (
+        "- For either/or requirements use exactly:\n"
+        "  Either:\n  - Option A\n  - Option B"
+    )
+    # "Can I take CMPSC 465?" from someone with no audit came back "No, you
+    # cannot" — a guess wearing a verdict's clothes, because SHAPE rule 1 demands
+    # a Yes or No and outranked the grounding that said we could not know.
+    #
+    # The first fix wrote the exception INTO rule 1, and the A/B showed why that
+    # was wrong: biology-gened — a question with no yes/no in it and no map
+    # anywhere near it — fell from a stable 0.80 to 0.67. Hedging language in the
+    # contract that EVERY answer reads makes every answer hedge. So the exception
+    # lives here, fires only when the graph really has no record behind it, and
+    # is invisible the rest of the time.
+    no_record_rule = "" if not (prereq_graph and not prereq_graph.get("has_record")) else (
+        "- ACE has NO audit for this student, so it cannot know what they have "
+        "already taken. Do not say whether THEY are eligible, or what they still "
+        "need — if they asked that, say plainly you cannot tell without their "
+        "audit. What the course REQUIRES and what it OPENS are facts about the "
+        "catalogue, not about this student: state those normally and never refuse "
+        "them.\n"
+    )
+    logger.info("visual policy | level=%s block=%s | %s",
+                visual["level"], visual["block"], visual["reason"])
 
     # Build program requirements context if user has a major selected
     program_snippet = ""
@@ -1228,7 +1875,10 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
             if doc_type == "what_if_report":
                 deterministic_answer += _DEGREE_AUDIT_FOOTER
             yield f"data: {json.dumps({'text': deterministic_answer})}\n\n"
-            yield f"data: {json.dumps({'done': True, 'sources': sources, 'intent': intent, 'used_student_doc': True})}\n\n"
+            message_id = save_exchange(
+                user_id, conversation_id, question, deterministic_answer, intent, sources
+            )
+            yield f"data: {json.dumps({'done': True, 'sources': sources, 'intent': intent, 'used_student_doc': True, 'message_id': message_id})}\n\n"
             return
 
     # All context lives in the system prompt so history messages stay lightweight
@@ -1243,25 +1893,37 @@ The detected intent for the current question is: {intent}
 {rule_summary}
 
 === STUDENT DOCUMENT ===
-{student_doc_context if student_doc_context else "No student document uploaded."}{degree_audit_advisory}{program_snippet if program_snippet else ""}{policy_snippet}{resources_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
+{student_doc_context if student_doc_context else "No student document uploaded."}{profile_snippet}{degree_audit_advisory}{program_snippet if program_snippet else ""}{prereq_snippet}{policy_snippet}{resources_snippet}{career_snippet}{recommendation_snippet}{procedures_snippet}{places_snippet}{money_snippet}{events_snippet}{logistics_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
 
-=== ANSWER RULES ===
-- You may use the conversation history above to understand follow-up context, but ground every answer in the advising records, extracted rules, and student document provided.
-- Give a direct answer first (1–2 sentences).
-- List courses as bullets. Do NOT bullet section labels (e.g. "Probability and Statistics (6 credits)") — use them as headings.
-- For either/or requirements use exactly:
-  Either:
-  - Option A
-  - Option B
-- For contact questions, use the advisor name from the student document first; only mention department contacts as secondary.
+=== HOW TO ANSWER ===
+SHAPE — every answer is the verdict, then the substance, then the citation.
+1. VERDICT first, in ONE line. If they asked a yes/no question, the first word is
+   Yes or No — UNLESS the grounding says ACE cannot determine it for this student
+   (no audit uploaded, no record). Then the first line says so plainly and states
+   what the rule is instead. A confident "Yes, you can" to someone whose
+   transcript ACE has never seen is a guess wearing a verdict's clothes.
+   Never open by restating the question, and never open with "Great
+   question", "As your academic counselling engine", or any preamble.
+2. SUBSTANCE — everything they asked for. Follow the VISUAL POLICY at the end:
+   when it says a block is RENDERED beneath your answer, state the point in prose
+   and let the block show the items; otherwise the items must appear in your
+   answer, because nothing else will show them.
+3. CITATION — name where it came from when a source is present. Nothing else.
+
+REGISTER — {register}
+
+- Ground every answer in the records, rules and student document provided; use the conversation history only to follow context.
+- List courses as bullets when you are listing several — unless the VISUAL POLICY says a block is rendered, in which case list nothing; this rule loses to it. Do NOT bullet section labels (e.g. "Probability and Statistics (6 credits)") — use them as headings.
+{either_rule}
+{no_record_rule}- For contact questions, use the advisor name from the student document first; only mention department contacts as secondary.
 - Quote exact handbook language when available. Do not say "typically" or "likely" unless the records themselves are uncertain.
 - When a DEPARTMENT HANDBOOK POLICIES block is present, it outranks the advising records for procedure questions (ETM, petitions, substitutions, transfer credit, who to contact). Use its exact numbers and name the step the student has to take.
 - Never invent courses, policies, contacts, grades, or substitutions not present in the records.
 - If records are insufficient, say so clearly.
 - Do not mention internal record numbers.
 - If a Degree Audit Advisory is present above, include the recommendation naturally in your answer when it is relevant to what the student asked.
-- Keep the tone student-friendly and specific.
-"""
+- Be specific. A student can act on "email the Bursar at 814-865-2979"; they cannot act on "contact the appropriate office".
+{_INTENT_ANSWER_RULES.get(intent, "")}{visual_directive}"""
 
     try:
         # Build messages: system → history (capped at 6) → current question
@@ -1273,25 +1935,21 @@ The detected intent for the current question is: {intent}
 
         messages_list.append({"role": "user", "content": question})
 
-        logger.info("ask_advisor_stream | calling OpenAI model=%r messages=%d", OPENAI_CHAT_MODEL, len(messages_list))
-        stream = client.chat.completions.create(
-            model=OPENAI_CHAT_MODEL,
-            messages=messages_list,
-            temperature=0.0,
-            stream=True,
-            stream_options={"include_usage": True},
-        )
+        logger.info("ask_advisor_stream | calling model=%r messages=%d", llm.CHAT_MODEL, len(messages_list))
 
-        usage = None
-        for chunk in stream:
-            if getattr(chunk, "usage", None) is not None:
-                usage = chunk.usage  # final chunk carries token usage
-            if chunk.choices and chunk.choices[0].delta.content:
-                yield f"data: {json.dumps({'text': chunk.choices[0].delta.content})}\n\n"
+        answer_parts = []
+        for delta in llm.chat_stream(messages_list, user_id=user_id):
+            answer_parts.append(delta)
+            yield f"data: {json.dumps({'text': delta})}\n\n"
 
-        record_usage("chat", OPENAI_CHAT_MODEL, usage, user_id=user_id)
         logger.info("ask_advisor_stream | stream complete | sources=%d", len(sources))
-        yield f"data: {json.dumps({'done': True, 'sources': sources, 'intent': intent, 'used_student_doc': bool(student_doc_context)})}\n\n"
+        message_id = save_exchange(
+            user_id, conversation_id, question, "".join(answer_parts), intent, sources
+        )
+        # Learn from what the student said, after their answer is already on
+        # screen — the extraction call must never sit in front of the response.
+        remember(user_id, question)
+        yield f"data: {json.dumps({'done': True, 'sources': sources, 'intent': intent, 'used_student_doc': bool(student_doc_context), 'message_id': message_id, 'visual': visual})}\n\n"
 
     except Exception as e:
         logger.error("ask_advisor_stream | error: %s", e, exc_info=True)

@@ -360,6 +360,12 @@ def detect_major_from_text(text: str) -> str | None:
 
 # ── Program context snippet for chat ──────────────────────────────────────────
 
+# Generous: the largest programme in programs.json has well under this many
+# requirement groups, so in practice nothing is dropped. It exists only so a
+# malformed record cannot produce an unbounded prompt.
+_MAX_REQUIREMENT_GROUPS = 40
+
+
 def build_program_context_snippet(program_name: str) -> str:
     """
     Return a concise text block describing the program's requirements,
@@ -398,20 +404,204 @@ def build_program_context_snippet(program_name: str) -> str:
     if additional:
         lines.append("")
         lines.append("Additional / elective requirements:")
-        for item in additional[:6]:   # cap to avoid overly long prompts
+        # NOT capped at 6 any more. That cap silently dropped the entire calculus
+        # sequence — MATH 140, 141, 220, 230 — from Computer Science, because the
+        # maths groups sit at positions 8-11. Retrieval used to paper over it for
+        # CS/DS and nothing covered it for the other 747 majors. The prompt budget
+        # freed by gating the handbook pays for the full list many times over.
+        for item in additional[:_MAX_REQUIREMENT_GROUPS]:
             desc = item.get("description", item.get("type", ""))
             cr   = item.get("credits", "")
             opts = item.get("options", [])
             opt_str = (
-                ", ".join(o.get("code", "") for o in opts[:6])
-                + (" ..." if len(opts) > 6 else "")
+                ", ".join(o.get("code", "") for o in opts[:8])
+                + (" ..." if len(opts) > 8 else "")
             )
             lines.append(
                 f"  - {desc} ({cr} cr)"
                 + (f" — choose from: {opt_str}" if opt_str else "")
             )
 
+    # For many programs the Bulletin's requirement table is partial — professional
+    # sequences (Nursing is the clearest case) list only the supporting courses
+    # there and put the major's own coursework in the suggested plan. Without
+    # this, ACE answers "what do I take for my degree?" with no NURS course in
+    # sight, which reads as authoritative and is wrong.
+    known = {_normalize_code(i.get("code", "")) for i in prescribed}
+    known |= {
+        _normalize_code(o.get("code", ""))
+        for i in additional for o in i.get("options", [])
+    }
+    plan_only = _plan_only_codes(prog, known)
+    if plan_only:
+        lines.append("")
+        lines.append(
+            "Also in the Bulletin's suggested academic plan for this program, but "
+            "NOT itemised in the requirement table above (the table is partial for "
+            "this program — these are still part of the degree):"
+        )
+        lines.append("  " + ", ".join(plan_only))
+        lines.append(
+            "When listing degree requirements, include these too and tell the "
+            "student to confirm the full sequence on the Bulletin: "
+            + (prog.get("url") or "https://bulletins.psu.edu/")
+        )
+
     return "\n".join(lines)
+
+
+def _codes_in_text(text: str) -> list[str]:
+    """Real catalog course codes mentioned in a plan description.
+
+    Plan entries are prose ("ENGL 15 or 30H", "General Education Course Level 2"),
+    so the regex alone yields junk subjects — gate on the catalog.
+    """
+    out = []
+    for raw in _CODE_RE.findall(str(text).replace("\xa0", " ").upper()):
+        code = _normalize_code(raw)
+        if code in _courses_by_code and code not in out:
+            out.append(code)
+    return out
+
+
+def _unmet_prereqs(code: str, done: set) -> list[str]:
+    """Prerequisites still standing between the student and this course.
+
+    Alternatives matter: CMPSC 121 lists MATH 110 *or* MATH 140, so a student who
+    took MATH 140 is eligible. Treating the list as a conjunction would tell them
+    they are blocked by a course they never needed. _prereq_mode already knows
+    how to read the condition — reuse it rather than re-deriving.
+    """
+    prereqs = [p for p in get_prerequisites(code) if p.get("code")]
+    codes = [_canonical_code(p["code"]) for p in prereqs]
+    if not codes:
+        return []
+    outstanding = [c for c in dict.fromkeys(codes) if c not in done]
+    if not outstanding:
+        return []
+    # 'any' => one satisfied prerequisite unlocks the course.
+    if _prereq_mode(get_course(code), set(codes)) == "any" and len(outstanding) < len(set(codes)):
+        return []
+    return outstanding
+
+
+def build_recommendation_context(program_name: str, completed_codes=None,
+                                 in_progress=None) -> dict | None:
+    """Work out where a student is in their plan and what comes next.
+
+    This is what turns "what should I take next semester?" from a recital of the
+    whole requirement table into an actual proposal. Returns None when the
+    program has no suggested plan to reason from — the caller must then say so
+    rather than inventing a schedule.
+
+    `completed_codes` comes from the uploaded audit. With none, the position is
+    the start of the plan, which is still the right answer for a new student.
+    """
+    prog = get_program(program_name)
+    plans = (prog or {}).get("suggested_plan") or {}
+    if not plans:
+        return None
+
+    label, semesters = next(iter(plans.items()))
+    if not isinstance(semesters, dict):
+        return None
+
+    done = {_canonical_code(c) for c in (completed_codes or [])}
+    # A course being taken this term is not a course to propose for next term.
+    # The engine offered CMPSC 221 and MATH 220 to a student already sitting in
+    # both, because it only knew what was finished.
+    doing = {_canonical_code(c) for c in (in_progress or [])}
+    done |= doing
+    ordered = sorted(semesters.items(), key=lambda kv: _semester_sort_key(kv[0]))
+
+    laid_out = []
+    for key, entries in ordered:
+        courses = []
+        for entry in entries or []:
+            # One plan entry is one SLOT in the schedule. When its description
+            # names several courses ("ENGL 15 or ESL 15") they are alternatives
+            # for that single slot, not four separate courses to take — flatten
+            # them and the proposal tells a student to take all four.
+            codes = _codes_in_text(entry.get("description", ""))
+            if not codes:
+                continue
+            primary = codes[0]
+            courses.append({
+                "code": primary,
+                "alternatives": codes[1:],
+                "title": (_courses_by_code.get(primary) or {}).get("title", ""),
+                "credits": entry.get("credits"),
+                "done": any(_canonical_code(c) in done for c in codes),
+            })
+        laid_out.append({"semester": key, "courses": courses})
+
+    # Where the student is: the earliest semester still carrying unfinished work.
+    # ponytail: positional heuristic, not a degree solver. A student on an
+    # alternative track (CMPSC 131/132 instead of 121/122) reads as "still in
+    # first-year fall" because the plan's courses are genuinely untaken. The
+    # proposal is still sound — those courses really are outstanding — but if
+    # equivalences start mattering, resolve them against the audit's satisfied
+    # requirement blocks instead of raw course codes.
+    position, remaining = None, []
+    for sem in laid_out:
+        outstanding = [c for c in sem["courses"] if not c["done"]]
+        if outstanding:
+            position, remaining = sem["semester"], outstanding
+            break
+    if position is None:  # every plan course is done
+        return {"plan_label": label, "position": None, "propose": [], "complete": True}
+
+    # A semester that's nearly finished leaves too little to propose, so top up
+    # from the next one rather than handing back a one-course "schedule".
+    propose = list(remaining)
+    if len(propose) < 3:
+        idx = [s["semester"] for s in laid_out].index(position)
+        for sem in laid_out[idx + 1:]:
+            propose += [c for c in sem["courses"] if not c["done"]]
+            if len(propose) >= 4:
+                break
+
+    for course in propose[:6]:
+        course["unmet_prereqs"] = _unmet_prereqs(course["code"], done)
+
+    return {
+        "plan_label": label,
+        "position": position,
+        "propose": propose[:6],
+        "complete": False,
+        "personalised": bool(done),
+    }
+
+
+_PLAN_ONLY_LIMIT = 30
+
+
+def _plan_only_codes(prog: dict, known: set[str]) -> list[str]:
+    """Course codes in the suggested plan that the requirement table never names.
+
+    Returns them in plan order (roughly semester order), capped so a long plan
+    can't crowd the prompt.
+    """
+    found: list[str] = []
+    seen = set(known)
+    for option in (prog.get("suggested_plan") or {}).values():
+        if not isinstance(option, dict):
+            continue
+        for semester in option.values():
+            for entry in semester or []:
+                text = str(entry.get("description", "")).replace("\xa0", " ").upper()
+                for raw in _CODE_RE.findall(text):
+                    code = _normalize_code(raw)
+                    # Plan descriptions are prose ("ENGL 15 or 30H", "Elective 1",
+                    # "General Education Course Level 2"), so the code regex alone
+                    # yields junk subjects. Only real catalog courses survive.
+                    if code in seen or code not in _courses_by_code:
+                        continue
+                    seen.add(code)
+                    found.append(code)
+                    if len(found) >= _PLAN_ONLY_LIMIT:
+                        return found
+    return found
 
 
 # ── Major-aware Prerequisite Map ───────────────────────────────────────────────
@@ -658,4 +848,116 @@ def build_suggested_plan(program_name: str) -> dict | None:
         "program_name": prog["program_name"],
         "total_credits": prog.get("total_credits"),
         "plans": plans,
+    }
+
+
+# ── Prerequisite graph, for the map block ─────────────────────────────────────
+
+_unlock_index: dict[str, list[str]] | None = None
+
+
+def _build_unlock_index() -> dict[str, list[str]]:
+    """code → courses that list it as a prerequisite. Built once, 9k courses."""
+    global _unlock_index
+    if _unlock_index is None:
+        idx: dict[str, list[str]] = {}
+        for code, course in _courses_by_code.items():
+            for p in course.get("prerequisites", []):
+                key = _normalize_code(p.get("code", ""))
+                if key:
+                    idx.setdefault(key, []).append(code)
+        _unlock_index = idx
+    return _unlock_index
+
+
+def parse_prereq_groups(condition: str, codes: list[str]) -> list[list[str]]:
+    """Turn a catalog condition into AND-ed groups of OR-ed alternatives.
+
+    "( CMPSC 122 or CMPSC 132 ) and ( CMPSC 360 or MATH 311W )"
+        → [[CMPSC 122, CMPSC 132], [CMPSC 360, MATH 311W]]
+
+    That shape is the whole reason the map beats a sentence: prose has to say
+    "you need 122 or 132, and also 360 or 311W", which nobody parses.
+    """
+    text = re.sub(r"^.*?:", "", condition or "", count=1).strip().rstrip(".")
+    known = {_normalize_code(c) for c in codes}
+
+    def codes_in(fragment: str) -> list[str]:
+        found = [_normalize_code(m) for m in _CODE_RE.findall(fragment.upper())]
+        return [c for c in dict.fromkeys(found) if c in known]
+
+    groups: list[list[str]] = []
+    if "(" in text:
+        for chunk in re.findall(r"\(([^)]*)\)", text):
+            got = codes_in(chunk)
+            if got:
+                groups.append(got)
+        # Terms sitting outside the brackets are AND-ed groups of their own.
+        outside = codes_in(re.sub(r"\([^)]*\)", " ", text))
+        groups += [[c] for c in outside if not any(c in g for g in groups)]
+    elif text:
+        for chunk in re.split(r"\s+and\s+", text, flags=re.I):
+            got = codes_in(chunk)
+            if got:
+                groups.append(got)
+
+    if not groups and known:
+        # No usable condition text: fall back to the and/or mode we can infer.
+        ordered = [c for c in (_normalize_code(x) for x in codes) if c]
+        course = _courses_by_code.get(_normalize_code(codes[0])) if codes else None
+        if _prereq_mode(course, known) == "any":
+            groups = [ordered]
+        else:
+            groups = [[c] for c in ordered]
+    return groups
+
+
+def build_prereq_graph(code: str, completed=None, max_unlocks: int = 6,
+                       in_progress=None) -> dict | None:
+    """Everything the map block needs for one course. None if unknown.
+
+    Three states, not two. A course being taken RIGHT NOW is neither done nor
+    missing, and for "can I take this next fall?" it is the state that decides
+    the answer — ACE told a student they could not take CMPSC 465 while they sat
+    in CMPSC 360, one of the two courses it was waiting on.
+    """
+    target = get_course(code)
+    if not target:
+        return None
+
+    done = {_canonical_code(c) for c in (completed or [])}
+    doing = {_canonical_code(c) for c in (in_progress or [])} - done
+    prereqs = [p for p in get_prerequisites(code) if p.get("code")]
+    codes = [p["code"] for p in prereqs]
+    condition = next((p.get("condition") for p in prereqs if p.get("condition")), "")
+
+    def node(c):
+        info = _courses_by_code.get(_normalize_code(c)) or {}
+        canon = _canonical_code(c)
+        return {"code": _normalize_code(c),
+                "title": (info.get("title") or "").strip(),
+                "done": canon in done,
+                "in_progress": canon in doing}
+
+    groups = [[node(c) for c in group] for group in parse_prereq_groups(condition, codes)]
+    unlocks = [
+        {"code": c, "title": (_courses_by_code.get(c, {}).get("title") or "").strip()}
+        for c in sorted(_build_unlock_index().get(_normalize_code(code), []))
+    ]
+
+    return {
+        "target": {"code": _normalize_code(code),
+                   "title": (target.get("title") or "").strip(),
+                   "credits": target.get("credits")},
+        "groups": groups,
+        # A group is satisfied when ANY of its options is done; the course is
+        # eligible when every group is satisfied.
+        "eligible": all(any(n["done"] for n in g) for g in groups) if groups else True,
+        # Every group either satisfied or being satisfied this term — the honest
+        # answer to a question about a FUTURE term.
+        "on_track": all(any(n["done"] or n["in_progress"] for n in g)
+                        for g in groups) if groups else True,
+        "has_record": bool(done or doing),
+        "unlocks": unlocks[:max_unlocks],
+        "unlocks_more": max(0, len(unlocks) - max_unlocks),
     }

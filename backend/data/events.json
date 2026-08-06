@@ -1,0 +1,2477 @@
+{
+ "_about": "Upcoming Penn State events from discover.psu.edu (Anthology Engage). THIS DATASET EXPIRES — re-run `python -m backend.data.events_scraper` weekly. events_service filters to future events at read time and falls back to the live page when the snapshot runs out.",
+ "source": "https://discover.psu.edu/events",
+ "scraped_at": "2026-08-03T21:25:24.235404+00:00",
+ "window_days": 90,
+ "count": 166,
+ "events": [
+  {
+   "id": "12123818",
+   "name": "Let's Talk",
+   "organization": "World Campus Student Affairs",
+   "description": "Let's Talk is a non-emergency drop-in service that offers students confidential and informal same-day consultations with a licensed mental health professional. Students can discuss their concerns and receive support, guidance, and resource referrals. The goal of this program is to create an accessible and informal avenue for students to connect with a licensed mental health professional who can address their immediate concerns and make it easier for them to access formal mental health services. ",
+   "starts_on": "2026-08-04T18:00:00+00:00",
+   "ends_on": "2026-08-04T19:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12123818",
+   "map_url": ""
+  },
+  {
+   "id": "12486821",
+   "name": "World Campus Virtual Study Hall",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "World Campus Virtual Study Hall is a weekly online study space held on Tuesdays from 5:00&ndash;8:00 PM ET via Zoom. Hosted by current World Campus Peer Guides—undergraduate work-study students who support incoming students through the Peer Guide Program—these sessions offer a welcoming environment where students can focus, stay motivated, and make progress on their coursework alongside fellow World Campus learners. Virtual Study Hall is not a tutoring session and does not provide course instruc",
+   "starts_on": "2026-08-04T21:00:00+00:00",
+   "ends_on": "2026-08-05T00:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused",
+    "Online or Virtual Attendance",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12486821",
+   "map_url": ""
+  },
+  {
+   "id": "12538344",
+   "name": "Feed The People Market Stand",
+   "organization": "Student Farm and Food Systems at University Park",
+   "description": "The Feed the People Market Stand is back this summer! Join us every Wednesday from 4-6 pm starting May 20 through August 19 for fresh produce across campus. The stand is pay-what-you-can, and weekly locations will be posted on our socials so be sure to check back each week!",
+   "starts_on": "2026-08-05T20:00:00+00:00",
+   "ends_on": "2026-08-05T22:00:00+00:00",
+   "location": "Huck Life Sciences",
+   "categories": [
+    "Sustainability",
+    "Health and Wellness",
+    "Summer Events!"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12538344",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.800940,-77.861490"
+  },
+  {
+   "id": "12513004",
+   "name": "ITSA Social Night: Meet the Officers",
+   "organization": "International and Transfer Students Association at World Campus",
+   "description": "Start the semester by getting to know the leadership team of the International and Transfer Students Association (ITSA)! Join us for a casual and welcoming virtual social where you'll meet the officers, learn about the organization, and connect with fellow international and transfer students. Instead of formal introductions, each officer will share their personal Penn State journey by answering questions such as: Why did you transfer to Penn State? What has been your biggest challenge as a trans",
+   "starts_on": "2026-08-07T23:00:00+00:00",
+   "ends_on": "2026-08-08T00:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Welcome Week at World Campus!"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12513004",
+   "map_url": ""
+  },
+  {
+   "id": "12539803",
+   "name": "Harvest For Hunger",
+   "organization": "Student Farm and Food Systems at University Park",
+   "description": "🧑&zwj;🌾 Join us for our new series Harvest for Hunger, helping to feed local communities through farmer collaboration! Meet us at Plowshare Produce on August 8 from 10-12pm to support local farmers, learn hands-on gardening and farming skills, and enjoy a free meal!",
+   "starts_on": "2026-08-08T14:00:00+00:00",
+   "ends_on": "2026-08-08T16:00:00+00:00",
+   "location": "Plowshare Produce",
+   "categories": [
+    "Sustainability",
+    "Off Campus Events",
+    "Summer Events!"
+   ],
+   "theme": "CommunityService",
+   "url": "https://discover.psu.edu/event/12539803",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.637040,-77.839980"
+  },
+  {
+   "id": "12123819",
+   "name": "Let's Talk",
+   "organization": "World Campus Student Affairs",
+   "description": "Let's Talk is a non-emergency drop-in service that offers students confidential and informal same-day consultations with a licensed mental health professional. Students can discuss their concerns and receive support, guidance, and resource referrals. The goal of this program is to create an accessible and informal avenue for students to connect with a licensed mental health professional who can address their immediate concerns and make it easier for them to access formal mental health services. ",
+   "starts_on": "2026-08-11T18:00:00+00:00",
+   "ends_on": "2026-08-11T19:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12123819",
+   "map_url": ""
+  },
+  {
+   "id": "12530105",
+   "name": "World Campus Career Services: How to Navigate Career Resources",
+   "organization": "World Campus Student Affairs",
+   "description": "Nittany Lion Careers (NLC) is Penn State's official career management system—and you already have access. The question is: are you using it to its full potential? This session will introduce you to NLC and show you how to navigate the system to find jobs, internships, and career opportunities. You'll learn what the platform offers, how to set up your profile, and how to access key features that can support your job search. We'll also walk through what to expect when you log in for the first time",
+   "starts_on": "2026-08-11T23:00:00+00:00",
+   "ends_on": "2026-08-11T23:45:00+00:00",
+   "location": "Virtual",
+   "categories": [
+    "Career Exploration",
+    "Online or Virtual Attendance"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12530105",
+   "map_url": ""
+  },
+  {
+   "id": "12486822",
+   "name": "World Campus Virtual Study Hall",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "World Campus Virtual Study Hall is a weekly online study space held on Tuesdays from 5:00&ndash;8:00 PM ET via Zoom. Hosted by current World Campus Peer Guides—undergraduate work-study students who support incoming students through the Peer Guide Program—these sessions offer a welcoming environment where students can focus, stay motivated, and make progress on their coursework alongside fellow World Campus learners. Virtual Study Hall is not a tutoring session and does not provide course instruc",
+   "starts_on": "2026-08-11T21:00:00+00:00",
+   "ends_on": "2026-08-12T00:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused",
+    "Online or Virtual Attendance",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12486822",
+   "map_url": ""
+  },
+  {
+   "id": "12538346",
+   "name": "Feed The People Market Stand",
+   "organization": "Student Farm and Food Systems at University Park",
+   "description": "The Feed the People Market Stand is back this summer! Join us every Wednesday from 4-6 pm starting May 20 through August 19 for fresh produce across campus.The stand is pay-what-you-can, and weekly locations will be posted on our socials so be sure to check back each week!",
+   "starts_on": "2026-08-12T20:00:00+00:00",
+   "ends_on": "2026-08-12T22:00:00+00:00",
+   "location": "Kern Lobby",
+   "categories": [
+    "Sustainability",
+    "Health and Wellness",
+    "Summer Events!"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12538346",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.797320,-77.868360"
+  },
+  {
+   "id": "12530120",
+   "name": "World Campus Career Services: How to Navigate Career Fairs",
+   "organization": "World Campus Student Affairs",
+   "description": "Career fairs can feel overwhelming, but they're one of the best opportunities to network directly with recruiters and employers. This session will show you how to approach a career fair with a plan, make meaningful conversations count, and stand out to recruiters. If you're attending your first fair or haven't felt much success in the past, you'll learn what to do before, during, and after the event to turn brief interactions into real connections. Walk in feeling prepared, confident, and ready ",
+   "starts_on": "2026-08-13T23:00:00+00:00",
+   "ends_on": "2026-08-13T23:45:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Career Exploration",
+    "Online or Virtual Attendance"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12530120",
+   "map_url": ""
+  },
+  {
+   "id": "12538983",
+   "name": "Collective Learning - Welcome",
+   "organization": "University Park Residence Life",
+   "description": "RA Training sessions are designed to prepare Student Leaders to successfully serve, support, and engage their residential communities throughout the academic year. Through interactive workshops, discussions, presentations, and hands-on activities, participants will develop the knowledge, skills, and confidence needed to navigate their role effectively.",
+   "starts_on": "2026-08-14T12:15:00+00:00",
+   "ends_on": "2026-08-14T12:45:00+00:00",
+   "location": "HUB - Robeson Center: Heritage Hall",
+   "categories": [],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12538983",
+   "map_url": ""
+  },
+  {
+   "id": "12538348",
+   "name": "Growing Together: Farm to Table",
+   "organization": "Student Farm and Food Systems at University Park",
+   "description": "The Growing Together Series is a monthly hands-on program hosted in partnership with the Penn State Student Farm, PASTO Agriculture Museum, and the The Arboretum at Penn State. Open to students and the wider Penn State community, each session teaches a new plant care skill-from seed starting to harvest-while creating a relaxed, welcoming space to connect with fellow plant lovers. Participants can gain practical growing skills to use at home and often leave with plants, cuttings, or new knowledge",
+   "starts_on": "2026-08-18T15:00:00+00:00",
+   "ends_on": "2026-08-18T16:00:00+00:00",
+   "location": "Ross Student Farm",
+   "categories": [
+    "Sustainability",
+    "Health and Wellness",
+    "Summer Events!"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12538348",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.810140,-77.868400"
+  },
+  {
+   "id": "12123820",
+   "name": "Let's Talk",
+   "organization": "World Campus Student Affairs",
+   "description": "Let's Talk is a non-emergency drop-in service that offers students confidential and informal same-day consultations with a licensed mental health professional. Students can discuss their concerns and receive support, guidance, and resource referrals. The goal of this program is to create an accessible and informal avenue for students to connect with a licensed mental health professional who can address their immediate concerns and make it easier for them to access formal mental health services. ",
+   "starts_on": "2026-08-18T18:00:00+00:00",
+   "ends_on": "2026-08-18T19:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12123820",
+   "map_url": ""
+  },
+  {
+   "id": "12347262",
+   "name": "Military Service Organization Monthly Meeting",
+   "organization": "Military Service Organization at World Campus",
+   "description": "Join the Military Service Organization (MSO) for our monthly meeting to stay connected, hear updates, and get involved. Open to all military-affiliated students, including service members, veterans, spouses, dependents, and supporters.",
+   "starts_on": "2026-08-19T00:00:00+00:00",
+   "ends_on": "2026-08-19T01:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Regular Meeting",
+    "Online or Virtual Attendance"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12347262",
+   "map_url": ""
+  },
+  {
+   "id": "12521693",
+   "name": "Feeding the Fire, Filling the Tank, Igniting a Pathway - World Campus",
+   "organization": "World Campus Student Affairs",
+   "description": "Setting and achieving goals can be challenging and rewarding. What lights your fire to take that first step in a goal? When you start that goal, what keeps you going? Hear ways to identify and lean into a network of support to &lsquo;fill your tank.' There are many on/off ramps along your pathway, learn and identify ways to keep your pathway of goals ignited with motivation and meaning. This event will feature a presentation by Jennifer L. Toof, assistant director, Penn State World Campus Studen",
+   "starts_on": "2026-08-19T16:00:00+00:00",
+   "ends_on": "2026-08-19T17:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12521693",
+   "map_url": ""
+  },
+  {
+   "id": "12521700",
+   "name": "Feeding the Fire, Filling the Tank, Igniting a Pathway - World Campus",
+   "organization": "World Campus Student Affairs",
+   "description": "Setting and achieving goals can be challenging and rewarding. What lights your fire to take that first step in a goal? When you start that goal, what keeps you going? Hear ways to identify and lean into a network of support to &lsquo;fill your tank.' There are many on/off ramps along your pathway, learn and identify ways to keep your pathway of goals ignited with motivation and meaning. This event will feature a presentation by Jennifer L. Toof, assistant director, Penn State World Campus Studen",
+   "starts_on": "2026-08-19T16:00:00+00:00",
+   "ends_on": "2026-08-19T17:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12521700",
+   "map_url": ""
+  },
+  {
+   "id": "12538347",
+   "name": "Feed The People Market Stand",
+   "organization": "Student Farm and Food Systems at University Park",
+   "description": "The Feed the People Market Stand is back this summer! Join us every Wednesday from 4-6 pm starting May 20 through August 19 for fresh produce across campus.The stand is pay-what-you-can, and weekly locations will be posted on our socials so be sure to check back each week!",
+   "starts_on": "2026-08-19T20:00:00+00:00",
+   "ends_on": "2026-08-19T22:00:00+00:00",
+   "location": "AVBS Lobby",
+   "categories": [
+    "Sustainability",
+    "Health and Wellness",
+    "Summer Events!"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12538347",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.803000,-77.864430"
+  },
+  {
+   "id": "12506713",
+   "name": "Convocation T-shirt distribution",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Come by the HUB-Robeson Center to grab your free t-shirt to wear to President's New Student Convocation t-shirt! These shirts are for first-year undergraduate students only. You'll need your mobile id+ card to pick up your shirt.",
+   "starts_on": "2026-08-19T20:00:00+00:00",
+   "ends_on": "2026-08-20T00:00:00+00:00",
+   "location": "HUB-Robeson Center",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12506713",
+   "map_url": ""
+  },
+  {
+   "id": "12521701",
+   "name": "Feeding the Fire, Filling the Tank, Igniting a Pathway - World Campus",
+   "organization": "World Campus Student Affairs",
+   "description": "Setting and achieving goals can be challenging and rewarding. What lights your fire to take that first step in a goal? When you start that goal, what keeps you going? Hear ways to identify and lean into a network of support to &lsquo;fill your tank.' There are many on/off ramps along your pathway, learn and identify ways to keep your pathway of goals ignited with motivation and meaning. This event will feature a presentation by Jennifer L. Toof, assistant director, Penn State World Campus Studen",
+   "starts_on": "2026-08-20T00:00:00+00:00",
+   "ends_on": "2026-08-20T01:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12521701",
+   "map_url": ""
+  },
+  {
+   "id": "12476130",
+   "name": "Navigating Your Financial Support Network at Penn State",
+   "organization": "Sokolov-Miller Family Financial and Life Skills Center",
+   "description": "Did you know Penn State has a whole network of financial education resources ready for you at no additional cost? This quick session introduces you to our Center, shows you the tools available, and explains how we help you handle the everyday money side of being a student.",
+   "starts_on": "2026-08-20T14:00:00+00:00",
+   "ends_on": "2026-08-20T14:30:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Welcome Week at University Park!"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12476130",
+   "map_url": ""
+  },
+  {
+   "id": "12509995",
+   "name": "Convocation T-shirt distribution",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Come by the HUB-Robeson Center to grab your free t-shirt to wear to President's New Student Convocation t-shirt! These shirts are for first-year undergraduate students only. You'll need your mobile id+ card to pick up your shirt.",
+   "starts_on": "2026-08-20T13:00:00+00:00",
+   "ends_on": "2026-08-20T18:00:00+00:00",
+   "location": "HUB-Robeson Center",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12509995",
+   "map_url": ""
+  },
+  {
+   "id": "12485807",
+   "name": "Penn State Hillel First Year Kickoff Mini Golf",
+   "organization": "Hillel at University Park",
+   "description": "Tee up for some friendly competition! We'll be heading out for a round of mini golf. (RSVP Required) FYKO registration: https://pennstatehillel.org/fyko-pre-registration/",
+   "starts_on": "2026-08-20T17:00:00+00:00",
+   "ends_on": "2026-08-20T19:00:00+00:00",
+   "location": "Happy Valley Mini Golf",
+   "categories": [
+    "Social Activities"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12485807",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.783560,-77.830070"
+  },
+  {
+   "id": "12476131",
+   "name": "Navigating Your Financial Support Network at Penn State",
+   "organization": "Sokolov-Miller Family Financial and Life Skills Center",
+   "description": "Did you know Penn State has a whole network of financial education resources ready for you at no additional cost? This quick session introduces you to our Center, shows you the tools available, and explains how we help you handle the everyday money side of being a student.",
+   "starts_on": "2026-08-20T19:00:00+00:00",
+   "ends_on": "2026-08-20T19:30:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Welcome Week at University Park!"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12476131",
+   "map_url": ""
+  },
+  {
+   "id": "12485808",
+   "name": "Penn State Hillel First Year Kickoff Myers Dairy Ice Cream Trip",
+   "organization": "Hillel at University Park",
+   "description": "Cool off with a Sweet treat at Myers Dairy! FYKO pre-registration: https://pennstatehillel.org/fyko-pre-registration/",
+   "starts_on": "2026-08-20T19:00:00+00:00",
+   "ends_on": "2026-08-20T20:00:00+00:00",
+   "location": "Meyers Dairy Ice Cream",
+   "categories": [
+    "Social Activities"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12485808",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.783830,-77.827280"
+  },
+  {
+   "id": "12515084",
+   "name": "World Campus Virtual Resource Open House",
+   "organization": "World Campus Student Affairs",
+   "description": "Join us for our Virtual Resource Open House to learn all about the resources available to you as a World Campus Student! Learn about Career Services, Academic Resources, Mental Health Services, Study Abroad, IT, and much more! This event will also offer you the opportunity to ask questions about resource access and support - and meet in groups with various staff representatives at World Campus to learn more.",
+   "starts_on": "2026-08-21T00:00:00+00:00",
+   "ends_on": "2026-08-21T01:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12515084",
+   "map_url": ""
+  },
+  {
+   "id": "12485809",
+   "name": "Penn State Hillel First Year Kickoff Whipple Dam Picnic",
+   "organization": "Hillel at University Park",
+   "description": "Spend the afternoon outdoors at beautiful Whipple Dam! Hillel is hosting a picnic with food provided. (RSVP Required) FYKO pre-registration: https://pennstatehillel.org/fyko-pre-registration/",
+   "starts_on": "2026-08-21T18:00:00+00:00",
+   "ends_on": "2026-08-21T20:00:00+00:00",
+   "location": "Whipple Dam",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12485809",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.694350,-77.855440"
+  },
+  {
+   "id": "12485810",
+   "name": "First Year Kickoff Pre-Shabbat Shuk and Cook",
+   "organization": "Hillel at University Park",
+   "description": "Get ready for Shabbat the delicious way! Join us in the kitchen as we cook shakshuka together. (RSVP Required) FYKO pre-registration: https://pennstatehillel.org/fyko-pre-registration/",
+   "starts_on": "2026-08-21T21:00:00+00:00",
+   "ends_on": "2026-08-21T22:30:00+00:00",
+   "location": "Gutterman Family Center",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12485810",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.796810,-77.856080"
+  },
+  {
+   "id": "12509999",
+   "name": "Convocation T-shirt distribution",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Come by the HUB-Robeson Center to grab your free t-shirt to wear to President's New Student Convocation t-shirt! These shirts are for first-year undergraduate students only. You'll need your mobile id+ card to pick up your shirt.",
+   "starts_on": "2026-08-21T16:00:00+00:00",
+   "ends_on": "2026-08-22T00:00:00+00:00",
+   "location": "HUB-Robeson Center",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12509999",
+   "map_url": ""
+  },
+  {
+   "id": "12425593",
+   "name": "Fall 2026 Involvement Fair [Wednesday] Sign-Ups at University Park",
+   "organization": "University Park Student Organizations",
+   "description": "Hello and thank you for your interest in tabling at the upcoming Fall Involvement Fair! You MUST RSVP for this event below. Only 1 RSVP will be accepted per group! The Involvement Fair will be held on the HUB Lawn on Tuesday, September 1st and Wednesday, September 2nd. A confirmation email will be sent the week before the fair with more information on what to bring/what not to bring, and any updates. Location: HUB-Robeson Center Lawn between the HUB and College Avenue. Check-in/Set-up: 10:30am-1",
+   "starts_on": "2026-04-15T19:00:00+00:00",
+   "ends_on": "2026-08-22T03:45:00+00:00",
+   "location": "HUB Lawn",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12425593",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12501035",
+   "name": "Parent & Family Outdoor Welcome Tents",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Stop by our welcome tents to get answers to your questions and meet current University Park parents and Parent and Family Engagement staff. Pick up a campus map and a pack of tissues. We will have outdoor tents set up at 3 locations. Please note the dates, locations, and times as some are varying. East Halls Outdoor Quad Wednesday, August 19 - Friday, August 21: 9:00 am - 4:30 pm Saturday, August 22: 9:00 am - 2:00 pm Pollocks Halls Outdoor Quad Wednesday, August 19 - Friday, August 21: 9:00 am ",
+   "starts_on": "2026-08-19T13:00:00+00:00",
+   "ends_on": "2026-08-22T18:00:00+00:00",
+   "location": "East Halls Outdoor Quad, Pollock Halls Outdoor Quad, HUB-Robeson Center Outdoor Plaza",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12501035",
+   "map_url": ""
+  },
+  {
+   "id": "12510002",
+   "name": "Convocation T-shirt distribution",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Come by the HUB-Robeson Center to grab your convocation t-shirt! Make sure to have your mobile id+ with you.",
+   "starts_on": "2026-08-22T13:00:00+00:00",
+   "ends_on": "2026-08-22T18:00:00+00:00",
+   "location": "HUB-Robeson Center",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12510002",
+   "map_url": ""
+  },
+  {
+   "id": "12510287",
+   "name": "President's New Student Convocation",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Join us for Convocation 2026 on Saturday, August 22, 2026, at 8:00 p.m. in the Bryce Jordan Center. Convocation is the official start to your academic journey at Penn State and marks your formal welcome into the university community. All first‑year students are required to attend. There is a strict no-bag policy at the Bryce Jordan Center. Please do not bring any bags with you to this event.",
+   "starts_on": "2026-08-23T00:00:00+00:00",
+   "ends_on": "2026-08-23T01:00:00+00:00",
+   "location": "Bryce Jordan Center",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12510287",
+   "map_url": ""
+  },
+  {
+   "id": "12502871",
+   "name": "Let's Glow State",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Grab your friends and make your way to the HUB for Let's Glow State! There will be many activities, games, glowsticks, and giveaways including glow-in-the-dark mini golf, a two-person trapeze show, a silent disco, caricatures, gameshows, stuff-a-plush, and so much more! This is definitely an event you won't want to miss. A full list of activities and where you can find them in the HUB can be found at welcomeweek.psu.edu/latenight",
+   "starts_on": "2026-08-23T01:00:00+00:00",
+   "ends_on": "2026-08-23T03:30:00+00:00",
+   "location": "HUB-Robeson Center",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12502871",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12506440",
+   "name": "College of Engineering Welcome",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Welcome to the College of Engineering! Join us for a special welcome event, designed to help you begin your academic journey. During the welcome, you'll hear from our faculty, staff, and fellow students who will share about their role in the College of Engineering community and the resources available to support your success. Following the welcome session, students will participate in an orientation program where they will be paired with upper-class engineering mentors. These mentors will provid",
+   "starts_on": "2026-08-23T14:00:00+00:00",
+   "ends_on": "2026-08-23T14:45:00+00:00",
+   "location": "Eisenhower Auditorium",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12506440",
+   "map_url": ""
+  },
+  {
+   "id": "12506427",
+   "name": "Eberly College of Science Dean's Welcome",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "This event is open to all Eberly College of Science students! Come meet the \"Dean Team\", students, and others for a quick introduction to the College. If your last name begins with A &ndash; K: 10:00-10:30AM If your last name begins with L &ndash; Z: 10:45-11:15AM",
+   "starts_on": "2026-08-23T14:00:00+00:00",
+   "ends_on": "2026-08-23T15:15:00+00:00",
+   "location": "100 Thomas Building",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12506427",
+   "map_url": ""
+  },
+  {
+   "id": "12506494",
+   "name": "College of the Liberal Arts Welcome",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Your journey at Penn State University Park begins with a warm welcome from the Dean of the College of the Liberal Arts and student leaders from our college-level student organizations. Begin building your support network from day one by connecting with current students and professional staff, getting answers to last-minute questions, and preparing for a successful fall semester. Enjoy delicious snacks, exciting giveaways, and lively conversation in a relaxed, welcoming atmosphere — and leave fee",
+   "starts_on": "2026-08-23T15:00:00+00:00",
+   "ends_on": "2026-08-23T17:00:00+00:00",
+   "location": "HUB-Robeson Center",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12506494",
+   "map_url": ""
+  },
+  {
+   "id": "12454978",
+   "name": "Smeal Fall College Meeting",
+   "organization": "Smeal College of Business at University Park",
+   "description": "-",
+   "starts_on": "2026-08-23T16:00:00+00:00",
+   "ends_on": "2026-08-23T17:00:00+00:00",
+   "location": "Eisenhower Auditorium",
+   "categories": [
+    "Welcome Week at University Park!"
+   ],
+   "theme": "GroupBusiness",
+   "url": "https://discover.psu.edu/event/12454978",
+   "map_url": ""
+  },
+  {
+   "id": "12540196",
+   "name": "College of Earth and Mineral Sciences Welcome (First-Year Students)",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Welcome to the College of Earth and Mineral Sciences! Join faculty, staff, and other students in learning about resources and opportunities available in the College of Earth and Mineral Sciences. Please attend the Academic College Welcome in the room based on the first letter of your last name: Last name starts with letter A-O: Deike Building, Rm. 22 Last name starts with letter P-Z: Hosler Building, Rm. 26",
+   "starts_on": "2026-08-23T16:00:00+00:00",
+   "ends_on": "2026-08-23T17:00:00+00:00",
+   "location": "Hosler, Room 26 and Deike, Room 22",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12540196",
+   "map_url": ""
+  },
+  {
+   "id": "12478008",
+   "name": "HHD Fall Academic College Welcome",
+   "organization": "First Year Experience in HHD at University Park",
+   "description": "Welcome to HHD! Gather together with the class of 2030 in a warm welcome to the College of Health and Human Development. You'll hear important information about resources, meet with key players in the College, and learn more about the values and expectations we have of you as a new student.",
+   "starts_on": "2026-08-23T16:00:00+00:00",
+   "ends_on": "2026-08-23T17:30:00+00:00",
+   "location": "100 Thomas Building (first-year) 101 Thomas Building (Transfer and Change of Campus)",
+   "categories": [
+    "Academically Focused"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12478008",
+   "map_url": ""
+  },
+  {
+   "id": "12509983",
+   "name": "College of Agricultural Sciences Welcome (First-Year students)",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Grow your future and discover where your passions can take you with the Penn State College of Agricultural Sciences! Connect with fellow students, inspiring faculty and staff, and dedicated advisers while exploring hands-on experiences, exciting student organizations, groundbreaking research, and rewarding career opportunities. Whether you're interested in agriculture, sustainability, food systems, animal science, or the environment, this is your chance to make new connections, find your communi",
+   "starts_on": "2026-08-23T17:00:00+00:00",
+   "ends_on": "2026-08-23T18:00:00+00:00",
+   "location": "Agriculture Sciences and Industries Building 101",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12509983",
+   "map_url": ""
+  },
+  {
+   "id": "12540209",
+   "name": "College of Earth and Mineral Sciences Welcome (Transfer and Change-of-Campus Students)",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Welcome to the College of Earth and Mineral Sciences at University Park! Join faculty, staff, and students in learning about resources and opportunities available in the College of Earth and Mineral Sciences.",
+   "starts_on": "2026-08-23T17:15:00+00:00",
+   "ends_on": "2026-08-23T18:15:00+00:00",
+   "location": "Deike, Room 22",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12540209",
+   "map_url": ""
+  },
+  {
+   "id": "12514512",
+   "name": "Nese College of Nursing Welcome",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Welcome to the Penn State Ross and Carol Nese College of Nursing! Class of 2030, get ready for a warm welcome from the Dean and other faculty at our welcome event. You will get the chance to talk with other incoming nursing students, hear from student organizations and learn more about how to get involved!",
+   "starts_on": "2026-08-23T17:30:00+00:00",
+   "ends_on": "2026-08-23T18:30:00+00:00",
+   "location": "Ruth Pike Auditorium",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12514512",
+   "map_url": ""
+  },
+  {
+   "id": "12506433",
+   "name": "College of Arts and Architecture Welcome",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "We are excited to welcome all new first-year, transfer, and change-of-campus students to the College of Arts and Architecture! The Fall 2026 College Welcome is a great opportunity to meet college leadership, connect with fellow students, get answers to any last-minute questions before classes begin, explore arts-focused involvement opportunities, and enjoy some sweet treats. Join us to start the semester feeling informed, prepared, and connected to the Arts & Architecture community.",
+   "starts_on": "2026-08-23T17:00:00+00:00",
+   "ends_on": "2026-08-23T19:00:00+00:00",
+   "location": "Recital Hall",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12506433",
+   "map_url": ""
+  },
+  {
+   "id": "12540352",
+   "name": "College of Education Welcome (First-Year Students)",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "This is your chance to meet the leadership of your academic college, connect with fellow students in your intended major, and get answers to any last-minute questions before classes begin. It's a great way to feel confident and prepared as you head into the fall semester. Keller Building Room 104, 1:00 p.m. - 2:00 p.m. and 2:00 p.m. - 3:00 p.m. There will be two sessions. You may choose to go to one of them.",
+   "starts_on": "2026-08-23T17:00:00+00:00",
+   "ends_on": "2026-08-23T19:00:00+00:00",
+   "location": "Keller, Room 104",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12540352",
+   "map_url": ""
+  },
+  {
+   "id": "12509989",
+   "name": "College of Information Sciences and Technology Welcome",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Kick off the semester with Penn State's College of Information Sciences and Technology Academic Welcome - a fun way to connect with the IST community! Enjoy free snacks, swag, and great conversations! Stop by tables to discover resources, opportunities, and ways to get involved throughout the year. Meet fellow incoming students, faculty, and staff in an atmosphere designed to help you feel at home in IST and the Westgate Building. Questions? Email ISTEngage@psu.edu",
+   "starts_on": "2026-08-23T17:00:00+00:00",
+   "ends_on": "2026-08-23T19:00:00+00:00",
+   "location": "East Westgate Building, 2nd Floor",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12509989",
+   "map_url": ""
+  },
+  {
+   "id": "12509985",
+   "name": "College of Agricultural Sciences Welcome (Change-of-Campus & Transfer students)",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Grow your future and discover where your passions can take you with the Penn State College of Agricultural Sciences! Connect with fellow students, inspiring faculty and staff, and dedicated advisers while exploring hands-on experiences, exciting student organizations, groundbreaking research, and rewarding career opportunities. Whether you're interested in agriculture, sustainability, food systems, animal science, or the environment, this is your chance to make new connections, find your communi",
+   "starts_on": "2026-08-23T18:00:00+00:00",
+   "ends_on": "2026-08-23T19:00:00+00:00",
+   "location": "Agriculture Sciences and Industries Building 101",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12509985",
+   "map_url": ""
+  },
+  {
+   "id": "12506435",
+   "name": "Bellisario College of Communications Welcome (First Year Students)",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "This event is for First Year students. Please join us for the Bellisario College of Communications Welcome! You will hear from assistant deans and advisers about important fall semester dates, opportunities to get involved in the college, internships, and other resources for your success. We look forward to seeing you there!",
+   "starts_on": "2026-08-23T18:00:00+00:00",
+   "ends_on": "2026-08-23T19:00:00+00:00",
+   "location": "100 Thomas Building",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12506435",
+   "map_url": ""
+  },
+  {
+   "id": "12520336",
+   "name": "2+2@Smeal Fall College Welcome & Involvement Fair",
+   "organization": "Smeal College of Business at University Park",
+   "description": "The Fall College Welcome meeting for Smeal's rising juniors from the across the commonwealth. Get prepared to hit the ground running at University Park and in your major, shake hands with Dean Corey Phelps and explore Smeal student organizations to join this fall. The College Welcome meeting will run from 2pm-3pm, with the 2+2@Smeal Student Involvement Fair immediately following.",
+   "starts_on": "2026-08-23T18:00:00+00:00",
+   "ends_on": "2026-08-23T20:00:00+00:00",
+   "location": "Dr. Keiko Miwa Ross Atrium, Business Building",
+   "categories": [
+    "Academically Focused"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12520336",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.803080,-77.865850"
+  },
+  {
+   "id": "12509993",
+   "name": "Science Involvement Fair",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Science Clubs, Departments, Prehealth Advisors, Office of Science Engagement and other college offices will all be there. Come for the swag and snacks (including creamery ice cream) and stay to learn about your program, resources in the college and science related clubs. If your last name begins with A &ndash; K: 2-3PM If your last name begins with L &ndash; Z: 3-4PM",
+   "starts_on": "2026-08-23T18:00:00+00:00",
+   "ends_on": "2026-08-23T20:00:00+00:00",
+   "location": "Outdoor space behind Ritenour",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12509993",
+   "map_url": ""
+  },
+  {
+   "id": "12506438",
+   "name": "Bellisario College of Communications Welcome (Change-of-Campus and Transfer Students)",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "This event is for Change-of-Campus and Transfer students. Please join us for the Bellisario College of Communications Welcome! You will hear from assistant deans and advisers about important fall semester dates, opportunities to get involved in the college, internships, and other resources for your success. We look forward to seeing you there!",
+   "starts_on": "2026-08-23T19:00:00+00:00",
+   "ends_on": "2026-08-23T20:00:00+00:00",
+   "location": "100 Thomas Building",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12506438",
+   "map_url": ""
+  },
+  {
+   "id": "12540355",
+   "name": "College of Education Welcome (Change-of-Campus and Transfer Students)",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "This is your chance to meet the leadership of your academic college, connect with fellow students in your intended major, and get answers to any last-minute questions before classes begin. It's a great way to feel confident and prepared as you head into the fall semester.",
+   "starts_on": "2026-08-23T19:00:00+00:00",
+   "ends_on": "2026-08-23T20:00:00+00:00",
+   "location": "Keller, Room 104",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12540355",
+   "map_url": ""
+  },
+  {
+   "id": "12502357",
+   "name": "First Day of Classes Photobooth",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Start the semester off with our First Day of Classes Photo Booth! It's your first day of class as a Nittany Lion, so come commemorate it with some friends. Pick out a few fun photo props too!",
+   "starts_on": "2026-08-24T13:30:00+00:00",
+   "ends_on": "2026-08-24T18:30:00+00:00",
+   "location": "Galbraith Lounge in HUB-Robeson Center",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12502357",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12480958",
+   "name": "Welcome to the Spiritual Center",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Join us at the Pasquerilla Spiritual Center as we welcome back returning faces and welcoming in new ones! Come by for Creamery ice cream sundaes on our patio along with a chance to make your own street sign. We will also be offering tours and you will have a chance to meet our staff and affiliates. This is a great chance to explore the religious and spiritual communities on campus! We will be hosting this open house from 7:00 - 9:00 p.m. at the Pasquerilla Spiritual Center on Monday 24 August. P",
+   "starts_on": "2026-08-24T23:00:00+00:00",
+   "ends_on": "2026-08-25T01:00:00+00:00",
+   "location": "Pasquerilla Spiritual Center",
+   "categories": [
+    "Welcome Week at University Park!"
+   ],
+   "theme": "Spirituality",
+   "url": "https://discover.psu.edu/event/12480958",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798960,-77.866700"
+  },
+  {
+   "id": "12502349",
+   "name": "Drag Bingo",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "We are pleased to invite PSU Opulence for an evening of performances, laughter, bingo, and prizes! Join us in Alumni Hall in the HUB-Robeson Center for a fun night with friends and great entertainment. Doors will open at 7:00 p.m. and the performers start at 7:30 p.m. You don't want to miss it!",
+   "starts_on": "2026-08-24T23:30:00+00:00",
+   "ends_on": "2026-08-25T01:00:00+00:00",
+   "location": "Alumni Hall in the HUB-Robeson Center",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12502349",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12123821",
+   "name": "Let's Talk",
+   "organization": "World Campus Student Affairs",
+   "description": "Let's Talk is a non-emergency drop-in service that offers students confidential and informal same-day consultations with a licensed mental health professional. Students can discuss their concerns and receive support, guidance, and resource referrals. The goal of this program is to create an accessible and informal avenue for students to connect with a licensed mental health professional who can address their immediate concerns and make it easier for them to access formal mental health services. ",
+   "starts_on": "2026-08-25T18:00:00+00:00",
+   "ends_on": "2026-08-25T19:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12123821",
+   "map_url": ""
+  },
+  {
+   "id": "12534580",
+   "name": "Career Services Weekly Workshops",
+   "organization": "Career Services at University Park",
+   "description": "Join the Career Services team every Tuesday at 3:15 p.m. &ndash; 4:00 p.m. for a series of professional development workshops. View the full schedule here: Weekly Workshops 2026 Topics include: Prepare for the Career Fair: Learn how to prepare for career fair events, create your elevator pitch, research employers before you meet them, dress for success, network skills, and how to follow up after career fairs to optimize the connections you've made. Cover Letter and Resume Tips: A professional co",
+   "starts_on": "2026-08-25T19:15:00+00:00",
+   "ends_on": "2026-08-25T20:00:00+00:00",
+   "location": "103 Bank of America Career Services Building",
+   "categories": [
+    "Career Exploration",
+    "Workshops and Presentations"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12534580",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.803110,-77.860430"
+  },
+  {
+   "id": "12506512",
+   "name": "Health Professions Overview",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Are you interested in a career in the health professions after college? This session will share more about how to prepare for your candidacy to various health professions programs while at Penn State. Ideal for first/second year students or students exploring career options in healthcare.",
+   "starts_on": "2026-08-25T22:00:00+00:00",
+   "ends_on": "2026-08-25T23:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12506512",
+   "map_url": ""
+  },
+  {
+   "id": "12540382",
+   "name": "World Campus Virtual Study Hall",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "World Campus Virtual Study Hall is a weekly online study space held on Tuesdays and Sundays from 5:00&ndash;8:00 PM ET via Zoom. Hosted by current World Campus Peer Guides—undergraduate work-study students who support incoming students through the Peer Guide Program—these sessions offer a welcoming environment where students can focus, stay motivated, and make progress on their coursework alongside fellow World Campus learners. Virtual Study Hall is not a tutoring session and does not provide co",
+   "starts_on": "2026-08-25T21:00:00+00:00",
+   "ends_on": "2026-08-26T00:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused",
+    "Online or Virtual Attendance",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12540382",
+   "map_url": ""
+  },
+  {
+   "id": "12490781",
+   "name": "Syllabi to Semester-at-a-Glance Workshop",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "Start your semester strong with support from the World Campus Chaiken Center for Student Success. Join us for a virtual Lunch and Learn workshop focused on transforming your course syllabus into a practical semester-at-a-glance plan. In this session, we'll explore strategies to map out key assignments, deadlines, and commitments so you can stay organized, manage your time effectively, and reduce stress throughout the semester. Bring a syllabus from your course(s) and leave feeling more confident",
+   "starts_on": "2026-08-26T16:00:00+00:00",
+   "ends_on": "2026-08-26T17:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12490781",
+   "map_url": ""
+  },
+  {
+   "id": "12501046",
+   "name": "IST Connections",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Welcome to the College of Information Sciences and Technology! The Academic Welcome is your opportunity to kick off your Penn State journey, connect with fellow first-year IST students, and learn more about the resources available to help you succeed. Enjoy free food, explore information tables, meet new friends, and get your questions answered as you begin your first semester!",
+   "starts_on": "2026-08-26T14:00:00+00:00",
+   "ends_on": "2026-08-26T18:00:00+00:00",
+   "location": "First Floor Hallway of the East Side in the Westgate Building",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12501046",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.793830,-77.867640"
+  },
+  {
+   "id": "12489649",
+   "name": "Tie-Dye & De-Stress with CAPS",
+   "organization": "Counseling and Psychological Services (CAPS) at University Park",
+   "description": "Free bags. Bright dyes. Stress less. Come get creative with CAPS and Tie-Dye a canvas bag to keep for FREE!!!",
+   "starts_on": "2026-08-26T16:00:00+00:00",
+   "ends_on": "2026-08-26T18:00:00+00:00",
+   "location": "HUB Lawn",
+   "categories": [
+    "Welcome Week at University Park!",
+    "Arts and Entertainment",
+    "Health and Wellness"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12489649",
+   "map_url": ""
+  },
+  {
+   "id": "12534235",
+   "name": "Pasquerilla & Dragons",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Date: Every Wednesday Time: 6 p.m.-9 p.m. Location: Pasquerilla 105 CRC Lounge Every Wednesday! Calling all adventurers! Come by and join the Center for Spiritual and Ethical Development and the Collegiate Recovery Community for a casual game of Dungeons and Dragons. Join us for fun, laughs, and fantasy. The group meets weekly at 6pm in Pasquerilla 105, the CRC Lounge every Wednesday. Looking forward to seeing you there!",
+   "starts_on": "2026-08-26T22:00:00+00:00",
+   "ends_on": "2026-08-27T01:00:00+00:00",
+   "location": "105 Pasquerilla CRC Lounge",
+   "categories": [
+    "Social Activities"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12534235",
+   "map_url": ""
+  },
+  {
+   "id": "12521960",
+   "name": "Results Will Vary Encore",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Join us for an encore of the Results Will Vary show! Come ready to laugh, cheer, and enjoy some fun musical numbers as the cast performs their last show of the summer.",
+   "starts_on": "2026-08-27T00:00:00+00:00",
+   "ends_on": "2026-08-27T01:00:00+00:00",
+   "location": "Schwab Auditorium",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12521960",
+   "map_url": ""
+  },
+  {
+   "id": "12502366",
+   "name": "Pizzingo for Change-of-Campus and Transfer students",
+   "organization": "Student Orientation and Transition Programs (Welcome Week)",
+   "description": "Join us for an evening of pizza and bingo! There will be plenty of food, drinks, and prizes to go around. This is a chance for you to connect with other new Change-of-Campus and Transfer students and kick off the semester with an evening of fun in Heritage Hall. Doors open at 7:00 p.m. with bingo kicking off shortly after. Make sure to have your mobile id+ with you.",
+   "starts_on": "2026-08-27T23:00:00+00:00",
+   "ends_on": "2026-08-28T01:00:00+00:00",
+   "location": "Lion's Lair in the HUB-Robeson Center",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12502366",
+   "map_url": ""
+  },
+  {
+   "id": "12480285",
+   "name": "Career Services Mini Tours!",
+   "organization": "Career Services at University Park",
+   "description": "Stop by Career Services during Fall Welcome Week for a quick tour of our space and an introduction to the resources available to support your career journey. Meet our team, explore what we offer, and get comfortable navigating our services.",
+   "starts_on": "2026-08-24T12:00:00+00:00",
+   "ends_on": "2026-08-28T21:00:00+00:00",
+   "location": "Bank of America Career Services Building",
+   "categories": [
+    "Welcome Week at University Park!",
+    "Career Exploration"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12480285",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.803110,-77.860430"
+  },
+  {
+   "id": "12539991",
+   "name": "SPA x Movin' On LightsUP 2026",
+   "organization": "Student Programming Association (SPA)",
+   "description": "Get excited for our annual LIGHTS UP event on the HUB lawn on Friday the 28th of August. There will be free novelty events and activities for all those who wish to participate, as well as a lineup of various student acts and some headliners, all to be announced soon! Events will start 5pm with music and all events wrap up around 10:30pm. See you there!",
+   "starts_on": "2026-08-28T21:00:00+00:00",
+   "ends_on": "2026-08-29T02:30:00+00:00",
+   "location": "Hub Lawn",
+   "categories": [],
+   "theme": "Arts",
+   "url": "https://discover.psu.edu/event/12539991",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12477638",
+   "name": "Fresh START Day of Service 2026",
+   "organization": "Fresh START Day of Service at University Park",
+   "description": "Fresh START Day of Service is one of Penn State's largest and most exciting days of service, created especially for incoming first-year, change-of-campus, transfer, and World Campus students who are new to the University Park campus. It's a fun opportunity to meet people, give back, and start building your Penn State community from day one! The primary goals of Fresh START are to: Introduce new students to the many service and civic engagement opportunities available both in the State College co",
+   "starts_on": "2026-08-29T14:00:00+00:00",
+   "ends_on": "2026-08-29T19:00:00+00:00",
+   "location": "HUB Lawn",
+   "categories": [
+    "Welcome Week at University Park!",
+    "Community Service",
+    "Civic Engagement"
+   ],
+   "theme": "CommunityService",
+   "url": "https://discover.psu.edu/event/12477638",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798210,-77.861110"
+  },
+  {
+   "id": "12540383",
+   "name": "World Campus Virtual Study Hall",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "World Campus Virtual Study Hall is a weekly online study space held on Tuesdays and Sundays from 5:00&ndash;8:00 PM ET via Zoom. Hosted by current World Campus Peer Guides—undergraduate work-study students who support incoming students through the Peer Guide Program—these sessions offer a welcoming environment where students can focus, stay motivated, and make progress on their coursework alongside fellow World Campus learners. Virtual Study Hall is not a tutoring session and does not provide co",
+   "starts_on": "2026-08-30T21:00:00+00:00",
+   "ends_on": "2026-08-31T00:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused",
+    "Online or Virtual Attendance",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12540383",
+   "map_url": ""
+  },
+  {
+   "id": "12480318",
+   "name": "Open House RSVP: Welcome Week Benefit",
+   "organization": "Career Services at University Park",
+   "description": "RSVP for the Fall '26 Career Services Open House here on Discover during Welcome Week to get a head start on prizes before the event even begins! Just show your RSVP at check-in to claim the first punch on your event card for free. Complete your punch card by visiting stations and earn prizes when you reach 10 punches. Join us at the Open House from 11:00 AM &ndash; 3:00 PM on September 2nd for a fun, interactive experience with free food, games, and ice cream. RSVP early, start ahead, and make ",
+   "starts_on": "2026-08-20T16:00:00+00:00",
+   "ends_on": "2026-08-31T17:00:00+00:00",
+   "location": "Bank of America Career Services Building",
+   "categories": [
+    "Welcome Week at University Park!",
+    "Career Exploration"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12480318",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.803110,-77.860430"
+  },
+  {
+   "id": "12529491",
+   "name": "Matters of Substance: Game Day",
+   "organization": "Counseling and Psychological Services (CAPS) at University Park",
+   "description": "Find CAPS clinicians at the HUB leading this year's Pop-Up Station series. Matters of Substance tables empower your health, wellbeing, and safety across common college scenarios.",
+   "starts_on": "2026-09-01T16:00:00+00:00",
+   "ends_on": "2026-09-01T18:30:00+00:00",
+   "location": "HUB Tables",
+   "categories": [
+    "Health and Wellness"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12529491",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12456467",
+   "name": "Let's Talk",
+   "organization": "World Campus Student Affairs",
+   "description": "Let's Talk is a non-emergency drop-in service that offers students confidential and informal same-day consultations with a licensed mental health professional. Students can discuss their concerns and receive support, guidance, and resource referrals. The goal of this program is to create an accessible and informal avenue for students to connect with a licensed mental health professional who can address their immediate concerns and make it easier for them to access formal mental health services. ",
+   "starts_on": "2026-09-01T18:00:00+00:00",
+   "ends_on": "2026-09-01T19:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12456467",
+   "map_url": ""
+  },
+  {
+   "id": "12534581",
+   "name": "Career Services Weekly Workshops",
+   "organization": "Career Services at University Park",
+   "description": "Join the Career Services team every Tuesday at 3:15 p.m. &ndash; 4:00 p.m. for a series of professional development workshops, including: Prepare for the Career Fair: Learn how to prepare for career fair events, create your elevator pitch, research employers before you meet them, dress for success, network skills, and how to follow up after career fairs to optimize the connections you've made. Cover Letter and Resume Tips: A professional cover letter and resume are essential internship and job s",
+   "starts_on": "2026-09-01T19:15:00+00:00",
+   "ends_on": "2026-09-01T20:00:00+00:00",
+   "location": "103 Bank of America Career Services Building",
+   "categories": [
+    "Career Exploration",
+    "Workshops and Presentations"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12534581",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.803110,-77.860430"
+  },
+  {
+   "id": "12481587",
+   "name": "Fall 2026 Involvement Fair- Academic Journal Society (AJS) at University Park",
+   "organization": "Academic Journal Society at University Park",
+   "description": "The Academic Journal Society (AJS) at University Park will have a table at the 2026 Fall Involvement Fair, September 1st from Noon-5pm! We will be sharing details of the organization, expectations as a member in the fall semester, and highlighting some of the benefits of joining in on the discussion. We encourage any interested undergraduate and graduate students to visit and learn more about Academic Journal Society, meet the executive officers, and explore other organizations offered through P",
+   "starts_on": "2026-09-01T16:00:00+00:00",
+   "ends_on": "2026-09-01T21:00:00+00:00",
+   "location": "HUB Lawn",
+   "categories": [
+    "Academically Focused"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12481587",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12502773",
+   "name": "First ASME General Body Meeting",
+   "organization": "American Society of Mechanical Engineers at University Park",
+   "description": "Join us for our first General Body Meeting to learn more about everything ASME has to offer! After the meeting, enjoy free Chick-fil-A while meeting club members at our post-meeting social on the Pattee Mall, just outside the Sparks Building. Looking to meet other engineers, connect with industry professionals, and have fun outside the classroom? ASME offers company presentations, technical workshops, design projects, social events, and networking opportunities that help students grow profession",
+   "starts_on": "2026-09-01T22:15:00+00:00",
+   "ends_on": "2026-09-01T23:15:00+00:00",
+   "location": "Sparks Building Room 121 / Pattee Mall",
+   "categories": [],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12502773",
+   "map_url": ""
+  },
+  {
+   "id": "12481845",
+   "name": "The Office: Desert Edition - Watch Party Launch",
+   "organization": "Cru at Penn State World Campus",
+   "description": "🌵 What happens when you combine The Office vibes with the Old Testament? You get The Promised Land, a hilarious, crowd-funded mockumentary series about wandering the desert and learning to listen to God. Imagine The Office or Parks and Rec meets the Book of Exodus. Fresh out of Egypt, Moses (played by Wasim No'mani) struggles to lead the nation through the wilderness while dealing with everyday corporate-like hurdles: dealing with impossible demands, bickering family members (like Aaron and Miri",
+   "starts_on": "2026-09-01T22:30:00+00:00",
+   "ends_on": "2026-09-01T23:15:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Social Activities",
+    "Online or Virtual Attendance",
+    "Welcome Week at World Campus!",
+    "World Campus Events"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12481845",
+   "map_url": ""
+  },
+  {
+   "id": "12540384",
+   "name": "World Campus Virtual Study Hall",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "World Campus Virtual Study Hall is a weekly online study space held on Tuesdays and Sundays from 5:00&ndash;8:00 PM ET via Zoom. Hosted by current World Campus Peer Guides—undergraduate work-study students who support incoming students through the Peer Guide Program—these sessions offer a welcoming environment where students can focus, stay motivated, and make progress on their coursework alongside fellow World Campus learners. Virtual Study Hall is not a tutoring session and does not provide co",
+   "starts_on": "2026-09-01T21:00:00+00:00",
+   "ends_on": "2026-09-02T00:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused",
+    "Online or Virtual Attendance",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12540384",
+   "map_url": ""
+  },
+  {
+   "id": "12490794",
+   "name": "Managing Your Calendar Workshop",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "Join the World Campus Chaiken Center for Student Success for a virtual Lunch and Learn workshop focused on managing your calendar effectively. World Campus students often balance coursework with careers, family, or other responsibilities—this session is designed to help you develop the skills to make the most of your time. You'll learn strategies for organizing your academic, work, and personal commitments so you can stay on top of deadlines, plan ahead, and work more efficiently. Discover tools",
+   "starts_on": "2026-09-02T16:00:00+00:00",
+   "ends_on": "2026-09-02T17:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12490794",
+   "map_url": ""
+  },
+  {
+   "id": "12533793",
+   "name": "Career Services Open House",
+   "organization": "Career Services at University Park",
+   "description": "Career Services Open House &lsquo;26 Wednesday, September 2 | 11:00 AM&ndash;3:00 PM Join Penn State Career Services for our annual Open House and discover the many resources available to support your career journey—from your first semester through graduation and beyond. During the event, you can: Explore Career Services in a fun, welcoming, and low-pressure environment while learning about available career resources Win prizes, play games, enjoy a free food truck lunch, and cool off with Creame",
+   "starts_on": "2026-09-02T15:00:00+00:00",
+   "ends_on": "2026-09-02T19:00:00+00:00",
+   "location": "Bank of America Career Services Building",
+   "categories": [
+    "Career Exploration",
+    "Social Activities"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12533793",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.803110,-77.860430"
+  },
+  {
+   "id": "12477396",
+   "name": "Fall 2026 Involvement Fair at University Park",
+   "organization": "Student Leadership and Involvement, a unit of Student Affairs at University Park",
+   "description": "The FALL INVOLVEMENT FAIR will take place on Tuesday & Wednesday September 1st and 2nd, 2026 from 12pm-5pm each day, on the HUB Lawn! Stop by to meet hundreds of student groups that are actively recruiting new members! Find a new way to get involved & make more friends! Want to see who will be at the fair each day? Check out our website! https://studentaffairs.psu.edu/get-involved/student-organizations/involvement-fair *The above website and list will be updated with org participant information ",
+   "starts_on": "2026-09-01T16:00:00+00:00",
+   "ends_on": "2026-09-02T21:00:00+00:00",
+   "location": "HUB Lawn",
+   "categories": [
+    "Welcome Week at University Park!"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12477396",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12470205",
+   "name": "American Nuclear Society PSU First General Body Meeting",
+   "organization": "American Nuclear Society at University Park",
+   "description": "Stop by Hallowell to hear what ANS is going to be up to for the 26-27 school year!",
+   "starts_on": "2026-09-02T22:00:00+00:00",
+   "ends_on": "2026-09-02T23:30:00+00:00",
+   "location": "Hallowell NIC",
+   "categories": [],
+   "theme": "GroupBusiness",
+   "url": "https://discover.psu.edu/event/12470205",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.792240,-77.868200"
+  },
+  {
+   "id": "12532136",
+   "name": "OriginLabs Open House - Make a Desk Organizer",
+   "organization": "Invent Penn State at University Park",
+   "description": "Join us for a walk-in Open House at OriginLabs, Penn State's makerspace for product development, prototyping, and innovation. Tour the space, learn about free student memberships, and create your own custom desk organizer to take home. Supplies are limited, so come early!",
+   "starts_on": "2026-09-03T18:00:00+00:00",
+   "ends_on": "2026-09-03T21:00:00+00:00",
+   "location": "OriginLabs",
+   "categories": [
+    "Social Activities"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12532136",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.792200,-77.863000"
+  },
+  {
+   "id": "12540385",
+   "name": "World Campus Virtual Study Hall",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "World Campus Virtual Study Hall is a weekly online study space held on Tuesdays and Sundays from 5:00&ndash;8:00 PM ET via Zoom. Hosted by current World Campus Peer Guides—undergraduate work-study students who support incoming students through the Peer Guide Program—these sessions offer a welcoming environment where students can focus, stay motivated, and make progress on their coursework alongside fellow World Campus learners. Virtual Study Hall is not a tutoring session and does not provide co",
+   "starts_on": "2026-09-06T21:00:00+00:00",
+   "ends_on": "2026-09-07T00:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused",
+    "Online or Virtual Attendance",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12540385",
+   "map_url": ""
+  },
+  {
+   "id": "12530228",
+   "name": "World Campus Career Services: Upgrade Your Resume with AI Job Seekers Workshop",
+   "organization": "World Campus Student Affairs",
+   "description": "Using AI on your resume? Learn how to do it the right way—so it helps you stand out, not blend in. AI tools are changing how students prepare for the job search—but knowing how to use them effectively (and ethically) can make all the difference. In this hands-on workshop, you'll learn how to use AI to improve your r&eacute;sum&eacute; while still presenting your authentic skills and experiences. We'll show you how to leverage AI for brainstorming, refining bullet points, and tailoring your r&eac",
+   "starts_on": "2026-09-08T16:00:00+00:00",
+   "ends_on": "2026-09-08T16:45:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12530228",
+   "map_url": ""
+  },
+  {
+   "id": "12456468",
+   "name": "Let's Talk",
+   "organization": "World Campus Student Affairs",
+   "description": "Let's Talk is a non-emergency drop-in service that offers students confidential and informal same-day consultations with a licensed mental health professional. Students can discuss their concerns and receive support, guidance, and resource referrals. The goal of this program is to create an accessible and informal avenue for students to connect with a licensed mental health professional who can address their immediate concerns and make it easier for them to access formal mental health services. ",
+   "starts_on": "2026-09-08T18:00:00+00:00",
+   "ends_on": "2026-09-08T19:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12456468",
+   "map_url": ""
+  },
+  {
+   "id": "12534582",
+   "name": "Career Services Weekly Workshops",
+   "organization": "Career Services at University Park",
+   "description": "Join the Career Services team every Tuesday at 3:15 p.m. &ndash; 4:00 p.m. for a series of professional development workshops, including: Prepare for the Career Fair: Learn how to prepare for career fair events, create your elevator pitch, research employers before you meet them, dress for success, network skills, and how to follow up after career fairs to optimize the connections you've made. Cover Letter and Resume Tips: A professional cover letter and resume are essential internship and job s",
+   "starts_on": "2026-09-08T19:15:00+00:00",
+   "ends_on": "2026-09-08T20:00:00+00:00",
+   "location": "103 Bank of America Career Services Building",
+   "categories": [
+    "Career Exploration",
+    "Workshops and Presentations"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12534582",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.803110,-77.860430"
+  },
+  {
+   "id": "12540386",
+   "name": "World Campus Virtual Study Hall",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "World Campus Virtual Study Hall is a weekly online study space held on Tuesdays and Sundays from 5:00&ndash;8:00 PM ET via Zoom. Hosted by current World Campus Peer Guides—undergraduate work-study students who support incoming students through the Peer Guide Program—these sessions offer a welcoming environment where students can focus, stay motivated, and make progress on their coursework alongside fellow World Campus learners. Virtual Study Hall is not a tutoring session and does not provide co",
+   "starts_on": "2026-09-08T21:00:00+00:00",
+   "ends_on": "2026-09-09T00:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused",
+    "Online or Virtual Attendance",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12540386",
+   "map_url": ""
+  },
+  {
+   "id": "12484459",
+   "name": "General Body Meeting #1",
+   "organization": "Filipino Association at Penn State University Park",
+   "description": "Join us for our first General Body Meeting of the 2026-27 school year! Starting promptly at 7 pm in Room 113 in the Ag Engineering Building! Note: not to be confused with the Ag Sciences and Industries (ASI) Building.",
+   "starts_on": "2026-09-08T23:00:00+00:00",
+   "ends_on": "2026-09-09T00:30:00+00:00",
+   "location": "113 Ag Engineering",
+   "categories": [
+    "Cultural Appreciation",
+    "Regular Meeting"
+   ],
+   "theme": "Cultural",
+   "url": "https://discover.psu.edu/event/12484459",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.801980,-77.865280"
+  },
+  {
+   "id": "12502024",
+   "name": "New Member Meeting",
+   "organization": "Nittany Motorsports at University Park",
+   "description": "This is the first full team meeting of the 2026-2027 Nittany Motorsports season. Held shortly after recruitment events, this meeting is known as our New Member Meeting. The newly elected leadership team introduces themselves and welcomes both new and returning members while giving an overview of how the team is organized. It's a chance to learn more about Nittany Motorsports, meet other members, and get excited for the season ahead!",
+   "starts_on": "2026-09-08T23:00:00+00:00",
+   "ends_on": "2026-09-09T00:30:00+00:00",
+   "location": "Chambers Bldg 112",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12502024",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798230,-77.867660"
+  },
+  {
+   "id": "12534236",
+   "name": "Pasquerilla & Dragons",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Date: Every Wednesday Time: 6 p.m.-9 p.m. Location: Pasquerilla 105 CRC Lounge Every Wednesday! Calling all adventurers! Come by and join the Center for Spiritual and Ethical Development and the Collegiate Recovery Community for a casual game of Dungeons and Dragons. Join us for fun, laughs, and fantasy. The group meets weekly at 6pm in Pasquerilla 105, the CRC Lounge every Wednesday. Looking forward to seeing you there!",
+   "starts_on": "2026-09-02T22:00:00+00:00",
+   "ends_on": "2026-09-10T01:00:00+00:00",
+   "location": "105 Pasquerilla CRC Lounge",
+   "categories": [
+    "Social Activities"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12534236",
+   "map_url": ""
+  },
+  {
+   "id": "12534237",
+   "name": "Pasquerilla & Dragons",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Date: Every Wednesday Time: 6 p.m.-9 p.m. Location: Pasquerilla 105 CRC Lounge Every Wednesday! Calling all adventurers! Come by and join the Center for Spiritual and Ethical Development and the Collegiate Recovery Community for a casual game of Dungeons and Dragons. Join us for fun, laughs, and fantasy. The group meets weekly at 6pm in Pasquerilla 105, the CRC Lounge every Wednesday. Looking forward to seeing you there!",
+   "starts_on": "2026-09-09T22:00:00+00:00",
+   "ends_on": "2026-09-10T01:00:00+00:00",
+   "location": "105 Pasquerilla CRC Lounge",
+   "categories": [
+    "Social Activities"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12534237",
+   "map_url": ""
+  },
+  {
+   "id": "12411916",
+   "name": "Fresh&Fit Dating Podcast",
+   "organization": "Uncensored America at University Park",
+   "description": "Guest speakers Myron Gaines and Walter Weekes will be holding the Fresh&Fit podcast live at Penn State University Park. During the podcast, Fresh and Fit will discuss with cast members about feminism and dating. To attend the live podcast, get tickets by going to https://uncensoredamerica.us/fresh-and-fit-psu/. This event has been rescheduled from Spring 2026.",
+   "starts_on": "2026-09-10T00:00:00+00:00",
+   "ends_on": "2026-09-10T02:00:00+00:00",
+   "location": "Biobehavioral Health 022",
+   "categories": [
+    "Cultural Appreciation",
+    "UPAC Funded"
+   ],
+   "theme": "Cultural",
+   "url": "https://discover.psu.edu/event/12411916",
+   "map_url": ""
+  },
+  {
+   "id": "12525030",
+   "name": "World Campus Career Services: First Semester Career Moves",
+   "organization": "World Campus Student Affairs",
+   "description": "Your first semester is one of the best opportunities to set yourself up for future success. In just 30 minutes, you'll gain practical insights into today's evolving job market and learn how to take advantage of the career resources available to every Penn State student. We'll cover strategies for building experience, expanding your network, developing a strong LinkedIn presence, and making the most of tools like Nittany Lion Careers and LionLink. Whether you're pursuing an undergraduate, graduat",
+   "starts_on": "2026-09-10T16:15:00+00:00",
+   "ends_on": "2026-09-10T16:45:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Career Exploration",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12525030",
+   "map_url": ""
+  },
+  {
+   "id": "12534315",
+   "name": "Rosh Hashanah Apples and Honey",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Join Penn State Hillel and the Center for Spiritual and Ethical Development for Rosh Hashanah as we give out apples, honey, and education about Judaism. This is a great chance to learn more while savoring a sweet treat during the High Holidays. We will be meeting Friday, September 11 from 1-2 p.m. in the Pasquerilla Spiritual Center Lobby. We hope you can join us!",
+   "starts_on": "2026-09-11T17:00:00+00:00",
+   "ends_on": "2026-09-11T18:00:00+00:00",
+   "location": "Pasquerilla Spiritual Center Lobby",
+   "categories": [
+    "Religious or Spiritual"
+   ],
+   "theme": "Spirituality",
+   "url": "https://discover.psu.edu/event/12534315",
+   "map_url": ""
+  },
+  {
+   "id": "12484737",
+   "name": "Harvest For Hunger",
+   "organization": "Student Farm and Food Systems at University Park",
+   "description": "🧑&zwj;🌾 Join us for our new series Harvest for Hunger, helping to feed local communities through farmer collaboration! Meet us at 814 Cider Works Farm on September 12 from 10-12pm to support local farmers, learn hands-on gardening and farming skills, and enjoy a free meal!",
+   "starts_on": "2026-09-12T14:00:00+00:00",
+   "ends_on": "2026-09-12T16:00:00+00:00",
+   "location": "814 Cider Works Farm",
+   "categories": [
+    "Sustainability",
+    "Health and Wellness",
+    "Summer Events!"
+   ],
+   "theme": "CommunityService",
+   "url": "https://discover.psu.edu/event/12484737",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.751760,-77.856410"
+  },
+  {
+   "id": "12485409",
+   "name": "Fall 2026 Semester Kickoff Swing Dance (with Live Jazz Music!)",
+   "organization": "Swing Dance Club at University Park",
+   "description": "Start the semester off on the right foot at our swing dance event on September 12 in Heritage Hall! This event is open to all, FREE for students, and perfect for newcomers and experienced dancers alike. We'll start the evening with a beginner-friendly lesson to get everyone moving (6:30pm), followed by a social dance featuring Crooner & Co. Swing Band (7-9pm). No partner or experience needed!",
+   "starts_on": "2026-09-12T22:30:00+00:00",
+   "ends_on": "2026-09-13T01:00:00+00:00",
+   "location": "PSU HUB - Heritage Hall",
+   "categories": [
+    "Arts and Entertainment",
+    "Cultural Appreciation",
+    "Health and Wellness",
+    "Workshops and Presentations",
+    "Recruiting New Members",
+    "UPAC Funded",
+    "Social Activities"
+   ],
+   "theme": "Arts",
+   "url": "https://discover.psu.edu/event/12485409",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12502026",
+   "name": "Spain GP Watch Party",
+   "organization": "Nittany Motorsports at University Park",
+   "description": "Watch the Spain GP with Nittany Motorsports!",
+   "starts_on": "2026-09-13T13:00:00+00:00",
+   "ends_on": "2026-09-13T15:00:00+00:00",
+   "location": "Westgate Cybertorium (W201)",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12502026",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.793640,-77.868330"
+  },
+  {
+   "id": "12506888",
+   "name": "Serve with EG, A Cross Council Collaboration!",
+   "organization": "Delta Sigma Theta Sorority, Inc. at University Park",
+   "description": "The EverlastinG Epsilon Gamma Chapter of Delta Sigma Theta Sorority, Inc. hosts a cross-council service project. As a chapter and national organization, it is our mission to serve our local communities, making a difference in the lives of those impacted and inspiring change when needed. In an effort to continue building bridges between councils, Epsilon Gamma offers the opportunity to build relationships through a service event in collaboration with A Soldier's Hand, a local organization that, a",
+   "starts_on": "2026-09-13T14:00:00+00:00",
+   "ends_on": "2026-09-13T16:00:00+00:00",
+   "location": "HUB 233AB",
+   "categories": [
+    "Community Service",
+    "Fraternity & Sorority Life Events"
+   ],
+   "theme": "CommunityService",
+   "url": "https://discover.psu.edu/event/12506888",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12540387",
+   "name": "World Campus Virtual Study Hall",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "World Campus Virtual Study Hall is a weekly online study space held on Tuesdays and Sundays from 5:00&ndash;8:00 PM ET via Zoom. Hosted by current World Campus Peer Guides—undergraduate work-study students who support incoming students through the Peer Guide Program—these sessions offer a welcoming environment where students can focus, stay motivated, and make progress on their coursework alongside fellow World Campus learners. Virtual Study Hall is not a tutoring session and does not provide co",
+   "starts_on": "2026-09-13T21:00:00+00:00",
+   "ends_on": "2026-09-14T00:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused",
+    "Online or Virtual Attendance",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12540387",
+   "map_url": ""
+  },
+  {
+   "id": "12502011",
+   "name": "HHD Leadership EDGE Program Info Session",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "The HHD Leadership EDGE Program is a semester long leadership development experience designed to help students identify their personal philosophy of leadership while learning from and collaborating with industry leaders and alumni. Each year, the program takes a trip to Harrisburg, PA to visit the State Capitol Building where students get to network with state legislators and observe leadership in action.",
+   "starts_on": "2026-09-15T14:00:00+00:00",
+   "ends_on": "2026-09-15T14:30:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Leadership Development"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12502011",
+   "map_url": ""
+  },
+  {
+   "id": "12456469",
+   "name": "Let's Talk",
+   "organization": "World Campus Student Affairs",
+   "description": "Let's Talk is a non-emergency drop-in service that offers students confidential and informal same-day consultations with a licensed mental health professional. Students can discuss their concerns and receive support, guidance, and resource referrals. The goal of this program is to create an accessible and informal avenue for students to connect with a licensed mental health professional who can address their immediate concerns and make it easier for them to access formal mental health services. ",
+   "starts_on": "2026-09-15T18:00:00+00:00",
+   "ends_on": "2026-09-15T19:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12456469",
+   "map_url": ""
+  },
+  {
+   "id": "12534303",
+   "name": "Ethical Development: Civic Engagement with Kendall Mainzer",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Join us for our Ethical Development series where we focus on morality and ethics from many perspectives. We will be hearing about not only ethics but also how we understand freedom in this talk by Dr. John Christman. Please stop by to dig deeper into what freedom means and its philosophy so we can engage more deeply in our own lives. We will be meeting on Tuesday, September 15 from 3:30 p.m. - 5:30 p.m. in 130 Pasquerilla Garden Room and on Zoom at bit.ly/CSEDmeet. We hope you can be there to le",
+   "starts_on": "2026-09-15T19:30:00+00:00",
+   "ends_on": "2026-09-15T21:30:00+00:00",
+   "location": "130 Pasquerilla Garden Room",
+   "categories": [
+    "Leadership Development",
+    "Civic Engagement"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12534303",
+   "map_url": ""
+  },
+  {
+   "id": "12502018",
+   "name": "Getting Started in Research",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "Join this session to connect with Undergraduate Research and Fellowships Mentoring (URFM) and learn tips and tricks for getting involved in research at Penn State.",
+   "starts_on": "2026-09-15T21:00:00+00:00",
+   "ends_on": "2026-09-15T21:30:00+00:00",
+   "location": "401 Health & Human Development Building",
+   "categories": [
+    "Workshops and Presentations"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12502018",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.796130,-77.860160"
+  },
+  {
+   "id": "12538446",
+   "name": "CCSO Mixer",
+   "organization": "Competitive Cyber Security Organization at University Park",
+   "description": "CCSO Mixer Event",
+   "starts_on": "2026-09-15T20:00:00+00:00",
+   "ends_on": "2026-09-15T22:00:00+00:00",
+   "location": "HUB Lions Lair",
+   "categories": [
+    "Social Activities"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12538446",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12534337",
+   "name": "Ethical Development: Freedom with Dr. Christman",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Join us for our Ethical Development series where we focus on morality and ethics from many perspectives. We will be hearing about not only ethics but also how we understand freedom in this talk by Dr. John Christman. Please stop by to dig deeper into what freedom means and its philosophy so we can engage more deeply in our own lives. We will be meeting on Tuesday, September 15 from 6 p.m. - 7:30 p.m. in 130 Pasquerilla Garden Room and on Zoom at bit.ly/CSEDmeet. We hope you can be there to learn",
+   "starts_on": "2026-09-15T22:00:00+00:00",
+   "ends_on": "2026-09-15T23:30:00+00:00",
+   "location": "130 Pasquerilla Garden Room",
+   "categories": [
+    "Leadership Development",
+    "Lectures & Speaking Engagements",
+    "Hybrid In-person and Online Event",
+    "Civic Engagement"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12534337",
+   "map_url": ""
+  },
+  {
+   "id": "12540388",
+   "name": "World Campus Virtual Study Hall",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "World Campus Virtual Study Hall is a weekly online study space held on Tuesdays and Sundays from 5:00&ndash;8:00 PM ET via Zoom. Hosted by current World Campus Peer Guides—undergraduate work-study students who support incoming students through the Peer Guide Program—these sessions offer a welcoming environment where students can focus, stay motivated, and make progress on their coursework alongside fellow World Campus learners. Virtual Study Hall is not a tutoring session and does not provide co",
+   "starts_on": "2026-09-15T21:00:00+00:00",
+   "ends_on": "2026-09-16T00:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused",
+    "Online or Virtual Attendance",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12540388",
+   "map_url": ""
+  },
+  {
+   "id": "12347263",
+   "name": "Military Service Organization Monthly Meeting",
+   "organization": "Military Service Organization at World Campus",
+   "description": "Join the Military Service Organization (MSO) for our monthly meeting to stay connected, hear updates, and get involved. Open to all military-affiliated students, including service members, veterans, spouses, dependents, and supporters.",
+   "starts_on": "2026-09-16T00:00:00+00:00",
+   "ends_on": "2026-09-16T01:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Regular Meeting",
+    "Online or Virtual Attendance"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12347263",
+   "map_url": ""
+  },
+  {
+   "id": "12490744",
+   "name": "Fall Career Days 2026",
+   "organization": "Career Services at University Park",
+   "description": "Join us for one of the largest collegiate career fairs in country, Penn State Fall Career Days. September 16 Bryce Jordan Center | University Park, PA Internships/Co-ops 11 am - 4 pm EST September 17 Bryce Jordan Center | University Park, PA Full Time Positions 11 am - 4 pm EST Get Paid $15/hr to Work Fall Career Days This is a great way for students to gain experience, earn money, and connect with employers on campus. What you'll do: Assist with event check-in and logistics Help employers and s",
+   "starts_on": "2026-09-16T15:00:00+00:00",
+   "ends_on": "2026-09-16T20:00:00+00:00",
+   "location": "Bryce Jordan Center",
+   "categories": [
+    "Career Exploration"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12490744",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.809060,-77.854990"
+  },
+  {
+   "id": "12502025",
+   "name": "Global Health Minor Info Session",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "The Global Health Minor is a unique program that combines an immersive education abroad experience with rigorous skills preparation for careers in medicine, public and global health, and variety of related fields such as international development, government, social service, education, and research. Join this session to learn about the Global Health Minor, the application process, and the five-week international field experience required for the minor.",
+   "starts_on": "2026-09-16T21:00:00+00:00",
+   "ends_on": "2026-09-16T22:00:00+00:00",
+   "location": "401 Health & Human Development Building",
+   "categories": [
+    "Academically Focused",
+    "Cultural Appreciation"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12502025",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.796130,-77.860160"
+  },
+  {
+   "id": "12534238",
+   "name": "Pasquerilla & Dragons",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Date: Every Wednesday Time: 6 p.m.-9 p.m. Location: Pasquerilla 105 CRC Lounge Every Wednesday! Calling all adventurers! Come by and join the Center for Spiritual and Ethical Development and the Collegiate Recovery Community for a casual game of Dungeons and Dragons. Join us for fun, laughs, and fantasy. The group meets weekly at 6pm in Pasquerilla 105, the CRC Lounge every Wednesday. Looking forward to seeing you there!",
+   "starts_on": "2026-09-16T22:00:00+00:00",
+   "ends_on": "2026-09-16T23:00:00+00:00",
+   "location": "105 Pasquerilla CRC Lounge",
+   "categories": [
+    "Social Activities"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12534238",
+   "map_url": ""
+  },
+  {
+   "id": "12503404",
+   "name": "WE ARE Listening: A Chat with World Campus Leadership",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "Join World Campus leadership for a student-centered conversation about the future of the online student experience. Designed for current students, this event offers an opportunity to hear directly from senior leaders about the vision and mission of Penn State World Campus and the Chaiken Center for Student Success, as well as how to make the most of your World Campus experience. The presentation will be structured around key topics and questions submitted in advance through the RSVP form, giving",
+   "starts_on": "2026-09-17T00:00:00+00:00",
+   "ends_on": "2026-09-17T01:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused",
+    "Online or Virtual Attendance",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12503404",
+   "map_url": ""
+  },
+  {
+   "id": "12490745",
+   "name": "Fall Career Days 2026",
+   "organization": "Career Services at University Park",
+   "description": "Join us for one of the largest collegiate career fairs in country, Penn State Fall Career Days. September 16 Bryce Jordan Center | University Park, PA Internships/Co-ops 11 am - 4 pm EST September 17 Bryce Jordan Center | University Park, PA Full Time Positions 11 am - 4 pm EST Get Paid $15/hr to Work Fall Career Days This is a great way for students to gain experience, earn money, and connect with employers on campus. What you'll do: Assist with event check-in and logistics Help employers and s",
+   "starts_on": "2026-09-17T15:00:00+00:00",
+   "ends_on": "2026-09-17T20:00:00+00:00",
+   "location": "Bryce Jordan Center",
+   "categories": [
+    "Career Exploration"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12490745",
+   "map_url": ""
+  },
+  {
+   "id": "12530813",
+   "name": "Life Hacks: LIVE!-- Belonging & Building Connections",
+   "organization": "Counseling and Psychological Services (CAPS) at University Park",
+   "description": "Available to students across all Penn State campuses, these are lively Zoom gatherings focused on learning how to develop and enhance your connections with others. All sessions are facilitated by CAPS Clinical Services Provider, Jason Yoder, LCSW. Belonging & Building Connections: Identify ways to curate a sense of meaningful connection that can be crucial when finding a sense of purpose and belonging.",
+   "starts_on": "2026-09-17T20:00:00+00:00",
+   "ends_on": "2026-09-17T21:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Health and Wellness",
+    "Online or Virtual Attendance"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12530813",
+   "map_url": ""
+  },
+  {
+   "id": "12540389",
+   "name": "World Campus Virtual Study Hall",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "World Campus Virtual Study Hall is a weekly online study space held on Tuesdays and Sundays from 5:00&ndash;8:00 PM ET via Zoom. Hosted by current World Campus Peer Guides—undergraduate work-study students who support incoming students through the Peer Guide Program—these sessions offer a welcoming environment where students can focus, stay motivated, and make progress on their coursework alongside fellow World Campus learners. Virtual Study Hall is not a tutoring session and does not provide co",
+   "starts_on": "2026-09-20T21:00:00+00:00",
+   "ends_on": "2026-09-21T00:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused",
+    "Online or Virtual Attendance",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12540389",
+   "map_url": ""
+  },
+  {
+   "id": "12497413",
+   "name": "In Dreams | Darla Jackson",
+   "organization": "HUB-Robeson Galleries",
+   "description": "This exhibition brings together one hundred rabbits, ninety nine plaster rabbits along with the single original clay sculpture that they were cast from, establishing a deliberate condition of formal sameness. This repetition forms the foundation of the work, from which ideas of individuality emerge. Each rabbit is altered through a unique, handcrafted mask, constructed from varied mixed-media materials and paired with a specific song. Together, these elements transform the rabbits into emotional",
+   "starts_on": "2026-07-03T14:00:00+00:00",
+   "ends_on": "2026-09-21T02:00:00+00:00",
+   "location": "Exhibition Cases",
+   "categories": [
+    "Arts and Entertainment"
+   ],
+   "theme": "Arts",
+   "url": "https://discover.psu.edu/event/12497413",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12532022",
+   "name": "Mind Gym: Self-Talk Enhancement",
+   "organization": "Counseling and Psychological Services (CAPS) at University Park",
+   "description": "TRAIN YOUR BRAIN with Penn State Counseling and Psychological Services. Mind Gym is a monthly performance and sport psychology workshop for athletes of all levels, performers in the arts, gym-goers, folks with an active lifestyle, and those wanting to learn critical mental performance strategies. Self-Talk Enhancement: Learn how to make your inner critic work for you instead of against you on the field.",
+   "starts_on": "2026-09-21T22:00:00+00:00",
+   "ends_on": "2026-09-21T23:00:00+00:00",
+   "location": "HUB Flex Theater",
+   "categories": [
+    "Arts and Entertainment",
+    "Athletics and Recreation",
+    "Health and Wellness"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12532022",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798210,-77.861110"
+  },
+  {
+   "id": "12456470",
+   "name": "Let's Talk",
+   "organization": "World Campus Student Affairs",
+   "description": "Let's Talk is a non-emergency drop-in service that offers students confidential and informal same-day consultations with a licensed mental health professional. Students can discuss their concerns and receive support, guidance, and resource referrals. The goal of this program is to create an accessible and informal avenue for students to connect with a licensed mental health professional who can address their immediate concerns and make it easier for them to access formal mental health services. ",
+   "starts_on": "2026-09-22T18:00:00+00:00",
+   "ends_on": "2026-09-22T19:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12456470",
+   "map_url": ""
+  },
+  {
+   "id": "12534583",
+   "name": "Career Services Weekly Workshops",
+   "organization": "Career Services at University Park",
+   "description": "Join the Career Services team every Tuesday at 3:15 p.m. &ndash; 4:00 p.m. for a series of professional development workshops, including: Prepare for the Career Fair: Learn how to prepare for career fair events, create your elevator pitch, research employers before you meet them, dress for success, network skills, and how to follow up after career fairs to optimize the connections you've made. Cover Letter and Resume Tips: A professional cover letter and resume are essential internship and job s",
+   "starts_on": "2026-09-22T19:15:00+00:00",
+   "ends_on": "2026-09-22T20:00:00+00:00",
+   "location": "103 Bank of America Career Services Building",
+   "categories": [
+    "Career Exploration",
+    "Workshops and Presentations"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12534583",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.803110,-77.860430"
+  },
+  {
+   "id": "12503237",
+   "name": "Global Volunteers Info Session",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "Global Volunteers mobilizes short-term volunteers in service to local people on long-term community development projects to help children and families reach their full human potential. The organization has engaged medically-focused students in Peru and Tanzania at local medical clinics delivering babies, conducting health assessments, providing basic care, and shadowing medical personnel. Students interested in education, engineering, business, nutrition, and agriculture have supported classroom",
+   "starts_on": "2026-09-22T21:00:00+00:00",
+   "ends_on": "2026-09-22T22:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Community Service",
+    "Cultural Appreciation",
+    "Online or Virtual Attendance"
+   ],
+   "theme": "CommunityService",
+   "url": "https://discover.psu.edu/event/12503237",
+   "map_url": ""
+  },
+  {
+   "id": "12540390",
+   "name": "World Campus Virtual Study Hall",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "World Campus Virtual Study Hall is a weekly online study space held on Tuesdays and Sundays from 5:00&ndash;8:00 PM ET via Zoom. Hosted by current World Campus Peer Guides—undergraduate work-study students who support incoming students through the Peer Guide Program—these sessions offer a welcoming environment where students can focus, stay motivated, and make progress on their coursework alongside fellow World Campus learners. Virtual Study Hall is not a tutoring session and does not provide co",
+   "starts_on": "2026-09-22T21:00:00+00:00",
+   "ends_on": "2026-09-23T00:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused",
+    "Online or Virtual Attendance",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12540390",
+   "map_url": ""
+  },
+  {
+   "id": "12534239",
+   "name": "Pasquerilla & Dragons",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Date: Every Wednesday Time: 6 p.m.-9 p.m. Location: Pasquerilla 105 CRC Lounge Every Wednesday! Calling all adventurers! Come by and join the Center for Spiritual and Ethical Development and the Collegiate Recovery Community for a casual game of Dungeons and Dragons. Join us for fun, laughs, and fantasy. The group meets weekly at 6pm in Pasquerilla 105, the CRC Lounge every Wednesday. Looking forward to seeing you there!",
+   "starts_on": "2026-09-23T22:00:00+00:00",
+   "ends_on": "2026-09-23T23:00:00+00:00",
+   "location": "105 Pasquerilla CRC Lounge",
+   "categories": [
+    "Social Activities"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12534239",
+   "map_url": ""
+  },
+  {
+   "id": "12502012",
+   "name": "HHD Leadership EDGE Program Info Session",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "The HHD Leadership EDGE Program is a semester long leadership development experience designed to help students identify their personal philosophy of leadership while learning from and collaborating with industry leaders and alumni. Each year, the program takes a trip to Harrisburg, PA to visit the State Capitol Building where students get to network with state legislators and observe leadership in action.",
+   "starts_on": "2026-09-24T23:00:00+00:00",
+   "ends_on": "2026-09-24T23:30:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Leadership Development"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12502012",
+   "map_url": ""
+  },
+  {
+   "id": "12540391",
+   "name": "World Campus Virtual Study Hall",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "World Campus Virtual Study Hall is a weekly online study space held on Tuesdays and Sundays from 5:00&ndash;8:00 PM ET via Zoom. Hosted by current World Campus Peer Guides—undergraduate work-study students who support incoming students through the Peer Guide Program—these sessions offer a welcoming environment where students can focus, stay motivated, and make progress on their coursework alongside fellow World Campus learners. Virtual Study Hall is not a tutoring session and does not provide co",
+   "starts_on": "2026-09-27T21:00:00+00:00",
+   "ends_on": "2026-09-28T00:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused",
+    "Online or Virtual Attendance",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12540391",
+   "map_url": ""
+  },
+  {
+   "id": "12502013",
+   "name": "HHD Leadership EDGE Program Info Session",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "The HHD Leadership EDGE Program is a semester long leadership development experience designed to help students identify their personal philosophy of leadership while learning from and collaborating with industry leaders and alumni. Each year, the program takes a trip to Harrisburg, PA to visit the State Capitol Building where students get to network with state legislators and observe leadership in action.",
+   "starts_on": "2026-09-28T20:30:00+00:00",
+   "ends_on": "2026-09-28T21:00:00+00:00",
+   "location": "401 Health & Human Development Building",
+   "categories": [
+    "Leadership Development"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12502013",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.796130,-77.860160"
+  },
+  {
+   "id": "12534418",
+   "name": "Ancient Prophets, Ancient Faiths The Dead Sea Scrolls: What they tells us about Judaism and Early Christianity",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Join the Center for Spiritual and Ethical Development as we welcome Professor Daniel Falk as we take an evening to learn more about what the Dead Sea Scrolls tell us about Judaism and Early Christianity. We will be meeting in 130 Pasquerilla Spiritual Center Garden Room from 6:00 - 8:00 p.m. on Monday September 28 as well as on Zoom at bit.ly/CSEDmeet. We hope you can be there for this fascinating talk as part of our Ancient Prophets, Ancient Faiths series!",
+   "starts_on": "2026-09-28T22:00:00+00:00",
+   "ends_on": "2026-09-29T00:00:00+00:00",
+   "location": "130 Pasquerilla Garden Room",
+   "categories": [
+    "Cultural Appreciation",
+    "Religious or Spiritual"
+   ],
+   "theme": "Cultural",
+   "url": "https://discover.psu.edu/event/12534418",
+   "map_url": ""
+  },
+  {
+   "id": "12517521",
+   "name": "Prime Branding Panel",
+   "organization": "Prime at University Park",
+   "description": "The 10th annual Prime Branding Panel will be held in the Business Atrium on September 28th from 6-8 PM. Students will hear from a panel of marketing and branding professionals for an hour and then engage in a networking hour following the panel. Speakers TBA closer to the event.",
+   "starts_on": "2026-09-28T22:00:00+00:00",
+   "ends_on": "2026-09-29T00:00:00+00:00",
+   "location": "Business Atrium",
+   "categories": [
+    "Academically Focused"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12517521",
+   "map_url": ""
+  },
+  {
+   "id": "12485655",
+   "name": "HHD Career/Internship Fair",
+   "organization": "Health and Human Development Office for Career Development at University Park",
+   "description": "The HHD Career Fair is open to all Penn State students. This is your chance to meet with recruiters and inquire about internship and full-time job positions. Whether you are a first-year or graduate-level student, this is a great opportunity to network and explore careers across a range of settings. 🔍Learn more about the fair and the employers attending The employer registration list is updated in real time, so check back often to view companies attending. 📝Preparing for a career fair is the fir",
+   "starts_on": "2026-09-29T15:00:00+00:00",
+   "ends_on": "2026-09-29T19:00:00+00:00",
+   "location": "129 Alumni Hall | HUB",
+   "categories": [
+    "Career Exploration"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12485655",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798490,-77.861780"
+  },
+  {
+   "id": "12456471",
+   "name": "Let's Talk",
+   "organization": "World Campus Student Affairs",
+   "description": "Let's Talk is a non-emergency drop-in service that offers students confidential and informal same-day consultations with a licensed mental health professional. Students can discuss their concerns and receive support, guidance, and resource referrals. The goal of this program is to create an accessible and informal avenue for students to connect with a licensed mental health professional who can address their immediate concerns and make it easier for them to access formal mental health services. ",
+   "starts_on": "2026-09-29T18:00:00+00:00",
+   "ends_on": "2026-09-29T19:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12456471",
+   "map_url": ""
+  },
+  {
+   "id": "12534584",
+   "name": "Career Services Weekly Workshops",
+   "organization": "Career Services at University Park",
+   "description": "Join the Career Services team every Tuesday at 3:15 p.m. &ndash; 4:00 p.m. for a series of professional development workshops, including: Prepare for the Career Fair: Learn how to prepare for career fair events, create your elevator pitch, research employers before you meet them, dress for success, network skills, and how to follow up after career fairs to optimize the connections you've made. Cover Letter and Resume Tips: A professional cover letter and resume are essential internship and job s",
+   "starts_on": "2026-09-29T19:15:00+00:00",
+   "ends_on": "2026-09-29T20:00:00+00:00",
+   "location": "103 Bank of America Career Services Building",
+   "categories": [
+    "Career Exploration",
+    "Workshops and Presentations"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12534584",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.803110,-77.860430"
+  },
+  {
+   "id": "12540392",
+   "name": "World Campus Virtual Study Hall",
+   "organization": "Chaiken Center for Student Success at Penn State World Campus",
+   "description": "World Campus Virtual Study Hall is a weekly online study space held on Tuesdays and Sundays from 5:00&ndash;8:00 PM ET via Zoom. Hosted by current World Campus Peer Guides—undergraduate work-study students who support incoming students through the Peer Guide Program—these sessions offer a welcoming environment where students can focus, stay motivated, and make progress on their coursework alongside fellow World Campus learners. Virtual Study Hall is not a tutoring session and does not provide co",
+   "starts_on": "2026-09-29T21:00:00+00:00",
+   "ends_on": "2026-09-30T00:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Academically Focused",
+    "Online or Virtual Attendance",
+    "World Campus Events"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12540392",
+   "map_url": ""
+  },
+  {
+   "id": "12503182",
+   "name": "NUTR 499 in Portugal Info Session",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "Join Dr. Rita Castro for an overview of NUTR 499: Exploring Portuguese Gastronomy and Architecture - Climate and Territory. This course takes students to Lisbon, Portugal to learn about the Atlantic Diet, sustainable food practices, and Portugal's architectural heritage through lectures, hands-on activities, and cultural excursions.",
+   "starts_on": "2026-09-30T21:00:00+00:00",
+   "ends_on": "2026-09-30T22:00:00+00:00",
+   "location": "401 Health & Human Development Building",
+   "categories": [
+    "Cultural Appreciation"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12503182",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.796130,-77.860160"
+  },
+  {
+   "id": "12534240",
+   "name": "Pasquerilla & Dragons",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Date: Every Wednesday Time: 6 p.m.-9 p.m. Location: Pasquerilla 105 CRC Lounge Every Wednesday! Calling all adventurers! Come by and join the Center for Spiritual and Ethical Development and the Collegiate Recovery Community for a casual game of Dungeons and Dragons. Join us for fun, laughs, and fantasy. The group meets weekly at 6pm in Pasquerilla 105, the CRC Lounge every Wednesday. Looking forward to seeing you there!",
+   "starts_on": "2026-09-30T22:00:00+00:00",
+   "ends_on": "2026-09-30T23:00:00+00:00",
+   "location": "105 Pasquerilla CRC Lounge",
+   "categories": [
+    "Social Activities"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12534240",
+   "map_url": ""
+  },
+  {
+   "id": "12534433",
+   "name": "Sacred Scares Folk Horror Fest: Gretel and Hansel",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Join the Center for Spiritual and Ethical Development for our October celebration of Spooky Season! We are hosting a weekly movie fest focusing on folk horror. We will be meeting in Pasquerilla 104 Harshbarger Room from 7:00 - 10:00 p.m. every Friday in October to take in a film, have a discussion around the spiritual and religious themes of the movie, learn a little about how films affect minority religious communities, and enjoy some snacks. This is a great opportunity to learn about the portr",
+   "starts_on": "2026-10-02T23:00:00+00:00",
+   "ends_on": "2026-10-03T02:00:00+00:00",
+   "location": "106 Pasquerilla Harshbarger Room",
+   "categories": [
+    "Arts and Entertainment",
+    "Religious or Spiritual",
+    "Social Activities"
+   ],
+   "theme": "Cultural",
+   "url": "https://discover.psu.edu/event/12534433",
+   "map_url": ""
+  },
+  {
+   "id": "12536321",
+   "name": "Saudi National Day Celebration 2026",
+   "organization": "Saudi Arabian Student Association at University Park",
+   "description": "Join the Saudi Students Association at Penn State as we celebrate the 96th Saudi National Day with an evening of culture, community, and tradition. The event will feature: Saudi cultural exhibits Traditional food and refreshments Music and entertainment Interactive activities and games Opportunities to connect with students, faculty, and the local community while learning more about Saudi heritage and culture. Everyone is welcome to attend and celebrate with us. We look forward to sharing this s",
+   "starts_on": "2026-10-03T13:00:00+00:00",
+   "ends_on": "2026-10-04T03:30:00+00:00",
+   "location": "Alumni Hall",
+   "categories": [],
+   "theme": "Cultural",
+   "url": "https://discover.psu.edu/event/12536321",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12456472",
+   "name": "Let's Talk",
+   "organization": "World Campus Student Affairs",
+   "description": "Let's Talk is a non-emergency drop-in service that offers students confidential and informal same-day consultations with a licensed mental health professional. Students can discuss their concerns and receive support, guidance, and resource referrals. The goal of this program is to create an accessible and informal avenue for students to connect with a licensed mental health professional who can address their immediate concerns and make it easier for them to access formal mental health services. ",
+   "starts_on": "2026-10-06T18:00:00+00:00",
+   "ends_on": "2026-10-06T19:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12456472",
+   "map_url": ""
+  },
+  {
+   "id": "12534585",
+   "name": "Career Services Weekly Workshops",
+   "organization": "Career Services at University Park",
+   "description": "Join the Career Services team every Tuesday at 3:15 p.m. &ndash; 4:00 p.m. for a series of professional development workshops, including: Prepare for the Career Fair: Learn how to prepare for career fair events, create your elevator pitch, research employers before you meet them, dress for success, network skills, and how to follow up after career fairs to optimize the connections you've made. Cover Letter and Resume Tips: A professional cover letter and resume are essential internship and job s",
+   "starts_on": "2026-10-06T19:15:00+00:00",
+   "ends_on": "2026-10-06T20:15:00+00:00",
+   "location": "103 Bank of America Career Services Building",
+   "categories": [
+    "Career Exploration",
+    "Workshops and Presentations"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12534585",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.803110,-77.860430"
+  },
+  {
+   "id": "12502014",
+   "name": "HHD Leadership EDGE Program Info Session",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "The HHD Leadership EDGE Program is a semester long leadership development experience designed to help students identify their personal philosophy of leadership while learning from and collaborating with industry leaders and alumni. Each year, the program takes a trip to Harrisburg, PA to visit the State Capitol Building where students get to network with state legislators and observe leadership in action.",
+   "starts_on": "2026-10-06T21:00:00+00:00",
+   "ends_on": "2026-10-06T21:30:00+00:00",
+   "location": "401 Health & Human Development Building",
+   "categories": [
+    "Leadership Development"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12502014",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.796130,-77.860160"
+  },
+  {
+   "id": "12530138",
+   "name": "World Campus Career Services: Interviewing 101",
+   "organization": "World Campus Student Affairs",
+   "description": "From AI screenings to final interviews—be ready for what employers expect. Join this webinar, hosted by career experts, to learn how to make a strong and lasting impression in today's hiring process. We'll guide you through what to expect before, during, and after an interview—helping you prepare effectively and present your best self with confidence. In addition to traditional and virtual interviews, we'll address the growing use of AI and recorded interview platforms, so you know how to approa",
+   "starts_on": "2026-10-06T23:00:00+00:00",
+   "ends_on": "2026-10-06T23:45:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Career Exploration",
+    "Online or Virtual Attendance"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12530138",
+   "map_url": ""
+  },
+  {
+   "id": "12534472",
+   "name": "Fall Labyrinth: Mindful Steps",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Join the Wesley Student Association, Penn State Lutherans, and the Center for Spiritual and Ethical Development for a chance to destress, meditate or pray as we walk our labyrinth. We will be on the Old Main lawn from 1:00 - 3:00 p.m. on Wednesday, October 7 so everyone can have a chance to walk the labyrinth while we enjoy our Fall season. Take a moment for Mindful Steps!",
+   "starts_on": "2026-10-07T17:00:00+00:00",
+   "ends_on": "2026-10-07T19:00:00+00:00",
+   "location": "Old Main Lawn",
+   "categories": [
+    "Religious or Spiritual"
+   ],
+   "theme": "Spirituality",
+   "url": "https://discover.psu.edu/event/12534472",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.796460,-77.862830"
+  },
+  {
+   "id": "12530276",
+   "name": "World Campus Career Services: Disclosures in the Workplace",
+   "organization": "World Campus Student Affairs",
+   "description": "Join us for an informative workshop where we explore best practices and strategies for disclosure. We will focus on disclosing personal circumstances to an employer. Deciding whether to share certain aspects of your background or personal experience at work isn't always straightforward. This session takes a practical look at workplace disclosure—what it means, when it matters, and how to approach it in a way that works for you. We'll explore common situations people face, such as deciding whethe",
+   "starts_on": "2026-10-08T23:00:00+00:00",
+   "ends_on": "2026-10-08T23:45:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Career Exploration",
+    "Online or Virtual Attendance"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12530276",
+   "map_url": ""
+  },
+  {
+   "id": "12540832",
+   "name": "Latine Heritage Month Fun Friday",
+   "organization": "Paul Robeson Cultural Center (PRCC)",
+   "description": "Join LAGRASA, Latino Caucus, BRASCA, and the PRCC in celebrating Latine Heritage Month! Stop by Heritage Hall from 12PM to 2PM for free food from La Caribbean Corner, sweat treats from Cakeshop by Tati, face painting, a photo booth, carnival mask making, music by DJ DEJI, and more!",
+   "starts_on": "2026-10-09T16:00:00+00:00",
+   "ends_on": "2026-10-09T18:00:00+00:00",
+   "location": "Heritage Hall",
+   "categories": [
+    "Arts and Entertainment",
+    "Social Activities"
+   ],
+   "theme": "Cultural",
+   "url": "https://discover.psu.edu/event/12540832",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12534434",
+   "name": "Sacred Scares Folk Horror Fest: The Feast",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Join the Center for Spiritual and Ethical Development for our October celebration of Spooky Season! We are hosting a weekly movie fest focusing on folk horror. We will be meeting in Pasquerilla 104 Harshbarger Room from 7:00 - 10:00 p.m. every Friday in October to take in a film, have a discussion around the spiritual and religious themes of the movie, learn a little about how films affect minority religious communities, and enjoy some snacks. This is a great opportunity to learn about the portr",
+   "starts_on": "2026-10-09T23:00:00+00:00",
+   "ends_on": "2026-10-10T02:00:00+00:00",
+   "location": "106 Pasquerilla Harshbarger Room",
+   "categories": [
+    "Arts and Entertainment",
+    "Religious or Spiritual",
+    "Social Activities"
+   ],
+   "theme": "Cultural",
+   "url": "https://discover.psu.edu/event/12534434",
+   "map_url": ""
+  },
+  {
+   "id": "12502032",
+   "name": "Full Team Meeting",
+   "organization": "Nittany Motorsports at University Park",
+   "description": "Join us for our monthly full team meeting and represent your subsystem!",
+   "starts_on": "2026-10-12T23:30:00+00:00",
+   "ends_on": "2026-10-13T00:30:00+00:00",
+   "location": "ECoRE 028",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12502032",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.792710,-77.871290"
+  },
+  {
+   "id": "12456473",
+   "name": "Let's Talk",
+   "organization": "World Campus Student Affairs",
+   "description": "Let's Talk is a non-emergency drop-in service that offers students confidential and informal same-day consultations with a licensed mental health professional. Students can discuss their concerns and receive support, guidance, and resource referrals. The goal of this program is to create an accessible and informal avenue for students to connect with a licensed mental health professional who can address their immediate concerns and make it easier for them to access formal mental health services. ",
+   "starts_on": "2026-10-13T18:00:00+00:00",
+   "ends_on": "2026-10-13T19:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12456473",
+   "map_url": ""
+  },
+  {
+   "id": "12534586",
+   "name": "Career Services Weekly Workshops",
+   "organization": "Career Services at University Park",
+   "description": "Join the Career Services team every Tuesday at 3:15 p.m. &ndash; 4:00 p.m. for a series of professional development workshops, including: Prepare for the Career Fair: Learn how to prepare for career fair events, create your elevator pitch, research employers before you meet them, dress for success, network skills, and how to follow up after career fairs to optimize the connections you've made. Cover Letter and Resume Tips: A professional cover letter and resume are essential internship and job s",
+   "starts_on": "2026-10-13T19:15:00+00:00",
+   "ends_on": "2026-10-13T20:00:00+00:00",
+   "location": "103 Bank of America Career Services Building",
+   "categories": [
+    "Career Exploration",
+    "Workshops and Presentations"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12534586",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.803110,-77.860430"
+  },
+  {
+   "id": "12502015",
+   "name": "HHD Leadership EDGE Program Info Session",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "The HHD Leadership EDGE Program is a semester long leadership development experience designed to help students identify their personal philosophy of leadership while learning from and collaborating with industry leaders and alumni. Each year, the program takes a trip to Harrisburg, PA to visit the State Capitol Building where students get to network with state legislators and observe leadership in action.",
+   "starts_on": "2026-10-14T19:30:00+00:00",
+   "ends_on": "2026-10-14T20:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Leadership Development"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12502015",
+   "map_url": ""
+  },
+  {
+   "id": "12503197",
+   "name": "HM 299 & 499 In Europe Info Session",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "Join Assistant Teaching Professor of hospitality management (HM), Kim Cooper, for an overview of the two HM faculty-led education abroad opportunities: HM 299 - International Hospitality Management in Greece (Spring Break) and HM 499 - Hospitality Management in Europe (Summer).",
+   "starts_on": "2026-10-14T21:00:00+00:00",
+   "ends_on": "2026-10-14T22:00:00+00:00",
+   "location": "401 Health & Human Development Building",
+   "categories": [
+    "Cultural Appreciation"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12503197",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.796130,-77.860160"
+  },
+  {
+   "id": "12530814",
+   "name": "Life Hacks: LIVE!-- Being Your Best Selfie",
+   "organization": "Counseling and Psychological Services (CAPS) at University Park",
+   "description": "Available to students across all Penn State campuses, these are lively Zoom gatherings focused on learning how to develop and enhance your connections with others. All sessions are facilitated by CAPS Clinical Services Provider, Jason Yoder, LCSW. Being Your Best Selfie: Find your fulfillment, live by your values, and personalize what self-care means to you.",
+   "starts_on": "2026-10-15T20:00:00+00:00",
+   "ends_on": "2026-10-15T21:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Health and Wellness",
+    "Online or Virtual Attendance"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12530814",
+   "map_url": ""
+  },
+  {
+   "id": "12534435",
+   "name": "Sacred Scares Folk Horror Fest: The Hallow",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Join the Center for Spiritual and Ethical Development for our October celebration of Spooky Season! We are hosting a weekly movie fest focusing on folk horror. We will be meeting in Pasquerilla 104 Harshbarger Room from 7:00 - 10:00 p.m. every Friday in October to take in a film, have a discussion around the spiritual and religious themes of the movie, learn a little about how films affect minority religious communities, and enjoy some snacks. This is a great opportunity to learn about the portr",
+   "starts_on": "2026-10-16T23:00:00+00:00",
+   "ends_on": "2026-10-17T02:00:00+00:00",
+   "location": "106 Pasquerilla Harshbarger Room",
+   "categories": [
+    "Arts and Entertainment",
+    "Religious or Spiritual",
+    "Social Activities"
+   ],
+   "theme": "Cultural",
+   "url": "https://discover.psu.edu/event/12534435",
+   "map_url": ""
+  },
+  {
+   "id": "12503252",
+   "name": "HHD Engaged Learning Showcase",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "Join the College of Health and Human Development in this poster-style session to hear from students about their experiences in key areas of engaged learning including, but not limited to: research and fellowships, education abroad and global engagement, leadership development, career and professional development, and service/civic engagement.",
+   "starts_on": "2026-10-17T14:00:00+00:00",
+   "ends_on": "2026-10-17T16:00:00+00:00",
+   "location": "Biobehavioral Health Building Patio",
+   "categories": [],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12503252",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.797110,-77.860690"
+  },
+  {
+   "id": "12497489",
+   "name": "Fall 2026 Housing Fair",
+   "organization": "Off-Campus Student Support",
+   "description": "The housing fair brings together local landlords and properties, as well as campus and community organizations, to provide students with the opportunity to explore off-campus housing options.",
+   "starts_on": "2026-10-18T14:00:00+00:00",
+   "ends_on": "2026-10-18T18:00:00+00:00",
+   "location": "Alumni Hall, HUB-Robeson Center",
+   "categories": [],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12497489",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12503263",
+   "name": "International Internships",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "Join Chris Nischalke, an education abroad and international internship adviser, as he discusses professional development experiences abroad.",
+   "starts_on": "2026-10-19T21:00:00+00:00",
+   "ends_on": "2026-10-19T22:00:00+00:00",
+   "location": "401 Health & Human Development Building",
+   "categories": [
+    "Academically Focused",
+    "Cultural Appreciation"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12503263",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.796130,-77.860160"
+  },
+  {
+   "id": "12456474",
+   "name": "Let's Talk",
+   "organization": "World Campus Student Affairs",
+   "description": "Let's Talk is a non-emergency drop-in service that offers students confidential and informal same-day consultations with a licensed mental health professional. Students can discuss their concerns and receive support, guidance, and resource referrals. The goal of this program is to create an accessible and informal avenue for students to connect with a licensed mental health professional who can address their immediate concerns and make it easier for them to access formal mental health services. ",
+   "starts_on": "2026-10-20T18:00:00+00:00",
+   "ends_on": "2026-10-20T19:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12456474",
+   "map_url": ""
+  },
+  {
+   "id": "12485493",
+   "name": "Fall 2027 New Organization Mini-Fair",
+   "organization": "Student Leadership and Involvement, a unit of Student Affairs at University Park",
+   "description": "The FALL NEW ORGANIZATION INVOLVEMENT MINI-FAIR will take place on Tuesday October 20th, 2026 from 10am-4pm in the Big TV Lounge on the 1st floor of the HUB! Stop by to meet our new student organizations that are actively recruiting new members! Find a new way to get involved & make more friends! If you have questions about this event, contact Student Leadership & Involvement at discover@psu.edu",
+   "starts_on": "2026-10-20T14:00:00+00:00",
+   "ends_on": "2026-10-20T20:00:00+00:00",
+   "location": "Big TV Lounge",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12485493",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12503267",
+   "name": "American Red Cross Info Session",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "Join HHD to learn about the American Red Cross and the importance of blood donation. Participating in a blood drive as an HHD student organization will count as a service event for HHD ROARs.",
+   "starts_on": "2026-10-20T21:00:00+00:00",
+   "ends_on": "2026-10-20T21:30:00+00:00",
+   "location": "401 Health & Human Development Building",
+   "categories": [
+    "Community Service"
+   ],
+   "theme": "CommunityService",
+   "url": "https://discover.psu.edu/event/12503267",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.796130,-77.860160"
+  },
+  {
+   "id": "12347264",
+   "name": "Military Service Organization Monthly Meeting",
+   "organization": "Military Service Organization at World Campus",
+   "description": "Join the Military Service Organization (MSO) for our monthly meeting to stay connected, hear updates, and get involved. Open to all military-affiliated students, including service members, veterans, spouses, dependents, and supporters.",
+   "starts_on": "2026-10-21T00:00:00+00:00",
+   "ends_on": "2026-10-21T01:00:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Regular Meeting",
+    "Online or Virtual Attendance"
+   ],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12347264",
+   "map_url": ""
+  },
+  {
+   "id": "12497493",
+   "name": "Fall 2026 Virtual Housing Fair",
+   "organization": "Off-Campus Student Support",
+   "description": "The virtual housing fair provides students with an online option to learn about local landlords and properties.",
+   "starts_on": "2026-10-22T17:00:00+00:00",
+   "ends_on": "2026-10-22T18:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12497493",
+   "map_url": ""
+  },
+  {
+   "id": "12502016",
+   "name": "HHD Leadership EDGE Program Info Session",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "The HHD Leadership EDGE Program is a semester long leadership development experience designed to help students identify their personal philosophy of leadership while learning from and collaborating with industry leaders and alumni. Each year, the program takes a trip to Harrisburg, PA to visit the State Capitol Building where students get to network with state legislators and observe leadership in action.",
+   "starts_on": "2026-10-22T18:00:00+00:00",
+   "ends_on": "2026-10-22T18:30:00+00:00",
+   "location": "Online",
+   "categories": [
+    "Leadership Development"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12502016",
+   "map_url": ""
+  },
+  {
+   "id": "12534436",
+   "name": "Sacred Scares Folk Horror Fest: Midsommar",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Join the Center for Spiritual and Ethical Development for our October celebration of Spooky Season! We are hosting a weekly movie fest focusing on folk horror. We will be meeting in Pasquerilla 104 Harshbarger Room from 7:00 - 10:00 p.m. every Friday in October to take in a film, have a discussion around the spiritual and religious themes of the movie, learn a little about how films affect minority religious communities, and enjoy some snacks. This is a great opportunity to learn about the portr",
+   "starts_on": "2026-10-23T23:00:00+00:00",
+   "ends_on": "2026-10-24T02:00:00+00:00",
+   "location": "106 Pasquerilla Harshbarger Room",
+   "categories": [
+    "Arts and Entertainment",
+    "Religious or Spiritual",
+    "Social Activities"
+   ],
+   "theme": "Cultural",
+   "url": "https://discover.psu.edu/event/12534436",
+   "map_url": ""
+  },
+  {
+   "id": "12502036",
+   "name": "US GP Watch Party",
+   "organization": "Nittany Motorsports at University Park",
+   "description": "Watch the US GP with Nittany Motorsports!",
+   "starts_on": "2026-10-25T20:00:00+00:00",
+   "ends_on": "2026-10-25T22:00:00+00:00",
+   "location": "Westgate Cybertorium (W201)",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12502036",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.793640,-77.868330"
+  },
+  {
+   "id": "12532023",
+   "name": "Mind Gym: Mentally Recovering from Injury",
+   "organization": "Counseling and Psychological Services (CAPS) at University Park",
+   "description": "TRAIN YOUR BRAIN with Penn State Counseling and Psychological Services. Mind Gym is a monthly performance and sport psychology workshop for athletes of all levels, performers in the arts, gym-goers, folks with an active lifestyle, and those wanting to learn critical mental performance strategies. Mentally Recovering from Injury: Learn how to take back your confidence and reclaim your talent in sport after injury.",
+   "starts_on": "2026-10-26T22:00:00+00:00",
+   "ends_on": "2026-10-26T23:00:00+00:00",
+   "location": "HUB Flex Theater",
+   "categories": [
+    "Arts and Entertainment",
+    "Athletics and Recreation",
+    "Health and Wellness"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12532023",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798210,-77.861110"
+  },
+  {
+   "id": "12529492",
+   "name": "Matters of Substance: Scary Situations",
+   "organization": "Counseling and Psychological Services (CAPS) at University Park",
+   "description": "Find CAPS clinicians at the HUB leading this year's Pop-Up Station series. Matters of Substance tables empower your health, wellbeing, and safety across common college scenarios.",
+   "starts_on": "2026-10-27T16:00:00+00:00",
+   "ends_on": "2026-10-27T18:30:00+00:00",
+   "location": "HUB Tables",
+   "categories": [
+    "Health and Wellness"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12529492",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  },
+  {
+   "id": "12456475",
+   "name": "Let's Talk",
+   "organization": "World Campus Student Affairs",
+   "description": "Let's Talk is a non-emergency drop-in service that offers students confidential and informal same-day consultations with a licensed mental health professional. Students can discuss their concerns and receive support, guidance, and resource referrals. The goal of this program is to create an accessible and informal avenue for students to connect with a licensed mental health professional who can address their immediate concerns and make it easier for them to access formal mental health services. ",
+   "starts_on": "2026-10-27T18:00:00+00:00",
+   "ends_on": "2026-10-27T19:00:00+00:00",
+   "location": "Online",
+   "categories": [],
+   "theme": "Social",
+   "url": "https://discover.psu.edu/event/12456475",
+   "map_url": ""
+  },
+  {
+   "id": "12534587",
+   "name": "Career Services Weekly Workshops",
+   "organization": "Career Services at University Park",
+   "description": "Join the Career Services team every Tuesday at 3:15 p.m. &ndash; 4:00 p.m. for a series of professional development workshops, including: Prepare for the Career Fair: Learn how to prepare for career fair events, create your elevator pitch, research employers before you meet them, dress for success, network skills, and how to follow up after career fairs to optimize the connections you've made. Cover Letter and Resume Tips: A professional cover letter and resume are essential internship and job s",
+   "starts_on": "2026-10-27T19:15:00+00:00",
+   "ends_on": "2026-10-27T20:00:00+00:00",
+   "location": "103 Bank of America Career Services Building",
+   "categories": [
+    "Career Exploration",
+    "Workshops and Presentations"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12534587",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.803110,-77.860430"
+  },
+  {
+   "id": "12503461",
+   "name": "Global Health Minor Info Session",
+   "organization": "HHD Engaged Learning at Penn State",
+   "description": "The Global Health Minor is a unique program that combines an immersive education abroad experience with rigorous skills preparation for careers in medicine, public and global health, and variety of related fields such as international development, government, social service, education, and research. Join this session to learn about the Global Health Minor, the application process, and the five-week international field experience required for the minor.",
+   "starts_on": "2026-10-27T21:00:00+00:00",
+   "ends_on": "2026-10-27T22:00:00+00:00",
+   "location": "401 Health & Human Development Building",
+   "categories": [
+    "Academically Focused",
+    "Cultural Appreciation"
+   ],
+   "theme": "ThoughtfulLearning",
+   "url": "https://discover.psu.edu/event/12503461",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.796130,-77.860160"
+  },
+  {
+   "id": "12534437",
+   "name": "Sacred Scares Folk Horror Fest: Starve Acre",
+   "organization": "Center for Spiritual and Ethical Development",
+   "description": "Join the Center for Spiritual and Ethical Development for our October celebration of Spooky Season! We are hosting a weekly movie fest focusing on folk horror. We will be meeting in Pasquerilla 104 Harshbarger Room from 7:00 - 10:00 p.m. every Friday in October to take in a film, have a discussion around the spiritual and religious themes of the movie, learn a little about how films affect minority religious communities, and enjoy some snacks. This is a great opportunity to learn about the portr",
+   "starts_on": "2026-10-30T23:00:00+00:00",
+   "ends_on": "2026-10-31T02:00:00+00:00",
+   "location": "106 Pasquerilla Harshbarger Room",
+   "categories": [
+    "Arts and Entertainment",
+    "Religious or Spiritual",
+    "Social Activities"
+   ],
+   "theme": "Cultural",
+   "url": "https://discover.psu.edu/event/12534437",
+   "map_url": ""
+  },
+  {
+   "id": "12107245",
+   "name": "Feral Botanica | Hidenori Ishii",
+   "organization": "HUB-Robeson Galleries",
+   "description": "Hidenori Ishii is a visual artist who approaches the social and environmental landscape through a fusion of art historical connections, personal narratives, and socio-political subject matter. The work takes the form of paintings, prints, and installations investigating the paradoxical dichotomy of civilization and nature through the interdependence which lies in between. It reveals a tenuous axis on which the two worlds serendipitously coexist, merging past and future onto a single plane. Hiden",
+   "starts_on": "2026-06-04T14:00:00+00:00",
+   "ends_on": "2026-10-31T22:00:00+00:00",
+   "location": "HUB Gallery",
+   "categories": [
+    "Arts and Entertainment"
+   ],
+   "theme": "Arts",
+   "url": "https://discover.psu.edu/event/12107245",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=40.798110,-77.861210"
+  }
+ ]
+}

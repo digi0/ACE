@@ -239,6 +239,7 @@ def parse_whatif_blocks(text: str) -> dict:
     result["earned_credits"] = round(
         sum(c.get("units") or 0 for c in completed_courses), 2
     )
+    merge_satisfied_requirements(result, text)
     return result
 
 
@@ -284,3 +285,106 @@ def build_audit_summary(parsed: dict) -> str:
             )
 
     return "\n".join(parts) if parts else "No audit summary extracted."
+
+# ── Satisfied requirement blocks ─────────────────────────────────────────────
+
+_REQ_LINE = re.compile(r"([A-Z]{2,6}\s?\d{1,3}[A-Z]?)(?:\s+or\s+([A-Z]{2,6}\s?\d{1,3}[A-Z]?))*")
+
+
+def parse_satisfied_requirements(text: str) -> list[dict]:
+    """Requirement blocks the audit itself marks Satisfied, with the courses named.
+
+    A what-if report does not list "CMPSC 122" as a completed course when the
+    credit arrived by transfer — the row reads "CMPSC XFR100 ... 3.00 TR" and the
+    only place the real course appears is the requirement header above it:
+
+        CMPSC 122 or CMPSC 132-C or higher required
+        Satisfied
+
+    Reading only the course rows found one completed course in an audit showing
+    66 of 120 credits used, and ACE told the student they could not take a course
+    they were already eligible for.
+    """
+    lines = [l.strip() for l in (text or "").split("\n")]
+    out: list[dict] = []
+    for i, line in enumerate(lines):
+        if "required" not in line.lower():
+            continue
+        codes = [
+            re.sub(r"\s+", " ", m.group(0)).upper()
+            for m in re.finditer(r"\b[A-Z]{2,6}\s?\d{1,3}[A-Z]?\b", line)
+        ]
+        if not codes:
+            continue
+        # The verdict sits within a couple of lines of the header.
+        window = " | ".join(lines[i + 1: i + 4]).lower()
+        if "not satisfied" in window:
+            state = "unsatisfied"
+        elif "satisfied" in window:
+            state = "satisfied"
+        else:
+            continue
+        via = "transfer" if any("TR" in l or "Transfer" in l
+                                for l in lines[i + 1: i + 8]) else ""
+        out.append({"codes": codes, "state": state, "via": via,
+                    "requirement": line[:120]})
+    return out
+
+
+def satisfied_course_codes(text: str) -> set[str]:
+    """Every course code the audit says a satisfied requirement covers."""
+    return {c for r in parse_satisfied_requirements(text)
+            if r["state"] == "satisfied" for c in r["codes"]}
+
+
+def merge_satisfied_requirements(parsed: dict, text: str) -> dict:
+    """Fold requirement blocks the audit marks Satisfied into completed_courses.
+
+    THE single place this correction lives, because every consumer — the
+    dashboard, the graduation checklist, the prereq map, the recommendation
+    engine, the GPA calculator — reads completed_courses and none of them should
+    have to know about transfer credit.
+
+    Course rows alone miss it: transferred credit appears as "CMPSC XFR100 ...
+    3.00 TR" and the real course is named only in the requirement header. One
+    audit showing 66 of 120 credits used produced a single completed course, and
+    ACE told the student they were ineligible for a course they had cleared.
+
+    Credits are deliberately NOT added — the row already carried the units, so
+    counting the requirement block again would double-count earned credit.
+    """
+    have = {_normalise(c.get("code")) for c in parsed.get("completed_courses", [])}
+    added = []
+    for code in sorted(satisfied_course_codes(text)):
+        if _normalise(code) in have:
+            continue
+        have.add(_normalise(code))
+        added.append({"code": code, "grade": None, "units": 0,
+                      "term": None, "source": "satisfied requirement"})
+    if added:
+        parsed.setdefault("completed_courses", []).extend(added)
+        parsed["satisfied_via_requirement"] = [c["code"] for c in added]
+
+    # Earned credits summed from course rows misses transferred credit for the
+    # same reason: the rows carry XFR placeholders. The audit states its own
+    # total in the overall block ("120 required, 66.49 used") — trust that over
+    # our arithmetic. The dashboard was telling a 66-credit student they had 0.75.
+    stated = _stated_credits_used(parsed)
+    if stated and stated > (parsed.get("earned_credits") or 0):
+        parsed["earned_credits"] = stated
+        parsed["earned_credits_source"] = "audit total"
+    return parsed
+
+
+def _stated_credits_used(parsed: dict) -> float:
+    used = []
+    for block in (parsed.get("overall_totals") or {}).values():
+        try:
+            used.append(float(block.get("used")))
+        except (TypeError, ValueError):
+            continue
+    return max(used) if used else 0.0
+
+
+def _normalise(code) -> str:
+    return re.sub(r"\s+", " ", (code or "").strip().upper())

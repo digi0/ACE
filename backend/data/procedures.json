@@ -1,0 +1,570 @@
+{
+ "_about": "Penn State student procedures — what to do when something goes wrong or off-schedule. Built by `python -m backend.data.procedures_scraper` from registrar.psu.edu and studentpetitions.psu.edu. LLM extraction is not bit-for-bit reproducible: diff before committing.",
+ "scraped_at": "2026-08-03T20:42:43.873479+00:00",
+ "count": 25,
+ "procedures": [
+  {
+   "id": "student-petition-types",
+   "title": "Student Petition Types",
+   "topic": "petition",
+   "what_it_is": "This page outlines the types of petitions students can submit for various academic situations, including retroactive withdrawals and course cancellations.",
+   "when_to_use": "Students would use this procedure when they need to petition for actions such as retroactive withdrawals, late drops, or administrative course cancellations after the standard deadlines have passed.",
+   "steps": [
+    "Determine the type of petition needed based on the situation.",
+    "Prepare the required documentation for the petition type.",
+    "Complete the Student Request Letter using the Student Letter Template.",
+    "Submit the petition along with the required documentation."
+   ],
+   "timing": "10 BUSINESS DAYS prior to the first day of classes for the upcoming term for expedited reviews.",
+   "forms": [
+    "Withdrawal Form",
+    "Registration-Drop/Add Form",
+    "Administrative Course Cancellation Form(s)"
+   ],
+   "who_to_contact": "Office of Student Care and Advocacy, 222 Boucke Building, 814-863-2020",
+   "consequences": "Petitions may affect transcript records and aid eligibility.",
+   "policy_refs": [
+    "Policy 56-30",
+    "Policy 34-89",
+    "Policy 34-87",
+    "Policy 34-20",
+    "Policy 48-30",
+    "Administrative Policy C-2"
+   ],
+   "source_url": "https://studentpetitions.psu.edu/student-petition-types",
+   "source_title": "Student Petition Types"
+  },
+  {
+   "id": "student-petition-process",
+   "title": "Student Petition Process",
+   "topic": "petition",
+   "what_it_is": "The Student Petition Process allows students to request exceptions to university policies or procedures. It involves submitting a petition through the appropriate college or campus office.",
+   "when_to_use": "A student would use this process when they need to request an exception to university policies due to extenuating circumstances.",
+   "steps": [
+    "Speak with an adviser at the college/campus advising center to initiate the petition process.",
+    "Prepare a student request letter using the Student Petition Letter Form.",
+    "Gather and provide documentation of extenuating circumstances that justify the petition.",
+    "Submit the petition and supporting documents through the appropriate college/campus office.",
+    "Make a copy of all documents included in the petition before submission."
+   ],
+   "timing": "There is no time limit for submitting a student petition.",
+   "forms": [
+    "Student Petition Letter Form"
+   ],
+   "who_to_contact": "Office of Student Care and Advocacy, 222 Boucke Building, 814-863-2020",
+   "consequences": "Once submitted, the petition and supporting documents become a part of a student’s educational record.",
+   "policy_refs": [],
+   "source_url": "https://studentpetitions.psu.edu/student-petition-process",
+   "source_title": "Student Petition Process"
+  },
+  {
+   "id": "petition-checklists",
+   "title": "Petition Checklists",
+   "topic": "petition",
+   "what_it_is": "The petition checklists provide guidance on various types of petitions that students can submit.",
+   "when_to_use": "A student would use this when they need to submit a petition for academic reasons.",
+   "steps": [
+    "Select the appropriate petition checklist from the list provided.",
+    "Download the checklist in Word format or print it to PDF."
+   ],
+   "timing": "",
+   "forms": [],
+   "who_to_contact": "",
+   "consequences": "",
+   "policy_refs": [],
+   "source_url": "https://studentpetitions.psu.edu/petition-checklists",
+   "source_title": "Petition Checklists"
+  },
+  {
+   "id": "frequently-asked-questions-about-student-petitions",
+   "title": "Frequently Asked Questions About Student Petitions",
+   "topic": "petition",
+   "what_it_is": "This procedure outlines how students can submit petitions regarding academic matters. It includes guidelines on documentation and the review process.",
+   "when_to_use": "Students would use this procedure when they need to request a change or exception related to their academic record or circumstances.",
+   "steps": [
+    "Determine the appropriate academic unit to submit the petition based on current enrollment status.",
+    "Gather necessary documentation to support the petition, including letters from instructors or other relevant parties.",
+    "Contact course instructors if needed to obtain supporting documentation.",
+    "Prepare the petition and include all required documentation.",
+    "Submit the petition through the authorized petition submitter at the college/campus.",
+    "Wait for a decision on the petition, which typically takes up to three weeks."
+   ],
+   "timing": "Decisions on petitions are expected within three weeks from the time the petition is received at the Senate Office.",
+   "forms": [
+    "eForm for petition documentation"
+   ],
+   "who_to_contact": "Authorized petition submitter at the college/campus",
+   "consequences": "The outcome of the petition may affect the student's academic record, including grades and enrollment status.",
+   "policy_refs": [],
+   "source_url": "https://studentpetitions.psu.edu/frequently-asked-questions",
+   "source_title": "Frequently Asked Questions About Student Petitions"
+  },
+  {
+   "id": "examples-of-appropriate-and-inappropriate-requests",
+   "title": "Examples of Appropriate and Inappropriate Requests",
+   "topic": "petition",
+   "what_it_is": "This procedure outlines scenarios where students may submit petitions for withdrawal or late drops based on specific circumstances.",
+   "when_to_use": "A student would be in a situation where they need to request a retroactive withdrawal or a selective late drop due to extenuating circumstances.",
+   "steps": [
+    "Determine if your situation qualifies for a petition based on the outlined scenarios.",
+    "Gather necessary documentation to support your petition, such as hospital records or letters from physicians.",
+    "Submit your petition along with the required documentation."
+   ],
+   "timing": "",
+   "forms": [],
+   "who_to_contact": "",
+   "consequences": "",
+   "policy_refs": [],
+   "source_url": "https://studentpetitions.psu.edu/examples-of-appropriate-and-inappropriate-requests",
+   "source_title": "Examples of Appropriate and Inappropriate Requests"
+  },
+  {
+   "id": "withdrawal",
+   "title": "Withdrawal",
+   "topic": "withdrawal",
+   "what_it_is": "Withdrawal allows students to leave the University and terminate enrollment in credit courses for current and future semesters, resulting in a 'W' symbol recorded as the course grade(s) on the transcript.",
+   "when_to_use": "A student would use this procedure if they are unable to complete the semester and wish to withdraw from the University.",
+   "steps": [
+    "Complete a Withdrawal Form."
+   ],
+   "timing": "Withdrawals are effective the date the form is received by the Registrar's office.",
+   "forms": [
+    "Withdrawal Form",
+    "Undergraduate Nondegree Enrollment Form"
+   ],
+   "who_to_contact": "Contact your academic adviser or the appropriate office for your category if you have questions about the impact of withdrawal.",
+   "consequences": "Withdrawal will delay normal degree progress, may have financial implications, and results in a 'W' symbol recorded as the course grade(s) on your transcript.",
+   "policy_refs": [
+    "48-20",
+    "56-30"
+   ],
+   "source_url": "https://www.registrar.psu.edu/enrollment/leaving/withdrawal.cfm",
+   "source_title": "Withdrawal"
+  },
+  {
+   "id": "leave-of-absence",
+   "title": "Leave of Absence",
+   "topic": "leave_of_absence",
+   "what_it_is": "The purpose of a leave of absence is to allow students to interrupt continuous enrollment (usually for not more than one year) without having to apply for re-enrollment and without changing conditions of their academic program.",
+   "when_to_use": "A student would use this procedure if they need to take a break from their studies for a specified period without re-enrolling.",
+   "steps": [
+    "Submit a Leave of Absence Form."
+   ],
+   "timing": "The deadline for filing a Leave of Absence Form is the last working day prior to the first day of classes for the semester the leave will begin. A leave of absence is not required for summer session.",
+   "forms": [
+    "Leave of Absence Form"
+   ],
+   "who_to_contact": "Office of the University Registrar",
+   "consequences": "You may not enroll in any Penn State courses. Students receiving federal financial aid loans are considered to be in an 'out of school status' and may use their loan repayment grace period and could possibly enter loan repayment.",
+   "policy_refs": [
+    "policy 56-70",
+    "GSAD-906"
+   ],
+   "source_url": "https://www.registrar.psu.edu/enrollment/leaving/leave-absence.cfm",
+   "source_title": "Leave of Absence"
+  },
+  {
+   "id": "how-to-cancel-your-registration",
+   "title": "How to Cancel Your Registration",
+   "topic": "withdrawal",
+   "what_it_is": "This procedure outlines how students can cancel their registration before the first day of classes.",
+   "when_to_use": "A student would use this procedure if they wish to cancel their registration before classes begin.",
+   "steps": [
+    "In the LionPATH Student Center, click the 'Enroll' link under Academics.",
+    "Choose the 'Drop' subtab to drop all your courses."
+   ],
+   "timing": "Before the first day of classes.",
+   "forms": [],
+   "who_to_contact": "",
+   "consequences": "You will receive a complete tuition refund. Students will be required to re-enroll if registration is canceled for either fall or spring semesters.",
+   "policy_refs": [],
+   "source_url": "https://www.registrar.psu.edu/enrollment/leaving/cancel-registration.cfm",
+   "source_title": "How to Cancel Your Registration"
+  },
+  {
+   "id": "military-leave-of-absence-military-withdrawal-and-military-d",
+   "title": "Military Leave of Absence, Military Withdrawal and Military Drop",
+   "topic": "leave_of_absence",
+   "what_it_is": "Military Leave of Absence (MLOA) status is available for students who have yet to begin classes when their military service obligation becomes known. Students who have begun classes can fully withdraw or continue with a reduced course load due to military obligations.",
+   "when_to_use": "A student would use this procedure if they are a U.S. Armed Forces active-duty service member or activated reserve-component service member, or a dependent spouse or partner, and are unable to meet class attendance due to military obligations.",
+   "steps": [
+    "Submit a Military Leave of Absence Form and upload a copy of military orders to initiate a Military Leave of Absence.",
+    "Submit a Military Withdrawal Form and upload a copy of military orders to initiate a Military Withdrawal.",
+    "If unable to present military orders prior to leaving campus, send a signed written request for a military withdrawal along with a copy of military orders to the University Registrar's Office by mail or fax.",
+    "Submit a Military Drop Form and upload a copy of military orders to initiate a Military Drop."
+   ],
+   "timing": "",
+   "forms": [
+    "Military Leave of Absence Form",
+    "Military Withdrawal Form",
+    "Military Drop Form"
+   ],
+   "who_to_contact": "University Registrar's Office",
+   "consequences": "A notation will be placed in the Special Actions and Notes section of the student's transcript indicating a 'military' withdrawal or 'military' leave of absence. For a Military Drop, an MD grade will be assigned to the course(s).",
+   "policy_refs": [
+    "Policy J-2"
+   ],
+   "source_url": "https://www.registrar.psu.edu/enrollment/leaving/military-leave-absence-withdrawal-drop.cfm",
+   "source_title": "Military Leave of Absence, Military Withdrawal and Military Drop"
+  },
+  {
+   "id": "re-enrollment",
+   "title": "Re-enrollment",
+   "topic": "re_enrollment",
+   "what_it_is": "Re-enrollment allows a former degree candidate to resume a degree program.",
+   "when_to_use": "Re-enrollment is appropriate if you withdrew from the University, interrupted continuous degree enrollment during fall/spring semester, were dismissed or suspended for nonacademic reasons, invalidated a leave of absence, plan to return for a second associate or baccalaureate degree, plan to return for graduation, or voluntarily changed your enrollment status to nondegree.",
+   "steps": [
+    "Complete the appropriate Undergraduate Re-enrollment Form.",
+    "If you are planning to graduate during the current semester, contact your college dean's office at least one month before the end of classes."
+   ],
+   "timing": "The student should submit the completed application as early as possible, and no later than two weeks prior to the start of classes in which the student wants to enroll.",
+   "forms": [
+    "Undergraduate Re-enrollment Form",
+    "Returning Adult Learner Form"
+   ],
+   "who_to_contact": "college dean's office",
+   "consequences": "Every re-enrollment request will be reviewed and a decision letter will be sent to the student.",
+   "policy_refs": [
+    "58-00"
+   ],
+   "source_url": "https://www.registrar.psu.edu/enrollment/returning/reenrollment",
+   "source_title": "Re-enrollment"
+  },
+  {
+   "id": "academic-renewal",
+   "title": "Academic Renewal",
+   "topic": "re_enrollment",
+   "what_it_is": "Academic renewal provides an opportunity for former students to resume their academic career without being penalized by their past academic record.",
+   "when_to_use": "A student would be in a situation where they have not enrolled in any Penn State credit course for a minimum period of four years and had a previous cumulative grade-point average of less than a 2.00.",
+   "steps": [
+    "Complete the Academic Renewal Form.",
+    "Return the form to the campus Registrar at the campus you plan to enroll."
+   ],
+   "timing": "",
+   "forms": [
+    "Academic Renewal Form"
+   ],
+   "who_to_contact": "campus Registrar",
+   "consequences": "Cumulative grade-point average starts over; prior academic record will remain unchanged on the transcript; a notation of academic renewal will be included on the transcript; total credits completed will be recalculated based on prior courses with a grade of 'C' or higher.",
+   "policy_refs": [
+    "54-90"
+   ],
+   "source_url": "https://www.registrar.psu.edu/student-forms/academic-renewal.cfm",
+   "source_title": "Academic Renewal"
+  },
+  {
+   "id": "late-course-drop",
+   "title": "Late Course Drop",
+   "topic": "late_drop",
+   "what_it_is": "Late dropping a course allows a student to drop a course after the regular drop period and before the late drop deadline, with certain restrictions and requirements.",
+   "when_to_use": "A student would use this procedure if they need to drop a course after the regular drop period has ended.",
+   "steps": [
+    "In the LionPATH Student Center, click the 'Enroll' link under Academics, and then choose the 'Drop' subtab to a course.",
+    "Read Instructions on How to Drop Courses in LionPATH.",
+    "In person using a Registration Drop/Add Form, submit the form to the department offering the course, the advising center, or the Registrar's office."
+   ],
+   "timing": "",
+   "forms": [
+    "Registration Drop/Add Form"
+   ],
+   "who_to_contact": "",
+   "consequences": "Courses are recorded on the student record.",
+   "policy_refs": [
+    "34-89"
+   ],
+   "source_url": "https://www.registrar.psu.edu/registration/adding-dropping-auditing-courses.cfm",
+   "source_title": "Adding, Dropping, and Auditing Courses"
+  },
+  {
+   "id": "late-registration",
+   "title": "Late Registration",
+   "topic": "registration",
+   "what_it_is": "Late registration refers to all registrations processed after the add period, which require specific conditions to be met.",
+   "when_to_use": "A student would be in a situation where they need to register for courses after the official add period has ended.",
+   "steps": [
+    "Obtain the Class Number from the Schedule of Courses.",
+    "For courses at University Park, contact the department offering the course.",
+    "For courses at non-University Park locations, contact the appropriate campus registrar's office."
+   ],
+   "timing": "All drop/add rules and dates apply for the remainder of the semester.",
+   "forms": [],
+   "who_to_contact": "the department offering the course or the appropriate campus registrar's office",
+   "consequences": "A late registration fee of $250 will be charged. A semester bill must be filed with the Bursar's office. Students may be asked to pay before courses are scheduled.",
+   "policy_refs": [],
+   "source_url": "https://www.registrar.psu.edu/registration/late-registration.cfm",
+   "source_title": "Late Registration"
+  },
+  {
+   "id": "registration-timetable",
+   "title": "Registration Timetable",
+   "topic": "registration",
+   "what_it_is": "The Registration Timetable provides a schedule of when students can begin registering for classes for a specific semester. The timetable provides a chart with the minimum credits and the corresponding first date to register for each student level.",
+   "when_to_use": "A student would use this procedure to determine when they can register for classes based on their earned credits and current enrollment.",
+   "steps": [
+    "Determine total credits earned and the number of credits currently enrolled.",
+    "Add these numbers to find the 'minimum credits to register'.",
+    "Refer to the Registration Timetable to find the corresponding first date to register."
+   ],
+   "timing": "The Registration Timetable is subject to change without notice.",
+   "forms": [],
+   "who_to_contact": "",
+   "consequences": "",
+   "policy_refs": [],
+   "source_url": "https://www.registrar.psu.edu/registration/registration-timetable.cfm",
+   "source_title": "Registration Timetable"
+  },
+  {
+   "id": "enforced-prerequisites",
+   "title": "Enforced Prerequisites",
+   "topic": "registration",
+   "what_it_is": "Prerequisite requirements are enforced during the prior semester of enrollment at the time of course registration. Students will be conditionally enrolled in a course with prerequisites if they currently are enrolled in the necessary prerequisite courses.",
+   "when_to_use": "This procedure applies when a student is registering for a course that has prerequisite requirements.",
+   "steps": [
+    "Register for courses with prerequisites.",
+    "Check the Post Enrollment Requirement Checking (PERC) roster generated on the Wednesday before the first day of classes.",
+    "If conditionally enrolled, ensure that prerequisite requirements are satisfied by the Friday before the first day of classes.",
+    "If necessary, log in to LionPATH to process a prerequisite override if applicable."
+   ],
+   "timing": "Between the Wednesday and Friday before the first day of classes, departments review the PERC rosters.",
+   "forms": [],
+   "who_to_contact": "",
+   "consequences": "Students who do not satisfy the prerequisite or co-requisite requirements by the Friday before the first day of classes will be dropped from the course.",
+   "policy_refs": [
+    "C-5"
+   ],
+   "source_url": "https://www.registrar.psu.edu/registration/enforced-prerequisites.cfm",
+   "source_title": "Enforced Prerequisites"
+  },
+  {
+   "id": "multiple-campus-registration",
+   "title": "Multiple Campus Registration",
+   "topic": "registration",
+   "what_it_is": "Multiple-campus registration is a procedure for students who want to enroll in courses at their assigned home campus and at another Penn State campus (or campuses) in the same semester or session.",
+   "when_to_use": "A student would use this procedure if they want to take courses at both their home campus and another Penn State campus in the same semester.",
+   "steps": [
+    "Register for courses offered by your home campus.",
+    "In LionPATH, search for classes and identify a course or courses at the other campus you would like to attend.",
+    "Submit the Multi-Campus Registration Add Form or Multi-Campus Registration Form, depending on the campus."
+   ],
+   "timing": "Most campuses will begin to accept these requests one week prior to the start of the semester.",
+   "forms": [
+    "Multi-Campus Registration Add Form",
+    "Multi-Campus Registration Form"
+   ],
+   "who_to_contact": "For general questions, contact the registrar's office of the respective campus.",
+   "consequences": "",
+   "policy_refs": [
+    "C-2"
+   ],
+   "source_url": "https://www.registrar.psu.edu/registration/multiple-campus-registration.cfm",
+   "source_title": "Multiple Campus Registration"
+  },
+  {
+   "id": "grade-forgiveness",
+   "title": "Grade Forgiveness",
+   "topic": "grades",
+   "what_it_is": "Penn State is implementing a new grade forgiveness option for undergraduate students. If a student earns a D or F grade in a course but then repeats the course and earns a better grade, the original grade can be forgiven.",
+   "when_to_use": "A student would be in a situation where they have repeated a course after earning a D or F grade and have received a better grade.",
+   "steps": [
+    "Access the Grade Forgiveness Request form online in LionPATH by choosing 'Grade Forgiveness' under 'Academic Records'.",
+    "Ensure that the form is only available after a course has been repeated and a grade posted, where the original grade was a D or F.",
+    "Consult with your academic adviser before submitting the Grade Forgiveness Request form.",
+    "If you no longer have an active Penn State account, unlock and reactivate your account by visiting the Account Management website and selecting 'Recover My Account'."
+   ],
+   "timing": "",
+   "forms": [
+    "Grade Forgiveness Request form"
+   ],
+   "who_to_contact": "Consult with your academic adviser.",
+   "consequences": "The original course will still appear on the student's official transcript, but will not earn credit or count towards the student's term or cumulative GPA.",
+   "policy_refs": [
+    "H-2 Undergraduate Grade Forgiveness procedure"
+   ],
+   "source_url": "https://www.registrar.psu.edu/grades/grade-forgiveness.cfm",
+   "source_title": "Grade Forgiveness"
+  },
+  {
+   "id": "deferred-grades",
+   "title": "Deferred Grades",
+   "topic": "grades",
+   "what_it_is": "If a student is prevented from completing a course within the prescribed amount of time, it is possible to have the grade for that course deferred and be completed at a later date.",
+   "when_to_use": "A student would use this procedure if they are unable to complete a course on time and need to request a deferred grade.",
+   "steps": [
+    "Request non-emergency permission for filing for a deferred grade prior to the beginning of the final exam period of the semester in which the course is taken.",
+    "Obtain approval for a deferred grade from the instructor of the course.",
+    "If the instructor is unavailable due to emergency conditions, obtain authorization from the academic unit which offered the course."
+   ],
+   "timing": "Deadlines apply to spring, summer and fall semesters.",
+   "forms": [],
+   "who_to_contact": "",
+   "consequences": "A 'DF' symbol will be entered on the student's transcript in place of a quality grade. Courses with a deferred grade will not be included in the grade-point average calculations.",
+   "policy_refs": [
+    "48-40",
+    "GCAC-401"
+   ],
+   "source_url": "https://www.registrar.psu.edu/grades/deferred-grades.cfm",
+   "source_title": "Deferred Grades"
+  },
+  {
+   "id": "satisfactory-and-unsatisfactory-grades",
+   "title": "Satisfactory and Unsatisfactory Grades",
+   "topic": "grades",
+   "what_it_is": "Students who do not want to receive a letter grade for a credit course may choose the satisfactory/unsatisfactory 'SA/UN' grading system subject to the regulations of the University and the students' degree programs.",
+   "when_to_use": "This option is for students who prefer not to receive a letter grade for a course and want to use the satisfactory/unsatisfactory grading system.",
+   "steps": [
+    "Consult with your adviser prior to processing.",
+    "Complete a Registration Drop/Add Form and indicate 'SA/UN' beside the course you wish to take as satisfactory/unsatisfactory.",
+    "Submit the completed form to the Registrar's office."
+   ],
+   "timing": "Must be processed between the eleventh and twenty-first calendar days of the semester or during the same percentage of time during the summer sessions.",
+   "forms": [
+    "Registration Drop/Add Form"
+   ],
+   "who_to_contact": "Registrar's office",
+   "consequences": "Satisfactory/unsatisfactory courses are not used in computing grade-point average. Courses taken through the satisfactory/unsatisfactory grading option are considered part of a student's credit load when qualifying for financial aid.",
+   "policy_refs": [
+    "49-60"
+   ],
+   "source_url": "https://www.registrar.psu.edu/grades/satisfactory-unsatisfactory-grades.cfm",
+   "source_title": "Satisfactory and Unsatisfactory Grades"
+  },
+  {
+   "id": "credit-by-examination",
+   "title": "Credit by Examination",
+   "topic": "grades",
+   "what_it_is": "A student may request a challenge examination as a substitute for completing the usual requirements of a course. If the examination is successfully completed the credits received are described as 'credits by examination'.",
+   "when_to_use": "A student would be in a situation where they want to earn credit for a course without completing the usual requirements, and they have not previously completed the course with a quality letter grade.",
+   "steps": [
+    "Access the Credit by Examination (Prior Learning) request in LionPATH under Transfer Credit."
+   ],
+   "timing": "",
+   "forms": [],
+   "who_to_contact": "",
+   "consequences": "Grades of 'C' or above must be attained to receive credit for the course. No notation is made if a grade of 'D' or 'F' is earned.",
+   "policy_refs": [
+    "42-50"
+   ],
+   "source_url": "https://www.registrar.psu.edu/grades/credit-examination.cfm",
+   "source_title": "Credit by Examination"
+  },
+  {
+   "id": "change-of-major",
+   "title": "Change of Major",
+   "topic": "change_program",
+   "what_it_is": "This procedure allows a student to change from one college to another, or from one major to another, or from the Division of Undergraduate Studies to a college.",
+   "when_to_use": "A student would use this procedure when they desire to change their major or college.",
+   "steps": [
+    "Investigate the new major using resources such as Academic Advising Centers, Division of Undergraduate Studies, or Career Services.",
+    "In the LionPATH Student Center, submit a Change of Major request using 'Update Academics.'",
+    "Select 'Degree Planning and Progress' from the Student Home Base and then select 'Update Academics' from the left-side navigation menu.",
+    "Read Instructions on Using Update Academics (Changes to Majors, Minors, Certificates) in LionPATH.",
+    "In person, request the Change of Major Form and submit it to the current college dean for review."
+   ],
+   "timing": "",
+   "forms": [
+    "Change of Major Form"
+   ],
+   "who_to_contact": "current college dean",
+   "consequences": "As soon as a change of major has the new college dean's approval, the administrative and advising responsibility for the student is transferred to the new college/major.",
+   "policy_refs": [
+    "37-30"
+   ],
+   "source_url": "https://www.registrar.psu.edu/degree-planning/change-major.cfm",
+   "source_title": "Change of Major"
+  },
+  {
+   "id": "change-of-campus",
+   "title": "Change of Campus",
+   "topic": "change_program",
+   "what_it_is": "This procedure allows undergraduate degree-seeking students to request a change of campus within the Penn State system. It can be for academic or personal reasons.",
+   "when_to_use": "A student would use this procedure if they need to change campuses to maintain academic progress or for personal reasons.",
+   "steps": [
+    "Contact Admissions if requesting a change of campus during the first semester.",
+    "If at University Park, contact your academic college or the Division of Undergraduate Studies to initiate an early campus change or request to remain at University Park.",
+    "If at a campus other than University Park, contact the campus representative at your current campus to initiate an early campus change or request to remain.",
+    "For a temporary change of campus, submit a Temporary Change of Campus request in the LionPATH Student Center using 'Update Campus.'",
+    "If requesting a temporary change for academic reasons, enter the course(s) you plan to take at the requested campus that are not available at your current campus."
+   ],
+   "timing": "",
+   "forms": [],
+   "who_to_contact": "Admissions, academic college, Division of Undergraduate Studies, or campus representative",
+   "consequences": "The student's location will automatically change back to their current campus at the end of one semester for temporary changes.",
+   "policy_refs": [
+    "D1",
+    "D2",
+    "D5"
+   ],
+   "source_url": "https://www.registrar.psu.edu/degree-planning/change-campus",
+   "source_title": "Change of Campus"
+  },
+  {
+   "id": "notifying-the-university-of-your-intent-to-graduate",
+   "title": "Notifying the University of Your Intent to Graduate",
+   "topic": "graduation",
+   "what_it_is": "This procedure outlines the steps a student must take to notify the University of their intent to graduate.",
+   "when_to_use": "A student would use this procedure when they are ready to graduate and need to inform the University of their intent.",
+   "steps": [
+    "Confirm the activation period on the Academic Calendar for the dates when you can activate your intent to graduate.",
+    "Using the 'Apply for Graduation' link within the My Academics page in the LionPATH Student Center, set your intent to graduate.",
+    "If the activation period expires, contact the appropriate college office or Graduate Enrollment Services to activate or remove your intent to graduate."
+   ],
+   "timing": "For fall and spring ceremonies, the data is sent during the tenth week of the semester. For the summer ceremony, the data is sent during the fifth week.",
+   "forms": [],
+   "who_to_contact": "the appropriate college office or Graduate Enrollment Services",
+   "consequences": "If your intent to graduate is activated after the student information has been sent to the publisher, your name will not appear in the program.",
+   "policy_refs": [
+    "86-00"
+   ],
+   "source_url": "https://www.registrar.psu.edu/graduation/intent.cfm",
+   "source_title": "Notifying the University of Your Intent to Graduate"
+  },
+  {
+   "id": "transcripts",
+   "title": "Transcripts",
+   "topic": "transcripts",
+   "what_it_is": "An official transcript from Penn State represents the complete academic record of a student's enrollment at the University.",
+   "when_to_use": "Students may need to order official transcripts for various purposes, including academic advising or other official needs.",
+   "steps": [
+    "Order an official paper or electronic transcript from Penn State.",
+    "Request an end-of-semester transcript to be held until the completion of final grade reporting or final graduation processing."
+   ],
+   "timing": "",
+   "forms": [],
+   "who_to_contact": "Office of the University Registrar",
+   "consequences": "",
+   "policy_refs": [],
+   "source_url": "https://www.registrar.psu.edu/transcripts",
+   "source_title": "Transcripts"
+  },
+  {
+   "id": "academic-progress",
+   "title": "Academic Progress",
+   "topic": "grades",
+   "what_it_is": "This procedure outlines the academic progress statuses used to notify students who fail to meet and maintain a 2.00 grade-point average. It includes information on academic warning, suspension, and dismissal.",
+   "when_to_use": "A student would use this procedure if they are not maintaining a 2.00 GPA and are facing academic warning, suspension, or dismissal.",
+   "steps": [
+    "Monitor your cumulative GPA at the end of each semester.",
+    "If your cumulative GPA is below 2.00, you will be placed on academic warning.",
+    "Meet with an academic adviser to remove the registration hold placed due to academic warning.",
+    "Maintain a semester GPA of 2.00 or higher to return to good standing.",
+    "If you fail to maintain a semester GPA of 2.00 while on academic warning, you will be academically suspended.",
+    "If suspended, you may not enroll for two consecutive semesters.",
+    "If you have 15 or fewer recovery points, you may petition the Faculty Senate for a reduction in or stay of the suspension.",
+    "To return after suspension, apply for re-enrollment and follow the college's requirements."
+   ],
+   "timing": "",
+   "forms": [],
+   "who_to_contact": "academic adviser",
+   "consequences": "Academic warning results in a hold on registration. Academic suspension prevents enrollment for two semesters. Academic dismissal prohibits taking courses at the University.",
+   "policy_refs": [
+    "54-20",
+    "54-40",
+    "54-50",
+    "54-90",
+    "58-00"
+   ],
+   "source_url": "https://www.registrar.psu.edu/academic-progress",
+   "source_title": "Academic Progress"
+  }
+ ]
+}

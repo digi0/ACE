@@ -48,6 +48,11 @@ python -c "from backend.services.index_service import build_index; build_index()
 python -m backend.test_policies   # policies.json schema + snippet relay
 python -m backend.test_routing    # major classification, scope filter, record selection
 python -m backend.test_rules      # dumps extracted requirement rules
+python -m backend.test_transcript # persistence, rating scope, weekly review, eval harvest
+
+# Answer quality (costs a few cents — calls the chat model + judge)
+python -m backend.eval.run             # full run
+python -m backend.eval.run --no-judge  # hard assertions only, free of judge cost
 ```
 
 ### Frontend
@@ -98,10 +103,19 @@ CMPSC-handbook-*.pdf  +  PSU bulletins (scraped)     RAG path — CMPSC/DTSCE on
                         │
                embedding_service.py (semantic_search with cosine sim + keyword + course-code boosts)
                         │
-               chat_service.py ──► OpenAI gpt-4o-mini (streaming SSE)
+               chat_service.py ──► llm.py ──► gpt-4o-mini (streaming SSE)
                         │
                main.py (FastAPI) ──► React frontend
 ```
+
+### Provider seam (`backend/services/llm.py`)
+
+Every request-path model call goes through `llm.py` — `chat()`, `chat_stream()`,
+`embed()`. Nothing else imports an OpenAI SDK (the one exception is
+`backend/data/policy_extractor.py`, an offline build script that needs the raw
+usage object back). Token metering lives inside the seam, so no caller can forget
+to meter a call. Moving off OpenAI means rewriting this one file. Don't
+reintroduce a direct `from openai import OpenAI` in a service or endpoint.
 
 ### Knowledge base (two grounding paths)
 
@@ -129,6 +143,66 @@ CMPSC-handbook-*.pdf  +  PSU bulletins (scraped)     RAG path — CMPSC/DTSCE on
 - Controls which source types are prioritised by `select_top_records()`
 - Determines whether hardcoded snippets are injected (deadline dates, gen-ed tables, campus resources, degree-audit advisory)
 - Triggers the deterministic path for `student_progress` when a student doc is uploaded (bypasses LLM)
+
+### Feedback loop ("model training")
+
+There is no fine-tuning. The improvement loop is: persist real exchanges → find
+the bad ones → turn them into eval items → fix → re-run.
+
+- `transcript_service.py` writes every exchange to `conversations` / `messages`
+  (best-effort — a DB failure must never break a student's answer) and returns the
+  assistant `message_id` so the client can rate it. `POST /messages/{id}/rating`
+  takes the thumbs (scoped to the caller's own conversations).
+- `GET /admin/review?days=7` is the weekly read: counts by intent, down-rated
+  questions, and ungrounded answers (no sources — the closest proxy for a dead end).
+- `python -m backend.eval.run` scores the pipeline two ways: hard substring
+  assertions (a failure exits non-zero, CI-usable) and a gpt-4o-mini judge against
+  each item's `expected_points`. **Baseline 2026-08-03: 20/20 hard, judge mean ~0.94.**
+  Re-run it after touching prompts, snippets, retrieval, or `program_service`.
+- **Trust the hard assertions over the judge.** The judge drifts 0.1–0.3 between
+  runs on identical answers, and has been observed *confidently wrong* — it scored
+  `cs-gened-doubledip` 0.50 three runs running for "does not specify any course
+  codes" against an answer listing four, with categories. Before changing code to
+  chase a low score, read the answer. Where a fact is deterministic, add a
+  `must_contain` instead of paying an LLM to re-check it.
+- `python -m backend.eval.from_transcripts --days 7 --write` harvests down-rated and
+  ungrounded real questions into new eval items. Expected points are drafted from
+  the *question only* — never from the answer ACE gave, which would bake the failure
+  in as the expectation. Drafted items carry `"_drafted": true`; read them before
+  trusting a score.
+
+Rebuilding `ace_index.pkl` re-scrapes the PSU bulletins; diff the record content
+against the old pickle before committing (2026-08-02 rebuild: byte-identical).
+
+### Question brackets (intent → grounding)
+
+`detect_question_intent()` decides which grounding a student gets, so a misroute
+is a wrong answer delivered confidently. It is keyword-based, and the recurring
+failure is **short tokens matching inside ordinary words** — `"gn "` in "sign up",
+`"org"` in "organic", `"rec"` in "record", `"ap"` in "apply". Every short token
+now goes through a `\b...\b` regex; keep it that way when adding keywords.
+`backend/test_routing.py` holds the case table — every entry in it was an
+observed misroute before it was a test. Add to it when you add a keyword.
+
+Beyond the original brackets, three carry their own grounding block:
+
+- **`logistics`** (`LOGISTICS_SNIPPET`) — how enrollment/registration actually
+  work: appointments, holds, waitlists, orientation. The calendar covers *when*
+  things happen and has zero entries for *how*, so this is its own source. It
+  describes the shape of each process and names the office that owns it, and
+  forbids inventing click paths.
+- **`recommendation`** (`build_recommendation_context` + `_build_recommendation_snippet`)
+  — ACE proposing rather than reciting. Locates the student in their program's
+  suggested plan, drops what the audit says is done, flags what they are not
+  eligible for. Two invariants: prerequisite **alternatives** (MATH 110 *or* 140)
+  must not read as conjunctions, and one plan entry naming several courses is one
+  **slot with alternatives**, not several courses to take.
+- **`career`** (`CAREER_RESOURCES_SNIPPET`) — ring 3, and deliberately a *referral*
+  bracket. ACE has no data on clubs, labs, or employers; asked for clubs it used
+  to invent four named organisations. The block routes to OrgCentral / Career
+  Services and forbids naming specifics, while still personalising on the
+  student's own major and coursework. Ring 3 is not shipped capability — do not
+  describe it as one.
 
 ### Student document pipeline
 

@@ -24,17 +24,28 @@
   --text:            #09090b;
   --text-secondary:  #71717a;
   --text-muted:      #a1a1aa;
-  --accent:          #2563eb;
-  --accent-bg:       rgba(37,99,235,0.1);
-  --accent-border:   rgba(37,99,235,0.25);
-  --green:           #22c55e;
-  --green-bg:        #f0fdf4;
+  /* Zero Chroma: ONE hue, and it is the period — the send, the due date, the
+     destination, the done. Everything that used to be blue is now this, and the
+     lime --green that sat beside it collapsed into it: two greens in one view
+     read worse than green next to blue did. Info has no hue at all any more —
+     a second colour competing for "look here" is what made these screens read
+     as decorated rather than decided. Source of truth: brand/tokens.css. */
+  --accent:          #00875A;
+  /* The same period, read as ink instead of as a fill. Identical here; the dark
+     twin lifts it, because #00875A as small text on a near-black ground measures
+     3.8:1 while white on a #00875A fill measures 4.6:1 — the fill survives both
+     modes, the ink does not. Splitting them keeps the hue locked either way. */
+  --accent-text:     #00875A;
+  --accent-bg:       rgba(0,135,90,0.10);
+  --accent-border:   rgba(0,135,90,0.25);
+  --green:           #00875A;
+  --green-bg:        rgba(0,135,90,0.08);
   --amber:           #f59e0b;
   --amber-bg:        #fffbeb;
   --red:             #ef4444;
   --red-bg:          #fef2f2;
-  --blue:            #3b82f6;
-  --blue-bg:         #eff6ff;
+  --blue:            #71717a;
+  --blue-bg:         #f4f4f5;
   --shadow-sm:       0 1px 2px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.03);
   --shadow-md:       0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
   --sidebar-w:       288px;
@@ -296,7 +307,7 @@ body {
   transition: background 0.13s;
 }
 .sb-account-item:hover { background: var(--bg-muted); }
-.sb-account-item--active { background: var(--accent-bg); color: var(--accent); }
+.sb-account-item--active { background: var(--accent-bg); color: var(--accent-text); }
 .sb-account-item--exit { color: var(--red); }
 .sb-account-item--exit:hover { background: var(--red-bg); }
 
@@ -386,8 +397,8 @@ body {
   color: var(--text-secondary);
   font-family: var(--mono);
 }
-.sb-status-badge--on-track { background: #dcfce7; color: #15803d; }
-.sb-status-badge--in-progress { background: #dcfce7; color: #15803d; }
+.sb-status-badge--on-track { background: var(--accent-bg); color: var(--accent-text); }
+.sb-status-badge--in-progress { background: var(--accent-bg); color: var(--accent-text); }
 .sb-status-badge--early-stage { background: var(--bg-muted); color: var(--text-secondary); }
 .sb-stat-row {
   display: flex;
@@ -448,7 +459,7 @@ body {
   border-radius: 99px;
 }
 .sb-req-fill--dark { background: #555; }
-.sb-req-fill--gold { background: #2563eb; }
+.sb-req-fill--gold { background: var(--accent); }
 
 /* Alerts */
 .sb-alerts { display: flex; flex-direction: column; gap: 3px; }
@@ -462,8 +473,8 @@ body {
   border-left: 2px solid #ddd;
 }
 .sb-alert--warning { border-left-color: #f59e0b; background: #fffbeb; color: #78350f; }
-.sb-alert--info    { border-left-color: #3b82f6; background: #eff6ff; color: #1e40af; }
-.sb-alert--success { border-left-color: #22c55e; background: #f0fdf4; color: #15803d; }
+.sb-alert--info    { border-left-color: var(--blue); background: var(--blue-bg); color: var(--text); }
+.sb-alert--success { border-left-color: var(--accent-text); background: var(--accent-bg); color: var(--accent-text); }
 
 /* ── Upload prompt ── */
 .sb-upload {
@@ -499,10 +510,10 @@ body {
 .sb-upload-compact:hover {
   background: var(--accent-bg);
   border-color: var(--accent-border);
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .sb-upload-compact-icon { color: var(--text-muted); flex-shrink: 0; transition: color 180ms; }
-.sb-upload-compact:hover .sb-upload-compact-icon { color: var(--accent); }
+.sb-upload-compact:hover .sb-upload-compact-icon { color: var(--accent-text); }
 .sb-upload-compact-text { min-width: 0; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sb-upload-icon-box {
   width: 32px;
@@ -581,7 +592,7 @@ body {
 }
 .sb-dl-dot--red   { background: #ef4444; }
 .sb-dl-dot--amber { background: #f59e0b; }
-.sb-dl-dot--gray  { background: #cbd5e1; }
+.sb-dl-dot--gray  { background: var(--border); }
 .sb-dl-info {
   display: flex;
   flex-direction: column;
@@ -627,13 +638,13 @@ body {
     color 180ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .sb-tool-btn:hover {
-  background: rgba(37, 99, 235, 0.08);
-  border-color: rgba(37, 99, 235, 0.25);
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
   transform: translateY(-1px);
 }
 .sb-tool-btn:hover .sb-tool-icon,
 .sb-tool-btn:hover .sb-tool-label {
-  color: #2563eb;
+  color: var(--accent-text);
 }
 .sb-tool-icon {
   color: var(--text-secondary);
@@ -673,11 +684,11 @@ body {
 }
 .sb-chat-btn--active,
 .sb-chat-btn--active:hover {
-  background: rgba(37, 99, 235, 0.10);
+  background: var(--accent-bg);
 }
 .sb-chat-btn--active .sb-chat-preview,
 .sb-chat-btn--active .sb-chat-icon {
-  color: #2563eb;
+  color: var(--accent-text);
 }
 .sb-chat-icon {
   color: #aaa;
@@ -707,7 +718,7 @@ body {
   padding: 6px 0;
   transition: color 180ms;
 }
-.sb-empty-link:hover { color: var(--accent); }
+.sb-empty-link:hover { color: var(--accent-text); }
 
 /* ── Bottom buttons ── */
 .sb-new-btn {
@@ -949,7 +960,7 @@ body {
 .answer-body p:last-child { margin-bottom: 0; }
 .answer-body ul, .answer-body ol { margin: 10px 0 10px 22px; }
 .answer-body li { margin: 5px 0; }
-.answer-body li::marker { color: var(--accent); }
+.answer-body li::marker { color: var(--accent-text); }
 .answer-body h1, .answer-body h2, .answer-body h3 {
   color: var(--text);
   margin: 18px 0 8px;
@@ -965,10 +976,10 @@ body {
 .answer-body h2 { font-size: calc(var(--chat-fs, 15px) + 3px); }
 .answer-body h3 {
   font-size: calc(var(--chat-fs, 15px) + 1px);
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .answer-body strong { color: var(--text); font-weight: 650; }
-.answer-body a { color: #2563eb; text-decoration: none; font-weight: 500; }
+.answer-body a { color: var(--accent-text); text-decoration: none; font-weight: 500; }
 .answer-body a:hover { text-decoration: underline; }
 .answer-body code {
   background: var(--bg-muted);
@@ -977,7 +988,7 @@ body {
   border-radius: 5px;
   font-size: calc(var(--chat-fs, 15px) - 1.5px);
   font-family: var(--mono, ui-monospace, monospace);
-  color: var(--accent);
+  color: var(--accent-text);
   font-weight: 550;
 }
 .answer-body blockquote {
@@ -1065,7 +1076,7 @@ body {
 .source-chip-link {
   display: inline-flex;
   align-items: center;
-  color: var(--accent);
+  color: var(--accent-text);
   text-decoration: none;
   font-weight: 600;
 }
@@ -1143,9 +1154,9 @@ body {
 }
 
 .upload-badge--ok {
-  background: #f0fdf4;
-  border-color: #86efac;
-  color: #15803d;
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+  color: var(--accent-text);
 }
 
 .upload-badge-x {
@@ -1594,7 +1605,7 @@ body {
   flex-shrink: 0;
 }
 [data-theme="dark"] .wpick-box { border-color: rgba(255,255,255,0.28); }
-.wpick--on .wpick-box { background: var(--accent); border-color: var(--accent); color: #fff; }
+.wpick--on .wpick-box { background: var(--accent); border-color: var(--accent-text); color: #fff; }
 
 /* Opens the status rail. Deliberately quiet — an icon, no label, no accent
    until it's on, so it reads as an affordance rather than a fifth tab. */
@@ -1629,7 +1640,7 @@ body {
 }
 .nav-badge--new {
   background: var(--accent-bg);
-  color: var(--accent);
+  color: var(--accent-text);
   border: 1px solid var(--accent-border);
 }
 
@@ -1786,8 +1797,8 @@ body {
 }
 .dash-alert-icon { flex-shrink: 0; font-size: 14px; }
 .dash-alert--warning { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
-.dash-alert--info    { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
-.dash-alert--success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.dash-alert--info    { background: var(--blue-bg); color: var(--text); border: 1px solid var(--border); }
+.dash-alert--success { background: var(--accent-bg); color: var(--accent-text); border: 1px solid var(--accent-border); }
 
 /* ── Top stat cards ──────────────────────────── */
 .dash-cards {
@@ -1827,7 +1838,7 @@ body {
   color: var(--text-muted);
   margin-top: 2px;
 }
-.stat-card--gold  .stat-card-value { color: var(--accent); }
+.stat-card--gold  .stat-card-value { color: var(--accent-text); }
 .stat-card--progress .stat-card-value { color: var(--text); }
 .stat-card--success  .stat-card-value { color: var(--green); }
 .stat-card--warning  .stat-card-value { color: var(--amber); }
@@ -1889,7 +1900,7 @@ body {
   line-height: 1.5;
   border: 1px solid transparent;
 }
-.inline-alert--info    { background: rgba(59,130,246,0.06); border-color: rgba(59,130,246,0.2); color: #1e40af; }
+.inline-alert--info    { background: rgba(113,113,122,0.06); border-color: rgba(113,113,122,0.2); color: var(--text); }
 .inline-alert--warning { background: rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.2); color: #92400e; }
 .dash-card-empty {
   color: var(--text-muted);
@@ -2697,8 +2708,8 @@ body {
   to   { transform: scale(1);    opacity: 1; }
 }
 
-.gpa-result--excellent { background: #f0fdf4; border: 1.5px solid #86efac; }
-.gpa-result--good      { background: #eff6ff; border: 1.5px solid #bfdbfe; }
+.gpa-result--excellent { background: var(--accent-bg); border: 1.5px solid var(--accent-border); }
+.gpa-result--good      { background: var(--blue-bg); border: 1.5px solid var(--border); }
 .gpa-result--average   { background: #fffbeb; border: 1.5px solid #fde68a; }
 .gpa-result--low       { background: #fef2f2; border: 1.5px solid #fecaca; }
 
@@ -2724,9 +2735,9 @@ body {
 .gpa-result-badge {
   font-size: 12px;
   font-weight: 600;
-  color: #166534;
-  background: #dcfce7;
-  border: 1px solid #86efac;
+  color: var(--accent-text);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
   border-radius: 20px;
   padding: 3px 10px;
   width: fit-content;
@@ -2744,7 +2755,7 @@ body {
   color: var(--text-secondary);
   font-weight: 500;
 }
-.gpa-result-meta-item--up   { color: #16a34a; font-weight: 700; }
+.gpa-result-meta-item--up   { color: var(--accent-text); font-weight: 700; }
 .gpa-result-meta-item--down { color: #dc2626; font-weight: 700; }
 
 /* ── Hint ── */
@@ -2893,8 +2904,8 @@ body {
 .major-modal-item:last-child { border-bottom: none; }
 .major-modal-item:hover { background: var(--bg); }
 .major-modal-item--selected {
-  background: #eef3ff;
-  border-color: #c5d3f5;
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
 }
 .major-modal-item-name {
   flex: 1;
@@ -2957,7 +2968,7 @@ body {
 [data-theme="dark"] .major-modal-list  { border-color: var(--border); }
 [data-theme="dark"] .major-modal-item  { border-color: var(--border); }
 [data-theme="dark"] .major-modal-item:hover { background: var(--bg-muted); }
-[data-theme="dark"] .major-modal-item--selected { background: #1a2040; border-color: #2a3a6a; }
+[data-theme="dark"] .major-modal-item--selected { background: var(--accent-bg); border-color: var(--accent-border); }
 [data-theme="dark"] .major-modal-item-name { color: #d4d4d4; }
 [data-theme="dark"] .major-modal-actions { border-color: var(--border); }
 
@@ -2986,17 +2997,21 @@ body {
   --text:            #f4f4f5;
   --text-secondary:  #a1a1aa;
   --text-muted:      #71717a;
-  --accent:          #3b82f6;
-  --accent-bg:       rgba(59,130,246,0.14);
-  --accent-border:   rgba(59,130,246,0.32);
-  --green:           #22c55e;
-  --green-bg:        rgba(34,197,94,0.10);
+  /* The FILL carries over untouched — that is the brand law, and white on it
+     still measures 4.6:1 here. Only the INK is lifted, to 7.5:1, because the
+     locked value as small text on this ground is 3.8:1. Same hue either way. */
+  --accent:          #00875A;
+  --accent-text:     #35C08C;
+  --accent-bg:       rgba(42,187,134,0.14);
+  --accent-border:   rgba(42,187,134,0.32);
+  --green:           #00875A;
+  --green-bg:        rgba(42,187,134,0.10);
   --amber:           #f59e0b;
   --amber-bg:        rgba(245,158,11,0.10);
   --red:             #ef4444;
   --red-bg:          rgba(239,68,68,0.10);
-  --blue:            #3b82f6;
-  --blue-bg:         rgba(59,130,246,0.10);
+  --blue:            #a1a1aa;
+  --blue-bg:         rgba(161,161,170,0.10);
   --shadow-sm:       0 1px 2px rgba(0,0,0,0.45), 0 1px 1px rgba(0,0,0,0.30);
   --shadow-md:       0 4px 6px -1px rgba(0,0,0,0.50), 0 2px 4px -2px rgba(0,0,0,0.35);
 
@@ -3010,11 +3025,7 @@ body {
   --gray-500:   #a1a1aa;
   --gray-700:   #d4d4d4;
   --gray-900:   #f4f4f5;
-  --gold-bg:    rgba(59,130,246,0.10);
-  --navy-hover: #2d5080;
   --dk-accent:  #f0f0f0;
-  --dk-teal:    #2dd4bf;
-  --dk-gold:    #f0b429;
 }
 
 /* ── Structural backgrounds ── */
@@ -3066,28 +3077,28 @@ body {
 [data-theme="dark"] .sb-req-bar { background: var(--border); }
 [data-theme="dark"] .sb-req-fill--dark { background: #888; }
 [data-theme="dark"] .sb-alert--warning { background: #1c1500; color: #d97706; border-left-color: #92400e; }
-[data-theme="dark"] .sb-alert--info    { background: #0c1a2e; color: #60a5fa; border-left-color: #1e40af; }
-[data-theme="dark"] .sb-alert--success { background: #0a1f0f; color: #4ade80; border-left-color: #15803d; }
+[data-theme="dark"] .sb-alert--info    { background: var(--blue-bg); color: var(--accent-text); border-left-color: var(--text); }
+[data-theme="dark"] .sb-alert--success { background: var(--accent-bg); color: var(--accent-text); border-left-color: var(--accent-text); }
 [data-theme="dark"] .sb-upload { border-color: var(--border); }
 [data-theme="dark"] .sb-upload-icon-box { background: var(--bg-muted); color: var(--text-secondary); }
 [data-theme="dark"] .sb-upload-title { color: #e5e5e5; }
 [data-theme="dark"] .sb-upload-desc { color: var(--text-secondary); }
 [data-theme="dark"] .sb-upload-btn { background: var(--accent); color: #ffffff; }
-[data-theme="dark"] .sb-upload-btn:hover { background: #2563eb; }
+[data-theme="dark"] .sb-upload-btn:hover { opacity: 0.82; }
 [data-theme="dark"] .dash-upload-btn { background: var(--accent); color: #ffffff; }
-[data-theme="dark"] .dash-upload-btn:hover { background: #2563eb; }
+[data-theme="dark"] .dash-upload-btn:hover { opacity: 0.82; }
 [data-theme="dark"] .sb-dl-row:hover { background: rgba(255, 255, 255, 0.04); }
 [data-theme="dark"] .sb-dl-date { color: #888; }
 [data-theme="dark"] .sb-dl-label { color: #d4d4d4; }
 [data-theme="dark"] .sb-dl-meta { color: #777; }
 [data-theme="dark"] .sb-dl-dot--gray { background: #4b5563; }
 [data-theme="dark"] .sb-tool-btn:hover {
-  background: rgba(59, 130, 246, 0.12);
-  border-color: rgba(59, 130, 246, 0.3);
+  background: rgba(42,187,134,0.12);
+  border-color: rgba(42,187,134,0.3);
 }
 [data-theme="dark"] .sb-tool-btn:hover .sb-tool-icon,
 [data-theme="dark"] .sb-tool-btn:hover .sb-tool-label {
-  color: #60a5fa;
+  color: var(--accent-text);
 }
 [data-theme="dark"] .sb-tool-icon { color: var(--text-secondary); }
 [data-theme="dark"] .sb-tool-label { color: #888; }
@@ -3098,11 +3109,11 @@ body {
 }
 [data-theme="dark"] .sb-chat-btn--active,
 [data-theme="dark"] .sb-chat-btn--active:hover {
-  background: rgba(59, 130, 246, 0.14);
+  background: rgba(42,187,134,0.14);
 }
 [data-theme="dark"] .sb-chat-btn--active .sb-chat-preview,
 [data-theme="dark"] .sb-chat-btn--active .sb-chat-icon {
-  color: #60a5fa;
+  color: var(--accent-text);
 }
 [data-theme="dark"] .sb-chat-icon { color: var(--text-muted); }
 [data-theme="dark"] .sb-chat-preview { color: #888; }
@@ -3116,12 +3127,12 @@ body {
 /* ── Top bar ── */
 [data-theme="dark"] .top-bar-tab   { color: #9a9a9a; }
 [data-theme="dark"] .top-bar-tab:hover { background: var(--border); color: #f0f0f0; }
-[data-theme="dark"] .top-bar-tab--active { background: var(--border); color: #f0f0f0; border-bottom-color: var(--accent); }
+[data-theme="dark"] .top-bar-tab--active { background: var(--border); color: #f0f0f0; border-bottom-color: var(--accent-text); }
 
 /* ── Chat messages ── */
 [data-theme="dark"] .message--user .message-bubble      { background: #1f2937; color: #f0f0f0; }
 [data-theme="dark"] .message--assistant .message-bubble { background: var(--bg-card); border: 1px solid var(--border); color: #d4d4d4; }
-[data-theme="dark"] .message--assistant .message-bubble a { color: var(--accent); }
+[data-theme="dark"] .message--assistant .message-bubble a { color: var(--accent-text); }
 [data-theme="dark"] .welcome-subtitle { color: #6e6e6e; }
 [data-theme="dark"] .source-chip      { background: var(--bg-card); border-color: var(--border); color: #9a9a9a; }
 
@@ -3162,12 +3173,12 @@ body {
 [data-theme="dark"] .gpa-scale-grade { color: #f0f0f0; }
 [data-theme="dark"] .gpa-scale-pts  { color: #9a9a9a; }
 [data-theme="dark"] .gpa-disclaimer  { color: #6e6e6e; }
-[data-theme="dark"] .gpa-result--excellent { background: rgba(34,197,94,0.10);  border-color: rgba(34,197,94,0.35); }
-[data-theme="dark"] .gpa-result--good      { background: rgba(59,130,246,0.10); border-color: rgba(59,130,246,0.35); }
+[data-theme="dark"] .gpa-result--excellent { background: rgba(42,187,134,0.10);  border-color: rgba(42,187,134,0.35); }
+[data-theme="dark"] .gpa-result--good      { background: rgba(113,113,122,0.10); border-color: rgba(113,113,122,0.35); }
 [data-theme="dark"] .gpa-result--average   { background: rgba(245,158,11,0.10); border-color: rgba(245,158,11,0.35); }
 [data-theme="dark"] .gpa-result--low       { background: rgba(239,68,68,0.10);  border-color: rgba(239,68,68,0.35); }
 [data-theme="dark"] .gpa-tab         { background: var(--bg-card); border-color: var(--border); color: var(--text-secondary); }
-[data-theme="dark"] .gpa-tab--active { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-border); }
+[data-theme="dark"] .gpa-tab--active { background: var(--accent-bg); color: var(--accent-text); border-color: var(--accent-border); }
 [data-theme="dark"] .gpa-history-row { background: var(--bg-card); border-color: var(--border); }
 [data-theme="dark"] .gpa-history-name { color: #f0f0f0; }
 [data-theme="dark"] .gpa-add-form  { background: var(--bg-card); border-color: var(--border); }
@@ -3177,24 +3188,23 @@ body {
 [data-theme="dark"] .cal-subtitle   { color: #6e6e6e; }
 [data-theme="dark"] .cal-day-cell   { background: var(--bg-card); }
 [data-theme="dark"] .cal-day-cell--other-month { background: var(--bg); }
-[data-theme="dark"] .cal-day-cell--today { background: #1e3158; }
 [data-theme="dark"] .cal-day-num    { color: #d4d4d4; }
 [data-theme="dark"] .cal-month-nav button { background: var(--border); color: #d4d4d4; }
 [data-theme="dark"] .cal-month-nav button:hover { background: #383838; }
 [data-theme="dark"] .cal-category-tab { background: var(--bg-card); border-color: var(--border); color: var(--text-secondary); }
-[data-theme="dark"] .cal-category-tab--active { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-border); }
+[data-theme="dark"] .cal-category-tab--active { background: var(--accent-bg); color: var(--accent-text); border-color: var(--accent-border); }
 [data-theme="dark"] .cal-day-name { background: var(--bg-muted); color: var(--text-secondary); }
-[data-theme="dark"] .cal-day-cell--today { background: var(--accent-bg); }
-[data-theme="dark"] .cal-day-cell--today .cal-day-num { background: var(--accent); color: #ffffff; }
+[data-theme="dark"] .cal-day-cell--today { background: var(--blue-bg); }
+[data-theme="dark"] .cal-day-cell--today .cal-day-num { background: var(--text); color: var(--bg); }
 [data-theme="dark"] .cal-event-row--deadline { background: rgba(249,115,22,0.10); border-left-color: #f97316; }
-[data-theme="dark"] .cal-event-row--holiday  { background: rgba(34,197,94,0.10);  border-left-color: #22c55e; }
+[data-theme="dark"] .cal-event-row--holiday  { background: var(--blue-bg);        border-left-color: var(--blue); }
 [data-theme="dark"] .cal-event-row--exam     { background: rgba(168,85,247,0.10); border-left-color: #a855f7; }
-[data-theme="dark"] .cal-event-row--tuition  { background: var(--accent-bg);      border-left-color: var(--accent); }
-[data-theme="dark"] .cal-event-row--academic { background: var(--accent-bg);      border-left-color: var(--accent); }
+[data-theme="dark"] .cal-event-row--tuition  { background: var(--accent-bg);      border-left-color: var(--accent-text); }
+[data-theme="dark"] .cal-event-row--academic { background: var(--accent-bg);      border-left-color: var(--accent-text); }
 [data-theme="dark"] .cal-event-badge--deadline { background: rgba(249,115,22,0.18); color: #fdba74; }
-[data-theme="dark"] .cal-event-badge--holiday  { background: rgba(34,197,94,0.18);  color: #86efac; }
+[data-theme="dark"] .cal-event-badge--holiday  { background: var(--blue-bg);         color: var(--text); }
 [data-theme="dark"] .cal-event-badge--exam     { background: rgba(168,85,247,0.18); color: #d8b4fe; }
-[data-theme="dark"] .cal-event-badge--tuition  { background: var(--accent-bg);      color: var(--accent); }
+[data-theme="dark"] .cal-event-badge--tuition  { background: var(--accent-bg);      color: var(--accent-text); }
 [data-theme="dark"] .cal-event-row  { background: var(--bg-card); }
 [data-theme="dark"] .cal-event-label { color: #d4d4d4; }
 [data-theme="dark"] .cal-event-date  { color: #9a9a9a; }
@@ -3220,7 +3230,7 @@ body {
 [data-theme="dark"] .prereq-subtitle    { color: #6e6e6e; }
 [data-theme="dark"] .prereq-course      { background: var(--bg-card); border-color: var(--border); }
 [data-theme="dark"] .prereq-course-name { color: #9a9a9a; }
-[data-theme="dark"] .prereq-course--available { background: #181400; border-color: var(--accent); }
+[data-theme="dark"] .prereq-course--available { background: #181400; border-color: var(--accent-text); }
 [data-theme="dark"] .prereq-course--available:hover { background: #1e1800; }
 [data-theme="dark"] .prereq-course--locked { background: var(--bg); opacity: 0.5; }
 [data-theme="dark"] .prereq-legend-item { color: #9a9a9a; }
@@ -3346,17 +3356,17 @@ body {
 .cal-grid          { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
 .cal-day-name      { background: var(--text); color: rgba(255,255,255,0.7); text-align: center; font-size: 10.5px; font-weight: 600; padding: 7px 0; letter-spacing: 0.5px; }
 .cal-day-cell      { background: var(--bg-card); min-height: 52px; padding: 5px 7px; display: flex; flex-direction: column; gap: 2px; position: relative; cursor: default; }
-.cal-day-cell--today { background: #eff6ff; }
+.cal-day-cell--today { background: var(--blue-bg); }
 .cal-day-cell--today .cal-day-num { background: var(--text); color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
 .cal-day-cell--other-month { background: var(--bg); opacity: 0.4; }
 .cal-day-num       { font-size: 12px; font-weight: 500; color: var(--text-secondary); line-height: 22px; }
 .cal-day-dots      { display: flex; flex-wrap: wrap; gap: 2px; }
 .cal-day-dot       { width: 6px; height: 6px; border-radius: 50%; }
 .cal-day-dot--deadline { background: #f97316; }
-.cal-day-dot--holiday  { background: #22c55e; }
+.cal-day-dot--holiday  { background: var(--blue); }
 .cal-day-dot--exam     { background: #a855f7; }
 .cal-day-dot--tuition  { background: var(--accent); }
-.cal-day-dot--academic { background: #3b82f6; }
+.cal-day-dot--academic { background: var(--blue); }
 
 .cal-category-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
 .cal-category-tab  { padding: 5px 13px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg-card); font-size: 12px; color: var(--text-secondary); cursor: pointer; font-family: var(--font); transition: all 0.12s; }
@@ -3366,18 +3376,18 @@ body {
 .cal-events-list   { display: flex; flex-direction: column; gap: 6px; }
 .cal-event-row     { display: flex; align-items: center; gap: 12px; padding: 9px 14px; border-radius: 8px; border-left: 3px solid var(--border); background: var(--bg); }
 .cal-event-row--deadline { border-left-color: #f97316; background: #fff7ed; }
-.cal-event-row--holiday  { border-left-color: #22c55e; background: #f0fdf4; }
+.cal-event-row--holiday  { border-left-color: var(--blue); background: var(--blue-bg); }
 .cal-event-row--exam     { border-left-color: #a855f7; background: #fdf4ff; }
-.cal-event-row--tuition  { border-left-color: var(--accent); background: var(--accent-bg); }
-.cal-event-row--academic { border-left-color: #3b82f6; background: #eff6ff; }
+.cal-event-row--tuition  { border-left-color: var(--accent-text); background: var(--accent-bg); }
+.cal-event-row--academic { border-left-color: var(--blue); background: var(--blue-bg); }
 .cal-event-date    { font-size: 11.5px; font-weight: 700; color: var(--text-secondary); min-width: 52px; white-space: nowrap; }
 .cal-event-label   { flex: 1; font-size: 13px; color: var(--text); }
 .cal-event-badge   { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
 .cal-event-badge--deadline { background: #fed7aa; color: #9a3412; }
-.cal-event-badge--holiday  { background: #bbf7d0; color: #14532d; }
+.cal-event-badge--holiday  { background: var(--blue-bg); color: var(--text); }
 .cal-event-badge--exam     { background: #e9d5ff; color: #581c87; }
-.cal-event-badge--tuition  { background: #fef3c7; color: #92400e; }
-.cal-event-badge--academic { background: #bfdbfe; color: #1e3a8a; }
+.cal-event-badge--tuition  { background: var(--accent-bg); color: var(--accent-text); }
+.cal-event-badge--academic { background: var(--border); color: var(--text); }
 .cal-empty         { text-align: center; color: var(--text-muted); font-size: 13px; padding: 24px 0; }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -3394,8 +3404,8 @@ body {
 .checklist-overall-fill  { height: 100%; background: linear-gradient(90deg, var(--text), var(--accent)); border-radius: 4px; transition: width 0.5s ease; }
 
 .checklist-section         { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-.checklist-section--complete { border-color: #22c55e; }
-.checklist-section--partial  { border-color: var(--accent); }
+.checklist-section--complete { border-color: var(--accent-text); }
+.checklist-section--partial  { border-color: var(--accent-text); }
 
 .checklist-section-header  { display: flex; align-items: center; gap: 10px; padding: 13px 16px; cursor: pointer; user-select: none; transition: background 0.12s; }
 .checklist-section-header:hover { background: var(--bg); }
@@ -3429,10 +3439,10 @@ body {
   margin-bottom: 14px;
   padding: 10px 14px;
   background: var(--green-bg);
-  border: 1px solid #86efac;
+  border: 1px solid var(--accent-border);
   border-radius: var(--radius-md);
   font-size: 12.5px;
-  color: #15803d;
+  color: var(--accent-text);
   font-weight: 500;
 }
 
@@ -3458,12 +3468,12 @@ body {
   white-space: nowrap;
   flex-shrink: 0;
 }
-.audit-tag--audit { background: var(--green-bg); color: #15803d; }
+.audit-tag--audit { background: var(--green-bg); color: var(--accent-text); }
 .audit-tag--ip    { background: var(--amber-bg); color: #92400e; }
 .checklist-item--ip .checklist-checkbox { border-color: var(--amber); }
 
-[data-theme="dark"] .audit-banner     { background: rgba(34,197,94,0.12); border-color: rgba(34,197,94,0.3); color: #4ade80; }
-[data-theme="dark"] .audit-tag--audit { background: rgba(34,197,94,0.15); color: #4ade80; }
+[data-theme="dark"] .audit-banner     { background: rgba(42,187,134,0.12); border-color: rgba(42,187,134,0.3); color: var(--accent-text); }
+[data-theme="dark"] .audit-tag--audit { background: rgba(42,187,134,0.15); color: var(--accent-text); }
 [data-theme="dark"] .audit-tag--ip    { background: rgba(245,158,11,0.15); color: #fbbf24; }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -3490,7 +3500,7 @@ body {
 
 .prereq-course     { padding: 9px 12px; border-radius: 8px; border: 2px solid var(--border); background: var(--bg-card); cursor: pointer; transition: all 0.15s; display: flex; flex-direction: column; gap: 2px; position: relative; user-select: none; }
 .prereq-course--completed { background: var(--text); border-color: var(--text); }
-.prereq-course--available { border-color: var(--accent); background: var(--accent-bg); cursor: pointer; }
+.prereq-course--available { border-color: var(--accent-text); background: var(--accent-bg); cursor: pointer; }
 .prereq-course--locked    { background: var(--bg); border-color: var(--border); cursor: not-allowed; opacity: 0.6; }
 .prereq-course--available:hover { background: var(--accent); }
 .prereq-course--completed:hover { opacity: 0.85; }
@@ -3499,7 +3509,7 @@ body {
 .prereq-course--completed .prereq-course-code { color: rgba(255,255,255,0.7); }
 .prereq-course-name { font-size: 10.5px; color: var(--text-secondary); line-height: 1.3; }
 .prereq-course--completed .prereq-course-name { color: rgba(255,255,255,0.6); }
-.prereq-course-check { position: absolute; top: 6px; right: 8px; font-size: 10px; color: var(--accent); }
+.prereq-course-check { position: absolute; top: 6px; right: 8px; font-size: 10px; color: var(--accent-text); }
 .prereq-course--in_progress { border-color: var(--amber); background: var(--amber-bg); }
 .prereq-course--in_progress:hover { border-color: var(--amber); }
 .prereq-course-ip { position: absolute; top: 6px; right: 8px; font-size: 8.5px; font-weight: 800; letter-spacing: 0.5px; color: var(--amber); }
@@ -3509,16 +3519,16 @@ body {
 /* ═══════════════════════════════════════════════════════════════
    GPA HISTORY TAB
    ═══════════════════════════════════════════════════════════════ */
-.gpa-audit-hint { font-size: 11.5px; color: #15803d; font-weight: 500; margin: 0 0 10px; }
-[data-theme="dark"] .gpa-audit-hint { color: #4ade80; }
+.gpa-audit-hint { font-size: 11.5px; color: var(--accent-text); font-weight: 500; margin: 0 0 10px; }
+[data-theme="dark"] .gpa-audit-hint { color: var(--accent-text); }
 .gpa-history-empty    { font-size: 13px; color: var(--text-muted); text-align: center; padding: 20px 0; }
 .gpa-history-list     { display: flex; flex-direction: column; gap: 6px; }
 .gpa-history-row      { display: flex; align-items: center; gap: 10px; padding: 9px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; }
 .gpa-history-name     { flex: 1; font-size: 13px; font-weight: 500; color: var(--text); }
 .gpa-history-gpa      { font-size: 14px; font-weight: 700; }
-.gpa-history-gpa--excellent { color: #16a34a; }
-.gpa-history-gpa--good      { color: #2563eb; }
-.gpa-history-gpa--average   { color: var(--accent); }
+.gpa-history-gpa--excellent { color: var(--accent-text); }
+.gpa-history-gpa--good      { color: var(--text); }
+.gpa-history-gpa--average   { color: var(--text-secondary); }
 .gpa-history-gpa--low       { color: #dc2626; }
 .gpa-history-credits  { font-size: 11.5px; color: var(--text-muted); white-space: nowrap; }
 .gpa-history-delete   { background: none; border: none; font-size: 16px; color: var(--border); cursor: pointer; padding: 0 2px; line-height: 1; transition: color 0.15s; }
@@ -3529,14 +3539,18 @@ body {
 .gpa-history-bar-label { font-size: 11.5px; color: var(--text-secondary); }
 .gpa-history-bar-track { height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
 .gpa-history-bar-fill  { height: 100%; border-radius: 5px; transition: width 0.5s ease; }
-.gpa-history-bar-fill--excellent { background: linear-gradient(90deg, #16a34a, #4ade80); }
-.gpa-history-bar-fill--good      { background: linear-gradient(90deg, #2563eb, #60a5fa); }
-.gpa-history-bar-fill--average   { background: linear-gradient(90deg, var(--accent), var(--accent)); }
+/* The old ramp was green / blue / blue / red — two of the four already matched,
+   and collapsing blue into emerald made three identical. Four tiers need four
+   readings, and Zero Chroma spends the hue once: emerald is the best term, then
+   ink, then grey. Red stays, because failing is a different KIND of fact. */
+.gpa-history-bar-fill--excellent { background: var(--accent); }
+.gpa-history-bar-fill--good      { background: var(--text); }
+.gpa-history-bar-fill--average   { background: var(--text-secondary); }
 .gpa-history-bar-fill--low       { background: linear-gradient(90deg, #dc2626, #f87171); }
 
 .gpa-history-cumulative { background: var(--text); color: white; border-radius: 10px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; }
 .gpa-history-cumulative-label { font-size: 13px; opacity: 0.8; }
-.gpa-history-cumulative-value { font-size: 22px; font-weight: 700; color: var(--accent); }
+.gpa-history-cumulative-value { font-size: 22px; font-weight: 700; color: var(--accent-text); }
 
 .gpa-add-form         { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
 .gpa-add-form-row     { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
@@ -3587,7 +3601,7 @@ body {
   flex-shrink: 0;
 }
 .ge-status--done    { color: var(--green); }
-.ge-status--partial { color: var(--accent); }
+.ge-status--partial { color: var(--accent-text); }
 .ge-status--none    { color: var(--text-muted); }
 
 /* ── Gen Ed Explorer ──────────────────────────────────────────────────────── */
@@ -3721,11 +3735,11 @@ body {
 }
 
 .gened-cat-card--satisfied {
-  border-left-color: #16a34a;
+  border-left-color: var(--accent-text);
 }
 
 .gened-cat-card--partial {
-  border-left-color: var(--accent);
+  border-left-color: var(--accent-text);
 }
 
 .gened-cat-card--needed {
@@ -3761,8 +3775,8 @@ body {
 }
 
 .gened-cat-code--satisfied {
-  background: #dcfce7;
-  color: #15803d;
+  background: var(--accent-bg);
+  color: var(--accent-text);
 }
 
 .gened-cat-code--partial {
@@ -3961,7 +3975,7 @@ body {
 .gened-smart-title {
   font-size: 16px;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-text);
   margin-bottom: 14px;
   letter-spacing: -0.2px;
 }
@@ -3990,7 +4004,7 @@ body {
 .gened-smart-cat {
   font-size: 12px;
   font-weight: 500;
-  color: var(--accent);
+  color: var(--accent-text);
   margin-left: 6px;
   opacity: 0.85;
 }
@@ -4017,7 +4031,7 @@ body {
 [data-theme="dark"] .gened-overall-label { color: #f0f0f0; }
 [data-theme="dark"] .gened-overall-bar   { background: var(--border); }
 [data-theme="dark"] .gened-filter-tab    { background: var(--bg-card); border-color: var(--border); color: var(--text-secondary); }
-[data-theme="dark"] .gened-filter-tab--active { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-border); }
+[data-theme="dark"] .gened-filter-tab--active { background: var(--accent-bg); color: var(--accent-text); border-color: var(--accent-border); }
 [data-theme="dark"] .gened-cat-card      { background: var(--bg-card); border-color: var(--border); }
 [data-theme="dark"] .gened-cat-header:hover { background: var(--border); }
 [data-theme="dark"] .gened-cat-label     { color: #f0f0f0; }
@@ -4033,7 +4047,7 @@ body {
 [data-theme="dark"] .gened-smart-picks   { background: var(--bg-card); border: 1px solid var(--border); }
 [data-theme="dark"] .gened-smart-course  { color: var(--text); }
 [data-theme="dark"] .gened-smart-reason  { color: var(--text-secondary); }
-[data-theme="dark"] .gened-cat-code--satisfied { background: rgba(34,197,94,0.15);  color: #4ade80; }
+[data-theme="dark"] .gened-cat-code--satisfied { background: rgba(42,187,134,0.15);  color: var(--accent-text); }
 [data-theme="dark"] .gened-cat-code--partial   { background: rgba(245,158,11,0.15); color: #fbbf24; }
 [data-theme="dark"] .gened-cat-code--needed    { background: var(--bg-muted);       color: var(--text-secondary); }
 [data-theme="dark"] .gened-smart-item    { color: #d4d4d4; }
@@ -4158,7 +4172,7 @@ body {
 }
 
 .wb-headline-accent {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 /* Rotating hero keyword ("planning" → "scheduling" → …)
@@ -4171,7 +4185,7 @@ body {
    baseline (half-leading 0.07em + descent 0.24em ≈ 0.31em). */
 .wb-rotator {
   display: inline-block;
-  color: var(--accent);
+  color: var(--accent-text);
   /* Must stay `overflow: hidden` on BOTH axes. Clipping only the y-axis
      (overflow-x:visible + overflow-y:clip) does fix the glyph-tail clip, but an
      inline-block takes its baseline from the bottom margin edge only while
@@ -4324,7 +4338,7 @@ body {
   margin-bottom: 14px; color: var(--text);
 }
 .set-card-head h3 { margin: 0; font-size: 15px; font-weight: 700; }
-.set-card-head svg { color: var(--accent); }
+.set-card-head svg { color: var(--accent-text); }
 .set-row { margin-bottom: 16px; }
 .set-row:last-child { margin-bottom: 0; }
 .set-label {
@@ -4341,7 +4355,7 @@ body {
   background: var(--bg-card); color: var(--text);
   outline: none; transition: border-color 0.15s;
 }
-.set-input:focus { border-color: var(--accent); }
+.set-input:focus { border-color: var(--accent-text); }
 .set-btn {
   display: inline-flex; align-items: center; gap: 6px;
   font-family: var(--font); font-size: 13px; font-weight: 600;
@@ -4399,7 +4413,7 @@ body {
   font-size: 22px; font-weight: 800; letter-spacing: -0.02em;
   color: var(--text); margin: 0;
 }
-.board-title svg { color: var(--accent); }
+.board-title svg { color: var(--accent-text); }
 .board-sub { font-size: 13px; color: var(--text-secondary); margin: 4px 0 0; }
 .board-add {
   display: inline-flex; align-items: center; gap: 6px;
@@ -4629,3 +4643,436 @@ body {
   .theme-switch__clouds,
   .theme-switch__stars-container { transition: none; }
 }
+
+/* ── Answer blocks (cards / checklist / strip / plan) ────────────────────────
+   Contained inside the bubble, planner-ruled, accent used once per block. */
+/* ── the glass panel every block sits on ────────────────────────────────────
+   .ab and .pm share it: one surface, so a map and a planner read as the same
+   kind of object.
+
+   Glass here is LIGHTING, not transparency, and that is deliberate. The face has
+   to stay fully opaque or the gradient border shows through the middle of the
+   panel — the same trap the cards fell into. So the depth comes from a bright
+   inset rim along the top edge, a specular sweep across the upper third, and a
+   soft cast shadow onto the dotted surface underneath. backdrop-filter is
+   pointless behind an opaque fill; none is used.
+
+   The border is the same travelling spectrum as .ab-card, at half speed, so a
+   panel holding six shimmering cards does not race against them. */
+.ab, .pm {
+  --panel-face: linear-gradient(var(--bg-card), var(--bg-card));
+  --panel-edge: linear-gradient(115deg,
+    #00875A 0%, #00B894 14%, #0091E6 28%, #5B4FE0 42%,
+    #B429CC 56%, #F0345C 70%, #F59E0B 84%, #00875A 100%);
+  position: relative;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: var(--panel-face) padding-box, var(--panel-edge) border-box;
+  background-size: auto, 300% 100%;
+  background-repeat: no-repeat, repeat;
+  padding: 14px 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03),
+    0 10px 30px rgba(0, 0, 0, 0.09),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+  animation: ab-sheen 36s linear infinite;
+  overflow: hidden;
+}
+/* The specular sweep — the thing that actually reads as glass. Sits above the
+   face and below the content, and is pointer-transparent so it never eats a
+   click on a node or a checkbox. */
+.ab::before, .pm::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 58%;
+  background: linear-gradient(170deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.12) 45%,
+    rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  border-radius: 13px 13px 0 0;
+}
+[data-theme="dark"] .ab, [data-theme="dark"] .pm {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 10px 30px rgba(0, 0, 0, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+}
+[data-theme="dark"] .ab::before, [data-theme="dark"] .pm::before {
+  background: linear-gradient(170deg,
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(255, 255, 255, 0.02) 45%,
+    rgba(255, 255, 255, 0) 100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ab, .pm { animation: none; }
+}
+
+/* The block's own strip of the page, clear of the bubble and of the avatar
+   gutter, so it sits on the dotted surface rather than inside the conversation. */
+.msg-visual {
+  max-width: 760px;
+  margin: -8px 0 0 40px;
+  animation: msg-visual-in 420ms cubic-bezier(.165, .84, .44, 1) both;
+}
+@keyframes msg-visual-in {
+  from { opacity: 0; transform: translateY(8px) scale(.995); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .msg-visual { animation: none; }
+}
+.ab-links { display: flex; gap: 11px; margin-top: 6px; flex-wrap: wrap; }
+.ab-links a {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent-text);
+  border-bottom: 1px solid var(--border); padding-bottom: 1px;
+}
+.ab-links a:hover { border-color: var(--accent-text); }
+.ab-foot-link {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent-text); display: inline-block; margin-top: 8px;
+}
+/* rail */
+.ab-rail {
+  display: flex; align-items: center; gap: 9px; margin-bottom: 9px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border); flex-wrap: wrap;
+}
+.ab-tab {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
+  /* Ink. This label says what the block IS; it is not what the student came for.
+     The one emerald in a cards block is .ab-foot-link — the way out to the rest. */
+  text-transform: uppercase; color: var(--bg-card); background: var(--text);
+  padding: 3px 7px; border-radius: 3px;
+}
+.ab-rail-meta {
+  font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: .06em;
+}
+/* cards */
+/* ── the card rail ───────────────────────────────────────────────────────────
+   An auto-fit grid in a chat column reflowed into a ragged two-and-a-half
+   columns with a half-empty last row, and the cards were being clipped by the
+   .ab panel they had wrongly inherited. A rail gives every card the same width
+   whatever the column is doing, and turns "there are more" into something you
+   can see rather than something that gets cut off. */
+.ab-carousel { display: block; }
+.ab-rail-wrap { position: relative; }
+.ab-cards {
+  display: flex;
+  gap: 10px;
+  /* overflow-x:auto makes the Y axis 'auto' too, so the hover lift and the card
+     shadow would be clipped without room to sit in. */
+  overflow-x: auto;
+  padding: 8px 2px 12px;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  overscroll-behavior-x: contain;
+}
+.ab-cards::-webkit-scrollbar { height: 6px; }
+.ab-cards::-webkit-scrollbar-thumb {
+  background: var(--border); border-radius: 999px;
+}
+.ab-cards::-webkit-scrollbar-track { background: transparent; }
+.ab-cards:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
+.ab-cards > .ab-card {
+  flex: 0 0 clamp(224px, 58%, 292px);
+  scroll-snap-align: start;
+}
+/* Faded only on the side that actually has more — a card that fades at rest
+   when there is nothing past it reads as a rendering fault. */
+.ab-rail-wrap.fade-r .ab-cards {
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 44px), transparent 100%);
+  mask-image: linear-gradient(90deg, #000 calc(100% - 44px), transparent 100%);
+}
+.ab-rail-wrap.fade-l .ab-cards {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 44px);
+  mask-image: linear-gradient(90deg, transparent 0, #000 44px);
+}
+.ab-rail-wrap.fade-l.fade-r .ab-cards {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 44px,
+                                      #000 calc(100% - 44px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 44px,
+                              #000 calc(100% - 44px), transparent 100%);
+}
+/* For mouse users, who cannot swipe a trackpad. */
+.ab-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text); font-size: 17px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0 0 2px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+  transition: border-color .16s ease, transform .16s ease;
+}
+.ab-nav:hover { border-color: var(--accent-text); transform: translateY(-50%) scale(1.08); }
+.ab-nav:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.ab-nav--l { left: -6px; }
+.ab-nav--r { right: -6px; }
+.ab-carousel-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 0 2px;
+}
+/* A flat card face, and the spectrum confined to the 1px edge travelling round it.
+
+   The face MUST stay fully opaque, and that is load-bearing rather than a style
+   choice: the edge layer is painted across the whole border-box and is hidden
+   only by the face sitting on top of it. Any transparency in --ab-face and the
+   spectrum comes through the middle of the card. It did — hover was tinting the
+   face with --accent-bg, which is rgba at 0.10, so hovering a card washed the
+   whole thing in rainbow. Hover now moves the card, not its fill.
+
+   The spectrum runs at full strength. It starts and ends on the emerald so the
+   travel loops seamlessly and the brand colour is the one the eye lands on when
+   the sheen comes to rest. Two dials, one line each: --ab-edge for the colours,
+   ab-sheen's duration for the speed.
+
+   Zero Chroma says no second hue, so this is a deliberate exception to the
+   brand, not an oversight — brand/BRAND.md §5 is the place to record it if it
+   stays. */
+.ab-card {
+  --ab-face: linear-gradient(var(--bg-card), var(--bg-card));
+  --ab-edge: linear-gradient(115deg,
+    #00875A 0%, #00B894 14%, #0091E6 28%, #5B4FE0 42%,
+    #B429CC 56%, #F0345C 70%, #F59E0B 84%, #00875A 100%);
+  display: flex; gap: 12px; align-items: flex-start; justify-content: space-between;
+  /* transparent border + padding-box/border-box layering is what puts a gradient
+     in a border at all; border-image cannot do it and keep border-radius. */
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: var(--ab-face) padding-box, var(--ab-edge) border-box;
+  background-size: auto, 300% 100%;
+  background-repeat: no-repeat, repeat;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6),
+              0 6px 18px rgba(0, 0, 0, 0.07);
+  padding: 10px 12px;
+  animation: ab-sheen 18s linear infinite;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+@keyframes ab-sheen {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 0 0, 300% 0; }
+}
+/* Staggered, so a grid of cards shimmers rather than pulsing in lockstep. */
+.ab-card:nth-child(2n) { animation-delay: -6s; }
+.ab-card:nth-child(3n) { animation-delay: -12s; }
+[data-theme="dark"] .ab-card {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
+              0 6px 18px rgba(0, 0, 0, 0.40);
+}
+/* Lift and shadow only. Nothing here may touch --ab-face; see above. */
+.ab-card:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7),
+              0 12px 26px rgba(0, 0, 0, 0.11);
+}
+[data-theme="dark"] .ab-card:hover {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07),
+              0 12px 26px rgba(0, 0, 0, 0.55);
+}
+/* A permanently moving edge is the kind of thing that makes some people ill. */
+@media (prefers-reduced-motion: reduce) {
+  .ab-card { animation: none; }
+}
+/* Blocked cards drop out of the shimmer entirely — a course you cannot take yet
+   should look inert, and a dashed transparent border would otherwise just chop
+   the spectrum into dashes and read as decoration rather than as a state. */
+.ab-card.is-blocked {
+  --ab-edge: none;
+  border: 1px dashed var(--border);
+  animation: none;
+  box-shadow: none;
+}
+.ab-card.is-blocked .ab-card-title { color: var(--text-muted); }
+.ab-card-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ab-card-title { font-size: 14.5px; font-weight: 600; line-height: 1.3; }
+.ab-card-sub { font-size: 12.5px; color: var(--text-secondary); }
+.ab-card-meta, .ab-card-note {
+  font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: .04em;
+}
+.ab-card-note { color: var(--text-secondary); }
+.ab-card-body { font-size: 12.5px; color: var(--text-secondary); line-height: 1.45; }
+.ab-card-value {
+  font-family: var(--mono); font-size: 18px; font-weight: 700; flex-shrink: 0;
+}
+.ab-card-value i { font-style: normal; font-size: 10px; color: var(--text-muted); margin-left: 2px; }
+/* checklist sheet */
+.ab-sheet-body { display: grid; grid-template-columns: minmax(0, 1fr) 175px; gap: 14px; }
+.ab-steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+/* .ab-box was a painted square. It is a button now — the whole point of writing
+   a petition as steps is knowing which one you are on when you come back to it. */
+button.ab-box {
+  appearance: none; -webkit-appearance: none; background: var(--bg-card);
+  border: 1.5px solid var(--border); border-radius: 4px;
+  width: 15px; height: 15px; flex: 0 0 15px; padding: 0; margin-top: 1px;
+  cursor: pointer; position: relative;
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+button.ab-box:hover { border-color: var(--accent-text); transform: scale(1.08); }
+button.ab-box:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+button.ab-box[aria-pressed="true"] {
+  background: var(--accent); border-color: var(--accent);
+}
+button.ab-box[aria-pressed="true"]::after {
+  content: ""; position: absolute; left: 4px; top: 1px;
+  width: 4px; height: 8px; border: solid #fff;
+  border-width: 0 2px 2px 0; transform: rotate(42deg);
+}
+.ab-steps li.is-done .ab-step-text {
+  color: var(--text-muted); text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.ab-step-text { transition: color 160ms ease; }
+.ab-rail-done {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--accent-text);
+}
+.ab-steps li {
+  display: flex; gap: 9px; align-items: flex-start; font-size: 13.5px;
+  padding: 5px 0; line-height: 1.45;
+}
+.ab-box {
+  width: 12px; height: 12px; border: 1.5px solid var(--text-muted);
+  border-radius: 2px; flex-shrink: 0; margin-top: 3px; display: inline-block;
+}
+.ab-facts {
+  border-left: 1px solid var(--border); padding-left: 13px;
+  display: flex; flex-direction: column; gap: 9px;
+}
+.ab-k {
+  display: block; font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px;
+}
+.ab-facts b { font-size: 12.5px; font-weight: 600; line-height: 1.3; display: block; }
+/* strip */
+.ab-timeline { list-style: none; margin: 0; padding: 0; }
+.ab-timeline li {
+  display: flex; align-items: baseline; gap: 9px; padding: 6px 0;
+  border-bottom: 1px solid var(--border); font-size: 13px;
+}
+.ab-timeline li:last-child { border-bottom: none; }
+.ab-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted);
+  flex-shrink: 0; align-self: center;
+}
+.ab-timeline li.is-next .ab-dot { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+.ab-timeline li.is-next .ab-tl-label { font-weight: 700; }
+.ab-tl-label { flex: 1; min-width: 0; }
+.ab-tl-date { font-family: var(--mono); font-size: 11px; color: var(--text-secondary); }
+.ab-tl-days {
+  font-family: var(--mono); font-size: 10px; color: var(--text-muted);
+  border: 1px solid var(--border); border-radius: 999px; padding: 1px 7px;
+}
+/* plan */
+.ab-plan-cols { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(0, 200px)); }
+.ab-term header { border-bottom: 2px solid var(--text); padding-bottom: 5px; margin-bottom: 5px; }
+.ab-term h4 { font-size: 12.5px; font-weight: 800; margin: 0; }
+.ab-term ul { list-style: none; margin: 0; padding: 0; }
+.ab-term li { display: flex; align-items: center; gap: 8px; height: 27px; font-size: 12.5px; }
+.ab-term li.is-blocked { opacity: .55; }
+.ab-term li.is-blocked .ab-box { border-style: dashed; }
+.ab-c { flex: 1; font-family: var(--mono); font-size: 11.5px; }
+.ab-n { font-family: var(--mono); font-size: 11px; color: var(--text-secondary); }
+.ab-term footer {
+  display: flex; justify-content: space-between; align-items: baseline;
+  border-top: 2px solid var(--text); margin-top: 4px; padding-top: 5px;
+}
+.ab-term footer span {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.ab-term footer b { font-family: var(--mono); font-size: 14px; }
+.ab-progress { height: 4px; background: var(--border); border-radius: 999px; margin-top: 11px; overflow: hidden; }
+.ab-progress i { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+@media (max-width: 620px) {
+  .ab-sheet-body { grid-template-columns: minmax(0, 1fr); }
+  .ab-facts { border-left: none; border-top: 1px solid var(--border); padding: 10px 0 0; }
+}
+
+/* ── Prerequisite map (SVG) ──────────────────────────────────────────────────
+   Groups on the left, wires converging on the course asked about, what it opens
+   on the right. Three node states, because "in progress" is what answers a
+   question about a future term. */
+/* .pm shares the glass panel declared above with .ab. */
+.pm-head { display: flex; align-items: center; gap: 9px; margin-bottom: 6px; flex-wrap: wrap; }
+.pm-label {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.pm-verdict {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text-secondary);
+  border: 1px solid var(--border); border-radius: 999px; padding: 2px 9px;
+}
+/* Ink, not emerald. The verdict and the course it is about are one statement,
+   and the emerald in this figure is spent on the course — see .is-target. */
+.pm-verdict.ok { color: var(--bg-card); background: var(--text); border-color: var(--text); }
+.pm-svg { width: 100%; height: auto; display: block; }
+.pm-wire { fill: none; stroke: var(--border); stroke-width: 1.25; }
+.pm-svg text { font-family: var(--mono); }
+.pm-grouplabel, .pm-join, .pm-more {
+  font-size: 8.5px; letter-spacing: .14em; text-transform: uppercase;
+  fill: var(--text-muted);
+}
+.pm-code { font-size: 11px; font-weight: 600; fill: var(--text); }
+.pm-code.sm { font-size: 10px; }
+.pm-sub { font-size: 8.5px; fill: var(--text-secondary); letter-spacing: 0; }
+.pm-cr { font-size: 9px; fill: rgba(255,255,255,.8); text-anchor: end; }
+/* Passed work is settled, not celebrated: solid ink outline, no tint. It used to
+   be emerald, which put the accent on six nodes at once and left the course the
+   student actually asked about competing with its own prerequisites. */
+.pm-mark { font-size: 11px; fill: var(--text); text-anchor: end; }
+.pm-mark.now { fill: var(--text-secondary); }
+/* The tween. Nodes are positioned by transform on a <g> and keyed by course
+   code, so on a re-centre React moves the same element and the browser
+   interpolates — courses that appear in both graphs slide to their new place
+   instead of the picture blinking. That continuity is what makes it read as one
+   graph you are moving through. */
+.pm-node { transition: transform 420ms cubic-bezier(.165, .84, .44, 1); }
+.pm-node rect {
+  fill: var(--bg-card); stroke: var(--border); stroke-width: 1;
+  transition: fill 220ms ease, stroke 220ms ease;
+}
+.pm-node.is-clickable { cursor: pointer; }
+.pm-node.is-clickable:hover rect { stroke: var(--accent-text); stroke-width: 1.5; }
+.pm-node.is-clickable:focus-visible { outline: none; }
+.pm-node.is-clickable:focus-visible rect {
+  stroke: var(--accent-text); stroke-width: 2;
+}
+.pm.is-loading .pm-svg { opacity: .55; transition: opacity 120ms ease; }
+.pm-back {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text-secondary);
+  background: none; border: 1px solid var(--border); border-radius: 999px;
+  padding: 2px 9px; cursor: pointer; margin-left: auto;
+}
+.pm-back:hover { border-color: var(--accent-text); color: var(--accent-text); }
+.pm-hint {
+  margin-left: auto; font-style: normal; opacity: .8;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pm-node { transition: none; }
+}
+.pm-node.is-done rect { stroke: var(--text); fill: var(--bg-card); }
+.pm-node.is-doing rect { stroke: var(--text-secondary); stroke-dasharray: 4 3; }
+.pm-node.is-todo rect { stroke: var(--border); }
+.pm-node.is-todo .pm-code { fill: var(--text-secondary); }
+/* THE emerald. One per figure, and it is the destination. */
+.pm-node.is-target rect { fill: var(--accent); stroke: var(--accent); }
+.pm-node.is-target .pm-code { fill: #fff; font-size: 12px; }
+.pm-node.is-target .pm-sub { fill: rgba(255,255,255,.85); }
+.pm-node.is-next rect { fill: var(--bg-card); stroke: var(--border); }
+.pm-legend { display: flex; flex-wrap: wrap; gap: 5px 14px; margin-top: 8px; }
+.pm-legend span {
+  display: flex; align-items: center; gap: 6px; font-family: var(--mono);
+  font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted);
+}
+.pm-legend .k { width: 11px; height: 8px; border: 1px solid var(--border); display: inline-block; }
+.pm-legend .k.done { border-color: var(--text); background: var(--bg-card); }
+.pm-legend .k.doing { border-color: var(--text-secondary); border-style: dashed; }
+.pm-legend .k.target { background: var(--accent); border-color: var(--accent); }

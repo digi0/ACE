@@ -11,6 +11,12 @@ class User(Base):
     email = Column(String(320), nullable=True)
     display_name = Column(String(256), nullable=True)
     selected_major = Column(String(500), nullable=True)
+    # What ACE has learned about the student from their own messages: interests,
+    # career direction, activities. A JSON blob rather than columns because the
+    # shape is still moving and it is read whole or not at all. Student-visible
+    # and student-editable via /user/profile — an inference about a person should
+    # never be invisible to them.
+    profile_json = Column(Text, nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     last_login = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
@@ -63,12 +69,17 @@ class Message(Base):
     content = Column(Text, nullable=False)
     intent = Column(String(64), nullable=True)
     sources_json = Column(Text, nullable=True)
+    # Student feedback on an assistant answer: 1 = thumbs up, -1 = thumbs down,
+    # NULL = not rated. Always NULL on user-role rows.
+    rating = Column(Integer, nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     conversation = relationship("Conversation", back_populates="messages")
 
     __table_args__ = (
         Index("ix_messages_conversation_id", "conversation_id"),
+        # Drives the weekly review query, which scans by recency.
+        Index("ix_messages_created_at", "created_at"),
     )
 
 

@@ -18,10 +18,16 @@
       "intent": "gen_ed",
       "question": "Which gen ed courses also count toward my major?",
       "expected_points": [
-        "identifies at least one double-dip course that satisfies both Gen Ed and a CMPSC requirement",
-        "names specific course codes"
+        "names specific course codes that count toward both General Education and the Computer Science major",
+        "for each course named, says which General Education category it satisfies",
+        "makes clear which courses are required for the major and which count only if the student chooses them"
       ],
-      "must_not": []
+      "must_not": [],
+      "must_contain": [
+        "CMPSC 150N",
+        "PHYS 211",
+        "GWS"
+      ]
     },
     {
       "id": "ds-courses-stats",
@@ -43,7 +49,10 @@
         "lists requirements specific to the Psychology program (e.g. PSYCH courses)",
         "does not describe a computing curriculum"
       ],
-      "must_not": ["CMPSC", "DTSCE"]
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
     },
     {
       "id": "psych-contact-advisor",
@@ -52,9 +61,13 @@
       "question": "Who do I talk to about my degree requirements?",
       "expected_points": [
         "directs the student to their college's advising office or a general advising resource",
-        "does not name a Computer Science department advisor"
+        "does not name a Computer Science department advisor",
+        "offering the advisor named in the student's own uploaded document is correct, not a defect"
       ],
-      "must_not": ["CMPSC", "DTSCE"]
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
     },
     {
       "id": "nursing-courses",
@@ -62,10 +75,17 @@
       "intent": "courses",
       "question": "What are the required courses for my degree?",
       "expected_points": [
-        "lists requirements specific to the Nursing program (e.g. NURS courses)",
-        "answer is grounded in the Nursing program requirements"
+        "lists the prescribed supporting courses by code (BIOL, MICRB, NUTR, PSYCH)",
+        "also lists the NURS professional sequence, which the Bulletin's requirement table omits and the suggested plan carries",
+        "tells the student to confirm the full sequence on the Bulletin"
       ],
-      "must_not": ["CMPSC", "DTSCE"]
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ],
+      "must_contain": [
+        "NURS"
+      ]
     },
     {
       "id": "mecheng-credits",
@@ -75,7 +95,10 @@
       "expected_points": [
         "states a specific total credit number for the Mechanical Engineering program"
       ],
-      "must_not": ["CMPSC", "DTSCE"]
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
     },
     {
       "id": "biology-gened",
@@ -86,7 +109,10 @@
         "describes Penn State Gen Ed categories (e.g. GA, GH, GS, GN, GHW, GQ)",
         "relates the answer to the Biology program where possible"
       ],
-      "must_not": ["CMPSC", "DTSCE"]
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
     },
     {
       "id": "finance-courses",
@@ -97,7 +123,10 @@
         "lists requirements specific to the Finance program (e.g. FIN courses)",
         "answer is grounded in the Finance program requirements"
       ],
-      "must_not": ["CMPSC", "DTSCE"]
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
     },
     {
       "id": "cs-deadline-drop",
@@ -130,7 +159,280 @@
         "describes requirements specific to the Kinesiology program",
         "answer is grounded in the program requirements, not a generic answer"
       ],
-      "must_not": ["CMPSC", "DTSCE"]
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "logistics-register",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "logistics",
+      "question": "How do I register for classes?",
+      "expected_points": [
+        "names LionPATH as the system where registration happens",
+        "mentions that registration opens on an assigned enrollment/registration appointment",
+        "mentions clearing holds before registering"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "logistics-hold",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "logistics",
+      "question": "What is a registration hold and how do I clear it?",
+      "expected_points": [
+        "explains a hold blocks registration until resolved",
+        "names at least one type of hold (advising, bursar/financial, health)",
+        "tells the student to check LionPATH and contact the office that owns the hold"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "logistics-newstudent",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "logistics",
+      "question": "I just enrolled at Penn State, what do I do first?",
+      "expected_points": [
+        "points the new student to orientation and/or their advising office",
+        "mentions LionPATH for registration",
+        "does not invent campus-specific click-by-click steps"
+      ],
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "rec-next-semester-cs",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "recommendation",
+      "question": "What should I take next semester?",
+      "expected_points": [
+        "proposes specific named courses by code, not just requirement categories",
+        "totals or states the credits",
+        "tells the student to confirm with an adviser"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "rec-schedule-psych",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "recommendation",
+      "question": "Can you suggest a schedule for me?",
+      "expected_points": [
+        "proposes specific named courses from the program's own suggested plan (a first-year plan legitimately includes writing and seminar courses, not only PSYCH courses)",
+        "does not propose a computing curriculum",
+        "does not list alternatives for the same slot as if they were separate courses to take"
+      ],
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "career-clubs-no-invention",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "career",
+      "question": "What clubs should I join as a CS major?",
+      "expected_points": [
+        "names real Penn State organisations from ACE's directory, with their profile links",
+        "does not invent organisations, meeting times, or membership requirements",
+        "points the student to the full directory for anything not listed"
+      ],
+      "must_not": [
+        "HackPSU"
+      ],
+      "must_contain": [
+        "discover.psu.edu/organization/"
+      ]
+    },
+    {
+      "id": "career-internship",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "career",
+      "question": "How do I find an internship?",
+      "expected_points": [
+        "names Career Services and/or Handshake as where postings live",
+        "gives concrete next actions",
+        "does not invent specific employers or job postings"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "career-research-psych",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "career",
+      "question": "How do I get involved in undergraduate research?",
+      "expected_points": [
+        "points the student to faculty in their own department and/or their adviser",
+        "may name real organisations from ACE's directory, with links",
+        "does not name specific faculty members or individual research labs",
+        "does not describe a computing curriculum"
+      ],
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "career-clubs-dance",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "career",
+      "question": "I'm interested in dancing — what should I join?",
+      "expected_points": [
+        "names specific Penn State dance organisations",
+        "includes links (profile, and Instagram where available)",
+        "says what each organisation actually does"
+      ],
+      "must_contain": [
+        "discover.psu.edu/organization/",
+        "instagram.com"
+      ],
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "proc-retroactive-withdrawal",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "deadline",
+      "question": "I had a medical emergency last semester and want to retroactively withdraw. What do I do?",
+      "expected_points": [
+        "explains this is a Faculty Senate student petition, not a normal withdrawal",
+        "gives concrete steps including talking to an adviser and providing documentation",
+        "links or names the petition process source"
+      ],
+      "must_contain": [
+        "petition"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "proc-missed-late-drop",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "deadline",
+      "question": "I missed the late drop deadline. Is there anything I can do?",
+      "expected_points": [
+        "does not simply restate the deadline that has already passed",
+        "explains the retroactive late drop petition route",
+        "names what the student needs to prepare"
+      ],
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "proc-grade-forgiveness",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "courses",
+      "question": "I failed a course and retook it. Can the old grade be removed?",
+      "expected_points": [
+        "explains grade forgiveness",
+        "states what the student has to do to request it"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "places-eat",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "general",
+      "question": "Where can I eat on campus?",
+      "expected_points": [
+        "names specific Penn State dining locations",
+        "gives a directions or info link",
+        "does not state specific opening or closing times, and points to the live hours page instead"
+      ],
+      "must_contain": [
+        "google.com/maps"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "places-study",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "general",
+      "question": "Where's a good place to study on campus?",
+      "expected_points": [
+        "names specific study spaces or libraries",
+        "gives links",
+        "does not describe a computing curriculum"
+      ],
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "places-parking",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "general",
+      "question": "Where do I park my car on campus and do I need a permit?",
+      "expected_points": [
+        "explains a permit is required",
+        "points to Transportation Services",
+        "does not invent lot names, prices, or fines"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "events-this-week",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "general",
+      "question": "What's happening on campus this week?",
+      "expected_points": [
+        "names specific upcoming events with dates",
+        "gives event links",
+        "does not claim to be the complete list"
+      ],
+      "must_contain": [
+        "discover.psu.edu/event/"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "money-who-to-email",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "general",
+      "question": "There's a charge on my student account I don't recognise. Who do I email?",
+      "expected_points": [
+        "names the Office of the Bursar as the office that owns student account charges",
+        "gives a contact route (phone, form, or email)",
+        "does not guess what the charge is or what the student owes"
+      ],
+      "must_contain": [
+        "bursar"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "money-refund",
+      "major": "Psychology, B.A. (Liberal Arts)",
+      "intent": "general",
+      "question": "Why haven't I received my refund yet?",
+      "expected_points": [
+        "explains how and when refunds are issued",
+        "points to the Bursar",
+        "does not claim to see the student's account"
+      ],
+      "must_not": [
+        "CMPSC",
+        "DTSCE"
+      ]
+    },
+    {
+      "id": "money-advice-refused",
+      "major": "Computer Science, B.S. (Engineering)",
+      "intent": "financial_aid",
+      "question": "Should I take out a loan to cover next semester?",
+      "expected_points": [
+        "does not advise whether to borrow",
+        "explains ACE cannot see their aid package or balance",
+        "routes them to the Office of Student Aid"
+      ],
+      "must_not": []
     }
   ]
 }

@@ -1,4 +1,6 @@
-import { useState, useRef, useEffect, useLayoutEffect, useCallback, lazy, Suspense } from "react";
+import { useState, useRef, useEffect, useLayoutEffect, useCallback, lazy, Suspense, Fragment } from "react";
+import PrereqMapBlock from "./PrereqMapBlock";
+import { CardsBlock, ChecklistBlock, StripBlock, PlanBlock } from "./AnswerBlocks";
 import ReactMarkdown from "react-markdown";
 import {
   ChevronRight, GraduationCap, BookOpen, CalendarClock,
@@ -696,6 +698,10 @@ function App() {
                 streaming: false,
                 sources: data.sources ?? [],
                 messageId: data.message_id ?? null,
+                // The backend's visual policy decides whether a block is
+                // warranted and ships the data for it. Renderers read this;
+                // when it is absent the answer is prose, which is the norm.
+                visual: data.visual ?? null,
               };
               return next;
             });
@@ -1038,7 +1044,8 @@ function App() {
           ) : (
             <div className="messages-list">
               {messages.map((msg, i) => (
-                <div key={i} className={`message message--${msg.role}`}>
+                <Fragment key={i}>
+                <div className={`message message--${msg.role}`}>
                   {msg.role === "assistant" && (
                     <div className="msg-avatar">
                       <AceLogo size={28} />
@@ -1084,6 +1091,23 @@ function App() {
                     )}
                   </div>
                 </div>
+                {/* Outside the bubble, on the dotted surface. A bubble is the
+                    shape of something SAID; a map you can walk and a checklist
+                    you can tick are things you work with, and a planner spread
+                    squeezed into a speech bubble read as a quotation of a plan
+                    rather than the plan. */}
+                {!msg.streaming && msg.visual?.data && (
+                  <div className="msg-visual">
+                    {{
+                      map: <PrereqMapBlock data={msg.visual.data} />,
+                      cards: <CardsBlock data={msg.visual.data} />,
+                      checklist: <ChecklistBlock data={msg.visual.data} />,
+                      strip: <StripBlock data={msg.visual.data} />,
+                      plan: <PlanBlock data={msg.visual.data} />,
+                    }[msg.visual.block] ?? null}
+                  </div>
+                )}
+                </Fragment>
               ))}
 
               {loading && (

@@ -4,7 +4,9 @@ import json
 import logging
 from datetime import datetime, timezone
 from pypdf import PdfReader
-from backend.services.audit_parser_service import parse_whatif_blocks
+from backend.services.audit_parser_service import (
+    parse_whatif_blocks, merge_satisfied_requirements,
+)
 from backend.config import UPLOAD_DIR, MAX_UPLOAD_FILES
 from backend.database import SessionLocal
 from backend.models import User, UserDocument
@@ -215,6 +217,16 @@ def load_student_document(file_path: str, filename: str, user_id: str, db=None) 
     }
 
 
+def _corrected_audit(row):
+    if not row.audit_parse_json:
+        return None
+    parsed = json.loads(row.audit_parse_json)
+    try:
+        return merge_satisfied_requirements(parsed, row.text or "")
+    except Exception:  # noqa: BLE001 — a correction must not break a read
+        return parsed
+
+
 def get_current_student_doc(user_id: str, db=None) -> dict:
     db, should_close = _ensure_db(db)
     try:
@@ -240,7 +252,9 @@ def get_current_student_doc(user_id: str, db=None) -> dict:
         "doc_type": row.doc_type,
         "text": row.text,
         "analysis": json.loads(row.analysis_json) if row.analysis_json else None,
-        "audit_parse": json.loads(row.audit_parse_json) if row.audit_parse_json else None,
+        # Re-applied on read so documents parsed before the transfer-credit fix
+        # are corrected without asking the student to upload again.
+        "audit_parse": _corrected_audit(row),
     }
 
 
