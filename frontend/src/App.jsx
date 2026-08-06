@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useLayoutEffect, useCallback, lazy, Suspense } from "react";
 import PrereqMapBlock from "./PrereqMapBlock";
+import { CardsBlock, ChecklistBlock, StripBlock, PlanBlock } from "./AnswerBlocks";
 import ReactMarkdown from "react-markdown";
 import {
   ChevronRight, GraduationCap, BookOpen, CalendarClock,
@@ -1061,8 +1062,14 @@ function App() {
                             }}
                           >{msg.content}</ReactMarkdown>
                           {msg.streaming && <span className="typing-cursor" />}
-                          {!msg.streaming && msg.visual?.block === "map" && msg.visual?.data && (
-                            <PrereqMapBlock data={msg.visual.data} />
+                          {!msg.streaming && msg.visual?.data && (
+                            {
+                              map: <PrereqMapBlock data={msg.visual.data} />,
+                              cards: <CardsBlock data={msg.visual.data} />,
+                              checklist: <ChecklistBlock data={msg.visual.data} />,
+                              strip: <StripBlock data={msg.visual.data} />,
+                              plan: <PlanBlock data={msg.visual.data} />,
+                            }[msg.visual.block] ?? null
                           )}
                         </div>
                         {!msg.streaming && msg.sources?.length > 0 && (

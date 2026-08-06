@@ -29,7 +29,7 @@ STALE_AFTER_DAYS = 21
 TRIGGERS = [
     "event", "events", "what's happening", "whats happening", "going on",
     "this week", "this weekend", "tonight", "today", "tomorrow",
-    "something to do", "things to do", "anything happening", "on campus",
+    "something to do", "things to do", "anything happening",
     "meeting", "workshop", "fair", "info session", "social", "party",
     "performance", "concert", "game night", "speaker",
 ]

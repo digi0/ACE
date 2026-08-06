@@ -26,9 +26,11 @@ from backend.services.clubs_service import build_clubs_snippet, search_clubs
 from backend.services.procedures_service import build_procedures_snippet, find_procedures
 from backend.services.places_service import build_places_snippet, find_places
 from backend.services.events_service import (
-    build_events_snippet, find_events, mentions_events, is_stale as is_events_stale,
+    build_events_snippet, find_events, mentions_events,
+    is_stale as is_events_stale, local_time as events_local_time,
 )
 from backend.services.money_service import build_money_snippet, find_money
+from backend.services import blocks as B
 from backend.services.visual_policy import (
     decide as decide_visual, build_visual_directive, _PREREQ_QUESTION,
 )
@@ -1037,6 +1039,55 @@ def _build_prereq_snippet(graph) -> str:
     return "\n".join(lines)
 
 
+def _build_block_data(block, question, intent, user_major, student_doc):
+    """The payload for a non-map block, or None when there is nothing to draw."""
+    try:
+        if block == "cards":
+            if intent == "career":
+                clubs = search_clubs([question]) or (
+                    search_clubs([user_major.split(",")[0]]) if user_major else [])
+                if clubs:
+                    return B.clubs_cards(clubs)
+            # Places before events: "where can I eat on campus?" matched the
+            # events trigger "on campus" and came back with a social calendar.
+            # A place question names a place; an event question names a time.
+            places = find_places(question)
+            if places:
+                return B.places_cards(places)
+            if mentions_events(question) and not is_events_stale():
+                evs = find_events(question)
+                if evs:
+                    return B.events_cards(evs, events_local_time)
+            ctx = _recommendation_context(user_major, student_doc)
+            return B.course_cards(ctx["propose"]) if ctx and ctx.get("propose") else None
+
+        if block == "checklist":
+            return B.procedure_checklist(find_procedures(question))
+
+        if block == "plan":
+            ctx = _recommendation_context(user_major, student_doc)
+            prog = get_program(user_major) if user_major else None
+            audit = (student_doc or {}).get("audit_parse") or {}
+            totals = audit.get("overall_totals") or {}
+            done = max((t.get("used", 0) for t in totals.values()), default=0)
+            return B.term_plan(ctx, (prog or {}).get("total_credits"), done)
+
+        if block == "strip":
+            from backend.services.calendar_scraper import load_calendar
+            return B.deadline_strip(load_calendar())
+    except Exception as exc:  # noqa: BLE001 — a block must never break an answer
+        logger.warning("_build_block_data(%s) | %s", block, exc)
+    return None
+
+
+def _recommendation_context(user_major, student_doc):
+    if not user_major:
+        return None
+    audit = (student_doc or {}).get("audit_parse") or {}
+    done = [c.get("code") for c in audit.get("completed_courses", []) if c.get("code")]
+    return build_recommendation_context(user_major, done)
+
+
 def _map_target_codes(question, history=None):
     """Course codes a map could be drawn about, current message first.
 
@@ -1108,18 +1159,20 @@ def _count_visual_material(question, intent, user_major, student_doc, history=No
 
 
 def _upcoming_deadline_count() -> int:
-    """Dated events left in the current term — the strip's raw material."""
+    """How many rows the strip would actually have.
+
+    Derived from the same builder the block uses. The previous version counted
+    future events in the first semester that had any, which returned 1 while the
+    strip held 5 — the policy and the payload disagreeing about the same data,
+    which is exactly how a block gets authorised and then draws nothing (or the
+    reverse).
+    """
     try:
         from backend.services.calendar_scraper import load_calendar
-        today = date.today().isoformat()
-        data = load_calendar() or {}
-        for sem in data.get("semesters", []):
-            future = [e for e in sem.get("events", []) if (e.get("iso_date") or "") >= today]
-            if future:
-                return len(future)
+        strip = B.deadline_strip(load_calendar())
+        return len(strip["events"]) if strip else 0
     except Exception:  # noqa: BLE001
-        pass
-    return 0
+        return 0
 
 
 def _build_recommendation_snippet(program_name, student_doc):
@@ -1607,6 +1660,20 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
             done = [c.get("code") for c in audit.get("completed_courses", []) if c.get("code")]
             prereq_graph = build_prereq_graph(codes[0], done)
     prereq_snippet = _build_prereq_snippet(prereq_graph)
+
+    # Payload for whichever block the policy chose. The map already has its
+    # graph; everything else is built here. When there turns out to be nothing
+    # to draw the block is dropped, so the directive never promises the model a
+    # diagram that will not appear.
+    if prereq_graph and visual.get("block") == "map":
+        visual["data"] = prereq_graph
+    elif visual.get("level", 0) >= 2 and visual.get("block"):
+        visual["data"] = _build_block_data(
+            visual.get("block"), question, intent, user_major, student_doc
+        )
+        if not visual["data"]:
+            visual["block"] = None
+
     register = _register_for(intent, question,
                              bool(procedures_snippet), bool(money_snippet))
     # The generic either/or bullet template fights the prerequisite block, which

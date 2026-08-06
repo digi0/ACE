@@ -111,9 +111,11 @@ def test_directive_matches_the_decision():
     d2 = vp.build_visual_directive("can I take CMPSC 465?", "courses", {"map": 5})
     assert "rendered beneath" in d2 and "do NOT" in d2
 
-    d2b = vp.build_visual_directive("which gen ed courses count?", "gen_ed", {"cards": 6})
-    assert "nothing renders it" in d2b and "must appear IN your answer" in d2b
-    assert "map" in vp.RENDERED_BLOCKS and "cards" not in vp.RENDERED_BLOCKS
+    # Every block the policy can choose now has a renderer, so the directive
+    # tells the model to stand back for all of them. The unrendered branch stays
+    # in place for the next block type added ahead of its component.
+    for block in ("map", "cards", "checklist", "strip", "plan"):
+        assert block in vp.RENDERED_BLOCKS
 
     d3 = vp.build_visual_directive("show me the map for CMPSC 465", "courses", {"map": 5})
     assert "rendered beneath" in d3

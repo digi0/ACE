@@ -73,7 +73,7 @@ BLOCK_RULES = {
 # block carry the structure" for a block with no renderer loses the information
 # entirely — the student gets neither the list nor the picture. Add to this set
 # only when a renderer ships.
-RENDERED_BLOCKS = {"map"}
+RENDERED_BLOCKS = {"map", "cards", "checklist", "strip", "plan"}
 
 # Which block an intent would use, if it qualifies at all.
 INTENT_BLOCK = {
@@ -102,6 +102,15 @@ _PREREQ_QUESTION = re.compile(
 _FALLBACK_ORDER = ("map", "plan", "checklist", "strip", "cards")
 _PROCEDURE_QUESTION = re.compile(
     r"\b(how do i|what do i do|steps|process|petition|retroactive|withdraw)\b", re.I
+)
+
+
+# A strip is for a term at a glance. "When is the last day to drop?" wants one
+# sentence with one date in it — drawing five deadlines around the answer buries
+# the one they asked for.
+_OVERVIEW_QUESTION = re.compile(
+    r"\b(deadlines|dates|what'?s coming|coming up|what'?s due|this term|"
+    r"this semester|calendar|key dates|important dates|overview)\b", re.I
 )
 
 
@@ -155,6 +164,10 @@ def decide(question, intent, counts=None, has_audit=False):
         # inventing a diagram — that is how charts of nothing get made.
         return _out(0, None, False,
                     "no structured data for a visual" if asked else "prose answers this")
+
+    if block == "strip" and not _OVERVIEW_QUESTION.search(q) and not asked:
+        return _out(1, None, False,
+                    "one date asked for — a sentence beats a term timeline")
 
     rule = BLOCK_RULES[block]
     n = counts.get(block, 0)
