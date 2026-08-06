@@ -132,6 +132,37 @@ def test_visual_counts_resolve_anaphora_from_history():
     assert counts.get("map"), f"history should surface a course to map, got {counts}"
 
 
+def test_prereq_graph_knows_in_progress_from_done():
+    from backend.services.program_service import build_prereq_graph
+
+    # The state that decides "can I take this NEXT fall?". ACE told a student no
+    # while they were sitting in one of the two courses it was waiting on.
+    g = build_prereq_graph("CMPSC 465", ["CMPSC 132"], in_progress=["CMPSC 360"])
+    assert g["eligible"] is False, "not eligible today — 360 is unfinished"
+    assert g["on_track"] is True, "but every group is satisfied or under way"
+    doing = [n for grp in g["groups"] for n in grp if n["in_progress"]]
+    assert [n["code"] for n in doing] == ["CMPSC 360"]
+
+    # Nothing in progress and a group untouched — genuinely blocked.
+    blocked = build_prereq_graph("CMPSC 465", ["CMPSC 132"])
+    assert blocked["on_track"] is False
+
+
+def test_transfer_credit_counts_as_satisfied():
+    from backend.services.audit_parser_service import satisfied_course_codes
+
+    # Transfer credit appears as "CMPSC XFR100" in the course rows; the only
+    # place the real course is named is the requirement header above it.
+    audit = ("CMPSC 122 or CMPSC 132-C or higher required\n"
+             "Satisfied\n· Units: 3.00 required, 3.00 used\n"
+             "FA 2023 CMPSC XFR100 Transfer Credit 3.00 TR\n")
+    assert "CMPSC 122" in satisfied_course_codes(audit)
+
+    unmet = audit.replace("Satisfied", "Not Satisfied")
+    assert "CMPSC 122" not in satisfied_course_codes(unmet), \
+        "'Not Satisfied' must not read as satisfied"
+
+
 def test_classify_major():
     # The CMPSC handbook documents the UP Engineering program — it must route to RAG.
     assert classify_major("Computer Science, B.S. (Engineering)") == "cs"
@@ -173,6 +204,8 @@ def test_filter_records_by_scope():
 if __name__ == "__main__":
     test_detect_question_intent()
     test_visual_counts_resolve_anaphora_from_history()
+    test_prereq_graph_knows_in_progress_from_done()
+    test_transfer_credit_counts_as_satisfied()
     test_recommendation_context()
     test_classify_major()
     test_select_top_records()

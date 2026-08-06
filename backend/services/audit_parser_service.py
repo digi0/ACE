@@ -284,3 +284,53 @@ def build_audit_summary(parsed: dict) -> str:
             )
 
     return "\n".join(parts) if parts else "No audit summary extracted."
+
+# ── Satisfied requirement blocks ─────────────────────────────────────────────
+
+_REQ_LINE = re.compile(r"([A-Z]{2,6}\s?\d{1,3}[A-Z]?)(?:\s+or\s+([A-Z]{2,6}\s?\d{1,3}[A-Z]?))*")
+
+
+def parse_satisfied_requirements(text: str) -> list[dict]:
+    """Requirement blocks the audit itself marks Satisfied, with the courses named.
+
+    A what-if report does not list "CMPSC 122" as a completed course when the
+    credit arrived by transfer — the row reads "CMPSC XFR100 ... 3.00 TR" and the
+    only place the real course appears is the requirement header above it:
+
+        CMPSC 122 or CMPSC 132-C or higher required
+        Satisfied
+
+    Reading only the course rows found one completed course in an audit showing
+    66 of 120 credits used, and ACE told the student they could not take a course
+    they were already eligible for.
+    """
+    lines = [l.strip() for l in (text or "").split("\n")]
+    out: list[dict] = []
+    for i, line in enumerate(lines):
+        if "required" not in line.lower():
+            continue
+        codes = [
+            re.sub(r"\s+", " ", m.group(0)).upper()
+            for m in re.finditer(r"\b[A-Z]{2,6}\s?\d{1,3}[A-Z]?\b", line)
+        ]
+        if not codes:
+            continue
+        # The verdict sits within a couple of lines of the header.
+        window = " | ".join(lines[i + 1: i + 4]).lower()
+        if "not satisfied" in window:
+            state = "unsatisfied"
+        elif "satisfied" in window:
+            state = "satisfied"
+        else:
+            continue
+        via = "transfer" if any("TR" in l or "Transfer" in l
+                                for l in lines[i + 1: i + 8]) else ""
+        out.append({"codes": codes, "state": state, "via": via,
+                    "requirement": line[:120]})
+    return out
+
+
+def satisfied_course_codes(text: str) -> set[str]:
+    """Every course code the audit says a satisfied requirement covers."""
+    return {c for r in parse_satisfied_requirements(text)
+            if r["state"] == "satisfied" for c in r["codes"]}

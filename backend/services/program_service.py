@@ -906,22 +906,32 @@ def parse_prereq_groups(condition: str, codes: list[str]) -> list[list[str]]:
     return groups
 
 
-def build_prereq_graph(code: str, completed=None, max_unlocks: int = 6) -> dict | None:
-    """Everything the map block needs for one course. None if unknown."""
+def build_prereq_graph(code: str, completed=None, max_unlocks: int = 6,
+                       in_progress=None) -> dict | None:
+    """Everything the map block needs for one course. None if unknown.
+
+    Three states, not two. A course being taken RIGHT NOW is neither done nor
+    missing, and for "can I take this next fall?" it is the state that decides
+    the answer — ACE told a student they could not take CMPSC 465 while they sat
+    in CMPSC 360, one of the two courses it was waiting on.
+    """
     target = get_course(code)
     if not target:
         return None
 
     done = {_canonical_code(c) for c in (completed or [])}
+    doing = {_canonical_code(c) for c in (in_progress or [])} - done
     prereqs = [p for p in get_prerequisites(code) if p.get("code")]
     codes = [p["code"] for p in prereqs]
     condition = next((p.get("condition") for p in prereqs if p.get("condition")), "")
 
     def node(c):
         info = _courses_by_code.get(_normalize_code(c)) or {}
+        canon = _canonical_code(c)
         return {"code": _normalize_code(c),
                 "title": (info.get("title") or "").strip(),
-                "done": _canonical_code(c) in done}
+                "done": canon in done,
+                "in_progress": canon in doing}
 
     groups = [[node(c) for c in group] for group in parse_prereq_groups(condition, codes)]
     unlocks = [
@@ -937,7 +947,11 @@ def build_prereq_graph(code: str, completed=None, max_unlocks: int = 6) -> dict 
         # A group is satisfied when ANY of its options is done; the course is
         # eligible when every group is satisfied.
         "eligible": all(any(n["done"] for n in g) for g in groups) if groups else True,
-        "has_record": bool(done),
+        # Every group either satisfied or being satisfied this term — the honest
+        # answer to a question about a FUTURE term.
+        "on_track": all(any(n["done"] or n["in_progress"] for n in g)
+                        for g in groups) if groups else True,
+        "has_record": bool(done or doing),
         "unlocks": unlocks[:max_unlocks],
         "unlocks_more": max(0, len(unlocks) - max_unlocks),
     }

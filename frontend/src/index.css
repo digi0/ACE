@@ -4630,73 +4630,6 @@ body {
   .theme-switch__stars-container { transition: none; }
 }
 
-/* ── Answer block: prerequisite map ──────────────────────────────────────────
-   Rendered inside the assistant bubble when the backend's visual policy chose a
-   map. The AND/OR structure is the whole point — prose flattens it. */
-.pm {
-  margin: 12px 0 4px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--bg);
-  padding: 12px 13px;
-}
-.pm-head { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
-.pm-label {
-  font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--text-muted);
-}
-.pm-verdict {
-  font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--text-secondary);
-  border: 1px solid var(--border); border-radius: 999px; padding: 2px 9px;
-}
-.pm-verdict.ok { color: #fff; background: var(--accent); border-color: var(--accent); }
-.pm-body { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.pm-groups { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 190px; }
-.pm-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.pm-row { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
-.pm-row.wrap { gap: 6px; }
-.pm-slot { display: flex; align-items: center; gap: 7px; }
-.pm-and, .pm-or {
-  font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--text-muted);
-}
-.pm-and { flex: 0 0 100%; margin: 1px 0; }
-.pm-node {
-  display: inline-flex; align-items: baseline; gap: 6px;
-  border: 1px solid var(--border); border-radius: var(--radius-sm);
-  background: var(--bg-card); padding: 5px 10px; max-width: 100%;
-}
-.pm-node.is-done { border-color: var(--accent); background: var(--accent-bg); }
-.pm-node.is-dim { opacity: .55; }
-.pm-node.is-next { padding: 4px 9px; }
-.pm-code { font-family: var(--mono); font-size: 11.5px; font-weight: 600; white-space: nowrap; }
-.pm-tick { color: var(--accent); font-size: 11px; }
-.pm-title {
-  font-size: 11.5px; color: var(--text-secondary);
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 190px;
-}
-.pm-arrow { color: var(--text-muted); font-size: 17px; }
-.pm-target {
-  display: flex; flex-direction: column; gap: 2px;
-  border: 1px solid var(--accent); border-radius: var(--radius-sm);
-  background: var(--accent); color: #fff; padding: 8px 12px; min-width: 150px;
-}
-.pm-target .pm-code { font-size: 12.5px; color: #fff; }
-.pm-target .pm-title { color: rgba(255,255,255,.86); max-width: 200px; }
-.pm-target .pm-cr { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,.75); }
-.pm-unlocks {
-  margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--border);
-  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
-}
-.pm-more, .pm-none {
-  font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: .06em;
-}
-@media (max-width: 560px) {
-  .pm-arrow { display: none; }
-  .pm-target { width: 100%; }
-}
-
 /* ── Answer blocks (cards / checklist / strip / plan) ────────────────────────
    Contained inside the bubble, planner-ruled, accent used once per block. */
 .ab {
@@ -4817,3 +4750,54 @@ body {
   .ab-sheet-body { grid-template-columns: 1fr; }
   .ab-facts { border-left: none; border-top: 1px solid var(--border); padding: 10px 0 0; }
 }
+
+/* ── Prerequisite map (SVG) ──────────────────────────────────────────────────
+   Groups on the left, wires converging on the course asked about, what it opens
+   on the right. Three node states, because "in progress" is what answers a
+   question about a future term. */
+.pm {
+  margin: 12px 0 4px; border: 1px solid var(--border);
+  border-radius: var(--radius-md); background: var(--bg); padding: 11px 12px;
+}
+.pm-head { display: flex; align-items: center; gap: 9px; margin-bottom: 6px; flex-wrap: wrap; }
+.pm-label {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.pm-verdict {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text-secondary);
+  border: 1px solid var(--border); border-radius: 999px; padding: 2px 9px;
+}
+.pm-verdict.ok { color: #fff; background: var(--accent); border-color: var(--accent); }
+.pm-svg { width: 100%; height: auto; display: block; }
+.pm-wire { fill: none; stroke: var(--border); stroke-width: 1.25; }
+.pm-svg text { font-family: var(--mono); }
+.pm-grouplabel, .pm-join, .pm-more {
+  font-size: 8.5px; letter-spacing: .14em; text-transform: uppercase;
+  fill: var(--text-muted);
+}
+.pm-code { font-size: 11px; font-weight: 600; fill: var(--text); }
+.pm-code.sm { font-size: 10px; }
+.pm-sub { font-size: 8.5px; fill: var(--text-secondary); letter-spacing: 0; }
+.pm-cr { font-size: 9px; fill: rgba(255,255,255,.8); text-anchor: end; }
+.pm-mark { font-size: 11px; fill: var(--accent); text-anchor: end; }
+.pm-mark.now { fill: var(--text-secondary); }
+.pm-node rect { fill: var(--bg-card); stroke: var(--border); stroke-width: 1; }
+.pm-node.is-done rect { stroke: var(--accent); fill: var(--accent-bg); }
+.pm-node.is-doing rect { stroke: var(--text-secondary); stroke-dasharray: 4 3; }
+.pm-node.is-todo rect { stroke: var(--border); }
+.pm-node.is-todo .pm-code { fill: var(--text-secondary); }
+.pm-node.is-target rect { fill: var(--accent); stroke: var(--accent); }
+.pm-node.is-target .pm-code { fill: #fff; font-size: 12px; }
+.pm-node.is-target .pm-sub { fill: rgba(255,255,255,.85); }
+.pm-node.is-next rect { fill: var(--bg-card); stroke: var(--border); }
+.pm-legend { display: flex; flex-wrap: wrap; gap: 5px 14px; margin-top: 8px; }
+.pm-legend span {
+  display: flex; align-items: center; gap: 6px; font-family: var(--mono);
+  font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted);
+}
+.pm-legend .k { width: 11px; height: 8px; border: 1px solid var(--border); display: inline-block; }
+.pm-legend .k.done { border-color: var(--accent); background: var(--accent-bg); }
+.pm-legend .k.doing { border-color: var(--text-secondary); border-style: dashed; }
+.pm-legend .k.target { background: var(--accent); border-color: var(--accent); }

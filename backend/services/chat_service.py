@@ -988,6 +988,26 @@ def _register_for(intent, question, has_procedure, has_money):
     return _REGISTER["plain"]
 
 
+def _audit_course_states(student_doc):
+    """(completed, in_progress) course codes from an uploaded audit.
+
+    Completed is the union of the course rows and the requirement blocks the
+    audit itself marks Satisfied — transfer credit appears in the rows as
+    "CMPSC XFR100", so reading rows alone found one completed course in a report
+    showing 66 of 120 credits used.
+    """
+    doc = student_doc or {}
+    audit = doc.get("audit_parse") or {}
+    done = {c.get("code") for c in audit.get("completed_courses", []) if c.get("code")}
+    try:
+        from backend.services.audit_parser_service import satisfied_course_codes
+        done |= satisfied_course_codes(doc.get("text") or "")
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("_audit_course_states | %s", exc)
+    doing = {c for c in (audit.get("in_progress_courses") or []) if isinstance(c, str)}
+    return sorted(done), sorted(doing)
+
+
 def _build_prereq_snippet(graph) -> str:
     """The enforced prerequisite rule, in words, for the prompt.
 
@@ -1005,16 +1025,24 @@ def _build_prereq_snippet(graph) -> str:
         lines.append("Every group below must be satisfied, and each group needs ONE of its options:")
         for i, group in enumerate(graph["groups"], 1):
             opts = "  OR  ".join(
-                n["code"] + (" [completed]" if n["done"] else "") for n in group
+                n["code"] + (" [completed]" if n["done"]
+                             else " [in progress now]" if n.get("in_progress") else "")
+                for n in group
             )
             lines.append(f"  group {i}: {opts}")
     else:
         lines.append("This course has no listed prerequisites.")
 
     if graph.get("has_record"):
-        lines.append("Status from their audit: "
-                     + ("all groups satisfied — eligible." if graph["eligible"]
-                        else "not yet eligible; an unfinished group is shown above."))
+        if graph["eligible"]:
+            status = "every group already satisfied — eligible now."
+        elif graph.get("on_track"):
+            status = ("every group is either satisfied or IN PROGRESS this term, so "
+                      "they are on track to be eligible next term provided they pass. "
+                      "Say yes, and name the in-progress course they must pass.")
+        else:
+            status = "a group is neither satisfied nor in progress — not yet eligible."
+        lines.append("Status from their audit: " + status)
     else:
         lines.append("No audit uploaded, so completion is unknown — describe the rule, "
                      "do not assert whether they personally qualify.")
@@ -1656,9 +1684,8 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
             _map_target_codes(question, history) if visual.get("block") == "map" else []
         )
         if codes:
-            audit = (student_doc or {}).get("audit_parse") or {}
-            done = [c.get("code") for c in audit.get("completed_courses", []) if c.get("code")]
-            prereq_graph = build_prereq_graph(codes[0], done)
+            done, doing = _audit_course_states(student_doc)
+            prereq_graph = build_prereq_graph(codes[0], done, in_progress=doing)
     prereq_snippet = _build_prereq_snippet(prereq_graph)
 
     # Payload for whichever block the policy chose. The map already has its
