@@ -29,7 +29,9 @@ from backend.services.events_service import (
     build_events_snippet, find_events, mentions_events, is_stale as is_events_stale,
 )
 from backend.services.money_service import build_money_snippet, find_money
-from backend.services.visual_policy import decide as decide_visual, build_visual_directive
+from backend.services.visual_policy import (
+    decide as decide_visual, build_visual_directive, _PREREQ_QUESTION,
+)
 
 load_dotenv()
 
@@ -462,7 +464,12 @@ def build_program_sources(major_name):
 
 
 def extract_course_codes(text):
-    pattern = r"\b([A-Za-z]{2,6}\s?\d{3})\b"
+    # The trailing letter is not optional decoration: CMPSC 431W, CMPSC 483W,
+    # MATH 311W, ENGL 202C, CMPSC 150N and every honors H section were invisible
+    # to this function, so a question naming one got no prerequisite data and the
+    # model invented some. Writing-intensive courses are a big slice of any
+    # degree, and they were the slice ACE could not see.
+    pattern = r"\b([A-Za-z]{2,6}\s?\d{3}[A-Za-z]?)\b"
     matches = re.findall(pattern, text)
     cleaned = []
 
@@ -952,6 +959,84 @@ def _has_other_grounding(question, intent, user_major) -> bool:
     return False
 
 
+# Register follows the stakes — the voice decision, made concrete. The same
+# product should not speak about a dance club and a Faculty Senate petition in
+# the same tone: warmth reassures in one and reads as flippant in the other.
+_HIGH_STAKES = {"deadline", "financial_aid", "international", "substitution",
+                "etm", "transfer"}
+_WARM = {"career", "wellbeing"}
+
+_REGISTER = {
+    "high": ("precise and calm. Exact dates, exact amounts, the office by name. "
+             "No reassurance padding and no exclamation — something with a "
+             "deadline or a cost is riding on this answer."),
+    "warm": ("like a friend a year ahead — plain, encouraging, no jargon. This is "
+             "about belonging or about a rough patch, so sound like a person."),
+    "plain": ("plain and practical. Direct, concrete, no filler. Neither chatty "
+              "nor formal."),
+}
+
+
+def _register_for(intent, question, has_procedure, has_money):
+    """Which of the three registers this answer should be written in."""
+    if intent in _HIGH_STAKES or has_procedure or has_money:
+        return _REGISTER["high"]
+    if intent in _WARM:
+        return _REGISTER["warm"]
+    return _REGISTER["plain"]
+
+
+def _build_prereq_snippet(graph) -> str:
+    """The enforced prerequisite rule, in words, for the prompt.
+
+    The renderer had this and the model did not, so a map showing "(CMPSC 122 or
+    CMPSC 132) and (CMPSC 360 or MATH 311W)" sat under prose claiming the
+    prerequisites were CMPSC 221 and 222 — inferred from the prescribed course
+    list, because nothing authoritative was in the prompt to contradict it.
+    """
+    if not graph:
+        return ""
+    t = graph["target"]
+    lines = ["\n\n=== ENFORCED PREREQUISITE RULE (course catalog — authoritative) ===",
+             f"{t['code']} — {t['title']}" + (f" ({t['credits']} cr)" if t.get("credits") else "")]
+    if graph["groups"]:
+        lines.append("Every group below must be satisfied, and each group needs ONE of its options:")
+        for i, group in enumerate(graph["groups"], 1):
+            opts = "  OR  ".join(
+                n["code"] + (" [completed]" if n["done"] else "") for n in group
+            )
+            lines.append(f"  group {i}: {opts}")
+    else:
+        lines.append("This course has no listed prerequisites.")
+
+    if graph.get("has_record"):
+        lines.append("Status from their audit: "
+                     + ("all groups satisfied — eligible." if graph["eligible"]
+                        else "not yet eligible; an unfinished group is shown above."))
+    else:
+        lines.append("No audit uploaded, so completion is unknown — describe the rule, "
+                     "do not assert whether they personally qualify.")
+
+    if graph.get("unlocks"):
+        more = f" (+{graph['unlocks_more']} more)" if graph.get("unlocks_more") else ""
+        lines.append("Taking it opens: "
+                     + ", ".join(u["code"] for u in graph["unlocks"]) + more)
+
+    lines.append(
+        "RULES: this rule is authoritative and complete. State it exactly, including "
+        "the or/and structure. Do NOT say 'typically', do NOT infer prerequisites "
+        "from the requirement or prescribed-course lists elsewhere in this prompt, "
+        "and do NOT name any course as a prerequisite unless it appears above.\n"
+        "SHAPE: lead with a direct yes or no, then state the rule as ONE plain "
+        "sentence — 'you need CMPSC 122 or 132, plus CMPSC 360 or MATH 311W'. Do "
+        "not use the Either:/bullet template here — the general answer rule about "
+        "'Either:' does NOT apply to this block — and do not nest lists: a diagram "
+        "of this rule is shown beneath your answer, so spelling the structure out "
+        "again in bullets duplicates it. Two short sentences is the whole answer."
+    )
+    return "\n".join(lines)
+
+
 def _map_target_codes(question, history=None):
     """Course codes a map could be drawn about, current message first.
 
@@ -1304,6 +1389,9 @@ def _build_dynamic_gen_ed_snippet(program_name: str, prog: dict | None, double_d
     # A student asking "which gen eds do I still need?" needs both.
     lines.append(NEUTRAL_GEN_ED_SNIPPET)
     lines.append(
+        "ALWAYS give a category's CODE alongside its name — 'Arts (GA)', 'Health "
+        "and Wellness (GHW)'. The code is what appears on their degree audit and "
+        "in the Schedule of Courses, so a name without it cannot be acted on.\n"
         "Answer using BOTH blocks: the university-wide categories are what the "
         "student still has to satisfy, and the program data above says which of "
         "them their major already covers. For each course you name, say which Gen "
@@ -1500,16 +1588,37 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     visual_directive = build_visual_directive(
         question, intent, visual_counts, bool(student_doc)
     )
-    # The renderer needs the graph, not just the verdict. Only built when a map
-    # was actually chosen, so no cost on the questions that stay prose.
-    if visual.get("block") == "map" and visual.get("level", 0) >= 2:
-        codes = _map_target_codes(question, history)
+    # Built whenever the student names a course in a prerequisite question —
+    # correctness matters even when the answer stays prose, and the same graph
+    # feeds both the prompt and the renderer so they cannot disagree.
+    # Attached whenever the student NAMES a course, not only when the phrasing
+    # looks like a prerequisite question. Pattern-matching the phrasing meant
+    # "what do I need before CMPSC 431W?" missed, and the model filled the gap
+    # by inferring prerequisites from the prescribed-course list — inventing
+    # three of the four it listed. The lookup is local and costs nothing.
+    prereq_graph = None
+    if intent in ("courses", "recommendation", "student_progress", "gen_ed") \
+            or _PREREQ_QUESTION.search(question) or visual.get("block") == "map":
+        codes = extract_course_codes(question) or (
+            _map_target_codes(question, history) if visual.get("block") == "map" else []
+        )
         if codes:
             audit = (student_doc or {}).get("audit_parse") or {}
             done = [c.get("code") for c in audit.get("completed_courses", []) if c.get("code")]
-            graph = build_prereq_graph(codes[0], done)
-            if graph:
-                visual["data"] = graph
+            prereq_graph = build_prereq_graph(codes[0], done)
+    prereq_snippet = _build_prereq_snippet(prereq_graph)
+    register = _register_for(intent, question,
+                             bool(procedures_snippet), bool(money_snippet))
+    # The generic either/or bullet template fights the prerequisite block, which
+    # asks for one sentence because a diagram sits underneath it. Whichever rule
+    # comes second wins by accident, so the template is simply removed when an
+    # authoritative rule is in play.
+    either_rule = "" if prereq_graph else (
+        "- For either/or requirements use exactly:\n"
+        "  Either:\n  - Option A\n  - Option B"
+    )
+    if prereq_graph and visual.get("block") == "map":
+        visual["data"] = prereq_graph
     logger.info("visual policy | level=%s block=%s | %s",
                 visual["level"], visual["block"], visual["reason"])
 
@@ -1605,16 +1714,24 @@ The detected intent for the current question is: {intent}
 {rule_summary}
 
 === STUDENT DOCUMENT ===
-{student_doc_context if student_doc_context else "No student document uploaded."}{profile_snippet}{degree_audit_advisory}{program_snippet if program_snippet else ""}{policy_snippet}{resources_snippet}{career_snippet}{recommendation_snippet}{procedures_snippet}{places_snippet}{money_snippet}{events_snippet}{logistics_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
+{student_doc_context if student_doc_context else "No student document uploaded."}{profile_snippet}{degree_audit_advisory}{program_snippet if program_snippet else ""}{prereq_snippet}{policy_snippet}{resources_snippet}{career_snippet}{recommendation_snippet}{procedures_snippet}{places_snippet}{money_snippet}{events_snippet}{logistics_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
 
-=== ANSWER RULES ===
-- You may use the conversation history above to understand follow-up context, but ground every answer in the advising records, extracted rules, and student document provided.
-- Give a direct answer first (1–2 sentences).
-- List courses as bullets. Do NOT bullet section labels (e.g. "Probability and Statistics (6 credits)") — use them as headings.
-- For either/or requirements use exactly:
-  Either:
-  - Option A
-  - Option B
+=== HOW TO ANSWER ===
+SHAPE — every answer is the verdict, then the substance, then the citation.
+1. VERDICT first, in ONE line. If they asked a yes/no question, the first word is
+   Yes or No. Never open by restating the question, and never open with "Great
+   question", "As your academic counselling engine", or any preamble.
+2. SUBSTANCE — everything they asked for. Follow the VISUAL POLICY at the end:
+   when it says a block is RENDERED beneath your answer, state the point in prose
+   and let the block show the items; otherwise the items must appear in your
+   answer, because nothing else will show them.
+3. CITATION — name where it came from when a source is present. Nothing else.
+
+REGISTER — {register}
+
+- Ground every answer in the records, rules and student document provided; use the conversation history only to follow context.
+- List courses as bullets when you are listing several. Do NOT bullet section labels (e.g. "Probability and Statistics (6 credits)") — use them as headings.
+{either_rule}
 - For contact questions, use the advisor name from the student document first; only mention department contacts as secondary.
 - Quote exact handbook language when available. Do not say "typically" or "likely" unless the records themselves are uncertain.
 - When a DEPARTMENT HANDBOOK POLICIES block is present, it outranks the advising records for procedure questions (ETM, petitions, substitutions, transfer credit, who to contact). Use its exact numbers and name the step the student has to take.
@@ -1622,7 +1739,7 @@ The detected intent for the current question is: {intent}
 - If records are insufficient, say so clearly.
 - Do not mention internal record numbers.
 - If a Degree Audit Advisory is present above, include the recommendation naturally in your answer when it is relevant to what the student asked.
-- Keep the tone student-friendly and specific.
+- Be specific. A student can act on "email the Bursar at 814-865-2979"; they cannot act on "contact the appropriate office".
 {_INTENT_ANSWER_RULES.get(intent, "")}{visual_directive}"""
 
     try:

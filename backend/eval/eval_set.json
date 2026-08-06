@@ -75,12 +75,16 @@
       "intent": "courses",
       "question": "What are the required courses for my degree?",
       "expected_points": [
-        "lists requirements specific to the Nursing program (e.g. NURS courses)",
-        "answer is grounded in the Nursing program requirements"
+        "lists the prescribed supporting courses by code (BIOL, MICRB, NUTR, PSYCH)",
+        "also lists the NURS professional sequence, which the Bulletin's requirement table omits and the suggested plan carries",
+        "tells the student to confirm the full sequence on the Bulletin"
       ],
       "must_not": [
         "CMPSC",
         "DTSCE"
+      ],
+      "must_contain": [
+        "NURS"
       ]
     },
     {

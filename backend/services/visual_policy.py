@@ -69,6 +69,12 @@ BLOCK_RULES = {
     "figure":    {"min": 1, "max": 2,  "needs": "a single number or date"},
 }
 
+# Blocks the frontend can actually draw today. Telling the model to "let the
+# block carry the structure" for a block with no renderer loses the information
+# entirely — the student gets neither the list nor the picture. Add to this set
+# only when a renderer ships.
+RENDERED_BLOCKS = {"map"}
+
 # Which block an intent would use, if it qualifies at all.
 INTENT_BLOCK = {
     "recommendation":   "plan",
@@ -210,11 +216,20 @@ def build_visual_directive(question, intent, counts=None, has_audit=False):
         return ("\n\nVISUAL POLICY: prose, with the key number or date stated once and "
                 "clearly. No table and no diagram. Explain what it means for the "
                 "student — the emphasis is on that one value, not on brevity.")
+    drawn = d["block"] in RENDERED_BLOCKS
     if d["level"] == 2:
-        return (f"\n\nVISUAL POLICY: a compact {d['block']} is warranted. Lead with the "
-                "direct answer, then present the items, and say what each one means "
-                "for this student. Don't present the same items twice in two "
-                "different forms.")
-    return (f"\n\nVISUAL POLICY: the student asked to see this laid out. Produce the "
-            f"full {d['block']}, with a framing sentence and whatever explanation the "
-            "items need to be understood.")
+        if drawn:
+            return (f"\n\nVISUAL POLICY: a {d['block']} is rendered beneath your answer. "
+                    "Lead with the direct answer and state the point in prose; do NOT "
+                    "list the same items again, the diagram shows them.")
+        return (f"\n\nVISUAL POLICY: a compact {d['block']} is warranted, but nothing "
+                "renders it — so the items must appear IN your answer. Lead with the "
+                "direct answer, then list them, and say what each one means for this "
+                "student.")
+    if drawn:
+        return (f"\n\nVISUAL POLICY: the student asked to see this, and a {d['block']} "
+                "is rendered beneath your answer. One framing sentence is enough; the "
+                "diagram carries the detail.")
+    return (f"\n\nVISUAL POLICY: the student asked to see this laid out, and nothing "
+            f"renders it — so lay it out IN your answer as a full {d['block']}, with a "
+            "framing sentence and whatever explanation the items need.")

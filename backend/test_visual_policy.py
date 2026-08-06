@@ -106,11 +106,17 @@ def test_directive_matches_the_decision():
     # detail is how a gen-ed answer loses its per-course explanation.
     assert "detail the question deserves" in d0
 
+    # A block with a renderer tells the model to stand back; one without tells it
+    # to write the items out, because otherwise they reach the student nowhere.
     d2 = vp.build_visual_directive("can I take CMPSC 465?", "courses", {"map": 5})
-    assert "compact map" in d2 and "what each one means" in d2
+    assert "rendered beneath" in d2 and "do NOT" in d2
+
+    d2b = vp.build_visual_directive("which gen ed courses count?", "gen_ed", {"cards": 6})
+    assert "nothing renders it" in d2b and "must appear IN your answer" in d2b
+    assert "map" in vp.RENDERED_BLOCKS and "cards" not in vp.RENDERED_BLOCKS
 
     d3 = vp.build_visual_directive("show me the map for CMPSC 465", "courses", {"map": 5})
-    assert "full map" in d3
+    assert "rendered beneath" in d3
 
     off = vp.build_visual_directive("what are all my requirements?", "student_progress",
                                     {"plan": 40}, has_audit=True)
