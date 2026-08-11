@@ -16,10 +16,12 @@ Chroma** (six greys, no hue, plus the period). Design tokens live in
 The one rule that governs every screen: **emerald `#00875A` appears once per view,
 and it is always the period** (send button, due date, destination, done).
 
-The mark has shipped into `frontend/` and `landing/`, but **the landing and product UI
-are still on the old blue brand** — remodelling them around Zero Chroma is the next
-piece of work. `brand/BRAND.md` §5 is the pickup point, with the migration path and the
-open questions. `brand/playbook.html` is the go-to-market playbook — read it before
+The mark has shipped into `frontend/` and `landing/`, and **both now run the emerald
+brand** — the legacy `--accent` in `index.css` aliases `#00875A`, with its own dark-mode
+values, so the old blue is gone. `brand/BRAND.md` §5 still holds the migration path and
+the open questions. One surface is deliberately off-language: the sign-in page uses a
+pastel mesh backdrop rather than Zero Chroma, which is an open design decision, not
+drift. `brand/playbook.html` is the go-to-market playbook — read it before
 writing any marketing copy.
 
 ## Commands
@@ -243,9 +245,22 @@ Single-page React app (`frontend/src/`). State lives in `App.jsx`. Key patterns:
 - Chat uses SSE via `POST /chat/stream`; responses stream token-by-token
 - Follow-up chips are driven by the `intent` field in the `done` SSE event
 - `activeView` state switches between chat, dashboard, resources, gen-ed, and tool panels (GPA calc, calendar, checklist, prereq map)
-- Sidebar widgets are configurable and persisted to `localStorage` under `ace_widgets3`
+- The **control panel** (`WidgetRail.jsx`) is a floating glass grid of widgets opened
+  from the top bar, not part of the sidebar. Its widget selection persists to
+  `localStorage` under `ace_panel_widgets`; whether the panel is pinned open is
+  `ace_rail`. Widgets that need an uploaded audit are hidden AND removed from the
+  customise list until there is one, so the picker never offers a dead tile
 - Conversations are persisted to `localStorage` keyed by Clerk user ID (`ace_chats_{uid}`)
-- `SparklesCore.jsx` is a manual port of Aceternity's Sparkles (`@tsparticles/react` + `@tsparticles/slim`) — NOT installed via shadcn, so the rest of the app's plain-CSS stack stays Tailwind-free
+- **Tailwind v4 is installed** (`@tailwindcss/vite`) and coexists with the plain CSS.
+  Preflight is deliberately NOT imported — its reset would restyle every heading and
+  input while the unconverted plain-CSS rules still assume the old defaults. The
+  global resets live in `tailwind.css` `@layer base`, and they HAVE to be layered:
+  unlayered rules outrank every utility, so an unlayered `* { margin:0 }` silently
+  beats every spacing class. Converting a component is not done until its rules are
+  deleted from `index.css`. `@/` resolves to `frontend/src` (see `jsconfig.json`)
+- `SparklesCore.jsx` is a manual port of Aceternity's Sparkles (`@tsparticles/react` +
+  `@tsparticles/slim`). It is currently **orphaned** — nothing imports it since the
+  login page was rebuilt, so `tsparticles` is dead weight in the bundle
 
 ### Key config (`backend/config.py`)
 
