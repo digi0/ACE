@@ -154,6 +154,30 @@ def test_a_real_word_in_an_academic_question_is_still_not_a_place():
         assert want in ps.detect_categories(q), f"{q!r} → {ps.detect_categories(q)}"
 
 
+def test_somewhere_else_is_not_our_campus():
+    """"Where should I eat in New York?" was answered with six Penn State dining
+    halls, because "eat" is a dining trigger and nothing read the rest of the
+    sentence. The list is a NOT-us list rather than a place-name list, because
+    Penn State is also Abington, Altoona and twenty-two others."""
+    for q in ["whats the best place to eat in new york city", "best restaurants in chicago",
+              "where should I eat in london", "how do I get to NYU",
+              "is Harvard better than Penn State"]:
+        assert ps.detect_categories(q) == [], f"{q!r} → {ps.detect_categories(q)}"
+    # Our own campuses are not "elsewhere".
+    assert "dining" in ps.detect_categories("where can I eat at Altoona")
+
+
+def test_a_product_recommendation_is_never_a_campus_question():
+    """"What's the best laptop to buy?" rendered the campus IT desks, because
+    "laptop" is an it_printing trigger. Penn State does not sell you a laptop."""
+    for q in ["what's the best laptop to buy in 2026", "cheapest phone deal",
+              "recommend me a good computer", "which tablet is worth buying"]:
+        assert ps.detect_categories(q) == [], f"{q!r} → {ps.detect_categories(q)}"
+    # Narrow on purpose: buying a permit really is a campus question.
+    assert "parking" in ps.detect_categories("where do I buy a parking permit")
+    assert "it_printing" in ps.detect_categories("my laptop broke, who fixes it")
+
+
 def test_unrelated_questions_match_nothing():
     for q in ["what math courses are required for my major?", "when is the drop deadline?", ""]:
         assert ps.find_places(q) == [], f"{q!r} should not pull a campus place"

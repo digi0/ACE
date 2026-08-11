@@ -43,6 +43,22 @@ def test_times_are_campus_time_not_utc():
         assert "already Eastern" in snippet, "the model must not re-convert"
 
 
+def test_a_time_word_is_not_an_event_word():
+    """"what's the weather tomorrow?" came back with the campus events board.
+    Every question has a WHEN, so "tonight", "today" and "this week" cannot be
+    enough on their own — nor can "meeting", which is more often an advisor's."""
+    for q in ["what's the weather tomorrow", "when is my advisor meeting today",
+              "what time is my class tonight", "is the library open this weekend"]:
+        assert not es.mentions_events(q), f"{q!r} is not an events question"
+
+    # ...and the phrases that really are events still land, including the ones
+    # built out of a weak word.
+    for q in ["what's happening on campus this week?", "anything happening tonight?",
+              "any events this weekend", "are there any workshops this week",
+              "is there a career fair tomorrow", "when is the involvement fair"]:
+        assert es.mentions_events(q), f"{q!r} is an events question"
+
+
 def test_only_event_questions_get_events():
     assert es.mentions_events("what's happening on campus this week?")
     assert es.mentions_events("anything happening tonight?")

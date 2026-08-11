@@ -136,10 +136,51 @@ def _matches(trigger: str, q: str) -> bool:
     return bool(rx.search(q))
 
 
+# Somewhere that is definitively not us. "Where should I eat in New York?" was
+# answered with six Penn State dining halls, because "eat" is a dining trigger
+# and nothing was reading the rest of the sentence.
+#
+# This cannot be "any place name" — Penn State IS Abington, Erie, Harrisburg and
+# twenty-one others, and "where can I eat at Altoona" is a real question. So it
+# is a not-us list, and PSU campus towns are deliberately absent from it. Add to
+# it when a student asks about somewhere new; it is meant to be edited.
+ELSEWHERE = re.compile(
+    r"\b(new york|nyc|manhattan|brooklyn|boston|chicago|los angeles|san francisco|"
+    r"seattle|austin|miami|atlanta|denver|dallas|houston|las vegas|washington dc|"
+    r"london|paris|tokyo|toronto|dubai|mumbai|delhi|beijing|sydney|berlin|"
+    r"pittsburgh|philadelphia|philly|baltimore|cleveland|columbus|"
+    r"harvard|yale|princeton|stanford|mit|berkeley|cornell|columbia university|"
+    r"nyu|ucla|usc|rutgers|temple university|drexel|villanova|"
+    r"pitt|university of pittsburgh|ohio state|michigan state|virginia tech)\b",
+    re.I,
+)
+
+
+def mentions_elsewhere(question: str) -> bool:
+    """True when the question names somewhere that is not Penn State."""
+    return bool(ELSEWHERE.search(question or ""))
+
+
+# "What's the best laptop to buy?" rendered the campus IT desks, because "laptop"
+# is an it_printing trigger. Penn State does not sell you a laptop, so a request
+# for a product RECOMMENDATION is never a campus-places question.
+#
+# Deliberately narrow: it needs a superlative or "recommend" beside the buying,
+# so "where do I buy a parking permit" — which really is a campus question —
+# still gets through.
+_PRODUCT_ADVICE = re.compile(
+    r"\b(best|cheapest|top|worth|recommend\w*)\b[^?]{0,50}"
+    r"\b(buy|buying|purchase|laptop|phone|computer|tablet|headphones|brand|deal)\b",
+    re.I,
+)
+
+
 def detect_categories(question: str) -> list[str]:
     """Which parts of campus a question is about, strongest first."""
     q = (question or "").lower()
     scored = []
+    if mentions_elsewhere(q) or _PRODUCT_ADVICE.search(q):
+        return []  # our campus is not an answer to either of those
     academic = bool(ACADEMIC_CONTEXT.search(q))
     for category, triggers in CATEGORY_TRIGGERS.items():
         if category == "study_space" and ("study abroad" in q or "study plan" in q):

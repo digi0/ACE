@@ -26,13 +26,26 @@ MAX_EVENTS = 6
 # Past this, the snapshot is treated as untrustworthy even if rows remain.
 STALE_AFTER_DAYS = 21
 
-TRIGGERS = [
+# A time word is not an event word. "tonight", "today" and "this week" say WHEN
+# something is, and every question has a when — "what's the weather tomorrow?"
+# came back with the campus events board. Same for "meeting", which is more often
+# an advisor meeting than a club one.
+#
+# So triggers are split: a strong one is enough on its own, a weak one only
+# counts as the timing of a question that was already about events.
+STRONG_TRIGGERS = [
     "event", "events", "what's happening", "whats happening", "going on",
-    "this week", "this weekend", "tonight", "today", "tomorrow",
-    "something to do", "things to do", "anything happening",
-    "meeting", "workshop", "fair", "info session", "social", "party",
-    "performance", "concert", "game night", "speaker",
+    "something to do", "things to do", "anything happening", "anything on",
+    "workshop", "info session", "party", "performance", "concert",
+    "game night", "open mic", "club meeting",
+    # "fair" on its own is "is that fair?"; as a phrase it is an actual event.
+    "career fair", "job fair", "involvement fair", "org fair", "activities fair",
 ]
+WEAK_TRIGGERS = [
+    "this week", "this weekend", "tonight", "today", "tomorrow",
+    "meeting", "fair", "social", "speaker",
+]
+TRIGGERS = STRONG_TRIGGERS + WEAK_TRIGGERS
 
 _STOPWORDS = {
     "event", "events", "campus", "penn", "state", "university", "park",
@@ -90,8 +103,9 @@ def _tokens(text: str) -> set[str]:
 
 
 def mentions_events(question: str) -> bool:
+    """A strong trigger is enough; a weak one needs a strong one beside it."""
     q = (question or "").lower()
-    return any(t in q for t in TRIGGERS)
+    return any(t in q for t in STRONG_TRIGGERS)
 
 
 def _window_for(question: str) -> int:

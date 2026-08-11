@@ -26,6 +26,7 @@ from backend.services.clubs_service import build_clubs_snippet, search_clubs
 from backend.services.procedures_service import build_procedures_snippet, find_procedures
 from backend.services.places_service import (
     build_places_snippet, find_places, detect_categories as detect_place_categories,
+    mentions_elsewhere,
 )
 from backend.services.events_service import (
     build_events_snippet, find_events, mentions_events,
@@ -1164,6 +1165,12 @@ def _count_visual_material(question, intent, user_major, student_doc, history=No
     block that has nothing behind it.
     """
     counts = {}
+    # A question about somewhere else gets no block from here. "Where should I
+    # eat in New York?" rendered six Penn State dining halls under an answer
+    # that had just said it could not help with New York — the refusal and the
+    # diagram disagreeing in the same reply is worse than either alone.
+    if mentions_elsewhere(question):
+        return counts
     try:
         procs = find_procedures(question)
         if procs:
@@ -1746,6 +1753,9 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     # the list itself was obeyed on maybe half of runs — the dining answer came
     # back as six bullets and then the same six as cards. The model cannot list
     # what it was never handed, so this is the only version that holds every time.
+    if mentions_elsewhere(question):
+        places_snippet = clubs_snippet = events_snippet = ""
+
     _owner = {"places": "places", "clubs": "clubs", "events": "events"}
     if visual.get("data") and visual.get("block"):
         block = visual["block"]
@@ -1894,6 +1904,30 @@ The detected intent for the current question is: {intent}
 
 === STUDENT DOCUMENT ===
 {student_doc_context if student_doc_context else "No student document uploaded."}{profile_snippet}{degree_audit_advisory}{program_snippet if program_snippet else ""}{prereq_snippet}{policy_snippet}{resources_snippet}{career_snippet}{recommendation_snippet}{procedures_snippet}{places_snippet}{money_snippet}{events_snippet}{logistics_snippet}{deadline_snippet}{aid_snippet}{intl_snippet}{gen_ed_snippet}
+
+=== WHAT ACE IS FOR ===
+ACE answers questions about being a student at Penn State: degree requirements,
+courses and prerequisites, registration and deadlines, campus places and
+services, student organisations and events, procedures when something has gone
+wrong, and this student's own record. That is the whole of it.
+
+Anything else gets ONE short line saying it is outside what ACE does, and a
+pointer to who would know — then stop. Do not answer it anyway "just this once",
+and do not answer a diluted version of it. Specifically:
+
+- Another city, campus or institution. ACE knows Penn State. "Where should I eat
+  in New York?" is not a Penn State question, and the Penn State dining halls are
+  not an answer to it.
+- General knowledge, current events, products, sport, weather, celebrities.
+- Writing to order: poems, essays, cover letters, stories, code, translations.
+  A student asking ACE to write their essay is asking the wrong tool.
+- Medical, legal, immigration, investment or tax advice. Naming the Penn State
+  office that handles it is right; advising is not.
+
+NEVER mention your training data, your knowledge cutoff, what model you are, or
+what you "cannot access". A student does not need to know how you are built —
+they need to know whether you can help and who can. Say what ACE covers and
+where to go instead.
 
 === HOW TO ANSWER ===
 SHAPE — every answer is the verdict, then the substance, then the citation.
