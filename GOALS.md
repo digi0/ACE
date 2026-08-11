@@ -9,11 +9,16 @@
 **Phase:** Product ready, cohort not yet in seats
 **Last reviewed:** 2026-08-11 — re-baselined against the repo and against production, because the doc had drifted far enough to mislead: six of the nine "Now" items were already done and still listed as pending, and DoD #4 read "Still not built" about something that shipped on 2026-08-02.
 
-> **The one number that matters right now.** Production, checked 2026-08-11:
-> **10 waitlist signups, 0 invited, 0 new users in seven days, last student
-> message 2026-08-07, 0 answers rated, $0.005 spent.** Fall is in its second
-> week. The build is not the bottleneck and has not been for a while — nobody
-> has been let through the door. Everything below is downstream of that.
+> **The one number that matters right now.** Production, 2026-08-11: the
+> waitlist holds ten rows but **five real prospects** — the rest are Raghav ×3,
+> Sinjini, and a spam signup. **All five have now been sent the code.** Nobody
+> has arrived yet: 8 users (mostly ours), 0 new in seven days, last student
+> message 2026-08-07, **0 answers rated**, $0.005 spent.
+>
+> Fall is in its second week. Two bottlenecks, found in that order and only the
+> first one fixed: nobody had been invited (they have now), and underneath it,
+> **only five real people ever signed up in two months.** The second one is not
+> an engineering problem and nothing below will solve it.
 
 ---
 
@@ -37,7 +42,9 @@ The product is **live at acecollege.app** behind a waitlist + invite gate. Two t
 ## Definition of done (was: by August 5) — scored 2026-08-11
 
 1. **Faculty ally activated.** ⬜ **Unknown from here.** Outreach sent, Prof. Faiza Abbas replied, meeting was being scheduled. Whether it happened is yours to record — no artefact in the repo can tell me.
-2. **Real students using it.** ❌ **Not met, and not close.** 0 of 10 invited. This was blocked on tooling that did not exist until 2026-08-11 (`0f59d8f`); it is now one command away and the remaining action is human.
+2. **Real students using it.** ❌ **Not reachable from this waitlist, and the bar needs rewriting.** The target says "10+ waitlist signups invited and active". The waitlist has ten rows and **five real prospects** — the other five are Raghav ×3 (`mrmalpani25`, `rlm6084@psu.edu`, `raghav.malpani@outlook`), Sinjini (co-founder), and one spam signup. All five prospects have been sent the access code manually and are stamped `invited_at` (2026-08-11); four are `@psu.edu`, one is a personal address.
+
+   **A perfect result here is five, not ten.** The number cannot come from this list, so either the bar moves or a second source of students does. See "Where the ten are supposed to come from" below.
 3. **Doesn't embarrass.** 🟡 **Much better than it was.** Fixed this window: ACE answering questions about New York and writing poetry on request, a prerequisite verdict that said "No" when the answer was yes, a withdrawal procedure sending students to the wrong office, transfer credit misread as 0.75 of 116 credits. Untested by real strangers, which is the only test that counts.
 4. **Logs feedback.** ✅ **Done** (2026-08-02). `messages.rating`, `POST /messages/{id}/rating`, thumbs UI, `GET /admin/review`, and `backend/eval/from_transcripts.py` to harvest bad answers into eval items. Caveat: **0 ratings exist**, because no students.
 
@@ -63,20 +70,32 @@ product exists — is the one that decided the outcome.
 
 ## Now (2026-08-11 →)
 
-Ordered by leverage, and the first one is not code:
+Ordered by leverage. The first item is done; the second is the one that decides August, and it is not an engineering problem:
 
-1. **Send the ten invites.** `POST /admin/waitlist/invite?limit=10&key=…` returns
-   ten `email → code` pairs and the message to send. It deliberately does not
-   send them — that is a person's decision. Nothing else on this list matters
-   until real students are in, and every day of the fall window spends itself.
-2. **Watch what they ask.** `GET /admin/review?days=7` is the weekly read:
+1. ~~**Send the invites.**~~ ✅ **Done 2026-08-11** — all five real prospects were
+   sent the shared access code by hand and stamped `invited_at`. Note the
+   consequence: the shared code carries no identity, so `redeemed_at` will stay
+   empty for this batch and conversion is only visible in aggregate (new `users`
+   rows, `user_docs` uploads, `messages`). Per-person attribution starts with the
+   next batch, via `POST /admin/waitlist/invite`.
+
+2. **Where the ten are supposed to come from.** This is now the real question and
+   it is not an engineering one. A live landing page ran for two months and
+   produced **five** real signups — the invite step was blocked, but underneath
+   it the supply was thin, and fixing the invite did not fix that. Two readings
+   and they need different work: either the waitlist was never the channel and
+   Prof. Abbas mentioning ACE to a class always was, or the landing page is
+   underperforming and nobody has looked at why. `?ref=` cannot help decide —
+   all ten rows say `landing`, so there is no channel breakdown to read. Decide
+   which it is before building anything else.
+3. **Watch what they ask.** `GET /admin/review?days=7` is the weekly read:
    counts by intent, down-rated answers, ungrounded answers. Then
    `python -m backend.eval.from_transcripts --days 7 --write` turns the failures
    into eval items. This loop is built and has never once run on real traffic.
-3. **Decide the August line** (see Open questions — still undecided, and now
+4. **Decide the August line** (see Open questions — still undecided, and now
    overdue). Is 10 active students the win or the floor?
-4. **RAG health check.** The last unbuilt item from the old list.
-5. **Track 2 — UCSD Phase A.** Unchanged below, and now the biggest *build*.
+5. **RAG health check.** The last unbuilt item from the old list.
+6. **Track 2 — UCSD Phase A.** Unchanged below, and now the biggest *build*.
    Note the new dependency: the scope gate added 2026-08-11 hardcodes Penn State
    (`ELSEWHERE` in `places_service.py` lists other universities as out of
    bounds, and the prompt says "ACE knows Penn State"). Making ACE multi-school
