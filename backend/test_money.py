@@ -45,6 +45,35 @@ def test_student_phrasing_finds_the_navigation():
         assert want in ms.detect_topics(q), f"{q!r} → {ms.detect_topics(q)}"
 
 
+def test_asking_who_to_contact_is_not_automatically_a_billing_question():
+    """"who do i contact" sat in the contacts trigger list with no money in it,
+    so "who do I contact about my transcript" and "who do I contact about my
+    grade appeal" both came back grounded in bursar records — the billing office
+    attached to a registrar question."""
+    for q in ["who do I contact about my transcript",
+              "who do I contact about my grade appeal",
+              "who do I email about changing my major",
+              "who handles course substitutions"]:
+        assert ms.detect_topics(q) == [], f"{q!r} → {ms.detect_topics(q)}"
+
+    # ...but the same phrasing with money in it still is one.
+    for q in ["who do I email about a charge on my account",
+              "who do I contact about my tuition bill",
+              "who do I talk to about my bill"]:
+        assert ms.detect_topics(q), f"{q!r} should still reach the money records"
+
+
+def test_short_money_words_do_not_hide_inside_ordinary_ones():
+    """"aid" lives in afraid, said, paid and maid; "bill" in billion; "grant" in
+    granted. Without boundaries "I'm afraid of failing" counted as money."""
+    for q in ["I'm afraid I should drop this class",
+              "she said I should take it", "granted admission to honors"]:
+        assert not ms.asks_for_advice(q), f"{q!r} is not a money decision"
+    for q in ["should I take out a loan to cover this?",
+              "can I afford to stay another semester?"]:
+        assert ms.asks_for_advice(q), f"{q!r} is a money decision"
+
+
 def test_advice_questions_are_refused_even_with_no_data_match():
     # The dangerous case: a pure advice question matches no navigational topic,
     # so without an explicit guard it would sail through with no boundary at all.

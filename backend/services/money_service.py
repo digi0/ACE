@@ -18,6 +18,7 @@ the split is in what ACE DOES with it, not in what it can see.
 
 import json
 import logging
+import re
 from functools import lru_cache
 from pathlib import Path
 
@@ -31,8 +32,12 @@ STUDENT_AID_URL = "https://studentaid.psu.edu/"
 # Navigational money questions — the ones this dataset answers.
 TOPIC_TRIGGERS = {
     "contacts": [
-        "who do i email", "who do i contact", "who should i call", "who handles",
+        # Only the ones that already say "money". "who do i contact" used to sit
+        # here, so "who do I contact about my transcript" and "who do I contact
+        # about my grade appeal" both came back grounded in bursar records — the
+        # billing office attached to a registrar question.
         "bursar", "who do i talk to about my bill", "billing office",
+        "who do i pay", "who do i email about my bill",
     ],
     "refunds": [
         "refund", "refunded", "credit balance", "erefund", "money back",
@@ -90,24 +95,35 @@ def detect_topics(question: str) -> list[str]:
         hits = [t for t in triggers if t in q]
         if hits:
             scored.append((len(hits) * 10 + max(len(t) for t in hits), topic))
+    # "Who do I contact?" is a billing question only when there is money in it.
+    if not scored and any(c in q for c in _GENERIC_CONTACT) and _MONEY_WORDS.search(q):
+        scored.append((10, "contacts"))
     return [t for _, t in sorted(scored, reverse=True)]
 
 
 # The advice markers alone are not enough: "should i take" also matches "should I
 # take CMPSC 121?", and a money disclaimer on a course question is noise. Advice
 # only counts when the question is actually about money.
-_MONEY_WORDS = [
-    "loan", "loans", "borrow", "aid", "fafsa", "scholarship", "grant",
-    "tuition", "afford", "pay", "paying", "cost", "money", "bill", "debt",
-    "work study", "work-study", "refund", "charge",
+# Word boundaries, because these are short and live inside ordinary words: "aid"
+# in afraid, said, paid and maid; "bill" in billion; "grant" in granted. Without
+# them "I'm afraid of failing" counts as a question about money.
+_MONEY_WORDS = re.compile(
+    r"\b(loans?|borrow|aid|fafsa|scholarships?|grants?|tuition|afford|pay|paid|"
+    r"paying|cost|costs|money|bills?|debt|work[- ]study|refunds?|charges?)\b", re.I
+)
+
+# Asking who to talk to is only a BILLING question when the question is about
+# money. On its own it is just as likely to be the registrar or an adviser.
+_GENERIC_CONTACT = [
+    "who do i email", "who do i contact", "who should i call", "who handles",
+    "who do i talk to", "who should i email",
 ]
 
 
 def asks_for_advice(question: str) -> bool:
     """True when the student is asking ACE to make a money decision for them."""
     q = (question or "").lower()
-    return (any(m in q for m in _ADVICE_MARKERS)
-            and any(w in q for w in _MONEY_WORDS))
+    return bool(any(m in q for m in _ADVICE_MARKERS) and _MONEY_WORDS.search(q))
 
 
 def find_money(question: str, limit=MAX_RECORDS) -> list[dict]:

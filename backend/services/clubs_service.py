@@ -36,6 +36,14 @@ _STOPWORDS = {
     "good", "best", "get", "find", "looking", "look", "me", "you", "recommend",
     "suggest", "about", "with", "that", "this", "have", "has", "major", "majors",
     "thing", "things", "stuff", "something", "anything", "one", "ones",
+    # Ordinary words that are not interests. "new" alone matched New Life
+    # Student Fellowship and New Wine Worship for "I want to get into new
+    # things", and "need"/"course" pulled Math Club onto a course question.
+    # An interest is a subject, not a verb or a unit of study.
+    "new", "need", "needs", "course", "courses", "class", "classes", "college",
+    "school", "credit", "credits", "semester", "term", "year", "years", "time",
+    "next", "first", "last", "way", "ways", "help", "know", "tell", "more",
+    "really", "very", "much", "many", "also", "start", "starting", "getting",
 }
 
 # A student says "dancing"; the org is called "Dance Company". Stemming the
