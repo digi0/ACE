@@ -23,7 +23,12 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // argsIgnorePattern matters as much as varsIgnorePattern here: without
+      // eslint-plugin-react, ESLint never registers JSX usage, so a component
+      // destructured from a param and used only in JSX (`{ Icon }` -> <Icon/>)
+      // reads as unused. Capitalised args are components by convention; `_x`
+      // marks a value destructured purely to keep it out of a props spread.
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^(_|[A-Z])' }],
     },
   },
 ])

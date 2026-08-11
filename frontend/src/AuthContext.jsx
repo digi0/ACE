@@ -1,8 +1,7 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useUser, useAuth as useClerkAuth } from "@clerk/clerk-react";
 import { apiFetch } from "./api.js";
-
-const AuthContext = createContext(null);
+import { AuthContext } from "./auth-context.js";
 
 /**
  * Thin wrapper around Clerk's hooks that preserves the shape App.jsx already
@@ -58,5 +57,3 @@ export function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
-
-export const useAuth = () => useContext(AuthContext);

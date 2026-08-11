@@ -38,7 +38,7 @@ export default function StickyBoard({ userId }) {
   useEffect(() => {
     try {
       localStorage.setItem(storageKey, JSON.stringify(notes));
-    } catch {}
+    } catch { /* quota or private-mode failure: the board still works this session */ }
   }, [notes, storageKey]);
 
   const addNote = () => {

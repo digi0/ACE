@@ -120,7 +120,11 @@ function HistoryTab({ userId }) {
   const [formCredits, setFormCredits] = useState("");
   const [formError, setFormError]     = useState("");
 
-  const histIdRef = useRef(Date.now());
+  /* Seeded lazily, on first use inside the handler — not here. Calling
+     Date.now() as the useRef argument runs it during render, which is impure
+     and makes the value unstable across re-renders. Time-based so ids cannot
+     collide with entries already restored from localStorage. */
+  const histIdRef = useRef(null);
 
   /* Persist to localStorage whenever history changes */
   useEffect(() => {
@@ -149,6 +153,7 @@ function HistoryTab({ userId }) {
       return;
     }
 
+    if (histIdRef.current === null) histIdRef.current = Date.now();
     const entry = { id: histIdRef.current++, name, gpa, credits };
     setHistory(prev => [...prev, entry]);
     setFormName("");

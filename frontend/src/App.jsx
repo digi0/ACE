@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { BGPattern } from "./BGPattern.jsx";
 import Sidebar from "./Sidebar.jsx";
-import { useAuth } from "./AuthContext.jsx";
+import { useAuth } from "./auth-context.js";
 import AccessGate from "./AccessGate.jsx";
 import { apiFetch, apiStream } from "./api.js";
 import { useIsMobile } from "./useIsMobile.js";
@@ -268,7 +268,7 @@ const FOLLOW_UP_MAP = {
 const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 /* ── MajorSelectModal ──────────────────────────── */
-function MajorSelectModal({ userId, onSelect, onSkip }) {
+function MajorSelectModal({ onSelect, onSkip }) {
   const [programs, setPrograms]   = useState([]);
   const [query, setQuery]         = useState("");
   const [loading, setLoading]     = useState(true);
@@ -531,7 +531,7 @@ function App() {
     try {
       const saved = localStorage.getItem(`ace_chats_${user.uid}`);
       if (saved) setConversations(JSON.parse(saved));
-    } catch {}
+    } catch { /* corrupt or unreadable history is not worth failing a render over */ }
   }, [user?.uid]);
 
   // ── Conversation persistence: save ──
@@ -755,7 +755,7 @@ function App() {
           if (data.detected_major && !selectedMajor) {
             setSelectedMajor(data.detected_major);
           }
-        } catch {}
+        } catch { /* the upload itself succeeded; a failed dashboard refresh must not report it as failed */ }
       } else {
         setUploadStatus(data.detail || "Upload failed");
       }
@@ -771,7 +771,7 @@ function App() {
     if (!user?.uid) return;
     try {
       await apiFetch("/clear-student-doc", { method: "POST" });
-    } catch {}
+    } catch { /* local state is already cleared; a failed server delete is retried on next upload */ }
   };
 
   const handleSwitchConversation = (conv) => {
@@ -1057,7 +1057,7 @@ function App() {
                         <div className="answer-body">
                           <ReactMarkdown
                             components={{
-                              a: ({ node, ...props }) => (
+                              a: ({ node: _node, ...props }) => (
                                 <a {...props} target="_blank" rel="noreferrer" />
                               ),
                             }}
@@ -1227,7 +1227,6 @@ function App() {
       {/* ── Major selection modal ─────────────── */}
       {showMajorModal && (
         <MajorSelectModal
-          userId={user.uid}
           onSelect={handleMajorSelect}
           onSkip={handleMajorSkip}
         />
