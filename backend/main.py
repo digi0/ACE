@@ -394,15 +394,36 @@ class AccessRequest(BaseModel):
 
 
 @app.post("/access/verify")
-def verify_access(req: AccessRequest):
-    """Pilot access gate. The code lives in the ACCESS_CODE env var on Railway —
-    never in the frontend bundle. Unset var = gate closed (fail safe)."""
-    expected = os.getenv("ACCESS_CODE")
-    if not expected:
-        raise HTTPException(status_code=503, detail="Access not configured yet.")
-    if req.code.strip() != expected:
+def verify_access(req: AccessRequest, db: Session = Depends(get_db)):
+    """Pilot access gate — a shared code, or the student's own invite code.
+
+    The shared ACCESS_CODE stays because people already hold it and locking them
+    out to tidy this up would be its own kind of broken. A personal code is the
+    one that tells you something: redeeming it stamps redeemed_at, which is the
+    difference between "we invited ten people" and "four of them came in".
+    """
+    code = (req.code or "").strip()
+    if not code:
         raise HTTPException(status_code=403, detail="That code isn't valid.")
-    return {"ok": True}
+
+    shared = os.getenv("ACCESS_CODE")
+    if shared and code == shared:
+        return {"ok": True}
+
+    row = (
+        db.query(models.WaitlistEntry)
+        .filter(models.WaitlistEntry.access_code == code.upper())
+        .first()
+    )
+    if row:
+        if not row.redeemed_at:
+            row.redeemed_at = datetime.now(timezone.utc)
+            db.commit()
+        return {"ok": True}
+
+    if not shared:
+        raise HTTPException(status_code=503, detail="Access not configured yet.")
+    raise HTTPException(status_code=403, detail="That code isn't valid.")
 
 
 # ── Waitlist (public; landing-page signups) ───────────────────────────────────
@@ -468,9 +489,80 @@ def admin_waitlist(
                 "referral": r.referral,
                 "created_at": r.created_at.isoformat() if r.created_at else None,
                 "invited_at": r.invited_at.isoformat() if r.invited_at else None,
+                "redeemed_at": r.redeemed_at.isoformat() if r.redeemed_at else None,
             }
             for i, r in enumerate(rows)
         ],
+        "invited": sum(1 for r in rows if r.invited_at),
+        "redeemed": sum(1 for r in rows if r.redeemed_at),
+    }
+
+
+# Ambiguous characters are out: no O/0, I/1, S/5. Someone is going to read this
+# off a phone screen and type it into a laptop, and "was that an oh or a zero"
+# is a support conversation nobody needs during week one.
+_CODE_ALPHABET = "ABCDEFGHJKLMNPQRTUVWXYZ2346789"
+
+
+def _mint_code(db) -> str:
+    import secrets
+
+    for _ in range(20):
+        code = "ACE-" + "".join(secrets.choice(_CODE_ALPHABET) for _ in range(6))
+        if not db.query(models.WaitlistEntry).filter_by(access_code=code).first():
+            return code
+    raise HTTPException(status_code=500, detail="Could not mint a unique code.")
+
+
+@app.post("/admin/waitlist/invite")
+def admin_waitlist_invite(
+    limit: int = Query(default=10, ge=1, le=200),
+    key: str = Query(default=None),
+    x_admin_key: str | None = Header(default=None),
+    db: Session = Depends(get_db),
+):
+    """Mint invite codes for the oldest un-invited signups, oldest first.
+
+    This does NOT send anything. It returns the addresses and their codes, and
+    the message to send them — delivering it is a person's decision, and ACE has
+    no business emailing students on its own initiative. Idempotent: a row that
+    already holds a code is returned as-is rather than re-minted, so running it
+    twice does not quietly invalidate an invite somebody is holding.
+    """
+    _require_admin(key, x_admin_key)
+
+    rows = (
+        db.query(models.WaitlistEntry)
+        .filter(models.WaitlistEntry.invited_at.is_(None))
+        .order_by(models.WaitlistEntry.created_at.asc(), models.WaitlistEntry.id.asc())
+        .limit(limit)
+        .all()
+    )
+    now = datetime.now(timezone.utc)
+    for r in rows:
+        if not r.access_code:
+            r.access_code = _mint_code(db)
+        r.invited_at = now
+    db.commit()
+
+    app_url = os.getenv("APP_URL", "https://app.acecollege.app")
+    return {
+        "invited_now": len(rows),
+        "still_waiting": db.query(models.WaitlistEntry)
+                           .filter(models.WaitlistEntry.invited_at.is_(None)).count(),
+        "invites": [{"email": r.email, "code": r.access_code, "major": r.major} for r in rows],
+        "message_template": (
+            "Subject: your ACE early access code\n\n"
+            "Hi — you signed up for early access to ACE, the academic advisor "
+            "that reads your own degree audit.\n\n"
+            f"Your code: {{code}}\n"
+            f"Open {app_url} and enter it once.\n\n"
+            "The first thing worth doing is uploading your Degree Audit or "
+            "What-If report from LionPATH — that's what turns it from advice "
+            "about the catalogue into advice about you.\n\n"
+            "It's early, so tell me what it gets wrong. There's a thumbs-down on "
+            "every answer and I read all of them.\n"
+        ),
     }
 
 

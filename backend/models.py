@@ -97,6 +97,12 @@ class WaitlistEntry(Base):
     referral = Column(String(120), nullable=True)    # ?ref= source tag from the landing page
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     invited_at = Column(DateTime, nullable=True)
+    # One code per person rather than one code for everyone. The shared
+    # ACCESS_CODE cannot answer the only question that matters in week one —
+    # which of the invited actually walked through the door — and a code that
+    # leaks opens the gate for the whole internet.
+    access_code = Column(String(32), nullable=True, unique=True)
+    redeemed_at = Column(DateTime, nullable=True)
 
     __table_args__ = (
         Index("ix_waitlist_created_at", "created_at"),
