@@ -56,8 +56,15 @@ button{font:inherit}
 .ground{position:absolute;inset:0;background:#07070A;z-index:0}
 .intro{background:#07070A;color:#F2F0EA;display:grid;place-items:center;isolation:isolate}
 .intro-in{position:relative;z-index:3;width:100%;padding:0 5%;display:flex;justify-content:center}
+/* --crisp is the counter-scale. The device opens at scale(ZIN) — about 4.6x —
+   so anything inside it is rasterised at 1x and blown up, which is what made
+   this line look soft. Instead the line is set ZIN times larger and scaled back
+   down by 1/ZIN: identical on screen at every point of the pull-back, but the
+   glyphs are rasterised at their FINAL size and only ever downsampled.
+   Set together with font-size in fitLine(); the two must always agree. */
 .intro-line{position:relative;display:inline-block;text-align:left;white-space:nowrap;
-  font-family:Quicksand,Switzer,sans-serif;font-weight:600;line-height:1.14;letter-spacing:-.018em}
+  font-family:Quicksand,Switzer,sans-serif;font-weight:600;line-height:1.14;letter-spacing:-.018em;
+  transform:scale(var(--crisp,1));transform-origin:center center}
 .intro-line .sizer{visibility:hidden}
 .intro-line .live{position:absolute;inset:0}
 /* The full stop is not type, it IS the mark's dot. In the wordmark the period
@@ -1016,14 +1023,24 @@ function drawNotes(){
 drawNotes();
 MOB.addEventListener('change',()=>{drawNotes();if(window.ScrollTrigger)ScrollTrigger.refresh()});
 
+/* The device's opening zoom, mirrored here so fitLine can rasterise the opener
+   at the size it is actually seen at. 1 until the pull-back computes ZIN.
+   MUST be declared above the first fitLine() call below — `let` is not hoisted,
+   and sitting next to fitLine's own definition put it in the temporal dead zone
+   for the call on load, which threw and killed the rest of the script. */
+let CRISP = 1;
+
 const dw=document.getElementById('devwrap'), dev=dw.querySelector('.dev');
 function layout(){
   if(MOB.matches){ dw.style.width=''; dw.style.height=''; drawNotes(); return; }
   const W=innerWidth,H=innerHeight,AR=1381/1859;
-  const h=Math.min(H*0.80, W*0.90*AR), w=h/AR;
+  /* Rounded to whole pixels. The screen and everything in it is positioned
+     relative to this box, so a fractional width put the headline on a
+     half-pixel origin and softened it even at an integer font size. */
+  const h=Math.round(Math.min(H*0.80, W*0.90*AR)), w=Math.round(h/AR);
   dw.style.width=w+'px'; dw.style.height=h+'px';
   dev.style.width=h+'px'; dev.style.height=w+'px';
-  dev.style.left=((w-h)/2)+'px'; dev.style.top=((h-w)/2)+'px';
+  dev.style.left=Math.round((w-h)/2)+'px'; dev.style.top=Math.round((h-w)/2)+'px';
   drawNotes();
 }
 layout(); fitLine();
@@ -1042,13 +1059,23 @@ const LINE="college, sorted";
 function fitLine(){
   const el=document.getElementById('introLine');
   const box=el.parentElement, sz=el.querySelector('.sizer');
+  /* Measure with the counter-scale OFF: .sizer is a child of the scaled element
+     while box is not, so leaving it on skews the ratio. */
+  el.style.setProperty('--crisp','1');
   el.style.fontSize='100px';
   const w=sz.getBoundingClientRect().width;
   const avail=box.getBoundingClientRect().width;
   /* Both measurements come back SCALED by the container's transform, so their
      ratio is sound and gives a correct LOCAL font size. Mixing in an unscaled
      height cap (an earlier attempt) silently never engaged. Width only. */
-  if(w>0&&avail>0) el.style.fontSize=Math.max(6,(100*avail/w)*0.235)+'px';
+  if(w>0&&avail>0){
+    const local=Math.max(6,(100*avail/w)*0.235);
+    /* Set it CRISP times bigger and scale back by 1/CRISP. Same pixels on
+       screen at every point of the pull-back, but rasterised at the final size
+       instead of being blown up 4.6x from a 16px raster. */
+    el.style.fontSize=Math.round(local*CRISP)+'px';
+    el.style.setProperty('--crisp',(1/CRISP).toFixed(5));
+  }
 }
 
 {
@@ -1186,7 +1213,8 @@ else{
     return gw&&gh ? Math.max(innerWidth/gw, innerHeight/gh)*1.02 : 4.6;
   }
   let ZIN=zoomToFill();
-  addEventListener('resize',()=>{ZIN=zoomToFill()});
+  CRISP=ZIN; fitLine();
+  addEventListener('resize',()=>{ZIN=zoomToFill();CRISP=ZIN;fitLine()});
   gsap.set(dw,{scale:ZIN});
   gsap.set('#ground',{backgroundColor:'#07070A'});
 
