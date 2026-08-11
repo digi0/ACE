@@ -109,16 +109,52 @@ def hours_url_for(category: str) -> str:
     return (_load().get("hours_urls") or {}).get(category, "")
 
 
+# Signals that a question is about the DEGREE, not the campus. Lives here rather
+# than in chat_service because places_service is the lower of the two and both
+# need it — chat_service imports this one, so a second copy would drift.
+ACADEMIC_CONTEXT = re.compile(
+    r"\b(course|courses|class|classes|credit|credits|requirement|requirements|"
+    r"prereq\w*|semester|term|major|minor|gen ?ed|elective|electives|degree|"
+    r"transcript|gpa|graduate|graduation|advisor|adviser|audit|syllabus|exam|"
+    r"[a-z]{2,6}\s?\d{3}[a-z]?)\b", re.I
+)
+
+# Multi-word triggers are safe as substrings — "where do i park" cannot hide
+# inside another word. Single words cannot: "tow" lives in "toward", and "eat"
+# lives in create, theater, repeated, great, heat and reseat, which is six of
+# fourteen probe questions hijacked by one three-letter trigger. This is the
+# same failure the intent router was fixed for; the fix never reached here.
+_TRIGGER_RE: dict[str, re.Pattern] = {}
+
+
+def _matches(trigger: str, q: str) -> bool:
+    if " " in trigger or "-" in trigger:
+        return trigger in q
+    rx = _TRIGGER_RE.get(trigger)
+    if rx is None:
+        rx = _TRIGGER_RE[trigger] = re.compile(rf"\b{re.escape(trigger)}\b")
+    return bool(rx.search(q))
+
+
 def detect_categories(question: str) -> list[str]:
     """Which parts of campus a question is about, strongest first."""
     q = (question or "").lower()
     scored = []
+    academic = bool(ACADEMIC_CONTEXT.search(q))
     for category, triggers in CATEGORY_TRIGGERS.items():
-        if category == "study_space" and "study abroad" in q:
-            continue  # that is a career question, not a room booking
-        hits = [t for t in triggers if t in q]
-        if hits:
-            scored.append((len(hits) * 10 + max(len(t) for t in hits), category))
+        if category == "study_space" and ("study abroad" in q or "study plan" in q):
+            continue  # a term plan and a term abroad are not room bookings
+        hits = [t for t in triggers if _matches(t, q)]
+        if not hits:
+            continue
+        # A single short word is the weakest evidence there is, and next to an
+        # academic question it is almost always coincidence: "I am SICK of my
+        # major", "who teaches the GYM class requirement", "does the BUS
+        # schedule affect my class times". A real place question either says so
+        # in a phrase ("where do i eat") or names the place outright.
+        if academic and all(len(t) <= 5 and " " not in t for t in hits):
+            continue
+        scored.append((len(hits) * 10 + max(len(t) for t in hits), category))
     return [c for _, c in sorted(scored, reverse=True)]
 
 

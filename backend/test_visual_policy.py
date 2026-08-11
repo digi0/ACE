@@ -200,6 +200,32 @@ def test_a_rendered_block_withholds_its_items_from_the_prompt():
     assert B.grounding_summary("cards", None) == ""
 
 
+def test_the_map_is_never_claimed_by_accident():
+    """Naming a course is enough to build its graph, so every question with a
+    course code in it has map data lying around. "can STAT 440 substitute for
+    MATH 232?" drew STAT 440's prerequisites — a confident answer to a question
+    nobody asked. The map is claimed by asking about eligibility, or by asking
+    to see it, and never by the one-candidate fallback."""
+    assert lvl("can STAT 440 substitute for MATH 232?", "substitution",
+               counts={"map": 5})["block"] is None
+    assert lvl("does CMPSC 465 count toward the minor?", "transfer",
+               counts={"map": 5})["block"] is None
+    # Asked about eligibility, or asked to see it — both still land.
+    assert lvl("can I take CMPSC 465?", "courses", counts={"map": 5})["block"] == "map"
+    assert lvl("show me the map for CMPSC 465", "courses",
+               counts={"map": 5})["block"] == "map"
+
+
+def test_the_plainest_prerequisite_phrasing_matches():
+    """"do i need .* before" required words BETWEEN the two, so "what do I need
+    before CMPSC 431W?" never matched — it was getting its map from the fallback,
+    which is why closing the fallback is what exposed it."""
+    for q in ["what do I need before CMPSC 431W?",
+              "what comes before CMPSC 465?",
+              "do I need anything before CMPSC 465?"]:
+        assert vp._PREREQ_QUESTION.search(q), f"{q!r} is a prerequisite question"
+
+
 def test_declining_the_strip_does_not_decline_the_answer():
     """"I missed the late drop deadline, what now?" routes to `deadline`, which
     claims the strip; the one-date guard then declines it and used to return —

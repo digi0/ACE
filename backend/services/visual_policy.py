@@ -92,8 +92,13 @@ INTENT_BLOCK = {
 _PREREQ_QUESTION = re.compile(
     # "pre req" and "pre-req" are how students actually spell it; matching only
     # the closed-up form missed "map out the pre req map for these classes".
+    # "do i need .* before" needed words BETWEEN the two, so "what do I need
+    # before CMPSC 431W?" — the plainest phrasing there is — never matched. It
+    # was getting its map through the fallback instead, which is why closing the
+    # fallback exposed it. Anything from `need` to `before` within a clause now.
     r"\b(pre[\s-]?req\w*|pre[\s-]?requisite|eligible|can i take|am i able to take|"
-    r"do i need .* before|unlocks?|unlocked|opens up|before i can take)\b", re.I
+    r"need\w*\b[^.?!]{0,30}\bbefore|comes before|unlocks?|unlocked|opens up|"
+    r"before i can take)\b", re.I
 )
 
 # When the block a question implies has no data but another block does, only a
@@ -147,7 +152,15 @@ def decide(question, intent, counts=None, has_audit=False):
             block = candidate
 
     if not block:
-        with_data = [b for b in _FALLBACK_ORDER if counts.get(b)]
+        # The map is the one block that must never arrive by fallback. Naming a
+        # course is enough to build its graph, so ANY question mentioning a
+        # course code has map data lying around — and "can STAT 440 substitute
+        # for MATH 232?" drew STAT 440's prerequisites, which is a confident
+        # answer to a question nobody asked. The map is claimed by asking about
+        # eligibility, never by happening to have a course in the sentence.
+        map_allowed = bool(_PREREQ_QUESTION.search(q)) or asked
+        with_data = [b for b in _FALLBACK_ORDER
+                     if counts.get(b) and (b != "map" or map_allowed)]
         # One kind of structured material and only one — there is nothing to be
         # ambiguous about. "I failed a course and retook it" produced a
         # 4-step checklist that decide() could not reach, because the question

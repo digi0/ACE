@@ -114,6 +114,46 @@ def test_a_category_front_door_is_only_claimed_where_one_exists():
         assert peer not in by_cat, f"{peer} is a peer list, not a hierarchy"
 
 
+def test_a_short_trigger_cannot_hide_inside_a_word():
+    """The failure the intent router was fixed for, which never reached here.
+
+    Triggers were matched as bare substrings, so "tow" lived in "toward" and
+    "eat" lived in create, theater, repeated, great, heat and reseat. "do my AP
+    credits count toward my degree?" came back with six parking cards.
+    """
+    for q in [
+        "do my AP credits count toward my degree?",
+        "does my minor count toward electives?",
+        "how do I create a study plan?",
+        "what does the theater major require?",
+        "I repeated a course, does it replace the grade?",
+        "is there great advice for freshmen?",
+        "can I reseat an exam?",
+        "how do I heat up my schedule with harder classes?",
+    ]:
+        assert ps.detect_categories(q) == [], f"{q!r} → {ps.detect_categories(q)}"
+
+
+def test_a_real_word_in_an_academic_question_is_still_not_a_place():
+    """Word boundaries do not save these — the word is genuinely there, used to
+    talk about a degree. A real place question either says so in a phrase or
+    names the place; a lone short word next to "major" or "class" is coincidence."""
+    for q in [
+        "I am sick of my major, can I switch?",
+        "who teaches the gym class requirement?",
+        "does the bus schedule affect my class times?",
+        "how do I print my transcript?",
+    ]:
+        assert ps.detect_categories(q) == [], f"{q!r} → {ps.detect_categories(q)}"
+
+    # ...while the same words still work when the question really is about campus.
+    for q, want in [("where do I work out at the gym", "recreation"),
+                    ("how do I take the bus to campus", "transit"),
+                    ("I feel sick, where do I go", "health"),
+                    ("how do I print something?", "it_printing")]:
+        assert want in ps.detect_categories(q), f"{q!r} → {ps.detect_categories(q)}"
+
+
 def test_unrelated_questions_match_nothing():
     for q in ["what math courses are required for my major?", "when is the drop deadline?", ""]:
         assert ps.find_places(q) == [], f"{q!r} should not pull a campus place"
