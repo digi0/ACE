@@ -25,6 +25,28 @@ MAX_PROCEDURES = 2  # two full procedures is already a long answer
 # Phrases that pin a question to a topic. Order matters only in that a question
 # can match several topics; all matches are scored and the best ones win.
 TOPIC_TRIGGERS = {
+    # Losing federal aid for academic progress. Written in the words the email
+    # and the student use, not the acronym — a student who has just been told
+    # they are "not meeting academic requirements for financial aid" does not
+    # yet know the phrase "satisfactory academic progress".
+    "aid_progress": [
+        "satisfactory academic progress", "sap", "sap appeal",
+        "financial aid warning", "financial aid suspension",
+        "lost my financial aid", "losing my financial aid", "lose my aid",
+        "not meeting academic requirements for financial aid",
+        "academic requirements for financial aid", "aid eligibility",
+        "cut off my aid", "cut off my financial aid", "no longer eligible for aid",
+        "67%", "completion rate", "appeal my aid", "appeal my financial aid",
+        "can i still get loans", "fafsa denied", "aid suspended",
+    ],
+    # The 19-credit rule and the GPA that governs it.
+    "credit_overload": [
+        "credit overload", "overload", "more than 19", "over 19 credits",
+        "19 credits", "21 credits", "22 credits", "24 credits",
+        "take an extra class", "extra credits", "too many credits",
+        "credit limit", "max credits", "maximum credits",
+        "schedule more than", "add another class",
+    ],
     "petition": [
         "retroactive", "retroactively", "petition", "senate petition",
         "faculty senate", "after the deadline", "past the deadline",
@@ -32,7 +54,7 @@ TOPIC_TRIGGERS = {
         "exception to the policy", "backdate", "appeal", "appealing",
         "make an exception", "ask for an exception", "special circumstances",
         "extenuating", "get out of this rule", "waive", "waiver", "override the rule",
-        "is there any way", "who decides",
+        "is there any way to appeal", "is there any way to petition", "who decides",
     ],
     # Leaving the whole term or the university. Kept distinct from late_drop by
     # scope: "get out of this semester" is here, "get out of one class" is not.
@@ -68,7 +90,7 @@ TOPIC_TRIGGERS = {
         "return to the university", "returning student", "academic renewal",
         "readmission", "was suspended", "come back after", "come back to school",
         "return to school", "start again", "finish my degree", "resume my degree",
-        "was gone", "can i return", "get back in", "re-apply", "reapply",
+        "was gone", "can i return to penn state", "can i return after", "get back in", "re-apply", "reapply",
         "left years ago", "want to finish", "finish what i started",
     ],
     "grades": [
@@ -170,6 +192,40 @@ def find_procedures(question: str, limit=MAX_PROCEDURES) -> list[dict]:
 
     q = (question or "").lower()
     picked, seen = [], set()
+    # One from each detected topic BEFORE going deep on the first. A student
+    # asking "I'm on academic warning, can I still overload credits?" scored
+    # petition above credit_overload — a loose match outranking the specific
+    # one — and the two-record limit filled with petitions before the overload
+    # rule they were actually asking about ever got a look in.
+    ranked = []
+    per_topic = {t: [p for p in procedures if p.get("topic") == t] for t in topics}
+    for t in topics:
+        per_topic[t].sort(
+            key=lambda p: (
+                # A record a human checked outranks one only the extractor saw.
+                # The credit-overload rule that decides the answer — GPA 2.0
+                # raises the cap from 19 to 24 — lives on the verified record,
+                # and the unverified sibling was crowding it out of the limit.
+                0 if p.get("verified_notes") else 1,
+                # Then the record whose own title the student echoed.
+                -sum(1 for w in re.findall(r"[a-z]+", p.get("title", "").lower())
+                     if len(w) > 4 and w in q),
+            )
+        )
+    depth = 0
+    while any(len(v) > depth for v in per_topic.values()):
+        for t in topics:
+            if len(per_topic[t]) > depth:
+                ranked.append(per_topic[t][depth])
+        depth += 1
+    for p in ranked:
+        if p["id"] not in seen:
+            seen.add(p["id"])
+            picked.append(p)
+            if len(picked) >= limit:
+                return picked
+    return picked
+
     for topic in topics:
         matches = [p for p in procedures if p.get("topic") == topic]
         # Within a topic, prefer the record whose own title the student echoed.
@@ -208,6 +264,13 @@ def format_procedure(p: dict) -> str:
         lines.append(f"Consequences: {p['consequences']}")
     if p.get("policy_refs"):
         lines.append("Penn State policy: " + ", ".join(p["policy_refs"]))
+    if p.get("verified_notes"):
+        # Human-read facts the extractor could not see. On the SAP page the two
+        # opposed appeal lists render side by side and flatten into one, which
+        # inverts them — so these are the decision-relevant half of the record.
+        lines.append("VERIFIED FACTS (read from the page by a human — use these "
+                     "exactly, they are the ones that decide the outcome):")
+        lines += [f"  * {n}" for n in p["verified_notes"]]
     lines.append(f"Source: {p['source_url']}")
     return "\n".join(lines)
 

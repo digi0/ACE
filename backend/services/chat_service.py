@@ -1779,6 +1779,19 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
         elif summary and owner == "events":
             events_snippet = summary
         elif summary and owner == "procedures":
+            # Withholding the ITEMS is the point; withholding a verified FACT is
+            # not. The block renders one procedure's steps, and the substitution
+            # was dropping the hand-checked facts from every other matched
+            # record — so "can I overload credits on academic warning?" lost the
+            # rule that decides it (GPA 2.0 raises the cap from 19 to 24) and
+            # the model answered from its own prior instead.
+            facts = [n for r in find_procedures(question)
+                     for n in (r.get("verified_notes") or [])]
+            if facts:
+                summary += ("\n\nVERIFIED FACTS that are NOT in the block — a human "
+                            "read these off the page and they decide the answer. "
+                            "Use them explicitly:\n"
+                            + "\n".join(f"  * {f}" for f in facts))
             procedures_snippet = summary
         elif summary and owner == "prereq":
             # The map draws the branching; the snippet keeps only the verdict.

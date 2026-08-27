@@ -175,6 +175,65 @@ def test_topic_coverage():
     assert not missing, f"topics with triggers but no procedures: {missing}"
 
 
+def test_sap_and_credit_overload_reach_the_student():
+    """Two gaps found by testing ACE against real Reddit situations, where the
+    community named the answer and ACE could not.
+
+    A student losing federal aid got routed to the aid office with no idea what
+    had happened to them; "satisfactory academic progress" existed nowhere in
+    ACE. A student on academic warning was told an invented policy, because the
+    19-credit rule existed nowhere either."""
+    for q, want in [
+        ("i got an email saying im not meeting academic requirements for financial aid", "aid_progress"),
+        ("i lost my financial aid what do i do", "aid_progress"),
+        ("can i appeal my financial aid", "aid_progress"),
+        ("can i take more than 19 credits", "credit_overload"),
+        ("im on academic warning can i still overload credits", "credit_overload"),
+    ]:
+        assert want in ps.detect_topics(q), f"{q!r} → {ps.detect_topics(q)}"
+        assert ps.find_procedures(q), f"{q!r} found no procedure"
+
+
+def test_the_sap_appeal_lists_are_not_inverted():
+    """The single most dangerous extraction in the repo.
+
+    The SAP page renders "Extenuating circumstances MAY include" and "NOT
+    considered extenuating circumstances" side by side. Flattened, they merge —
+    and the merged list reads as if time-management problems were valid grounds.
+    They are explicitly refused, and an appeal cannot be re-filed on the same
+    reason, so a student acting on the inverted list burns their one attempt.
+
+    These were read off the rendered page by a human on 2026-08-27."""
+    rec = next((p for p in ps.load_procedures() if p.get("verified_notes")
+                and p["topic"] == "aid_progress"), None)
+    assert rec, "the SAP record lost its verified notes"
+    notes = " ".join(rec["verified_notes"]).lower()
+
+    # The accepted side.
+    assert "death of a loved one" in notes
+    assert "diagnosed by a professional" in notes
+    # The refused side, and it must be marked as refused.
+    refused = next(n for n in rec["verified_notes"] if n.lower().startswith("not accepted"))
+    for item in ["time management", "not understanding university policies",
+                 "not being able to pay tuition"]:
+        assert item in refused.lower(), f"{item!r} must sit on the NOT-accepted side"
+    # The distinction that decides the appeal.
+    assert "undiagnosed" in notes or "not diagnosed" in notes
+    assert "same reason twice" in notes
+
+
+def test_verified_facts_survive_the_block_substitution():
+    """When a checklist renders, the itemised grounding is withheld — that is
+    the point. But it was withholding the hand-verified facts too, so the
+    credit-overload rule that decides the answer never reached the model and it
+    answered from its own prior instead."""
+    q = "im on academic warning, is there any way to overload credits?"
+    recs = ps.find_procedures(q)
+    facts = [n for r in recs for n in (r.get("verified_notes") or [])]
+    assert facts, "the verified credit-overload rule is not reachable from this question"
+    assert any("24 credits" in f for f in facts)
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_") and callable(fn):

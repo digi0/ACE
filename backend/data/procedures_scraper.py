@@ -45,6 +45,11 @@ _HEADERS = {"User-Agent": "ACE-advising-bot/1.0 (Penn State student advising too
 TOPICS = [
     "withdrawal", "late_drop", "petition", "leave_of_absence", "re_enrollment",
     "grades", "registration", "change_program", "graduation", "transcripts",
+    # Added after a real-situation test run: a student losing federal aid for
+    # academic progress got routed to the aid office with no idea what had
+    # happened to them or that an appeal existed, and a student on academic
+    # warning was told an invented credit-overload policy.
+    "aid_progress", "credit_overload",
 ]
 
 # (url, topic hint). The hint seeds the extractor; it may correct it.
@@ -55,6 +60,14 @@ SOURCES = [
     ("https://studentpetitions.psu.edu/petition-checklists", "petition"),
     ("https://studentpetitions.psu.edu/frequently-asked-questions", "petition"),
     ("https://studentpetitions.psu.edu/examples-of-appropriate-and-inappropriate-requests", "petition"),
+    # Losing federal aid for academic progress — SAP. The single most
+    # consequential financial event in an undergraduate's life, and ACE had no
+    # knowledge of it at all.
+    ("https://www.psu.edu/costs-aid/managing-aid/satisfactory-academic-progress", "aid_progress"),
+    ("https://senate.psu.edu/students/policies-and-rules-for-undergraduate-students/appendix-e-financial-aid-satisfactory-academic-progress-policy/", "aid_progress"),
+    # Credit overload — the 19-credit rule and what standing is required for it.
+    ("https://bulletins.psu.edu/undergraduate/general-information/academic-information/registration-academic-records/credits/", "credit_overload"),
+    ("https://www.registrar.psu.edu/registration/adding-dropping-auditing-courses.cfm", "credit_overload"),
     # Leaving, pausing, and coming back.
     ("https://www.registrar.psu.edu/enrollment/leaving/withdrawal.cfm", "withdrawal"),
     ("https://www.registrar.psu.edu/enrollment/leaving/leave-absence.cfm", "leave_of_absence"),
@@ -89,7 +102,14 @@ _EXTRACT_SYSTEM = (
     "wording for rules. Steps must be the actions a STUDENT takes, in order, and "
     "concrete enough to follow. For who_to_contact, name the OFFICE and never an "
     "individual staff member — a named person goes stale, and a personal name does "
-    "not belong in a file ACE quotes into answers. who_to_contact is the office "
+    "not belong in a file ACE quotes into answers.\n\n"
+    "WATCH FOR PAIRED OPPOSING LISTS. Some pages put 'X MAY include' and "
+    "'NOT considered X' side by side, and a flattened read merges them into "
+    "one list — which inverts the meaning. On the SAP appeals page this would "
+    "tell a student that 'time management issues' is a valid appeal reason "
+    "when it is explicitly refused, and appeals cannot be re-filed on the same "
+    "reason. If you cannot tell which list an item belongs to, put it in "
+    "NEITHER and say so in consequences. who_to_contact is the office "
     "that OWNS this page and this process, not every office the page mentions. A "
     "petitions page is owned by the petitions office even when it warns you that a "
     "petition affects your aid; offices mentioned as a consequence or an aside "
@@ -180,8 +200,8 @@ def extract_record(url: str, topic_hint: str, title: str, text: str) -> dict | N
     }
 
 
-def build(limit=None) -> dict:
-    sources = SOURCES[:limit] if limit else SOURCES
+def build(limit=None, sources=None) -> dict:
+    sources = sources or (SOURCES[:limit] if limit else SOURCES)
     records, seen_ids = [], set()
 
     for url, hint in sources:
@@ -214,6 +234,8 @@ def build(limit=None) -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser(description="Scrape Penn State student procedures.")
     ap.add_argument("--limit", type=int, default=None, help="only the first N sources")
+    ap.add_argument("--only", nargs="+", metavar="URLFRAGMENT",
+                    help="scrape only sources matching these fragments and MERGE")
     ap.add_argument("--out", default=str(OUT_FILE))
     args = ap.parse_args()
 
@@ -221,7 +243,30 @@ def main() -> int:
     from dotenv import load_dotenv
     load_dotenv()
 
-    data = build(limit=args.limit)
+    if args.only:
+        # Scrape ONLY these URLs and merge into what is already on disk. A full
+        # re-run rewrites all 25 records, which would have silently reverted the
+        # hand-corrected "Student Petition Types" office — that record pointed
+        # students at the Office of Student Aid for a petition, and the fix was
+        # made by a human reading the sibling page. Verified corrections must
+        # survive adding a new source.
+        wanted = set(args.only)
+        subset = [(u, t) for (u, t) in SOURCES if any(w in u for w in wanted)]
+        if not subset:
+            print(f"No source matches {args.only}")
+            return 1
+        fresh = build(sources=subset)
+        existing = json.loads(Path(args.out).read_text(encoding="utf-8"))
+        by_id = {r["id"]: r for r in existing["procedures"]}
+        added = [r for r in fresh["procedures"] if r["id"] not in by_id]
+        by_id.update({r["id"]: r for r in fresh["procedures"]})
+        data = {**existing, "procedures": list(by_id.values())}
+        data["count"] = len(data["procedures"])
+        data["scraped_at"] = fresh["scraped_at"]
+        print(f"merged: {len(added)} new, {len(fresh['procedures']) - len(added)} updated, "
+              f"{len(existing['procedures'])} preserved")
+    else:
+        data = build(limit=args.limit)
     if not data["procedures"]:
         print("Nothing extracted — refusing to overwrite procedures.json.")
         return 1

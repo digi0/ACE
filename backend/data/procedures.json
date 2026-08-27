@@ -1,7 +1,7 @@
 {
- "_about": "Penn State student procedures — what to do when something goes wrong or off-schedule. Built by `python -m backend.data.procedures_scraper` from registrar.psu.edu and studentpetitions.psu.edu. LLM extraction is not bit-for-bit reproducible: diff before committing.",
- "scraped_at": "2026-08-03T20:42:43.873479+00:00",
- "count": 25,
+ "_about": "Penn State student procedures — what to do when something goes wrong or off-schedule. Built by `python -m backend.data.procedures_scraper` from registrar.psu.edu and studentpetitions.psu.edu. LLM extraction is not bit-for-bit reproducible: diff before committing. Records may carry `verified_notes`: facts a human read off the rendered page because the extractor could not see them correctly. Do not overwrite those by re-running the scraper without checking.",
+ "scraped_at": "2026-08-27T04:50:01.083798+00:00",
+ "count": 30,
  "procedures": [
   {
    "id": "student-petition-types",
@@ -565,6 +565,128 @@
    ],
    "source_url": "https://www.registrar.psu.edu/academic-progress",
    "source_title": "Academic Progress"
+  },
+  {
+   "id": "satisfactory-academic-progress-sap",
+   "title": "Satisfactory Academic Progress (SAP)",
+   "topic": "aid_progress",
+   "what_it_is": "The Satisfactory Academic Progress (SAP) process at Penn State determines whether students are making adequate progress in their educational program to receive student financial aid.",
+   "when_to_use": "A student would use this procedure if they are concerned about their eligibility for federal financial aid due to not meeting SAP requirements.",
+   "steps": [
+    "Review your completion rate, GPA, and maximum timeframe to ensure you meet SAP requirements.",
+    "If you are not meeting SAP requirements after your Financial Aid Warning semester, consider submitting an appeal.",
+    "Monitor the 'Communication Center' in LionPATH for an email labeled 'Financial Aid Suspension' for the SAP appeal form link.",
+    "Submit your appeal with all required pieces by the deadline."
+   ],
+   "timing": "The deadline for submission of appeals is the Friday prior to the last week of classes for the semester for which you are applying for aid.",
+   "forms": [
+    "SAP appeal form",
+    "Credit Evaluation Form"
+   ],
+   "who_to_contact": "Office of Student Aid",
+   "consequences": "Not meeting SAP requirements can result in ineligibility for federal financial aid.",
+   "policy_refs": [
+    "Penn State SAP Policy"
+   ],
+   "source_url": "https://www.psu.edu/costs-aid/managing-aid/satisfactory-academic-progress",
+   "source_title": "Satisfactory Academic Progress (SAP)",
+   "verified_notes": [
+    "ACCEPTED appeal grounds (page's own list): death of a loved one; serious illness or injury of the student or a loved one; mental health conditions DIAGNOSED by a professional; substance use disorder; legal issues; significant disruption from a natural disaster.",
+    "NOT accepted (page's own list): difficulty adjusting to college, campus, teaching style or online delivery; time management or maturity issues; not understanding university policies; not obtaining course materials on time; not being able to pay tuition; medical or mental health issues NOT diagnosed by a healthcare provider; taking too many courses, or the course or major not being a good fit.",
+    "The diagnosed/undiagnosed distinction decides the appeal: a diagnosed mental health condition is accepted, an undiagnosed one is refused.",
+    "Appeals cannot be approved for the same reason twice, and cannot be requested or submitted during a Financial Aid Warning semester.",
+    "SAP status is SEPARATE from academic standing. Financial Aid Warning is not the same thing as Academic Warning, and a student can be in one without the other.",
+    "Thresholds: complete at least 67% of attempted credits; undergraduates keep a cumulative GPA of at least 2.0 (graduates 3.0); finish within 150% of the credits needed (180 credits for a 120-credit degree)."
+   ]
+  },
+  {
+   "id": "financial-aid-satisfactory-academic-progress-policy",
+   "title": "Financial Aid Satisfactory Academic Progress Policy",
+   "topic": "aid_progress",
+   "what_it_is": "This policy outlines the standards for determining whether a student is making satisfactory academic progress (SAP) to receive federal student aid funds.",
+   "when_to_use": "A student would refer to this policy to understand the requirements for maintaining eligibility for federal student aid based on their academic performance.",
+   "steps": [
+    "Review the qualitative and quantitative standards for financial aid SAP.",
+    "Monitor your cumulative GPA to ensure it meets the minimum requirement for your program.",
+    "Ensure you complete at least 67% of attempted credits.",
+    "If you fail to meet SAP standards, consider filing an appeal with the Office of Student Aid."
+   ],
+   "timing": "The policy is effective starting the first day of the Summer 2023 Term.",
+   "forms": [],
+   "who_to_contact": "Office of Student Aid",
+   "consequences": "Failure to meet SAP standards may result in financial aid suspension, affecting eligibility for federal student aid.",
+   "policy_refs": [
+    "34 CFR 668.34"
+   ],
+   "source_url": "https://senate.psu.edu/students/policies-and-rules-for-undergraduate-students/appendix-e-financial-aid-satisfactory-academic-progress-policy/",
+   "source_title": "Appendix E – Financial Aid Satisfactory Academic Progress Policy"
+  },
+  {
+   "id": "credit-overload",
+   "title": "Credit Overload",
+   "topic": "credit_overload",
+   "what_it_is": "This procedure outlines the requirements for scheduling more than 19 credits in a semester and the implications of doing so.",
+   "when_to_use": "A student would use this procedure when they wish to enroll in more than 19 credits for a semester.",
+   "steps": [
+    "Add the overload credits during the drop/add period."
+   ],
+   "timing": "Credits must be added during the drop/add period.",
+   "forms": [],
+   "who_to_contact": "Office of the University Registrar",
+   "consequences": "A tuition surcharge will be applied for each credit above 19. Audit credits are counted as part of a semester credit load.",
+   "policy_refs": [
+    "42-23"
+   ],
+   "source_url": "https://bulletins.psu.edu/undergraduate/general-information/academic-information/registration-academic-records/credits/",
+   "source_title": "Credits"
+  },
+  {
+   "id": "adding-a-credit-overload",
+   "title": "Adding a Credit Overload",
+   "topic": "credit_overload",
+   "what_it_is": "This procedure outlines the process for adding a course that will take a student over 19 credits for the semester.",
+   "when_to_use": "A student would use this procedure when they wish to enroll in more than 19 credits for a semester.",
+   "steps": [
+    "Obtain the Class Number from the Schedule of Courses.",
+    "In the LionPATH Student Center, click the 'Enroll' link under Academics, and then choose the 'Add' subtab to add a course.",
+    "Read Instructions on How to Add Courses in LionPATH.",
+    "In person using a Registration Drop/Add Form. Submit the form to the department offering the course or the Registrar's office."
+   ],
+   "timing": "Cannot process until the first day of classes",
+   "forms": [
+    "Registration Drop/Add Form"
+   ],
+   "who_to_contact": "Registrar's office",
+   "consequences": "Beginning Fall 2023, will result in a tuition surcharge. $6.00 fee for each transaction after the regular add period.",
+   "policy_refs": [],
+   "source_url": "https://www.registrar.psu.edu/registration/adding-dropping-auditing-courses.cfm",
+   "source_title": "Adding, Dropping, and Auditing Courses",
+   "verified_notes": [
+    "Effective Spring 2022, a student with a cumulative GPA of at least 2.0 can enroll for up to 24 credits. Below that the 19-credit cap stands — which is why academic warning blocks an overload."
+   ]
+  },
+  {
+   "id": "late-dropping-a-course",
+   "title": "Late Dropping a Course",
+   "topic": "late_drop",
+   "what_it_is": "This procedure allows students to drop a course after the regular drop period and before the late drop deadline.",
+   "when_to_use": "A student would use this procedure if they need to drop a course after the regular drop period has ended.",
+   "steps": [
+    "In the LionPATH Student Center, click the 'Enroll' link under Academics, and then choose the 'Drop' subtab to a course.",
+    "Read Instructions on How to Drop Courses in LionPATH.",
+    "In person using a Registration Drop/Add Form, submit the form to the department offering the course, the advising center, or the Registrar's office."
+   ],
+   "timing": "",
+   "forms": [
+    "Registration Drop/Add Form"
+   ],
+   "who_to_contact": "Registrar's office",
+   "consequences": "Courses are recorded on the student record.",
+   "policy_refs": [
+    "34-89"
+   ],
+   "source_url": "https://www.registrar.psu.edu/registration/adding-dropping-auditing-courses.cfm",
+   "source_title": "Adding, Dropping, and Auditing Courses"
   }
  ]
 }
