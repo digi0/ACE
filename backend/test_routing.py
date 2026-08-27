@@ -214,6 +214,49 @@ def test_filter_records_by_scope():
     assert filter_records_by_scope(records[:1], "ds") == records[:1]
 
 
+def test_distress_rides_along_with_whatever_bracket_wins():
+    """Support was withheld from two students in obvious difficulty because
+    another bracket claimed the question first. "im failing everything and i
+    dont know if i should withdraw" routed to `deadline` and got a withdrawal
+    date; "im so behind and stressed i cant even look at lionpath" routed to
+    `logistics` and got productivity advice. Neither was offered CAPS.
+
+    `wellbeing` sits 7th in the router's return order. Reordering would be wrong
+    — a real logistics question should stay logistics. Withholding care from a
+    frightened student because their sentence also mentioned LionPATH is worse,
+    so the support resources are additive."""
+    from backend.services.chat_service import shows_distress
+
+    for q in ["im failing everything and i dont know if i should withdraw or push through",
+              "im so behind and stressed i cant even look at lionpath",
+              "i stopped going to class and i dont know what to do anymore",
+              "i havent been to class in three weeks"]:
+        assert shows_distress(q), f"{q!r} is a student in trouble"
+
+    # ...and an ordinary question does not drag the crisis block in.
+    for q in ["when is the late drop deadline", "how do i register for classes",
+              "where can i eat on campus", "what math courses do i need"]:
+        assert not shows_distress(q), f"{q!r} is not distress"
+
+
+def test_no_placeholder_rule_appears_when_there_is_no_document():
+    """A student who had just said their family could not afford college was told
+    to contact "[Advisor Name]". With no uploaded document the instruction to use
+    the adviser's name had no referent, and the model manufactured a slot."""
+    import inspect, re
+    from backend.services import chat_service as cs
+    src = inspect.getsource(cs.ask_advisor_stream)
+    assert "advisor_rule" in src, "the advisor instruction must be conditional"
+    # Collapse the source's own line breaks first — the rule is written across
+    # two string literals, so a contiguous substring match on the raw source
+    # fails for a reason that has nothing to do with the behaviour.
+    flat = re.sub(r'"\s*\n\s*"', "", src)
+    assert "NEVER write a placeholder" in flat
+    assert "[Advisor Name]" in flat, "the failure mode should be named"
+    # And the branch must actually be conditional on having a document.
+    assert "if student_doc else" in flat
+
+
 if __name__ == "__main__":
     test_detect_question_intent()
     test_visual_counts_resolve_anaphora_from_history()
@@ -223,4 +266,6 @@ if __name__ == "__main__":
     test_classify_major()
     test_select_top_records()
     test_filter_records_by_scope()
+    test_distress_rides_along_with_whatever_bracket_wins()
+    test_no_placeholder_rule_appears_when_there_is_no_document()
     print("routing self-check OK")

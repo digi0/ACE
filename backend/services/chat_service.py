@@ -46,6 +46,52 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 
+# Distress vocabulary, at module level because two things need it: the router,
+# and the ADDITIVE support check. A student can be distressed AND asking a
+# logistics question — "im so behind and stressed i cant even look at lionpath"
+# routed to `logistics` and got productivity advice, because wellbeing sits 7th
+# in the return order and something else claimed it first. Reordering would be
+# wrong; withholding CAPS from a frightened student because their sentence also
+# mentioned LionPATH is worse.
+DISTRESS_MARKERS = [
+        "stress", "stressed", "anxiety", "anxious", "overwhelmed", "burnout",
+        "mental health", "depressed", "depression", "struggling", "counseling",
+        "student health", "health center", "therapy", "therapist", "crisis",
+        "emergency fund", "financial hardship", "can't afford", "cannot afford",
+        "safe walk", "unsafe", "harassed", "emergency", "campus police",
+        # How someone in trouble actually types it. All of these routed to
+        # `general` and got a generic answer instead of the care resources —
+        # the one place a miss costs more than a bad answer.
+        "losing it", "falling apart", "can't keep up", "cant keep up",
+        "drowning", "barely holding", "can't cope", "cant cope", "at my limit",
+        "breaking point", "want to give up", "giving up", "behind on everything",
+        "spiraling", "spiralling", "panicking", "panic attack", "crying",
+        "too much going on", "can't do this", "cant do this",
+    ]
+# Distress by MEANING rather than vocabulary. None of these contain a feelings
+# word, and every one of them is a student in trouble.
+DISTRESS_MARKERS += [
+    "failing everything", "failing all", "flunking everything",
+    "cant even look", "can't even look", "cant even open", "can't even open",
+    "cant bring myself", "can't bring myself", "havent been to class",
+    "haven't been to class", "stopped going to class", "stopped attending",
+    "everything is falling", "dont know what to do anymore",
+    "don't know what to do anymore", "nothing is working", "so behind",
+]
+
+
+def shows_distress(question: str) -> bool:
+    """True when the student sounds like they are struggling, whatever they asked.
+
+    Deliberately separate from the wellbeing INTENT. Intent picks one bracket;
+    this decides whether the support resources ride along with whatever bracket
+    won. Someone asking how to withdraw while failing everything needs the
+    process AND the people."""
+    q = (question or "").lower()
+    return bool(re.search(r"\b(caps|uhs)\b", q)
+               or any(k in q for k in DISTRESS_MARKERS))
+
+
 def detect_question_intent(question):
     q = question.lower()
 
@@ -220,20 +266,7 @@ def detect_question_intent(question):
     # inside "broken", so "do I need organic chemistry?" was answered out of the
     # CAPS / 988 crisis block. Bare "health" is gone too — "health requirement"
     # is the GHW gen-ed category, not a wellbeing question.
-    wellbeing_keywords = [
-        "stress", "stressed", "anxiety", "anxious", "overwhelmed", "burnout",
-        "mental health", "depressed", "depression", "struggling", "counseling",
-        "student health", "health center", "therapy", "therapist", "crisis",
-        "emergency fund", "financial hardship", "can't afford", "cannot afford",
-        "safe walk", "unsafe", "harassed", "emergency", "campus police",
-        # How someone in trouble actually types it. All of these routed to
-        # `general` and got a generic answer instead of the care resources —
-        # the one place a miss costs more than a bad answer.
-        "losing it", "falling apart", "can't keep up", "cant keep up",
-        "drowning", "barely holding", "can't cope", "cant cope", "at my limit",
-        "breaking point", "want to give up", "giving up", "behind on everything",
-        "spiraling", "spiralling", "panicking", "panic attack", "crying",
-        "too much going on", "can't do this", "cant do this",
+    wellbeing_keywords = DISTRESS_MARKERS + [
         "recreation", "recsports", "intramural", "writing center", "tutoring",
         "calculus help",
     ]
@@ -1712,7 +1745,10 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
         if not visual["data"]:
             visual["block"] = None
 
-    resources_snippet = CAMPUS_RESOURCES_SNIPPET if intent == "wellbeing" else ""
+    # Additive, not exclusive. The bracket that won decides the ANSWER; distress
+    # decides whether the support resources come with it.
+    resources_snippet = (CAMPUS_RESOURCES_SNIPPET
+                         if intent == "wellbeing" or shows_distress(question) else "")
     career_snippet = CAREER_RESOURCES_SNIPPET if intent == "career" else ""
     # Real organisations, matched on what ACE has learned about the student and
     # on the question itself. Appended to the career block, whose rules defer to
@@ -1822,6 +1858,19 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     # contract that EVERY answer reads makes every answer hedge. So the exception
     # lives here, fires only when the graph really has no record behind it, and
     # is invisible the rest of the time.
+    # Told to "use the advisor name from the student document" with NO document,
+    # the model manufactured a template slot: a student who had just said their
+    # family could not afford college was told to contact "[Advisor Name]".
+    # The instruction only exists when there is a name to take.
+    advisor_rule = (
+        "- For contact questions, use the advisor name from the student document "
+        "first; only mention department contacts as secondary.\n"
+        if student_doc else
+        "- No student document is uploaded, so you do NOT know this student's "
+        "adviser's name. Say \"your academic adviser\" and name the office. NEVER "
+        "write a placeholder like [Advisor Name] — a bracketed slot in an answer "
+        "reads as broken software to someone who is already worried.\n"
+    )
     no_record_rule = "" if not (prereq_graph and not prereq_graph.get("has_record")) else (
         "- ACE has NO audit for this student, so it cannot know what they have "
         "already taken. Do not say whether THEY are eligible, or what they still "
@@ -1971,7 +2020,7 @@ REGISTER — {register}
 - Ground every answer in the records, rules and student document provided; use the conversation history only to follow context.
 - List courses as bullets when you are listing several — unless the VISUAL POLICY says a block is rendered, in which case list nothing; this rule loses to it. Do NOT bullet section labels (e.g. "Probability and Statistics (6 credits)") — use them as headings.
 {either_rule}
-{no_record_rule}- For contact questions, use the advisor name from the student document first; only mention department contacts as secondary.
+{no_record_rule}{advisor_rule}
 - Quote exact handbook language when available. Do not say "typically" or "likely" unless the records themselves are uncertain.
 - When a DEPARTMENT HANDBOOK POLICIES block is present, it outranks the advising records for procedure questions (ETM, petitions, substitutions, transfer credit, who to contact). Use its exact numbers and name the step the student has to take.
 - Never invent courses, policies, contacts, grades, or substitutions not present in the records.
@@ -1979,6 +2028,7 @@ REGISTER — {register}
 - Do not mention internal record numbers.
 - If a Degree Audit Advisory is present above, include the recommendation naturally in your answer when it is relevant to what the student asked.
 - Be specific. A student can act on "email the Bursar at 814-865-2979"; they cannot act on "contact the appropriate office".
+- NEVER emit a fill-in-the-blank placeholder — [Advisor Name], [Your Major], [insert date]. If you do not know a value, say what you do not know, or leave it out. A bracketed slot is not a polite hedge; it is a visible defect.
 {_INTENT_ANSWER_RULES.get(intent, "")}{visual_directive}"""
 
     try:

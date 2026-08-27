@@ -212,6 +212,13 @@ def build_visa_snippet(question: str) -> str:
 
     lines.append(
         "\nANSWERING RULES FOR THIS TOPIC — read them, they are not boilerplate:\n"
+        "- THE FIRST SENTENCE CARRIES THE CONDITION. The answer contract asks for "
+        "a verdict in the opening line, and on an F-1 question the safe verdict is "
+        "almost never a bare yes. \"You can drop a class while on an F-1 visa\" is "
+        "the sentence a frightened student acts on, and the caveat that follows it "
+        "arrives too late. Write \"Not without authorisation first\" or \"Only if "
+        "ISSA approves it in advance\" — the condition belongs IN the verdict, not "
+        "after it.\n"
         "- Your job is to MAP OPTIONS, not to decide. Name the provisions above "
         "that could fit, say what each requires, and say what it costs to get "
         "wrong. The student almost certainly did not know these existed; that is "

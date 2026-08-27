@@ -128,6 +128,20 @@ def test_the_dataset_itself_is_sound():
         assert not hit, f"a personal name may have leaked: {hit.group(0)!r}"
 
 
+def test_the_verdict_carries_its_own_condition():
+    """"i want to drop a class but im on an f1 visa" opened with "You can drop a
+    class while on an F-1 visa". Everything after it was right; that clause is
+    the one a frightened student acts on, and the caveat arrives too late.
+
+    The answer contract demands a verdict in the opening line. On this content
+    the safe verdict is almost never a bare yes, so the condition has to ride
+    inside it."""
+    snippet = vs.build_visa_snippet("i want to drop a class but im on an f1 visa")
+    assert "THE FIRST SENTENCE CARRIES THE CONDITION" in snippet
+    assert "Not without authorisation first" in snippet
+    assert "arrives too late" in snippet
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_") and callable(fn):
