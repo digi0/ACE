@@ -109,3 +109,28 @@
 @media (max-width: 768px) {
   .wb-headline { white-space: normal; }
 }
+
+/* ── Touch targets ───────────────────────────────────────────────────────────
+   Found by measuring every view at 375px. Both of these are comfortably
+   tappable with a mouse and fiddly with a thumb, so they are widened HERE
+   rather than in the desktop baseline — the pointer that needs the extra room
+   is the only one that gets it, and neither card layout moves on desktop. */
+@media (max-width: 768px) {
+  /* "Visit →" is the primary action on every resource card, and was 27px tall.
+     Padding rather than height, so the label stays vertically centred. */
+  .resource-card-link {
+    min-height: 44px;
+    padding-top: 0;
+    padding-bottom: 0;
+    align-items: center;
+  }
+
+  /* The row-remove × was 28x28 AND destructive — a mis-tap deletes a course the
+     student just typed. Grows to 44 without moving the row: the visual button
+     is unchanged, the hit area around it is not. */
+  .gpa-remove-btn {
+    width: 44px;
+    height: 44px;
+    margin: -8px;
+  }
+}
