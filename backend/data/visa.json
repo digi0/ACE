@@ -1,0 +1,832 @@
+{
+ "_about": "Penn State F-1 provisions — what exists, what it requires, and what breaks if you get it wrong. Built by `python -m backend.data.visa_scraper` from global.psu.edu. NOT immigration advice: ACE names the options and the question to ask; only a DSO at Penn State Global can tell a student which applies to them. LLM extraction is not bit-for-bit reproducible — diff before committing.",
+ "scraped_at": "2026-08-27T03:48:31.320539+00:00",
+ "count": 37,
+ "sources_failed": [],
+ "records": [
+  {
+   "id": "full-time-enrollment",
+   "title": "Full-Time Enrollment",
+   "topic": "full_time_enrollment",
+   "visa": "F-1",
+   "what_it_is": "Both F-1 and J-1 students must maintain full-time academic status.",
+   "when_it_applies": "For F-1 or J-1 students enrolled at Penn State.",
+   "conditions": [
+    "Undergraduate and Law students must enroll for a minimum of 12 credits/semester.",
+    "Graduate students must enroll in a minimum of 9 credits/semester.",
+    "F-1 and J-1 students may count no more than 3 hybrid-remote/online credits toward their minimum requirement."
+   ],
+   "numbers": [
+    "12 credits minimum for undergraduate and Law students",
+    "9 credits minimum for graduate students",
+    "3 hybrid-remote/online credits maximum"
+   ],
+   "risk_if_wrong": "Dropping below full-time enrollment without authorization is a status violation.",
+   "who_authorises": "International Student Adviser",
+   "how_to_start": "Access your iStart account.",
+   "ask_adviser": "What are the consequences of dropping below full-time enrollment?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/article/enrollment-requirements"
+  },
+  {
+   "id": "part-time-enrollment-reduced-course-load",
+   "title": "Part-Time Enrollment/Reduced Course Load",
+   "topic": "reduced_course_load",
+   "visa": "F-1",
+   "what_it_is": "Part-time enrollment/exceptions to full-time study must be cleared with an International Student Adviser in advance.",
+   "when_it_applies": "When a student needs to enroll part-time instead of full-time.",
+   "conditions": [],
+   "numbers": [],
+   "risk_if_wrong": "Part-time enrollment without authorization is a status violation.",
+   "who_authorises": "International Student Adviser",
+   "how_to_start": "Meet with your International Student Adviser.",
+   "ask_adviser": "What are the approved reasons for a reduced course load?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/article/enrollment-requirements"
+  },
+  {
+   "id": "hybrid-web-based-or-online-courses",
+   "title": "Hybrid, Web-Based, or Online Courses",
+   "topic": "full_time_enrollment",
+   "visa": "F-1",
+   "what_it_is": "F-1 and J-1 students may count only 3 credits that are taught hybrid-remote/online toward full-time enrollment each semester.",
+   "when_it_applies": "When enrolling in hybrid-remote/online courses.",
+   "conditions": [],
+   "numbers": [
+    "3 hybrid-remote/online credits maximum"
+   ],
+   "risk_if_wrong": "Counting more than 3 hybrid-remote/online credits toward full-time enrollment is a status violation.",
+   "who_authorises": "International Student Adviser",
+   "how_to_start": "Review the course schedule for hybrid-remote/online options.",
+   "ask_adviser": "How do hybrid-remote/online courses affect my full-time status?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/article/enrollment-requirements"
+  },
+  {
+   "id": "world-campus-enrollment",
+   "title": "World Campus Enrollment",
+   "topic": "status_violation",
+   "visa": "F-1",
+   "what_it_is": "F-1 and J-1 students cannot do a change of campus to World Campus and remain in the United States.",
+   "when_it_applies": "When considering enrollment in World Campus while in the U.S.",
+   "conditions": [],
+   "numbers": [],
+   "risk_if_wrong": "Full-time enrollment in World Campus within the U.S. is a violation of F-1 and J-1 status.",
+   "who_authorises": "International Student Adviser",
+   "how_to_start": "Consult with your International Student Adviser before making changes.",
+   "ask_adviser": "Can I take World Campus courses while in the U.S.?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/article/enrollment-requirements"
+  },
+  {
+   "id": "summer-enrollment-requirements",
+   "title": "Summer Enrollment Requirements",
+   "topic": "full_time_enrollment",
+   "visa": "F-1",
+   "what_it_is": "Undergraduate and graduate students beginning their degree during the summer must meet specific credit requirements.",
+   "when_it_applies": "For students starting their degree in the summer semester.",
+   "conditions": [
+    "Undergraduate students must be registered for 12 credits.",
+    "Graduate students must be registered for 9 credits.",
+    "F-1 and J-1 students may count no more than 3 hybrid-remote/online credits toward their minimum requirement."
+   ],
+   "numbers": [
+    "12 credits minimum for undergraduate students",
+    "9 credits minimum for graduate students",
+    "3 hybrid-remote/online credits maximum"
+   ],
+   "risk_if_wrong": "Failing to meet these requirements can jeopardize immigration status.",
+   "who_authorises": "International Student Adviser",
+   "how_to_start": "Register for summer courses as per the requirements.",
+   "ask_adviser": "What are the specific requirements for summer enrollment?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/article/enrollment-requirements"
+  },
+  {
+   "id": "f-1-regulations",
+   "title": "F-1 Regulations",
+   "topic": "full_time_enrollment",
+   "visa": "F-1",
+   "what_it_is": "As an F-1 international student, you are required to enroll in a full-time course load or have approval for a reduced course load.",
+   "when_it_applies": "This applies to all F-1 international students.",
+   "conditions": [
+    "Enroll in a full-time course load or have approval for a reduced course load.",
+    "Enroll in the correct number of in-person credits.",
+    "Enroll in courses while you have an active SEVIS record."
+   ],
+   "numbers": [],
+   "risk_if_wrong": "A violation will result in a student’s SEVIS record being terminated. When this occurs, there is no grace period, and the student is required to leave the U.S. immediately.",
+   "who_authorises": "International Students and Scholars Advising (ISSA)",
+   "how_to_start": "Access your iStart account.",
+   "ask_adviser": "What are the specific requirements for maintaining my full-time enrollment status?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/page/f-1-regulations"
+  },
+  {
+   "id": "academic-difficulty",
+   "title": "Academic Difficulty",
+   "topic": "reduced_course_load",
+   "visa": "F-1",
+   "what_it_is": "This provision allows students to request a reduced course load due to initial academic difficulties.",
+   "when_it_applies": "For students facing initial academic difficulty due to language, reading requirements, unfamiliarity with American teaching methods, or improper course level placement.",
+   "conditions": [
+    "This reason can be used only one time per degree program.",
+    "Initial academic difficulty due to problems with English language: 1st semester only.",
+    "Initial academic difficulty due to the reading requirements: 1st year only.",
+    "Initial academic difficulty due to student being unfamiliar with American teaching methods: 1st year only.",
+    "Improper course level placement."
+   ],
+   "numbers": [
+    "Undergraduate students: 6 credits (with a minimum of 3 in-person and no more than 3 online/hybrid/remote credits)",
+    "Graduate students: 5 credits (with a minimum of 3 in-person and no more than 3 online/hybrid/remote credits)"
+   ],
+   "risk_if_wrong": "Failing to meet enrollment requirements violates your immigration status, which ISSA must report and may jeopardize your active status.",
+   "who_authorises": "International Student and Scholar Advising",
+   "how_to_start": "Access your iStart account.",
+   "ask_adviser": "I used academic-difficulty RCL in my first semester — can I use a different reason now?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/page/requesting-reduced-course-load"
+  },
+  {
+   "id": "last-semester-of-enrollment",
+   "title": "Last Semester of Enrollment",
+   "topic": "reduced_course_load",
+   "visa": "F-1",
+   "what_it_is": "This provision allows students to request a reduced course load during their final semester of enrollment.",
+   "when_it_applies": "For students completing their degree program requirements, including thesis or paper defense.",
+   "conditions": [
+    "For students in non-thesis programs: The last semester is your final semester of enrollment.",
+    "For graduate students and others in programs that require a thesis or paper: Your last semester is the final semester of enrollment and thesis or paper defense."
+   ],
+   "numbers": [
+    "Undergraduate students and graduate students without a thesis requirement: 3 in-person credits required for your program (with a minimum of 3 in-person and no more than 3 online/hybrid/remote credits)",
+    "Graduate students with a thesis requirement: 1 in-person credit required for your program."
+   ],
+   "risk_if_wrong": "Failing to meet enrollment requirements violates your immigration status, which ISSA must report and may jeopardize your active status.",
+   "who_authorises": "International Student and Scholar Advising",
+   "how_to_start": "Access your iStart account.",
+   "ask_adviser": "Does my thesis defence term count as my final semester for the I-20 end date?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/page/requesting-reduced-course-load"
+  },
+  {
+   "id": "medical-or-psychological-reasons",
+   "title": "Medical or Psychological Reasons",
+   "topic": "reduced_course_load",
+   "visa": "F-1",
+   "what_it_is": "This provision allows students to request a reduced course load for medical or psychological reasons.",
+   "when_it_applies": "For students receiving treatment at University Health Services or Counseling and Psychological Services, or those who submit documentation from a licensed physician or psychiatrist.",
+   "conditions": [
+    "Requests are reviewed by University Health Services or Counseling and Psychological Services.",
+    "Students must either receive treatment at UHS or CAPS, or submit documentation from a licensed physician (to UHS) or psychiatrist (to CAPS) for review.",
+    "Approval of a reduced course load for these reasons is limited to a maximum of 12 months total."
+   ],
+   "numbers": [
+    "These RCL requests are granted per semester."
+   ],
+   "risk_if_wrong": "Failing to meet enrollment requirements violates your immigration status, which ISSA must report and may jeopardize your active status.",
+   "who_authorises": "International Student and Scholar Advising",
+   "how_to_start": "Access your iStart account.",
+   "ask_adviser": "What documentation do I need to submit for a medical or psychological RCL?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/page/requesting-reduced-course-load"
+  },
+  {
+   "id": "f-1-on-campus-employment-policies",
+   "title": "F-1 On-Campus Employment Policies",
+   "topic": "on_campus_work",
+   "visa": "F-1",
+   "what_it_is": "As an F-1 student, you are allowed to work on-campus for Penn State.",
+   "when_it_applies": "This applies to F-1 students who are enrolled at Penn State.",
+   "conditions": [
+    "You may work up to 20 hours per week while school is in session.",
+    "Continuing students may work full time (over 20 hours per week) in the summer."
+   ],
+   "numbers": [
+    "20 hours per week while school is in session",
+    "over 20 hours per week in the summer for continuing students"
+   ],
+   "risk_if_wrong": "Working more than the allowed hours without authorization is a status violation.",
+   "who_authorises": "ISSA",
+   "how_to_start": "Obtain an employment letter from the hiring department.",
+   "ask_adviser": "What steps do I need to take to start working on-campus?",
+   "side_effects": [
+    "Potential impact on academic performance due to work hours",
+    "Possible effects on financial aid eligibility"
+   ],
+   "source_url": "https://global.psu.edu/page/f-1-campus-employment"
+  },
+  {
+   "id": "f-1-curricular-practical-training-cpt-eligibility-requiremen",
+   "title": "F-1 Curricular Practical Training (CPT) - Eligibility Requirements",
+   "topic": "cpt",
+   "visa": "F-1",
+   "what_it_is": "CPT allows F-1 students to engage in internships or employment that is integral to their academic program.",
+   "when_it_applies": "This applies to students who need practical training as part of their degree requirements.",
+   "conditions": [
+    "Must have lawful, full-time enrollment for one academic year.",
+    "CPT must occur before the program end date on your I-20.",
+    "The training/internship must be required by the academic program.",
+    "The opportunity must be closely related to the major of study.",
+    "The training must happen before completing all coursework."
+   ],
+   "numbers": [],
+   "risk_if_wrong": "Unauthorized CPT can lead to a status violation.",
+   "who_authorises": "International Student Services Office",
+   "how_to_start": "Access your iStart account.",
+   "ask_adviser": "Does my unpaid internship require CPT authorization?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/page/f-1-curricular-practical-training-cpt"
+  },
+  {
+   "id": "f-1-curricular-practical-training-cpt-part-time-vs-full-time",
+   "title": "F-1 Curricular Practical Training (CPT) - Part-time vs. Full-time",
+   "topic": "cpt",
+   "visa": "F-1",
+   "what_it_is": "CPT can be authorized for part-time or full-time work.",
+   "when_it_applies": "This applies to students who are engaging in CPT.",
+   "conditions": [],
+   "numbers": [
+    "Part-time: 20 hours or fewer per week.",
+    "Full-time: more than 20 hours per week."
+   ],
+   "risk_if_wrong": "",
+   "who_authorises": "",
+   "how_to_start": "",
+   "ask_adviser": "",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/page/f-1-curricular-practical-training-cpt"
+  },
+  {
+   "id": "f-1-curricular-practical-training-cpt-effect-of-cpt-on-optio",
+   "title": "F-1 Curricular Practical Training (CPT) - Effect of CPT on Optional Practical Training (OPT)",
+   "topic": "cpt",
+   "visa": "F-1",
+   "what_it_is": "Accumulating full-time CPT can affect eligibility for OPT.",
+   "when_it_applies": "This applies to students who have engaged in full-time CPT.",
+   "conditions": [],
+   "numbers": [
+    "If you accumulate 365 days or more of full-time CPT, you will not be eligible for OPT."
+   ],
+   "risk_if_wrong": "",
+   "who_authorises": "",
+   "how_to_start": "",
+   "ask_adviser": "",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/page/f-1-curricular-practical-training-cpt"
+  },
+  {
+   "id": "f-1-curricular-practical-training-cpt-application-and-author",
+   "title": "F-1 Curricular Practical Training (CPT) - Application and Authorization Process",
+   "topic": "cpt",
+   "visa": "F-1",
+   "what_it_is": "This outlines the steps to apply for CPT authorization.",
+   "when_it_applies": "This applies to students who have secured an internship or employment.",
+   "conditions": [],
+   "numbers": [],
+   "risk_if_wrong": "Continuing to work beyond the authorized date on your I-20 without an extension can lead to a status violation.",
+   "who_authorises": "International Student Services Office",
+   "how_to_start": "Fill out the Curricular Practical Training (CPT) form in iStart.",
+   "ask_adviser": "What details must be included in the employer letter for CPT?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/page/f-1-curricular-practical-training-cpt"
+  },
+  {
+   "id": "f-1-curricular-practical-training-cpt-updating-your-address-",
+   "title": "F-1 Curricular Practical Training (CPT) - Updating Your Address While on CPT",
+   "topic": "cpt",
+   "visa": "F-1",
+   "what_it_is": "Students must keep their current address updated in SEVIS while on CPT.",
+   "when_it_applies": "This applies to students who are currently engaged in CPT.",
+   "conditions": [],
+   "numbers": [],
+   "risk_if_wrong": "Failure to update your address can lead to compliance issues with the Department of Homeland Security.",
+   "who_authorises": "",
+   "how_to_start": "Complete the U.S. Local Address Update form in iStart.",
+   "ask_adviser": "",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/page/f-1-curricular-practical-training-cpt"
+  },
+  {
+   "id": "post-completion-opt-eligibility",
+   "title": "Post-Completion OPT Eligibility",
+   "topic": "opt",
+   "visa": "F-1",
+   "what_it_is": "Post-Completion Optional Practical Training (OPT) allows F-1 students to gain up to 12 months of practical experience in their field of study after completing their degree.",
+   "when_it_applies": "When a student is nearing completion of their degree and meets the eligibility requirements for Post-Completion OPT.",
+   "conditions": [
+    "Have not been approved for a total of 365 days of full-time CPT.",
+    "Were enrolled full-time for at least one academic year (two semesters).",
+    "Have maintained active F-1 status.",
+    "Will complete your degree in the near future."
+   ],
+   "numbers": [
+    "up to 12 months of practical experience",
+    "365 days maximum of full-time CPT",
+    "two semesters minimum enrollment"
+   ],
+   "risk_if_wrong": "If a student applies for OPT without meeting the eligibility requirements, they may violate their F-1 status.",
+   "who_authorises": "ISSA",
+   "how_to_start": "Request an OPT I-20 in iStart.",
+   "ask_adviser": "Can I apply for OPT if I have used full-time CPT previously?",
+   "side_effects": [
+    "Potential impact on tuition and financial aid eligibility.",
+    "Delay in graduation timing if application is not submitted correctly."
+   ],
+   "source_url": "https://global.psu.edu/landing/post-completion-opt"
+  },
+  {
+   "id": "applying-for-opt-a-two-step-process",
+   "title": "Applying for OPT: A Two-Step Process",
+   "topic": "opt",
+   "visa": "F-1",
+   "what_it_is": "The process for applying for Post-Completion OPT involves requesting an OPT I-20 and submitting the application to USCIS.",
+   "when_it_applies": "When a student is ready to apply for Post-Completion OPT after meeting eligibility requirements.",
+   "conditions": [],
+   "numbers": [
+    "Apply for OPT as early as 90 days before your program end date.",
+    "Submit your OPT application within 30 days of the date of OPT I-20 issuance or by the 60th day from the program end date, whichever comes first.",
+    "The OPT application window closes on the 60th day from the program end date."
+   ],
+   "risk_if_wrong": "Submitting the application late may result in the inability to work on OPT.",
+   "who_authorises": "ISSA",
+   "how_to_start": "Submit form I-765, the signed I-20 with the OPT recommendation, and other required documents to USCIS online.",
+   "ask_adviser": "What is the best time to submit my OPT application?",
+   "side_effects": [
+    "Inability to work on campus past the I-20 program end date unless on OPT.",
+    "Need to maintain enrollment if summer is the final term."
+   ],
+   "source_url": "https://global.psu.edu/landing/post-completion-opt"
+  },
+  {
+   "id": "pre-completion-opt",
+   "title": "Pre-Completion OPT",
+   "topic": "opt",
+   "visa": "F-1",
+   "what_it_is": "Pre-completion OPT allows students to work either full-time or part-time while enrolled in their academic program, or during summer vacation, as long as they will enroll for the upcoming fall semester.",
+   "when_it_applies": "This applies to students who have been enrolled continuously for one academic year and are in active F-1 status.",
+   "conditions": [
+    "Have been enrolled continuously for one academic year (fall and spring semester) by the time the Pre-completion OPT employment starts.",
+    "Be in active F-1 status.",
+    "Your Pre-completion OPT employment must be closely related to your major of study."
+   ],
+   "numbers": [
+    "Eligible for 12 months of OPT for each higher-level degree.",
+    "Full-time Pre-completion OPT is deducted at a one-to-one ratio from the 12-month total.",
+    "Part-time Pre-completion OPT is deducted at half the rate from the 12-month total.",
+    "You may apply for Pre-completion OPT 90 days prior to the end of the one academic year.",
+    "Submit form I-765 within 30 days of the date of OPT I-20 issuance."
+   ],
+   "risk_if_wrong": "If you apply and are approved for Pre-completion OPT for a total of 12 months, you will no longer be eligible for Post-completion OPT.",
+   "who_authorises": "USCIS",
+   "how_to_start": "Request the I-20 by completing the OPT form in iStart.",
+   "ask_adviser": "What documents do I need to submit with my OPT application?",
+   "side_effects": [
+    "Any unused days of OPT cannot be recovered once approved.",
+    "It takes approximately 90 days to receive the EAD card."
+   ],
+   "source_url": "https://global.psu.edu/page/pre-completion-opt"
+  },
+  {
+   "id": "cap-gap-extension",
+   "title": "Cap-Gap Extension",
+   "topic": "opt",
+   "visa": "F-1",
+   "what_it_is": "The Cap-Gap extension allows students on Post-Completion or STEM OPT to continue working between the end of their OPT authorized period and the beginning of the H-1B period if their employer filed the H-1B petition in a timely manner.",
+   "when_it_applies": "This applies to students who are on Post-Completion or STEM OPT and have a timely filed H-1B petition.",
+   "conditions": [
+    "The H-1B petition must be filed in a timely manner.",
+    "If not approved for OPT or in the 60-day grace period after OPT has ended, the student is eligible for an extension of F-1 status but may not work during the Cap-Gap period."
+   ],
+   "numbers": [
+    "60-day grace period if the H-1B petition is rejected, denied, or revoked."
+   ],
+   "risk_if_wrong": "If the H-1B petition is not approved, the Cap-Gap extension will terminate, and the student will enter a 60-day grace period.",
+   "who_authorises": "International Student Adviser",
+   "how_to_start": "Access your iStart account and complete the Cap Gap form.",
+   "ask_adviser": "What should I do if my H-1B petition is denied?",
+   "side_effects": [
+    "May affect work authorization and status if the H-1B petition is not approved."
+   ],
+   "source_url": "https://global.psu.edu/page/cap-gap-extension"
+  },
+  {
+   "id": "volunteering",
+   "title": "Volunteering",
+   "topic": "cpt",
+   "visa": "F-1",
+   "what_it_is": "Volunteering is working for an individual or an organization in an unpaid position for humanitarian, public service, or religious reasons with no expectation of remuneration or compensation.",
+   "when_it_applies": "When an international student wishes to volunteer without compensation.",
+   "conditions": [
+    "Volunteering must be for humanitarian, public service, or religious reasons.",
+    "Volunteering cannot be for for-profit private sector employers.",
+    "Activities that are normally considered paid employment cannot be volunteered."
+   ],
+   "numbers": [],
+   "risk_if_wrong": "Engaging in activities that are considered employment without proper authorization can lead to a violation of status.",
+   "who_authorises": "ISSA",
+   "how_to_start": "Review how the U.S. Fair Labor Standards Act (FLSA) defines volunteering.",
+   "ask_adviser": "If I volunteer in a position that is normally paid, will it affect my status?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/landing/unpaid-work"
+  },
+  {
+   "id": "unpaid-internship",
+   "title": "Unpaid Internship",
+   "topic": "cpt",
+   "visa": "F-1",
+   "what_it_is": "For International students in F-1 status, internships (unpaid or paid) require authorization from ISSA.",
+   "when_it_applies": "When an international student wants to participate in an unpaid internship.",
+   "conditions": [
+    "An unpaid internship may fall under Curricular Practical Training (CPT).",
+    "Students must have been lawfully enrolled full-time for one academic year to be eligible for CPT.",
+    "Students in English language programs are ineligible for practical training."
+   ],
+   "numbers": [
+    "Must be lawfully enrolled full-time for one academic year."
+   ],
+   "risk_if_wrong": "Participating in an unpaid internship without authorization can lead to a violation of status.",
+   "who_authorises": "ISSA",
+   "how_to_start": "Review information on how to request Curricular Practical Training (CPT).",
+   "ask_adviser": "What steps do I need to take to get authorization for an unpaid internship?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/landing/unpaid-work"
+  },
+  {
+   "id": "f-1-on-campus-employment",
+   "title": "F-1 On-Campus Employment",
+   "topic": "on_campus_work",
+   "visa": "F-1",
+   "what_it_is": "F-1 international students are allowed to work on campus under certain eligibility requirements.",
+   "when_it_applies": "When F-1 international students meet the eligibility requirements for on-campus employment.",
+   "conditions": [
+    "Must maintain valid F-1 status",
+    "Must be enrolled full-time during the academic year",
+    "Employment must not exceed 20 hours per week during the academic year"
+   ],
+   "numbers": [
+    "20 hours per week during the academic year"
+   ],
+   "risk_if_wrong": "Working without authorization or exceeding the allowed hours can lead to a violation of F-1 status.",
+   "who_authorises": "International Student Advising",
+   "how_to_start": "Contact your International Student Adviser for guidance on employment opportunities.",
+   "ask_adviser": "What are the specific eligibility requirements for on-campus employment?",
+   "side_effects": [
+    "Potential impact on academic performance",
+    "Possible effects on financial aid eligibility"
+   ],
+   "source_url": "https://global.psu.edu/landing/employment-f-1-international-students"
+  },
+  {
+   "id": "f-1-severe-economic-hardship-authorized-off-campus-employmen",
+   "title": "F-1 Severe Economic Hardship - Authorized Off-Campus Employment",
+   "topic": "on_campus_work",
+   "visa": "F-1",
+   "what_it_is": "This provision allows F-1 students to work off-campus due to severe economic hardship.",
+   "when_it_applies": "When unforeseen circumstances beyond the student's control cause financial problems.",
+   "conditions": [
+    "Maintain F-1 status for a full academic year",
+    "Be in good academic standing and enrolled full-time (unless approved for a Reduced Course Load)",
+    "Make a good faith effort to obtain on-campus employment before applying",
+    "Discuss with an International Student Adviser"
+   ],
+   "numbers": [
+    "Limited to 20 hours of work per week while school is in session",
+    "Full time only during vacation periods and summers"
+   ],
+   "risk_if_wrong": "Unauthorized off-campus employment can lead to a status violation.",
+   "who_authorises": "International Student Adviser",
+   "how_to_start": "Access the iStart account to begin the application process.",
+   "ask_adviser": "What documentation do I need to provide for severe economic hardship?",
+   "side_effects": [
+    "Potential impact on tuition and financial aid",
+    "May affect graduation timing"
+   ],
+   "source_url": "https://global.psu.edu/page/f-1-severe-economic-hardship"
+  },
+  {
+   "id": "violation-of-penn-state-s-code-of-conduct-and-your-immigrati",
+   "title": "Violation of Penn State's Code of Conduct and Your Immigration Status",
+   "topic": "status_violation",
+   "visa": "F-1",
+   "what_it_is": "Activities that violate Penn State's code of conduct standards may affect your immigration status in the U.S.",
+   "when_it_applies": "If a violation of Penn State's code of conduct results in your inability to enroll.",
+   "conditions": [],
+   "numbers": [],
+   "risk_if_wrong": "If your SEVIS record is terminated for this reason, you will not have a grace period and will be required to leave the U.S. immediately.",
+   "who_authorises": "ISSA",
+   "how_to_start": "Know and abide by the laws of the U.S.",
+   "ask_adviser": "What should I do if I am accused of violating the code of conduct?",
+   "side_effects": [
+    "Loss of enrollment",
+    "Immediate departure from the U.S."
+   ],
+   "source_url": "https://global.psu.edu/page/activities-may-impact-your-immigration-status"
+  },
+  {
+   "id": "correcting-a-terminated-f-1-record",
+   "title": "Correcting a Terminated F-1 Record",
+   "topic": "status_violation",
+   "visa": "F-1",
+   "what_it_is": "This provision allows students to apply for a new F-1 record to resume their studies in the U.S. after a withdrawal, military service, suspension, or leave of absence.",
+   "when_it_applies": "When a student wishes to return to Penn State for in-person studies after a withdrawal, military service, suspension, or leave of absence.",
+   "conditions": [
+    "Complete the re-enrollment process with the Registrar’s Office (undergraduates) or through the Fox Graduate School (graduate students).",
+    "ISSA can process your returning student I-20 only after confirmation of approval to return by the Registrar’s Office or your department.",
+    "Request a new I-20 about 3 months before the date of your approved return to the University."
+   ],
+   "numbers": [
+    "Request a new I-20 about 3 months before the date of your approved return."
+   ],
+   "risk_if_wrong": "Failing to apply for a new F-1 record can result in a status violation.",
+   "who_authorises": "ISSA",
+   "how_to_start": "Access your iStart account and complete the Returning Students form.",
+   "ask_adviser": "What documents do I need to upload with my Returning Students form?",
+   "side_effects": [
+    "Potential delays in resuming studies.",
+    "Impact on financial aid and tuition status."
+   ],
+   "source_url": "https://global.psu.edu/page/correcting-terminated-f-1-record"
+  },
+  {
+   "id": "leave-of-absence",
+   "title": "Leave of Absence",
+   "topic": "status_violation",
+   "visa": "F-1",
+   "what_it_is": "A student is allowed to apply for a Leave of Absence for a period of time and return to continue their degree program.",
+   "when_it_applies": "When a student needs to take a break from their studies for personal reasons.",
+   "conditions": [
+    "Apply for a Leave of Absence with the Registrar's Office or, for graduate students, with the J. Jeffrey and Ann Marie Fox Graduate School.",
+    "The deadline for applying is the last business day before the first day of classes for the semester that the leave will begin."
+   ],
+   "numbers": [
+    "usually up to one year"
+   ],
+   "risk_if_wrong": "Your I-20/DS-2019 record will be closed down as a result, which ends your active F-1/J-1 SEVIS status.",
+   "who_authorises": "Registrar's Office or J. Jeffrey and Ann Marie Fox Graduate School",
+   "how_to_start": "Apply for a Leave of Absence with the appropriate office.",
+   "ask_adviser": "What are the implications for my immigration status if I take a Leave of Absence?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/page/taking-break-studies"
+  },
+  {
+   "id": "withdrawal",
+   "title": "Withdrawal",
+   "topic": "status_violation",
+   "visa": "F-1",
+   "what_it_is": "If a student is unable to complete the semester, they may choose to withdraw from the University.",
+   "when_it_applies": "When a student cannot complete the semester and considers withdrawing.",
+   "conditions": [
+    "Refer to the Registrar’s website to see the university process to withdraw or, for graduate students, the J. Jeffrey and Ann Marie Fox Graduate School website.",
+    "Discuss your situation with an International Student Adviser to determine the timing of leaving the U.S."
+   ],
+   "numbers": [],
+   "risk_if_wrong": "Your I-20/DS-2019 record will be closed down as a result of the withdrawal, which ends your active F-1/J-1 SEVIS status.",
+   "who_authorises": "Registrar's Office or J. Jeffrey and Ann Marie Fox Graduate School",
+   "how_to_start": "Refer to the appropriate website for the withdrawal process.",
+   "ask_adviser": "What are the consequences of withdrawing on my immigration status?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/page/taking-break-studies"
+  },
+  {
+   "id": "travel-signature-validity",
+   "title": "Travel Signature Validity",
+   "topic": "travel",
+   "visa": "F-1",
+   "what_it_is": "This provision outlines the validity period of travel signatures for F-1 and J-1 students.",
+   "when_it_applies": "For current F-1/J-1 students planning to travel abroad.",
+   "conditions": [
+    "Only ISSA advisers who are a Designated School Official (DSO) or Alternate Responsible Officer (ARO) can sign a Penn State I-20/DS-2019."
+   ],
+   "numbers": [
+    "Travel signature is valid for 12 months or until the end of the program of study, whichever is sooner for current F-1/J-1 students.",
+    "Travel signature is valid for 6 months for F-1 students on Post-Completion OPT/STEM OPT or J-1 students on Academic Training."
+   ],
+   "risk_if_wrong": "Traveling without a valid travel signature can result in being unable to re-enter the U.S.",
+   "who_authorises": "ISSA",
+   "how_to_start": "Complete the Travel Signature form in iStart, under Other Requests, well in advance of travel.",
+   "ask_adviser": "How do I ensure my travel signature is valid before I travel?",
+   "side_effects": [
+    "Potential delays in re-entry to the U.S.",
+    "Issues with maintaining student status."
+   ],
+   "source_url": "https://global.psu.edu/page/international-travel-and-travel-signature"
+  },
+  {
+   "id": "f-1-i-20-extension",
+   "title": "F-1 I-20 Extension",
+   "topic": "i20",
+   "visa": "F-1",
+   "what_it_is": "This provision allows students to request an extension of their I-20 if they cannot complete their academic program by the program end date listed on their I-20.",
+   "when_it_applies": "When a student will not complete their academic program by the program end date on their I-20.",
+   "conditions": [
+    "Submit your extension request in iStart no later than 45 days before the expiration date of your I-20.",
+    "Have maintained and are currently maintaining F-1 immigration status.",
+    "Full-time enrollment (unless you have been approved for a Reduced Course Load through ISSA).",
+    "The delay is caused by compelling academic or medical reasons, such as changes of major or research topics, unexpected research problems, or documented illnesses.",
+    "You are progressing normally toward your educational degree."
+   ],
+   "numbers": [
+    "no later than 45 days before the expiration date of your I-20",
+    "summer in-person enrollment is required if summer is your final semester"
+   ],
+   "risk_if_wrong": "You will not be able to request an extension after your I-20 expires, which could lead to a status violation.",
+   "who_authorises": "ISSA",
+   "how_to_start": "Submit an extension request in iStart (listed under I-20 or DS-2019 Requests).",
+   "ask_adviser": "What should I do if I have compelling academic reasons for needing an extension?",
+   "side_effects": [
+    "Potential impact on tuition and financial aid",
+    "Graduation timing may be delayed"
+   ],
+   "source_url": "https://global.psu.edu/page/f-1-i-20-extension"
+  },
+  {
+   "id": "grace-period-for-f-1-and-j-1-students",
+   "title": "Grace Period for F-1 and J-1 Students",
+   "topic": "grace_period",
+   "visa": "F-1",
+   "what_it_is": "A grace period allows students to take action to continue their lawful stay in the U.S. after completing their studies.",
+   "when_it_applies": "Upon completion of studies for F-1 and J-1 students.",
+   "conditions": [
+    "F-1 students have a 60-day grace period.",
+    "J-1 students have a 30-day grace period.",
+    "Students must take action within the grace period."
+   ],
+   "numbers": [
+    "60 days for F-1 students",
+    "30 days for J-1 students"
+   ],
+   "risk_if_wrong": "If a student does not take any action, they must depart by the end of the grace period.",
+   "who_authorises": "International Student Adviser",
+   "how_to_start": "Complete the Exit form in iStart to inform of your plan to return home.",
+   "ask_adviser": "What actions can I take during my grace period?",
+   "side_effects": [
+    "Potential impact on future visa applications",
+    "Ineligibility for certain benefits if not properly managed"
+   ],
+   "source_url": "https://global.psu.edu/page/completing-your-studies"
+  },
+  {
+   "id": "transferring-to-a-new-institution",
+   "title": "Transferring to a New Institution",
+   "topic": "transfer",
+   "visa": "F-1",
+   "what_it_is": "This provision allows students to transfer their SEVIS record to a new institution.",
+   "when_it_applies": "When a student wishes to move from Penn State to another school.",
+   "conditions": [
+    "Must submit the SEVIS Transfer Out form in iStart.",
+    "Must upload the admission/acceptance letter from the new school.",
+    "No transfer request will be processed without a completed iStart form and an admission letter.",
+    "J-1 students must be sure they are eligible for the transfer before making this request."
+   ],
+   "numbers": [
+    "Must begin at the new school within 5 months of the last date of attendance or on the next available session start date, whichever is earlier.",
+    "Graduating students must request a transfer date within their 60-day grace period."
+   ],
+   "risk_if_wrong": "Transferring without authorization can lead to a status violation, and students may not receive a refund of tuition or may receive all 'W' grades on their transcript.",
+   "who_authorises": "ISSA",
+   "how_to_start": "Access your iStart account and submit the SEVIS Transfer Out form.",
+   "ask_adviser": "What should I consider when choosing my transfer release date?",
+   "side_effects": [
+    "May not receive a refund of tuition money if transferring in the middle of a semester.",
+    "May receive all 'W' grades on the transcript for the semester if transferring mid-semester."
+   ],
+   "source_url": "https://global.psu.edu/page/transferring-new-institution"
+  },
+  {
+   "id": "lost-or-stolen-documents",
+   "title": "Lost or Stolen Documents",
+   "topic": "documents",
+   "visa": "F-1",
+   "what_it_is": "This provision outlines the steps to take if your passport or other important documents are lost or stolen.",
+   "when_it_applies": "This applies to international students in F-1 or J-1 status who have lost or had their passport stolen.",
+   "conditions": [],
+   "numbers": [],
+   "risk_if_wrong": "Failing to replace lost or stolen documents can jeopardize your legal status in the U.S.",
+   "who_authorises": "International Student and Scholar Advising",
+   "how_to_start": "Request a police report at the local police station.",
+   "ask_adviser": "What should I do if my passport is lost or stolen?",
+   "side_effects": [
+    "Potential delays in travel, issues with on-campus work, and complications with visa status."
+   ],
+   "source_url": "https://global.psu.edu/page/lost-or-stolen-documents"
+  },
+  {
+   "id": "change-of-major",
+   "title": "Change of Major",
+   "topic": "program_change",
+   "visa": "F-1",
+   "what_it_is": "F-1 students can request a new document to change their major by completing the Change of Major form in iStart.",
+   "when_it_applies": "This applies to F-1 students who need to update their major.",
+   "conditions": [
+    "This form is only for F-1 students.",
+    "Typically, J-1 students cannot change their major as it is considered a change in program objective."
+   ],
+   "numbers": [],
+   "risk_if_wrong": "Your I-20 or DS-2019 must reflect accurate information; failing to do so may lead to status issues.",
+   "who_authorises": "International Student Adviser",
+   "how_to_start": "Access your iStart account.",
+   "ask_adviser": "What should I do if I notice a mistake on my I-20 or DS-2019?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/page/change-major"
+  },
+  {
+   "id": "change-of-academic-level",
+   "title": "Change of Academic Level",
+   "topic": "program_change",
+   "visa": "F-1",
+   "what_it_is": "This provision allows students to change their academic degree level while at Penn State and receive a new I-20 or DS-2019.",
+   "when_it_applies": "When a student accepts an offer of admission at a new program degree level.",
+   "conditions": [
+    "Must accept an offer of admission at the new program degree level.",
+    "Must complete the Change of Level form in iStart and submit new financial documentation.",
+    "A new I-20/DS-2019 must be issued no later than the end of the grace period.",
+    "Enrollment in the new program must begin at the next available session start date but no more than 5 months from the end of the last program."
+   ],
+   "numbers": [
+    "5 months from the end of the last program for enrollment in the new program."
+   ],
+   "risk_if_wrong": "Failing to maintain status while changing academic levels can lead to a status violation.",
+   "who_authorises": "International Student Adviser",
+   "how_to_start": "Access your iStart account.",
+   "ask_adviser": "What steps do I need to take to ensure my I-20 reflects my new academic level?",
+   "side_effects": [
+    "Potential impact on tuition and financial aid.",
+    "Graduation timing may be affected."
+   ],
+   "source_url": "https://global.psu.edu/page/change-academic-level"
+  },
+  {
+   "id": "social-security-number",
+   "title": "Social Security Number",
+   "topic": "ssn",
+   "visa": "F-1",
+   "what_it_is": "The Social Security Number (SSN) is needed when employers report wages to the government. The Social Security Administration (SSA) will issue a Social Security Number (SSN), upon request, to international students for employment purposes only.",
+   "when_it_applies": "When an international student needs to work in the U.S. and requires an SSN for employment purposes.",
+   "conditions": [
+    "An SSN is not necessary for establishing a bank account, renting an apartment, or opening a cell phone account.",
+    "If someone insists on providing an SSN for the above instances, they should contact ISSA."
+   ],
+   "numbers": [],
+   "risk_if_wrong": "Providing an SSN when not required can lead to unnecessary complications and potential misuse of personal information.",
+   "who_authorises": "ISSA",
+   "how_to_start": "Access your iStart account.",
+   "ask_adviser": "What documents do I need to apply for an SSN?",
+   "side_effects": [],
+   "source_url": "https://global.psu.edu/page/social-security-number"
+  },
+  {
+   "id": "health-insurance-requirement",
+   "title": "Health Insurance Requirement",
+   "topic": "insurance",
+   "visa": "F-1",
+   "what_it_is": "It is mandatory for all international students in F-1 and J-1 status and for their accompanying dependents to have health insurance.",
+   "when_it_applies": "All international students in F-1 and J-1 status and their dependents.",
+   "conditions": [
+    "Students must either purchase insurance through the Penn State Insurance Office or apply for a waiver by providing evidence of current health insurance coverage that meets the Penn State insurance standards.",
+    "Students have the first week to apply for an insurance waiver if they have insurance meeting all of the waiver standards."
+   ],
+   "numbers": [
+    "Graduate Assistants and Graduate Fellows are automatically enrolled in the Penn State insurance plan.",
+    "Penn State covers 80% of the insurance premium for the graduate assistant/fellow and 70% of the premium for dependents."
+   ],
+   "risk_if_wrong": "Willful violation of this mandate requires termination of the J-1 status.",
+   "who_authorises": "Student Health Insurance",
+   "how_to_start": "Access your iStart account.",
+   "ask_adviser": "What are the waiver standards for health insurance?",
+   "side_effects": [
+    "Health insurance charges will be on the student bill in LionPATH for all international students.",
+    "Students will be automatically enrolled in the Student Health Insurance Program (SHIP) if they do not apply for a waiver."
+   ],
+   "source_url": "https://global.psu.edu/page/health-insurance"
+  },
+  {
+   "id": "updating-address-and-contact-information",
+   "title": "Updating Address and Contact Information",
+   "topic": "documents",
+   "visa": "F-1",
+   "what_it_is": "Students in F-1 and J-1 status are required to report and update their address and contact information.",
+   "when_it_applies": "While you are a student and after graduation while on OPT or STEM Extension OPT.",
+   "conditions": [
+    "You must report both your home country address and your local U.S. address.",
+    "You must update your local U.S. address in iStart within 10 days every time it changes.",
+    "If you change your address while working on campus, you must fill out a new W-4 form with your Penn State Employer.",
+    "All off-campus employment requires authorization through ISSA.",
+    "After graduation, you must report any address change within 10 days of occurrence."
+   ],
+   "numbers": [
+    "10 days for updating local U.S. address",
+    "10 days for reporting address change after graduation"
+   ],
+   "risk_if_wrong": "Failure to report your address can lead to a violation of your immigration status.",
+   "who_authorises": "ISSA",
+   "how_to_start": "Access your iStart account.",
+   "ask_adviser": "What should I do if I change my address while on OPT?",
+   "side_effects": [
+    "Potential issues with employment authorization",
+    "Impact on immigration status"
+   ],
+   "source_url": "https://global.psu.edu/page/updating-address-and-contact-information"
+  }
+ ]
+}

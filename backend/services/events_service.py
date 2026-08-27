@@ -72,7 +72,10 @@ def snapshot_age_days() -> int | None:
     if not scraped:
         return None
     try:
-        return (date.today() - date.fromisoformat(scraped)).days
+        # max(0, ...): scraped_at is UTC and date.today() is local, so a
+        # fresh scrape can read as -1 and reach the prompt as
+        # "refreshed -1 day(s) ago".
+        return max(0, (date.today() - date.fromisoformat(scraped)).days)
     except ValueError:
         return None
 

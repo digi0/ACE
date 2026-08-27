@@ -33,6 +33,9 @@ from backend.services.events_service import (
     is_stale as is_events_stale, local_time as events_local_time,
 )
 from backend.services.money_service import build_money_snippet, find_money
+from backend.services.visa_service import (
+    build_visa_snippet, find_provisions as find_visa_provisions,
+)
 from backend.services import blocks as B
 from backend.services.visual_policy import (
     decide as decide_visual, build_visual_directive, _PREREQ_QUESTION,
@@ -828,17 +831,19 @@ specific situation. Do not quote dollar amounts, eligibility rules, or deadlines
 """
 
 INTERNATIONAL_RESOURCES_SNIPPET = """
-=== INTERNATIONAL STUDENTS / VISA — REFER TO PENN STATE GLOBAL / DISSA (do NOT give immigration advice) ===
-ACE is NOT an immigration adviser. Visa and work-authorization matters (F-1, J-1, OPT, CPT, I-20,
-SEVIS, travel signatures, maintaining status) are governed by federal law, are individualized, and
-wrong guidance can put a student OUT OF STATUS. Do NOT state visa rules, eligibility, timelines, or
-deadlines, and do NOT tell the student what to file. Always route them to the official advisers:
-- Penn State Global / DISSA (Directorate of International Student & Scholar Advising): https://global.psu.edu/
-  — schedule with an international student adviser (DSO/ARO) for any visa/SEVIS/work-authorization question.
-- Each campus has a designated international student adviser; University Park is served by Penn State Global.
-For non-immigration questions (academics, campus life, English support), help normally — but for anything
-touching visa status, your answer is: "that's handled by your international student adviser at Penn State
-Global; here's how to reach them." Be warm and reassuring; do not attempt the immigration answer yourself.
+=== INTERNATIONAL STUDENTS / VISA — ACE MAPS OPTIONS, ONLY A DSO DECIDES ===
+ACE is NOT an immigration adviser and cannot determine anyone's status, eligibility, or what to
+file — that is a Designated School Official's job, and being wrong puts a student OUT OF STATUS.
+But "go ask your adviser" on its own is a non-answer: the student already knew that. What they do
+not know is which provisions exist, and that is what ACE is for.
+- Where a F-1 PROVISIONS block appears below, use it: name the options, their conditions, their
+  stated limits, and ALWAYS the risk of getting each one wrong. Never say the student qualifies.
+- Where no such block appears, you have no grounding — do NOT state visa rules, numbers, timelines
+  or eligibility from memory. Say what you cannot determine, and route them.
+- The office is ISSA (International Student and Scholar Advising), part of Penn State Global:
+  https://global.psu.edu/ — appointments via Starfish, questions via iStart. It is NOT "DISSA".
+Be warm and concrete. A student asking about their visa is usually frightened; a clear map of the
+routes and the exact question to ask is worth more than reassurance.
 """
 
 
@@ -1747,6 +1752,10 @@ def ask_advisor_stream(question, history=None, user_id: str = None, major: str =
     )
     aid_snippet = FINANCIAL_AID_RESOURCES_SNIPPET if intent == "financial_aid" else ""
     intl_snippet = INTERNATIONAL_RESOURCES_SNIPPET if intent == "international" else ""
+    # Matched on the SITUATION, not the intent: "I want to drop a class and I'm on an
+    # F-1" routes to reduced_course_load or courses, never to `international`, and that
+    # student is the one about to break their status.
+    intl_snippet += build_visa_snippet(question)
 
     # When a block carries the items, the prose grounding for those same items is
     # WITHHELD rather than merely discouraged. "Don't repeat the list" alongside
