@@ -1,0 +1,95 @@
+{
+ "cases": [
+  {
+   "id": "accidental-late-drop",
+   "thread": "1qhgge4",
+   "intent": "logistics",
+   "block": "checklist",
+   "chars": 570,
+   "truth": "Advisor contacts the professor/department to re-add; a late-add form is the mechanism; registrar can help; the LD likely stays but does not affect GPA.",
+   "scored": {
+    "names a late add route": true,
+    "sends to a human who can act": true,
+    "addresses the LD mark": true
+   },
+   "answer": "You will need to seek a Dean's exception to re-enroll in the class since you have already processed a late drop. This is typically granted only in rare circumstances, such as illness or emergencies. \n\nTo proceed, you should contact your academic adviser to discuss your situation and get guidance on how to formally request the exception. They will be able to provide you with the necessary steps and any required documentation. \n\nIf you need further assistance, you can also reach out to the Registrar's office for additional support regarding your registration status.",
+   "error": null
+  },
+  {
+   "id": "ld-deadline-session",
+   "thread": "1slmtgn",
+   "intent": "logistics",
+   "block": "checklist",
+   "chars": 610,
+   "truth": "April 22 is the deadline for 7-week second-session classes ONLY; the regular session deadline was April 10. Misunderstanding a deadline is not grounds for a petition.",
+   "scored": {
+    "knows deadlines differ by session": true,
+    "does not promise a petition will work": true,
+    "points at the registrar or calendar": false
+   },
+   "answer": "The late drop deadline for the regular session in Spring 2027 is actually April 9, not April 22. Since today is August 27, 2026, you are currently outside the late drop period for that semester. \n\nIf you are unable to drop the class in LionPATH, it may be due to the fact that the late drop period has ended. If you have extenuating circumstances, you may need to seek a Dean's exception, which is rare and typically requires documentation of illness or emergency.\n\nFor further assistance, I recommend contacting your academic advisor or the engineering advising office for guidance on your specific situation.",
+   "error": null
+  },
+  {
+   "id": "enroll-before-advisor",
+   "thread": "1o6ydyd",
+   "intent": "deadline",
+   "block": null,
+   "chars": 596,
+   "truth": "Yes. No advisor meeting is required to enrol at Penn State; only incoming first-years must complete NSO first. And do not wait — classes fill.",
+   "scored": {
+    "answers yes": true,
+    "does not invent a blocker": true,
+    "mentions enrollment window or lionpath": true
+   },
+   "answer": "Yes, you can enroll in classes before meeting with your academic advisor. However, it's important to ensure that the classes you choose align with your degree requirements and academic plan. \n\nYou can register for classes through LionPATH, and it's advisable to review your degree requirements and any prerequisites for the courses you are considering. After enrolling, you can discuss your selections with your advisor during your meeting in November to ensure you are on the right track.\n\nFor more information on registration and to access LionPATH, visit [LionPATH](https://lionpath.psu.edu/).",
+   "error": null
+  },
+  {
+   "id": "warning-credit-overload",
+   "thread": "1qbs8h7",
+   "intent": "contact",
+   "block": null,
+   "chars": 638,
+   "truth": "The overload limit is 19 credits; you need at least a 2.0 GPA to schedule above it, so academic warning blocks it. Extra credits cost extra tuition. Summer/World Campus is the cheaper alternative route.",
+   "scored": {
+    "knows the 19 credit limit": true,
+    "ties it to GPA standing": true,
+    "offers a real alternative": false
+   },
+   "answer": "No, you cannot overload credits while on academic warning. According to Penn State policy, students who are on academic warning are not permitted to take more than the standard course load. \n\nTo return to good academic standing, you need to maintain a semester GPA of 2.00 or higher. If you have further questions or need clarification, I recommend discussing your situation with your academic adviser again, as they can provide guidance tailored to your specific circumstances. \n\nFor more information on academic progress and policies, you can refer to the Penn State Registrar's website: https://www.registrar.psu.edu/academic-progress.",
+   "error": null
+  },
+  {
+   "id": "sap-aid-suspension",
+   "thread": "1coikgz",
+   "intent": "financial_aid",
+   "block": null,
+   "chars": 572,
+   "truth": "This is Satisfactory Academic Progress (SAP). Below a 2.0 GPA / 67% completion you lose federal aid. The route back is a SAP appeal with documentation, plus raising GPA.",
+   "scored": {
+    "names SAP or the appeal": false,
+    "names the aid office": true,
+    "does not calculate their aid": true
+   },
+   "answer": "You should contact the Office of Student Aid for assistance with your financial aid situation. They can provide you with specific information regarding your eligibility and options available to you. You can reach them at [Office of Student Aid](https://studentaid.psu.edu/) or by calling 814-865-6301. \n\nAdditionally, if you are considering loans, make sure to complete the FAFSA, which is required for most financial aid. You can find more information about that at [FAFSA](https://studentaid.gov/). \n\nPlease reach out to them as soon as possible to discuss your options.",
+   "error": null
+  },
+  {
+   "id": "f1-spring-cpt",
+   "thread": "1gjmcyk",
+   "intent": "international",
+   "block": null,
+   "chars": 2532,
+   "truth": "Full course load takes precedence (12 UG / 9 grad). Routes are: full-time CPT if the school authorises it, Reduced Course Load if eligible, or move the internship to summer when full-time work during a break is allowed. Summer classes do not retroactively fix a paused spring.",
+   "scored": {
+    "names CPT": true,
+    "names RCL or full time rule": true,
+    "refuses to rule on eligibility": true,
+    "states the risk": true
+   },
+   "answer": "I cannot determine specific eligibility or options for your situation, but I can outline some provisions that may apply to F-1 students like you regarding internships and maintaining your visa status.\n\n1. **F-1 Curricular Practical Training (CPT)**:\n   - **What it is**: CPT allows F-1 students to engage in internships or employment that is integral to their academic program.\n   - **When it applies**: This applies to students who need practical training as part of their degree requirements.\n   - **Conditions**: You must have lawful, full-time enrollment for one academic year; CPT must occur before the program end date on your I-20; the training/internship must be required by the academic program; the opportunity must be closely related to the major of study; and the training must happen before completing all coursework.\n   - **Risk if done wrong**: Unauthorized CPT can lead to a status violation.\n\n2. **Part-time vs. Full-time CPT**:\n   - **What it is**: CPT can be authorized for part-time or full-time work.\n   - **Stated limits**: Part-time: 20 hours or fewer per week; Full-time: more than 20 hours per week.\n\n3. **Effect of CPT on Optional Practical Training (OPT)**:\n   - **What it is**: Accumulating full-time CPT can affect eligibility for OPT.\n   - **Stated limits**: If you accumulate 365 days or more of full-time CPT, you will not be eligible for OPT.\n\n4. **Application and Authorization Process for CPT**:\n   - **What it is**: This outlines the steps to apply for CPT authorization.\n   - **Risk if done wrong**: Continuing to work beyond the authorized date on your I-20 without an extension can lead to a status violation.\n\n5. **Updating Your Address While on CPT**:\n   - **What it is**: Students must keep their current address updated in SEVIS while on CPT.\n   - **Risk if done wrong**: Failure to update your address can lead to compliance issues with the Department of Homeland Security.\n\nTo explore these options further and understand how they apply to your specific situation, I recommend reaching out to the International Student Services Office (ISSA) at Penn State. You can make an appointment through Starfish or ask questions via iStart. Here are some questions you might consider asking them:\n- Does my unpaid internship require CPT authorization?\n- What details must be included in the employer letter for CPT?\n- Can I take summer classes to maintain my status while participating in CPT?\n\nYou can find more information and contact them at [Penn State Global - ISSA](https://global.psu.edu/).",
+   "error": null
+  }
+ ]
+}
