@@ -103,7 +103,7 @@ export default function StickyBoard({ userId }) {
         {notes.length === 0 && (
           <div className="board-empty">
             <p>No notes yet.</p>
-            <p className="board-empty-hint">Click <strong>New note</strong> to pin your first sticky.</p>
+            <p className="board-empty-hint">Use <strong>New note</strong> to pin your first sticky.</p>
           </div>
         )}
         {notes.map((n) => (
