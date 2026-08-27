@@ -3471,7 +3471,19 @@ body {
 .checklist-subtitle { font-size: 13px; color: var(--text-muted); }
 
 .checklist-overall       { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; display: flex; flex-direction: column; gap: 8px; }
-.checklist-overall-label { font-size: 13px; font-weight: 600; color: var(--text); }
+/* Two spans — the sentence and the percentage — were never laid out as a row,
+   so they butted together and rendered as "requirements completed0%". The
+   markup has always intended a label left, a figure right. */
+.checklist-overall-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
 .checklist-overall-bar   { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
 .checklist-overall-fill  { height: 100%; background: linear-gradient(90deg, var(--text), var(--accent)); border-radius: 4px; transition: width 0.5s ease; }
 
@@ -3481,7 +3493,18 @@ body {
 
 .checklist-section-header  { display: flex; align-items: center; gap: 10px; padding: 13px 16px; cursor: pointer; user-select: none; transition: background 0.12s; }
 .checklist-section-header:hover { background: var(--bg); }
-.checklist-section-icon    { font-size: 16px; }
+/* The set mixes emoji (💻 🎓 📚) with plain text glyphs (∑ ⚗ ✍), which render
+   at wildly different weights. A fixed box and centred alignment stops the
+   text ones looking like broken images beside the pictograms. */
+.checklist-section-icon    {
+  font-size: 16px;
+  line-height: 1;
+  width: 1.25em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
 .checklist-section-name    { flex: 1; font-size: 14px; font-weight: 600; color: var(--text); }
 .checklist-section-count   { font-size: 12px; color: var(--text-muted); font-weight: 500; }
 .checklist-chevron         { font-size: 11px; color: var(--text-muted); transition: transform 0.2s; }
