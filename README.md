@@ -325,6 +325,18 @@ Railway. Tables: `users` (keyed by Clerk uid), `user_docs` (uploaded audit, one 
 - Set production secrets as environment variables on each platform — never commit `.env`, the local
   SQLite DB, or uploaded documents (all gitignored).
 
+### Search
+
+`landing/SEO.md` is the audit and the plan. Two things it assumes you know:
+
+- **`acecollege.app` is the only indexable surface.** `app.acecollege.app` is `noindex` plus
+  `Disallow: /` (`frontend/index.html`, `frontend/public/robots.txt`) because every route there
+  renders the same sign-in shell to a crawler. Don't put marketing copy on the app subdomain.
+- **The link-preview card is generated, not drawn.** `node scripts/build-og-image.js` rewrites
+  `landing/public/og.png` from the brand tokens. Re-run it whenever the mark, the accent, or the
+  proof numbers change, and look at the PNG afterwards — the script's header explains why a green
+  run is not evidence the card is intact.
+
 ---
 
 <div align="center">

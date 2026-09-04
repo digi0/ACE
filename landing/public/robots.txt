@@ -1,0 +1,43 @@
+# acecollege.app, the marketing site.
+#
+# Everything here is public by design, so the default is a plain yes.
+# The product itself lives on app.acecollege.app, which serves its own
+# robots.txt (frontend/public/robots.txt) and disallows everything: it is
+# behind an access gate, so the only thing a crawler could ever index there
+# is a sign-in screen.
+
+User-agent: *
+Allow: /
+
+# Answer engines get an explicit yes rather than an implicit one.
+#
+# This is a decision, not an oversight. A student asking an assistant "how do
+# I find out what CMPSC 465 needs first" is the exact moment ace is for, and
+# being quotable in that answer is worth more to us than the pageview we lose
+# by being summarised. The default above already permits these crawlers; they
+# are named so that a future reader knows the omission would be deliberate.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://acecollege.app/sitemap.xml

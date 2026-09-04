@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Four routes is the whole site today. Hand-maintained on purpose: a
+  generator for four static files would be more moving parts than the thing
+  it generates.
+
+  It stops being hand-maintainable the moment the programmatic pages in
+  landing/SEO.md ship, because that is hundreds of URLs built from
+  programs.json. Generate it in the same commit that generates them, and
+  delete this file rather than leaving a stale copy beside a generated one.
+
+  lastmod is a real signal and a cheap lie. Only move a date when the page's
+  content actually changed.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://acecollege.app/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://acecollege.app/privacy.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://acecollege.app/terms.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://acecollege.app/accessibility.html</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>

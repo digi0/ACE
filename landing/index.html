@@ -3,8 +3,59 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ace. the friend who's a year ahead</title>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SEARCH · the head is a surface, not paperwork.
+
+     The whole page is one route (acecollege.app/), so everything a crawler
+     or a link unfurler ever sees about ace is in these forty lines. Rules
+     that hold when editing them:
+
+      · The title and description are the only ace copy most people will
+        ever read. They carry the words a student actually types (Penn
+        State, degree audit, prereq, deadline) because the visible copy
+        deliberately does not: the hero says "college, sorted" and the h2s
+        speak in student voice, so the head is the only place the search
+        vocabulary can live without wrecking the writing.
+      · Length is a hard constraint, not a preference. Title <= 60 chars
+        and description <= 160, or Google truncates mid-word.
+      · The no-em-dashes house rule covers this copy too. It is copy.
+      · Never claim a Penn State affiliation in the structured data. The
+        footer disclaimer and the schema have to agree.
+     ══════════════════════════════════════════════════════════════════════ -->
+<title>ace. ask your college anything · Penn State degree planning</title>
+<meta name="description" content="Ask anything about being a Penn State student: prereqs, gen-eds, deadlines, holds, dining hours. ace reads your degree audit and answers, cited to the page.">
+<link rel="canonical" href="https://acecollege.app/">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="theme-color" content="#FBF6EC">
+
 <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<!-- Open Graph. og:image is a purpose-built 1200x630 card (see scripts/build-og-image.js),
+     not the hero poster: the poster is 16:9 and loses its subject to the crop. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ace">
+<meta property="og:url" content="https://acecollege.app/">
+<meta property="og:title" content="ace. ask your college anything">
+<meta property="og:description" content="One place that knows your college. Courses, deadlines, money, the offices nobody explains. Cited to the page, and awake at 2am.">
+<meta property="og:image" content="https://acecollege.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ace. ask your college anything. 749 majors, 9,439 courses, cited to the page.">
+<meta property="og:locale" content="en_US">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ace. ask your college anything">
+<meta name="twitter:description" content="One place that knows your college. Courses, deadlines, money, the offices nobody explains. Cited to the page, and awake at 2am.">
+<meta name="twitter:image" content="https://acecollege.app/og.png">
+
+<!-- The three faces above the fold. Everything else can arrive on swap;
+     these decide LCP, and the opener is a single line of Quicksand that
+     fitLine() measures, so a late font swap reflows the hero. -->
+<link rel="preload" href="/type/fonts/quicksand-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/type/fonts/switzer-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/type/fonts/tabular-400.woff2" as="font" type="font/woff2" crossorigin>
 <!--
   v11 · TIGHTENED.
 
@@ -42,6 +93,12 @@ body{background:var(--cream);color:var(--ink);font-family:Switzer,system-ui,sans
   font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
 button{font:inherit}
+/* Reachable by a screen reader and by a crawler, not by an eye. Used once,
+   inside the h1, to give the hero heading an accessible name: on its own
+   "college, sorted" names a feeling, not a page. Absolute + 1px so it can
+   never widen the h1 that fitLine() measures. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap;border:0}
 /* nothing on this page goes under 12px */
 .mono{font-family:Tabular,ui-monospace,monospace;font-size:12px;letter-spacing:.13em;
   text-transform:uppercase;line-height:1.4}
@@ -610,6 +667,84 @@ button{font:inherit}
   .fold{position:relative!important;top:auto!important}
 }
 </style>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     STRUCTURED DATA
+
+     Three nodes in one graph: who we are, what the site is, what the
+     product is. Deliberately absent, and to stay absent:
+
+      · aggregateRating / review. We have no ratings, and inventing them is
+        both a manual action from Google and a lie.
+      · FAQPage. The Q&A on this page is revealed by a click, and the chip
+        answers are illustrative ("example answer, real content"). Marking
+        them up as an FAQ would claim a permanence the page does not have.
+        When the /answers pages in SEO.md ship, the FAQ markup goes there,
+        on visible text.
+      · Any Penn State relation. "audienceType" says who it is FOR, which
+        is true. parentOrganization / affiliation would contradict the
+        footer disclaimer, and the disclaimer is the honest one.
+     ══════════════════════════════════════════════════════════════════════ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://acecollege.app/#organization",
+      "name": "ace",
+      "alternateName": "ACE, Academic Counselling Engine",
+      "url": "https://acecollege.app/",
+      "logo": "https://acecollege.app/favicon.svg",
+      "image": "https://acecollege.app/og.png",
+      "email": "hello@acecollege.app",
+      "slogan": "Ask your college anything.",
+      "description": "ace is an independent navigation layer for college: one place a student can ask anything about their institution and get an answer cited to its source."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://acecollege.app/#website",
+      "url": "https://acecollege.app/",
+      "name": "ace",
+      "description": "Ask anything about being a Penn State student. ace reads your degree audit and answers, cited to the page.",
+      "publisher": { "@id": "https://acecollege.app/#organization" },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://acecollege.app/#application",
+      "name": "ace",
+      "url": "https://app.acecollege.app",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any modern web browser",
+      "browserRequirements": "Requires JavaScript.",
+      "isAccessibleForFree": true,
+      "inLanguage": "en-US",
+      "description": "Upload a Penn State degree audit and ask questions in plain language about prerequisites, gen-eds, entrance to major, registration windows, drop deadlines, financial aid and campus services. Every answer names the handbook page or office it came from.",
+      "featureList": [
+        "Reads your degree audit and knows your major, catalog year and remaining requirements",
+        "Answers course and prerequisite questions across 749 programs and 9,439 courses",
+        "Cites the handbook page or bulletin section behind every academic answer",
+        "Tracks registration windows, add and drop deadlines and other calendar dates",
+        "Hands off to the office that owns a question instead of refusing it"
+      ],
+      "audience": {
+        "@type": "EducationalAudience",
+        "educationalRole": "student",
+        "audienceType": "Penn State undergraduates"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/LimitedAvailability",
+        "description": "Free for students. Access is currently gated by a waitlist."
+      },
+      "publisher": { "@id": "https://acecollege.app/#organization" }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -661,10 +796,25 @@ button{font:inherit}
               <span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="b4"></span>
             </div>
             <div class="intro-in">
-              <p class="intro-line" id="introLine">
+              <!-- This is an h1, not a p. The page shipped without a single
+                   level-1 heading, which costs it twice: a crawler gets no
+                   statement of what the page is about, and a screen reader
+                   user landing here gets a heading outline that starts at
+                   level 2 ("Some students know someone a year ahead") with
+                   nothing above it.
+
+                   Both fixes are in the markup, neither is visible. The
+                   element keeps .intro-line so every rule and the fitLine()
+                   measurement below are untouched (font-size is set inline
+                   by JS, so the h1 UA default never applies), and the
+                   .sr-only span carries the accessible name, because the
+                   visible line is typed in by JS one character at a time
+                   and reads as an empty heading until the animation ends. -->
+              <h1 class="intro-line" id="introLine">
+                <span class="sr-only">ace: ask your college anything. An academic advisor for Penn State students, awake at 2am.</span>
                 <span class="sizer" aria-hidden="true">college, sorted<i class="dot"></i></span>
-                <span class="live"><span id="typed"></span><i class="dot" id="introDot"></i><i class="caret" id="introCaret"></i></span>
-              </p>
+                <span class="live" aria-hidden="true"><span id="typed"></span><i class="dot" id="introDot"></i><i class="caret" id="introCaret"></i></span>
+              </h1>
             </div>
           </div>
 

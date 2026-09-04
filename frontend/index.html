@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#ffffff" />
     <meta name="description" content="Your Penn State academic advisor — course planning, degree progress, deadlines, and personalized degree-audit analysis." />
+    <!-- This is the gated product, not a page anyone should find in a search
+         result. Signed out, every route here renders the same sign-in shell,
+         so indexing it would put a dozen near-identical thin pages on a
+         subdomain of acecollege.app and compete with the landing site for the
+         same queries. Marketing lives at https://acecollege.app/ and carries
+         all the canonical/OG/schema markup; this file carries none on
+         purpose. See frontend/public/robots.txt for the other half. -->
+    <meta name="robots" content="noindex,nofollow" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />

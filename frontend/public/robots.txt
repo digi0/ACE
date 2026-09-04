@@ -1,0 +1,17 @@
+# app.acecollege.app, the product, behind a Clerk sign-in and an access gate.
+#
+# Nothing here is crawlable in any useful sense. Every route renders the same
+# empty SPA shell to a signed-out client (vercel.json rewrites /(.*) to
+# /index.html), so a crawler that ignored this file would index one thin
+# sign-in page under a dozen URLs and split acecollege.app's authority with
+# a duplicate of itself.
+#
+# The marketing site is the indexable surface: https://acecollege.app/
+#
+# This file is belt to the braces of the <meta name="robots" content="noindex">
+# in index.html. Keep both: robots.txt stops the crawl, the meta tag is what
+# actually removes a URL that some other site has already linked to, and a
+# disallowed page can never be re-crawled to discover its own noindex.
+
+User-agent: *
+Disallow: /
